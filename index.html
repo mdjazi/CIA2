@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIA SYSTEM | نظام التحكم والاستخبارات</title>
+    <style>
+        :root {
+            --bg-color: #05080c;
+            --card-bg: #0b1017;
+            --accent-color: #0084ff;
+            --border-color: #162235;
+            --text-color: #d1d9e6;
+            --danger-color: #d90429;
+            --gold-color: #c5a059;
+            --success-color: #10b981;
+            --text-muted: #8191a5;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .login-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 35px 30px;
+            width: 100%;
+            max-width: 410px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.85);
+        }
+        .subtitle-top {
+            font-size: 10px;
+            letter-spacing: 2.5px;
+            color: #64748b;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        .logo-container {
+            width: 95px;
+            height: 95px;
+            margin: 0 auto 15px auto;
+            border-radius: 50%;
+            border: 2px solid var(--gold-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+            box-shadow: 0 0 20px rgba(197, 160, 89, 0.25);
+        }
+        .logo-container img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+        }
+        .title {
+            color: var(--gold-color);
+            font-size: 22px;
+            font-weight: 800;
+            margin: 5px 0 0 0;
+            letter-spacing: 1.5px;
+        }
+        .agency-name {
+            color: #64748b;
+            font-size: 10px;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        .input-group {
+            text-align: right;
+            margin-bottom: 14px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 11px;
+            color: var(--accent-color);
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        .input-group input, .input-group select, .input-group textarea {
+            width: 100%;
+            padding: 11px;
+            background: #04060a;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            color: #fff;
+            box-sizing: border-box;
+            font-size: 13px;
+            text-align: right;
+            outline: none;
+        }
+        .search-box {
+            margin-bottom: 15px;
+            border-color: var(--gold-color) !important;
+            background: #09101a !important;
+        }
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: var(--accent-color);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.2s;
+        }
+        .btn-login:hover { opacity: 0.9; }
+        .error-msg {
+            color: var(--danger-color);
+            font-size: 12px;
+            margin-top: 12px;
+            display: none;
+            font-weight: 600;
+        }
+        .sync-status {
+            font-size: 11px;
+            color: var(--gold-color);
+            margin-top: 10px;
+        }
+        #main-system {
+            display: none;
+            width: 100%;
+            max-width: 1150px;
+            box-sizing: border-box;
+        }
+        .header-system {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 18px 25px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .btn-leader-nav {
+            background: #171004;
+            color: var(--gold-color);
+            border: 1px solid var(--gold-color);
+            padding: 8px 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 12px;
+            display: none;
+            transition: 0.2s;
+        }
+        .btn-leader-nav:hover {
+            background: var(--gold-color);
+            color: #000;
+        }
+        .btn-logout {
+            background: var(--danger-color);
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 12px;
+        }
+        .badge {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            background: var(--accent-color);
+            color: #fff;
+        }
+        .badge-leader { background: var(--gold-color); color: #000; }
+        .folder-grid-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .grid-title {
+            color: var(--gold-color);
+            font-size: 18px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .folder-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+        @media (max-width: 768px) { .folder-grid { grid-template-columns: 1fr; } }
+        .folder-card {
+            background: #04060a;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: right;
+            position: relative;
+        }
+        .folder-card:hover {
+            border-color: var(--gold-color);
+            transform: translateY(-2px);
+        }
+        .folder-card b {
+            display: block;
+            color: var(--gold-color);
+            font-size: 15px;
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+        }
+        .folder-card small { color: var(--text-muted); font-size: 11px; }
+        .folder-card .open-lbl {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-size: 9px;
+            color: #475569;
+            letter-spacing: 1px;
+        }
+        .workspace-panel {
+            display: none;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        .btn-back {
+            background: #04060a;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        .btn-back:hover { border-color: var(--gold-color); color: var(--gold-color); }
+
+        /* أدوات التشفير المصممة بشكل أنيق */
+        .crypto-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 768px) { .crypto-grid { grid-template-columns: 1fr; } }
+        .crypto-box {
+            background: #04060a;
+            border: 1px solid var(--border-color);
+            padding: 18px;
+            border-radius: 8px;
+        }
+
+        .crypto-result-box {
+            background: linear-gradient(135deg, #09121d 0%, #04060a 100%);
+            border: 1px solid var(--gold-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(197, 160, 89, 0.15);
+            text-align: center;
+        }
+        .crypto-result-title {
+            font-size: 11px;
+            color: var(--gold-color);
+            font-weight: bold;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+        .crypto-result-value {
+            font-family: monospace;
+            font-size: 14px;
+            color: var(--success-color);
+            word-break: break-all;
+            background: rgba(16, 185, 129, 0.05);
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px dashed rgba(16, 185, 129, 0.3);
+        }
+
+        .log-box {
+            background: #000;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 15px;
+            font-family: monospace;
+            font-size: 12px;
+            color: #10b981;
+            margin-top: 20px;
+            line-height: 1.6;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+        .log-title { color: var(--accent-color); font-weight: bold; margin-bottom: 8px; }
+
+        .data-card {
+            border: 1px solid var(--border-color);
+            background: #04060a;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        .wanted-card { border-color: var(--danger-color); background: rgba(217, 4, 41, 0.05); }
+        .badge-danger { background: var(--danger-color); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 3px; }
+        .action-btns { display: flex; gap: 5px; }
+        .btn-del-item { background: var(--danger-color); color: #fff; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 10px; font-weight: bold; }
+        .btn-edit-item { background: var(--gold-color); color: #000; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 10px; font-weight: bold; }
+
+        /* تصميم القوائم القابلة للطي (Accordion Style) */
+        .collapsible-item {
+            background: #090e15;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            transition: 0.2s;
+        }
+        .collapsible-header {
+            padding: 14px 18px;
+            background: #04060a;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            border-bottom: 1px solid transparent;
+        }
+        .collapsible-header:hover {
+            background: #0d1522;
+        }
+        .collapsible-title {
+            color: var(--gold-color);
+            font-weight: bold;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .collapsible-body {
+            display: none;
+            padding: 18px;
+            background: #060a10;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* شجرة الهيكل التنظيمي للعصابة */
+        .tree-container {
+            margin-top: 15px;
+            padding: 15px;
+            background: #020407;
+            border: 1px dashed var(--gold-color);
+            border-radius: 8px;
+            text-align: center;
+        }
+        .tree-node {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 5px;
+        }
+        .tree-leader { background: #c5a059; color: #000; border: 1px solid #fff; }
+        .tree-deputy { background: #0084ff; color: #fff; }
+        .tree-members { background: #162235; color: #d1d9e6; border: 1px solid #2a3c58; }
+        .tree-line {
+            width: 2px;
+            height: 12px;
+            background: var(--gold-color);
+            margin: 0 auto;
+        }
+
+        .report-classification {
+            background: rgba(220, 38, 38, 0.15);
+            color: #f87171;
+            border: 1px solid #ef4444;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 800;
+        }
+        .report-meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 8px;
+            background: #04060a;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: #94a3b8;
+            margin: 12px 0;
+            border: 1px dashed var(--border-color);
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
+        th, td { padding: 10px; border: 1px solid var(--border-color); text-align: right; }
+        th { background: #04060a; color: var(--gold-color); }
+        .leader-panel { border: 1px solid var(--gold-color); background: #090e15; padding: 25px; border-radius: 8px; margin-bottom: 20px; }
+        .user-list-item { display: flex; justify-content: space-between; align-items: center; background: #04060a; padding: 12px 15px; margin-top: 10px; border-radius: 6px; border: 1px solid var(--border-color); font-size: 13px; }
+        .img-preview { max-width: 100%; max-height: 250px; border-radius: 5px; margin-top: 8px; border: 1px solid var(--border-color); }
+        video { max-width: 100%; border-radius: 5px; margin-top: 8px; border: 1px solid var(--border-color); }
+    </style>
+</head>
+<body>
+    <div class="login-card" id="login-screen">
+        <div class="subtitle-top">CIA • FEDERAL DATA TERMINAL</div>
+        <div class="logo-container">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Emblem">
+        </div>
+        <div class="title">CIA FEDERAL SYSTEM</div>
+        <div class="agency-name">CENTRAL INTELLIGENCE AGENCY</div>
+        <div class="input-group">
+            <label>معرف الوكيل / اسم المستخدم (Username)</label>
+            <input type="text" id="login-username" placeholder="Name" autocomplete="off">
+        </div>
+        <div class="input-group">
+            <label>كلمة المرور التشفيرية (Passcode)</label>
+            <input type="password" id="login-password" placeholder="•••••" autocomplete="new-password">
+        </div>
+        <div class="input-group">
+            <label>رمز الأمان التشغيلي (PIN Code)</label>
+            <input type="password" id="login-pin" placeholder="••••" autocomplete="off">
+        </div>
+        <button class="btn-login" onclick="login()">تسجيل الدخول للمنظومة الفدرالية</button>
+        <div class="sync-status" id="loading-status">🔄 جاري الاتصال بالسحابة...</div>
+        <div class="error-msg" id="error-msg">⚠️ خطأ: اسم المستخدم، كلمة السر، أو الرمز غير صحيح!</div>
+    </div>
+
+    <div id="main-system">
+        <div class="header-system">
+            <div>
+                <h3 style="margin:0; color:var(--gold-color); font-size:18px;">🛡️ CIA SYSTEM | نظام التحكم والاستخبارات</h3>
+                <small style="color:#94a3b8;">
+                    العضو: <span id="current-user-display" style="color:var(--accent-color); font-weight:bold;">Mutleq</span> 
+                    | الرتبة: <span id="current-role-display" class="badge">CID Member</span>
+                </small>
+            </div>
+            <div class="header-actions">
+                <button class="btn-leader-nav" id="btn-leader-toggle" onclick="openSection('leaderSection')">👑 مركز الإدارة والتراخيص</button>
+                <button class="btn-logout" onclick="logout()">تسجيل الخروج</button>
+            </div>
+        </div>
+
+        <div class="folder-grid-panel" id="folderHome">
+            <div class="grid-title">سطح مكتب نظام CIA</div>
+            <small style="color:var(--text-muted)">اختر مجلداً لفتح القسم الخاص به</small>
+            <div class="folder-grid">
+                <div class="folder-card" onclick="openSection('reportsSection')">
+                    <b>REPORTS 📁</b>
+                    <small>التقارير والمذكرات الرسمية</small>
+                    <span class="open-lbl">OPEN FOLDER →</span>
+                </div>
+                <div class="folder-card" onclick="openSection('wantedSection')">
+                    <b>WANTED 📁</b>
+                    <small>المطلوبون للعدالة</small>
+                    <span class="open-lbl">OPEN FOLDER →</span>
+                </div>
+                <div class="folder-card" onclick="openSection('recordsSection')">
+                    <b>RECORDS 📁</b>
+                    <small>السجلات الجنائية</small>
+                    <span class="open-lbl">OPEN FOLDER →</span>
+                </div>
+                <div class="folder-card" onclick="openSection('intelligenceSection')">
+                    <b>INTELLIGENCE 📁</b>
+                    <small>ملفات الاستخبارات والعصابات</small>
+                    <span class="open-lbl">OPEN FOLDER →</span>
+                </div>
+                <div class="folder-card" onclick="openSection('casesSection')">
+                    <b> Decryption 📁 </b>
+                    <small>🔓 تشفير وفك التشفير 🔒</small>
+                    <span class="open-lbl">OPEN FOLDER →</span>
+                </div>
+                <div class="folder-card" onclick="openSection('usersSection')">
+                    <b>USERS 📁</b>
+                    <small>الأعضاء والمتصلون</small>
+                    <span class="open-lbl">OPEN FOLDER →</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- مركز الإدارة -->
+        <div class="workspace-panel leader-panel" id="leaderSection">
+            <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
+            <h3 style="color:var(--gold-color); margin-top:0;">👑 مركز إدارة التراخيص والسرية</h3>
+            <p style="font-size:12px; color:#94a3b8; margin-bottom: 15px;">إنشاء وتحديث الحسابات بالسحابة أونلاين:</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
+                <div class="input-group"><label>اسم الوكيل</label><input type="text" id="new-username" placeholder="Username"></div>
+                <div class="input-group"><label>المعرف (Badge ID)</label><input type="text" id="new-id" placeholder="CIA-709"></div>
+                <div class="input-group"><label>كلمة المرور</label><input type="text" id="new-password" placeholder="Passcode"></div>
+                <div class="input-group"><label>رمز PIN</label><input type="text" id="new-pin" placeholder="PIN"></div>
+                <div class="input-group">
+                    <label>الرتبة التشغيلية</label>
+                    <select id="new-role">
+                        <option value="SPECIAL AGENT">SPECIAL AGENT</option>
+                        <option value="CID Member">CID Member</option>
+                        <option value="FIELD AGENT">FIELD AGENT</option>
+                        <option value="DIRECTOR">DIRECTOR</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn-login" style="background:var(--success-color); font-size: 13px;" onclick="createAccount()">➕ إضافة الحساب أونلاين</button>
+            <div id="users-container" style="margin-top:15px;"></div>
+        </div>
+
+        <!-- التقارير مع إرفاق الملفات وقائمة قابلة للطي -->
+        <div class="workspace-panel" id="reportsSection">
+            <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
+            <h3 style="color:var(--gold-color); margin-bottom: 15px;">📝 قسم التقارير والمذكرات الاستخباراتية</h3>
+            <div class="input-group">
+                <input type="text" id="reportSearch" class="search-box" placeholder="🔍 بحث في قاعدة بيانات التقارير..." oninput="renderReports()">
+            </div>
+            <div style="background:#04060a; padding:15px; border-radius:6px; margin-bottom:20px; border:1px solid var(--border-color);">
+                <div class="input-group"><label>عنوان التقرير / المذكرة</label><input type="text" id="reportTitle" placeholder="عنوان التقرير"></div>
+                <div class="input-group"><label>تفاصيل التقرير الاستخباراتي</label><textarea id="reportDetails" rows="4" placeholder="اكتب تفاصيل التقرير..."></textarea></div>
+                <div class="input-group"><label>Citizen ID المرتبط بالتقرير</label><input type="text" id="reportCitizen" placeholder="مثال: CIA-102"></div>
+                
+                <!-- إرفاق من الجهاز مباشرة -->
+                <div class="input-group"><label>📁 إرفاق صورة دليل (من الجهاز)</label><input type="file" id="reportImageFile" accept="image/*"></div>
+                <div class="input-group"><label>🎥 إرفاق فيديو دليل (من الجهاز)</label><input type="file" id="reportVideoFile" accept="video/*"></div>
+                
+                <button class="btn-login" style="background:var(--accent-color); font-weight:bold;" onclick="addReport()">إرسال وحفظ التقرير أونلاين</button>
+            </div>
+            <h4 style="color:var(--gold-color); margin-bottom:15px;">📑 التقارير المحفوظة بالنظام (اضغط للعرض):</h4>
+            <div id="reports-list"></div>
+            <div class="log-box" id="reports-log"></div>
+        </div>
+
+        <!-- المطلوبون -->
+        <div class="workspace-panel" id="wantedSection">
+            <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
+            <h3 style="color:var(--gold-color); margin-bottom: 15px;">📜 قائمة المطلوبين للعدالة (WANTED LIST)</h3>
+            <div class="input-group">
+                <input type="text" id="wantedSearch" class="search-box" placeholder="🔍 بحث في داتابيس المطلوبين" oninput="renderWanted()">
+            </div>
+            <div style="background:#04060a; padding:15px; border-radius:6px; margin-bottom:15px; border:1px solid var(--border-color);">
+                <div class="input-group"><label>اسم المطلوب</label><input type="text" id="wantedName" placeholder="Name"></div>
+                <div class="input-group">
+                    <label>مستوى الخطورة</label>
+                    <select id="wantedRisk">
+                        <option value="🟡 منخفض الخطورة">🟡 منخفض الخطورة</option>
+                        <option value="🟠 متوسط الخطورة">🟠 متوسط الخطورة</option>
+                        <option value="🔴 خطر جداً">🔴 خطر جداً</option>
+                    </select>
+                </div>
+                <div class="input-group"><label>التهم التفصيلية</label><textarea id="wantedCrime" rows="2" placeholder="التهمة"></textarea></div>
+                <button class="btn-login" style="background:var(--danger-color);" onclick="addWanted()">+ إضافة مطلوب إلى القائمة</button>
+            </div>
+            <div id="wanted-list" style="display:flex; gap:15px; flex-wrap:wrap;"></div>
+        </div>
+
+        <!-- السجلات الجنائية مع العرض عند الضغط -->
+        <div class="workspace-panel" id="recordsSection">
+            <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
+            <h3 style="color:var(--gold-color); margin-bottom: 15px;">📂 السجل الجنائي للمواطنين</h3>
+            <div class="input-group">
+                <input type="text" id="recordsSearch" class="search-box" placeholder="🔍 بحث في السجل الجنائي للأشخاص" oninput="renderRecords()">
+            </div>
+            <div style="background:#04060a; padding:15px; border-radius:6px; margin-bottom:15px; border:1px solid var(--border-color);">
+                <div class="input-group"><label>اسم المواطن</label><input type="text" id="recName" placeholder="John Doe"></div>
+                <div class="input-group"><label>Citizen ID</label><input type="text" id="recId" placeholder="CIA-102"></div>
+                <div class="input-group"><label>سجل الملاحظات والقضايا</label><textarea id="recNotes" rows="2" placeholder="الملاحظات"></textarea></div>
+                <button class="btn-login" style="background:var(--gold-color); color:#000;" onclick="addRecord()">+ إضافة ملف جديد للسجل</button>
+            </div>
+            <h4 style="color:var(--gold-color); margin-bottom:15px;">📂 الملفات المحفوظة (اضغط للعرض):</h4>
+            <div id="records-list"></div>
+        </div>
+
+        <!-- قسم الاستخبارات والعصابات مع الهيكل التنظيمي وشجرة القيادة -->
+        <div class="workspace-panel" id="intelligenceSection">
+            <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
+            <h3 style="color:var(--gold-color); margin-bottom: 15px;">GANG INTELLIGENCE & HIERARCHY 🕵️‍♂️</h3>
+            <div class="input-group">
+                <input type="text" id="gangsSearch" class="search-box" placeholder="🔍 بحث في مخططات الاستخبارات والعصابات" oninput="renderGangs()">
+            </div>
+            <div style="background:#04060a; padding:15px; border-radius:6px; margin-bottom:15px; border:1px solid var(--border-color);">
+                <div class="input-group"><label>اسم العصابة / التنظيم</label><input type="text" id="gangName" placeholder="Gang Name"></div>
+                <div class="input-group"><label>👑 اسم الرئيس (Leader)</label><input type="text" id="gangLeader" placeholder="اسم قائد العصابة"></div>
+                <div class="input-group"><label>🎖️ اسم النائب (Deputy)</label><input type="text" id="gangDeputy" placeholder="اسم نائب القائد"></div>
+                <div class="input-group"><label>👥 الأعضاء (افصل بينهم بفاصلة)</label><input type="text" id="gangMembers" placeholder="عضو 1, عضو 2, عضو 3"></div>
+                <div class="input-group"><label>تفاصيل المخطط والنشاطات</label><textarea id="gangDetails" rows="2" placeholder="التفاصيل والارتباطات"></textarea></div>
+                <button class="btn-login" style="background:var(--gold-color); color:#000;" onclick="addGang()">+ إنشاء مخطط الشجرة والعصابة</button>
+            </div>
+            <h4 style="color:var(--gold-color); margin-bottom:15px;">🌐 ملفات العصابات والمخططات (اضغط للتوسع والشجرة):</h4>
+            <div id="gangs-list"></div>
+        </div>
+
+        <!-- قسم التشفير -->
+        <div class="workspace-panel" id="casesSection">
+            <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
+            <h3 style="color:var(--gold-color); margin-bottom: 20px;">🔓 قسم التشفير وفك التشفير 🔒</h3>
+            
+            <div class="crypto-grid">
+                <div class="crypto-box">
+                    <label style="color:var(--accent-color); font-weight:bold; font-size:12px;">🔒 تشفير رسالة</label>
+                    <input type="text" id="plainText" placeholder="أدخل النص للتشفير..." style="margin-top:8px;">
+                    <button class="btn-login" style="margin-top:12px; background:var(--accent-color);" onclick="encryptMsg()">تشفير البيانات</button>
+                </div>
+                <div class="crypto-box">
+                    <label style="color:var(--gold-color); font-weight:bold; font-size:12px;">🔓 فك التشفير</label>
+                    <input type="text" id="cipherText" placeholder="أدخل الكود لفك التشفير..." style="margin-top:8px;">
+                    <button class="btn-login" style="margin-top:12px; background:var(--gold-color); color:#000;" onclick="decryptMsg()">فك تشفير الكود</button>
+                </div>
+            </div>
+
+            <div class="crypto-result-box">
+                <div class="crypto-result-title">📋 النتيجة التشفيرية المخرجة</div>
+                <div class="crypto-result-value" id="cryptoResult">- في انتظار الإدخال -</div>
+            </div>
+        </div>
+
+        <div class="workspace-panel" id="usersSection">
+            <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
+            <h3 style="color:var(--gold-color);">👥 قائمة الأعضاء المسجلين بالمنظومة</h3>
+            <div class="input-group">
+                <input type="text" id="usersSearch" class="search-box" placeholder="🔍 بحث في قائمة الأعضاء" oninput="renderUsers()">
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>اسم الوكيل</th>
+                        <th>المعرف</th>
+                        <th>الرتبة</th>
+                    </tr>
+                </thead>
+                <tbody id="users-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const BIN_ID = "ضع_هنا_BIN_ID_الخاص_بك"; 
+        const API_KEY = "ضع_هنا_API_KEY_بدون_نقطة_في_النهاية"; 
+        let defaultDatabase = {
+            users: {
+                "Majed": { password: "1967", pin: "0000", id: "CIA-001", role: "DIRECTOR" },
+                "Mutleq": { password: "123", pin: "1234", id: "CIA-102", role: "CID Member" }
+            },
+            reports: [],
+            wanted: [],
+            records: [],
+            gangs: [],
+            logs: ["[SYSTEM READY]: تم الاتصال بالسحابة الفدرالية."]
+        };
+        let globalDatabase = defaultDatabase;
+        let currentUser = "";
+
+        async function fetchCloudData() {
+            try {
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest?nocache=${Date.now()}`, {
+                    headers: { "X-Master-Key": API_KEY }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.record && data.record.users) {
+                        globalDatabase = data.record;
+                        renderAllData();
+                        const statusElem = document.getElementById("loading-status");
+                        if(statusElem) statusElem.innerText = "✅ متصل بالمنظومة الفدرالية ومُزامن بنجاح";
+                    }
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        async function saveCloudData() {
+            try {
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+                    method: "PUT",
+                    headers: { 
+                        "Content-Type": "application/json", 
+                        "X-Master-Key": API_KEY 
+                    },
+                    body: JSON.stringify(globalDatabase)
+                });
+                if(res.ok) {
+                    renderAllData();
+                } else {
+                    alert("⚠️ فشل الحفظ في السحابة! تحقق من API_KEY أو BIN_ID");
+                }
+            } catch (e) { alert("⚠️ خطأ في الاتصال أثناء حفظ البيانات!"); }
+        }
+
+        function checkAutoLogin() {
+            const savedUser = localStorage.getItem("active_cia_user");
+            if (savedUser && globalDatabase.users[savedUser]) {
+                openMainSystem(savedUser);
+            }
+        }
+
+        function login() {
+            const user = document.getElementById("login-username").value.trim();
+            const pass = document.getElementById("login-password").value.trim();
+            const pin = document.getElementById("login-pin").value.trim();
+            const errorMsg = document.getElementById("error-msg");
+            if (globalDatabase.users[user] && globalDatabase.users[user].password === pass && globalDatabase.users[user].pin === pin) {
+                errorMsg.style.display = "none";
+                localStorage.setItem("active_cia_user", user);
+                openMainSystem(user);
+            } else {
+                errorMsg.style.display = "block";
+            }
+        }
+
+        function openMainSystem(user) {
+            currentUser = user;
+            document.getElementById("login-screen").style.display = "none";
+            document.getElementById("main-system").style.display = "block";
+            
+            document.getElementById("current-user-display").innerText = `${user}`;
+            const roleDisplay = document.getElementById("current-role-display");
+            const leaderBtn = document.getElementById("btn-leader-toggle");
+            
+            roleDisplay.innerText = globalDatabase.users[user].role;
+            if (globalDatabase.users[user].role === "DIRECTOR") {
+                roleDisplay.className = "badge badge-leader";
+                leaderBtn.style.display = "inline-block";
+            } else {
+                roleDisplay.className = "badge";
+                leaderBtn.style.display = "none";
+            }
+            renderAllData();
+            showHome();
+        }
+
+        function renderAllData() {
+            renderReports();
+            renderWanted();
+            renderRecords();
+            renderGangs();
+            renderUsers();
+            renderLogs();
+        }
+
+        /* قراءة الصور والفيديوهات مباشرة من جهاز المستخدم */
+        function readFileAsBase64(file) {
+            return new Promise((resolve, reject) => {
+                if (!file) resolve("");
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function addReport() {
+            const title = document.getElementById("reportTitle").value.trim();
+            const details = document.getElementById("reportDetails").value.trim();
+            const citizen = document.getElementById("reportCitizen").value.trim();
+            const imageFile = document.getElementById("reportImageFile").files[0];
+            const videoFile = document.getElementById("reportVideoFile").files[0];
+
+            if (!title || !details) return alert("يرجى كتابة عنوان وتفاصيل التقرير!");
+
+            const imageBase64 = imageFile ? await readFileAsBase64(imageFile) : "";
+            const videoBase64 = videoFile ? await readFileAsBase64(videoFile) : "";
+
+            globalDatabase.reports.push({
+                id: Date.now(),
+                title, details, citizen,
+                image: imageBase64,
+                video: videoBase64,
+                author: currentUser,
+                date: new Date().toLocaleTimeString('ar-EG')
+            });
+            addLog(`قام [${currentUser}] بإضافة تقرير جديد: ${title}`);
+            document.getElementById("reportTitle").value = "";
+            document.getElementById("reportDetails").value = "";
+            document.getElementById("reportCitizen").value = "";
+            document.getElementById("reportImageFile").value = "";
+            document.getElementById("reportVideoFile").value = "";
+            await saveCloudData();
+        }
+
+        function toggleCollapsible(element) {
+            const body = element.nextElementSibling;
+            if (body.style.display === "block") {
+                body.style.display = "none";
+            } else {
+                body.style.display = "block";
+            }
+        }
+
+        function renderReports() {
+            const list = document.getElementById("reports-list");
+            if (!list) return;
+            const q = (document.getElementById("reportSearch")?.value || "").toLowerCase();
+            list.innerHTML = "";
+            globalDatabase.reports.filter(r => 
+                (r.title && r.title.toLowerCase().includes(q)) || 
+                (r.details && r.details.toLowerCase().includes(q)) || 
+                (r.citizen && r.citizen.toLowerCase().includes(q))
+            ).forEach(r => {
+                const div = document.createElement("div");
+                div.className = "collapsible-item";
+                div.innerHTML = `
+                    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                        <div class="collapsible-title">📄 ${r.title}</div>
+                        <small style="color:var(--text-muted); font-size:11px;">بواسطة: ${r.author} ▼</small>
+                    </div>
+                    <div class="collapsible-body">
+                        <div class="action-btns" style="margin-bottom:10px;">
+                            <button class="btn-del-item" onclick="deleteReport(${r.id})">حذف التقرير</button>
+                        </div>
+                        <span class="report-classification">TOP SECRET // CLASSIFIED</span>
+                        <div class="report-meta-grid">
+                            <div>الكاتب: <b>${r.author}</b></div>
+                            <div>الـ ID المرتبط: <b>${r.citizen || 'غير محدد'}</b></div>
+                            <div>تاريخ الصدور: <b>${r.date}</b></div>
+                            <div>رقم المرجعية: <b>#REF-${r.id.toString().slice(-5)}</b></div>
+                        </div>
+                        <div style="color:#e2e8f0; font-size:13px; line-height:1.6; background:#04060a; padding:10px; border-radius:4px;">${r.details}</div>
+                        ${r.image ? `<div style="margin-top:10px;"><small style="color:var(--gold-color);">🖼️ صورة الدليل المرفقة:</small><br><img src="${r.image}" class="img-preview"></div>` : ''}
+                        ${r.video ? `<div style="margin-top:10px;"><small style="color:var(--gold-color);">🎥 تسجيل الفيديو المرفق:</small><br><video controls src="${r.video}"></video></div>` : ''}
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        async function deleteReport(id) {
+            if (confirm("هل تريد حذف هذا التقرير نهائياً؟")) {
+                globalDatabase.reports = globalDatabase.reports.filter(r => r.id !== id);
+                addLog(`قام [${currentUser}] بحذف تقرير.`);
+                await saveCloudData();
+            }
+        }
+
+        async function addWanted() {
+            const name = document.getElementById("wantedName").value.trim();
+            const risk = document.getElementById("wantedRisk").value;
+            const crime = document.getElementById("wantedCrime").value.trim();
+            if (!name || !crime) return alert("يرجى تعبئة بيانات المطلوب!");
+            globalDatabase.wanted.push({ id: Date.now(), name, risk: risk, crime });
+            addLog(`قام [${currentUser}] بإضافة مطلوب جديد: ${name}`);
+            document.getElementById("wantedName").value = "";
+            document.getElementById("wantedCrime").value = "";
+            await saveCloudData();
+        }
+
+        function renderWanted() {
+            const list = document.getElementById("wanted-list");
+            if(!list) return;
+            const q = (document.getElementById("wantedSearch")?.value || "").toLowerCase();
+            list.innerHTML = "";
+            globalDatabase.wanted.filter(w => 
+                (w.name && w.name.toLowerCase().includes(q)) || 
+                (w.crime && w.crime.toLowerCase().includes(q)) || 
+                (w.risk && w.risk.toLowerCase().includes(q))
+            ).forEach(w => {
+                const div = document.createElement("div");
+                div.className = "data-card wanted-card";
+                div.style.maxWidth = "280px";
+                div.style.width = "100%";
+                div.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span class="badge-danger">${w.risk}</span>
+                        <button class="btn-del-item" onclick="deleteWanted(${w.id})">حذف</button>
+                    </div>
+                    <h4 style="color:#fff; margin-top:8px;">${w.name}</h4>
+                    <p style="font-size:11px; color:#94a3b8; margin-top:6px;">${w.crime}</p>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        async function deleteWanted(id) {
+            if (confirm("حذف الشخص المطلوب؟")) {
+                globalDatabase.wanted = globalDatabase.wanted.filter(w => w.id !== id);
+                await saveCloudData();
+            }
+        }
+
+        async function addRecord() {
+            const name = document.getElementById("recName").value.trim();
+            const cid = document.getElementById("recId").value.trim();
+            const notes = document.getElementById("recNotes").value.trim();
+            if (!name) return alert("يرجى كتابة اسم المواطن!");
+            globalDatabase.records.push({ id: Date.now(), name, cid: cid || "N/A", notes });
+            addLog(`قام [${currentUser}] بإنشاء ملف سجلي لـ: ${name}`);
+            document.getElementById("recName").value = "";
+            document.getElementById("recId").value = "";
+            document.getElementById("recNotes").value = "";
+            await saveCloudData();
+        }
+
+        function renderRecords() {
+            const list = document.getElementById("records-list");
+            if(!list) return;
+            const q = (document.getElementById("recordsSearch")?.value || "").toLowerCase();
+            list.innerHTML = "";
+            globalDatabase.records.filter(r => 
+                (r.name && r.name.toLowerCase().includes(q)) || 
+                (r.cid && r.cid.toLowerCase().includes(q)) || 
+                (r.notes && r.notes.toLowerCase().includes(q))
+            ).forEach(r => {
+                const div = document.createElement("div");
+                div.className = "collapsible-item";
+                div.innerHTML = `
+                    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                        <div class="collapsible-title">📁 ${r.name} (${r.cid})</div>
+                        <small style="color:var(--text-muted); font-size:11px;">اضغط للتفاصيل ▼</small>
+                    </div>
+                    <div class="collapsible-body">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <h4 style="color:var(--accent-color);">${r.name}</h4>
+                            <button class="btn-del-item" onclick="deleteRecord(${r.id})">حذف السجل</button>
+                        </div>
+                        <p style="font-size:12px; color:#d1d9e6; background:#04060a; padding:10px; border-radius:4px;">${r.notes}</p>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        async function deleteRecord(id) {
+            if (confirm("حذف ملف المواطن؟")) {
+                globalDatabase.records = globalDatabase.records.filter(r => r.id !== id);
+                await saveCloudData();
+            }
+        }
+
+        /* إضافة عصابة جديدة مع الشجرة التنظيمية */
+        async function addGang() {
+            const name = document.getElementById("gangName").value.trim();
+            const leader = document.getElementById("gangLeader").value.trim();
+            const deputy = document.getElementById("gangDeputy").value.trim();
+            const members = document.getElementById("gangMembers").value.trim();
+            const details = document.getElementById("gangDetails").value.trim();
+
+            if (!name) return alert("يرجى كتابة اسم العصابة!");
+            globalDatabase.gangs.push({ id: Date.now(), name, leader, deputy, members, details });
+            addLog(`قام [${currentUser}] بإضافة ملف مخطط عصابة: ${name}`);
+            document.getElementById("gangName").value = "";
+            document.getElementById("gangLeader").value = "";
+            document.getElementById("gangDeputy").value = "";
+            document.getElementById("gangMembers").value = "";
+            document.getElementById("gangDetails").value = "";
+            await saveCloudData();
+        }
+
+        function renderGangs() {
+            const list = document.getElementById("gangs-list");
+            if(!list) return;
+            const q = (document.getElementById("gangsSearch")?.value || "").toLowerCase();
+            list.innerHTML = "";
+            globalDatabase.gangs.filter(g => 
+                (g.name && g.name.toLowerCase().includes(q)) || 
+                (g.details && g.details.toLowerCase().includes(q))
+            ).forEach(g => {
+                const memberList = g.members ? g.members.split(',') : [];
+                const div = document.createElement("div");
+                div.className = "collapsible-item";
+                div.innerHTML = `
+                    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                        <div class="collapsible-title">🏴‍☠️ تنظيم: ${g.name}</div>
+                        <small style="color:var(--text-muted); font-size:11px;">عرض الشجرة التنظيمية ▼</small>
+                    </div>
+                    <div class="collapsible-body">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                            <h4 style="color:var(--gold-color);">${g.name}</h4>
+                            <button class="btn-del-item" onclick="deleteGang(${g.id})">حذف الملف</button>
+                        </div>
+                        <p style="font-size:12px; color:#d1d9e6;">${g.details || 'لا توجد تفاصيل إضافية'}</p>
+                        
+                        <!-- الشجرة التنظيمية الهرمية -->
+                        <div class="tree-container">
+                            <small style="color:var(--gold-color); font-weight:bold; display:block; margin-bottom:8px;">🌳 الشجرة الهيكلية للتنظيم</small>
+                            <div>
+                                <div class="tree-node tree-leader">👑 الرئيس: ${g.leader || 'غير معروف'}</div>
+                            </div>
+                            <div class="tree-line"></div>
+                            <div>
+                                <div class="tree-node tree-deputy">🎖️ النائب: ${g.deputy || 'غير معروف'}</div>
+                            </div>
+                            <div class="tree-line"></div>
+                            <div>
+                                ${memberList.length > 0 ? memberList.map(m => `<div class="tree-node tree-members">👤 ${m.trim()}</div>`).join('') : '<div class="tree-node tree-members">لا يوجد أعضاء مسجلين</div>'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        async function deleteGang(id) {
+            if (confirm("حذف ملف العصابة والشجرة؟")) {
+                globalDatabase.gangs = globalDatabase.gangs.filter(g => g.id !== id);
+                await saveCloudData();
+            }
+        }
+
+        async function createAccount() {
+            const user = document.getElementById("new-username").value.trim();
+            const id = document.getElementById("new-id").value.trim();
+            const pass = document.getElementById("new-password").value.trim();
+            const pin = document.getElementById("new-pin").value.trim();
+            const role = document.getElementById("new-role").value;
+            if (!user || !id || !pass || !pin) return alert("يرجى تعبئة جميع الحقول!");
+            globalDatabase.users[user] = { password: pass, pin: pin, id: id, role: role };
+            addLog(`تم إنشاء حساب جديد لـ: ${user} برتبة: [${role}]`);
+            await saveCloudData();
+            alert(`تم إضافة الحساب (${user}) أونلاين بنجاح!`);
+        }
+
+        async function deleteAccount(username) {
+            if (username === "Majed") return alert("لا يمكنك حذف المدير!");
+            if (confirm(`حذف (${username})؟`)) {
+                delete globalDatabase.users[username];
+                await saveCloudData();
+            }
+        }
+
+        function renderUsers() {
+            const container = document.getElementById("users-container");
+            const tbody = document.getElementById("users-table-body");
+            const q = (document.getElementById("usersSearch")?.value || "").toLowerCase();
+            if (container) container.innerHTML = "";
+            if (tbody) tbody.innerHTML = "";
+            for (let user in globalDatabase.users) {
+                const u = globalDatabase.users[user];
+                if (user.toLowerCase().includes(q) || u.id.toLowerCase().includes(q) || u.role.toLowerCase().includes(q)) {
+                    if (tbody) {
+                        const tr = document.createElement("tr");
+                        tr.innerHTML = `<td>${user}</td><td>${u.id}</td><td>${u.role}</td>`;
+                        tbody.appendChild(tr);
+                    }
+                    if (container) {
+                        const div = document.createElement("div");
+                        div.className = "user-list-item";
+                        div.innerHTML = `
+                            <div><b>${user}</b> (${u.id}) - <small style="color:var(--gold-color);">${u.role}</small></div>
+                            <div>
+                                <small style="color:#94a3b8; margin-left:10px;">Pass: ${u.password} | PIN: ${u.pin}</small>
+                                ${u.role !== 'DIRECTOR' ? `<button class="btn-del-item" style="position:static;" onclick="deleteAccount('${user}')">حذف</button>` : ''}
+                            </div>
+                        `;
+                        container.appendChild(div);
+                    }
+                }
+            }
+        }
+
+        function addLog(text) {
+            const time = new Date().toLocaleTimeString('ar-EG');
+            globalDatabase.logs.unshift(`[${time}] ${text}`);
+            if (globalDatabase.logs.length > 20) globalDatabase.logs.pop();
+        }
+
+        function renderLogs() {
+            const logBox = document.getElementById("reports-log");
+            if (logBox) {
+                logBox.innerHTML = `<div class="log-title">📊 سجل الميدان (Log)</div>` + 
+                    globalDatabase.logs.map(l => `<div>${l}</div>`).join('');
+            }
+        }
+
+        function showHome() {
+            document.getElementById("folderHome").style.display = "block";
+            const panels = document.querySelectorAll('.workspace-panel');
+            panels.forEach(p => p.style.display = 'none');
+        }
+
+        function openSection(sectionId) {
+            document.getElementById("folderHome").style.display = "none";
+            const panels = document.querySelectorAll('.workspace-panel');
+            panels.forEach(p => p.style.display = 'none');
+            const target = document.getElementById(sectionId);
+            if (target) target.style.display = "block";
+        }
+
+        function encryptMsg() {
+            const val = document.getElementById("plainText").value.trim();
+            if (!val) return;
+            document.getElementById("cryptoResult").innerText = btoa(unescape(encodeURIComponent(val)));
+        }
+
+        function decryptMsg() {
+            const val = document.getElementById("cipherText").value.trim();
+            if (!val) return;
+            try {
+                document.getElementById("cryptoResult").innerText = decodeURIComponent(escape(atob(val)));
+            } catch (e) { document.getElementById("cryptoResult").innerText = "⚠️ كود خاطئ أو غير صالح!"; }
+        }
+
+        function logout() {
+            localStorage.removeItem("active_cia_user");
+            document.getElementById("login-screen").style.display = "block";
+            document.getElementById("main-system").style.display = "none";
+        }
+
+        fetchCloudData().then(() => {
+            checkAutoLogin();
+        });
+
+        setInterval(fetchCloudData, 5000);
+    </script>
+</body>
+</html>
