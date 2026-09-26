@@ -109,7 +109,6 @@
         .crypto-result-box { background: rgba(9, 18, 29, 0.8); border: 1px solid var(--gold-color); padding: 15px; border-radius: 8px; text-align: center; }
         .crypto-result-value { font-family: monospace; font-size: 14px; color: var(--success-color); word-break: break-all; background: rgba(16, 185, 129, 0.08); padding: 8px; border-radius: 4px; }
         
-        .log-box { background: rgba(0, 0, 0, 0.8); border: 1px solid var(--border-color); border-radius: 6px; padding: 15px; font-family: monospace; font-size: 12px; color: #10b981; margin-top: 20px; max-height: 180px; overflow-y: auto; }
         .badge-danger { background: var(--danger-color); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 3px; }
         .action-btns { display: flex; gap: 5px; align-items: center; }
         .btn-del-item { background: var(--danger-color); color: #fff; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px; font-weight: bold; }
@@ -156,7 +155,6 @@
             z-index: 0;
         }
         .cia-doc-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px dashed #b91c1c; padding-bottom: 15px; margin-bottom: 12px; position: relative; z-index: 1; }
-        .cia-doc-logo { width: 65px; height: 65px; border-radius: 50%; border: 1px solid #000; }
         .cia-top-secret-stamp { color: #b91c1c; font-size: 10px; font-weight: 900; letter-spacing: 1px; border: 1.5px solid #b91c1c; padding: 2px 6px; transform: rotate(-3deg); display: inline-block; background: rgba(185, 28, 28, 0.05); }
         .cia-doc-meta { font-size: 12px; color: #111; margin-bottom: 10px; line-height: 1.5; border-bottom: 1px solid #b5b9c0; padding-bottom: 8px; position: relative; z-index: 1; font-weight: bold; }
         .cia-doc-body { background: transparent; padding: 2px 0 8px 0; min-height: 120px; font-size: 13px; color: #111; line-height: 1.5; position: relative; z-index: 1; font-weight: bold; white-space: pre-wrap; word-break: break-word; }
@@ -171,7 +169,6 @@
         .chat-msg-me { align-self: flex-start; background: rgba(0, 132, 255, 0.2); border: 1px solid var(--accent-color); color: #fff; }
         .chat-msg-other { align-self: flex-end; background: rgba(22, 34, 53, 0.9); border: 1px solid var(--border-color); color: #d1d9e6; }
         .chat-meta { font-size: 9px; color: var(--gold-color); margin-bottom: 4px; display: flex; justify-content: space-between; }
-        .btn-del-msg { background: transparent; color: var(--danger-color); border: none; cursor: pointer; font-size: 11px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -521,7 +518,23 @@
             document.getElementById("customModal").style.display = "none";
         }
 
-        /* قالب الوثيقة مع إدخال روابط الصور والفيديو وتعديل الارتفاع والتباعد */
+        /* دالة تحويل الملف المرفق إلى Base64 */
+        function readFileAsBase64(fileInputId) {
+            return new Promise((resolve) => {
+                const fileInput = document.getElementById(fileInputId);
+                if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+                    resolve(null);
+                    return;
+                }
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) { resolve(e.target.result); };
+                reader.onerror = function() { resolve(null); };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        /* قالب الوثيقة مع إرفاق الملفات الحقيقية وزر إزالة الصور/الفيديوهات */
         function getReportDocHtml(titleVal = "", detailsVal = "", imageUrlVal = "", videoUrlVal = "", authorVal = currentUser, dateVal = new Date().toLocaleDateString(), dayVal = new Date().toLocaleDateString('ar-EG', { weekday: 'long' }), isEdit = false) {
             return `
                 <div class="cia-classified-doc">
@@ -541,12 +554,21 @@
                     <div class="cia-doc-body">
                         <div style="margin-bottom:2px; font-weight:900; color:#b91c1c; font-size:11px;">[مضمون التقرير الاستخباراتي]:</div>
                         ${isEdit ? `<textarea id="editReportDetails" rows="5" style="width:100%; padding:6px; background:transparent; border:1px solid #999; font-weight:bold; white-space:pre-wrap;">${detailsVal}</textarea>` : `<textarea id="popReportDetails" rows="5" placeholder="تفاصيل العملية والتحريات..." style="width:100%; padding:6px; background:transparent; border:1px solid #999; font-weight:bold; white-space:pre-wrap;"></textarea>`}
+                        
                         ${!isEdit ? `
-                            <div class="input-group" style="margin-top:8px;"><label style="color:#111; font-weight:bold;">🔗 رابط صورة الدليل (URL)</label><input type="text" id="popReportImageUrl" placeholder="https://example.com/image.jpg" style="background:#fff; color:#111;"></div>
-                            <div class="input-group" style="margin-top:4px;"><label style="color:#111; font-weight:bold;">🔗 رابط فيديو الدليل (URL)</label><input type="text" id="popReportVideoUrl" placeholder="https://example.com/video.mp4" style="background:#fff; color:#111;"></div>
+                            <div class="input-group" style="margin-top:8px;"><label style="color:#111; font-weight:bold;">📎 إرفاق صورة الدليل</label><input type="file" id="popReportImageFile" accept="image/*" style="background:#fff; color:#111;"></div>
+                            <div class="input-group" style="margin-top:4px;"><label style="color:#111; font-weight:bold;">📎 إرفاق فيديو الدليل</label><input type="file" id="popReportVideoFile" accept="video/*" style="background:#fff; color:#111;"></div>
                         ` : `
-                            <div class="input-group" style="margin-top:8px;"><label style="color:#111; font-weight:bold;">🔗 رابط صورة الدليل (URL)</label><input type="text" id="editReportImageUrl" value="${imageUrlVal || ''}" style="background:#fff; color:#111;"></div>
-                            <div class="input-group" style="margin-top:4px;"><label style="color:#111; font-weight:bold;">🔗 رابط فيديو الدليل (URL)</label><input type="text" id="editReportVideoUrl" value="${videoUrlVal || ''}" style="background:#fff; color:#111;"></div>
+                            <div class="input-group" style="margin-top:8px;">
+                                <label style="color:#111; font-weight:bold;">📎 إرفاق صورة جديدة (اختياري للاستبدال)</label>
+                                <input type="file" id="editReportImageFile" accept="image/*" style="background:#fff; color:#111;">
+                                ${imageUrlVal ? `<div style="margin-top:5px; display:flex; align-items:center; gap:10px;"><img src="${imageUrlVal}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;"><label style="font-size:10px; color:#b91c1c; cursor:pointer;"><input type="checkbox" id="removeImgCheck"> حذف الصورة الحالية</label></div>` : ''}
+                            </div>
+                            <div class="input-group" style="margin-top:4px;">
+                                <label style="color:#111; font-weight:bold;">📎 إرفاق فيديو جديد (اختياري للاستبدال)</label>
+                                <input type="file" id="editReportVideoFile" accept="video/*" style="background:#fff; color:#111;">
+                                ${videoUrlVal ? `<div style="margin-top:5px;"><label style="font-size:10px; color:#b91c1c; cursor:pointer;"><input type="checkbox" id="removeVidCheck"> حذف الفيديو الحالي</label></div>` : ''}
+                            </div>
                         `}
                     </div>
                 </div>
@@ -559,11 +581,15 @@
                 const title = document.getElementById("popReportTitle").value.trim();
                 const details = document.getElementById("popReportDetails").value;
                 if (!title) return alert("أدخل عنوان التقرير!");
-                const imageUrl = document.getElementById("popReportImageUrl").value.trim();
-                const videoUrl = document.getElementById("popReportVideoUrl").value.trim();
+                
+                const imageBase64 = await readFileAsBase64("popReportImageFile");
+                const videoBase64 = await readFileAsBase64("popReportVideoFile");
+
                 globalDatabase.reports.push({ 
                     id: Date.now(), title, details, 
-                    imageUrl, videoUrl, author: currentUser, 
+                    imageUrl: imageBase64 || "", 
+                    videoUrl: videoBase64 || "", 
+                    author: currentUser, 
                     date: new Date().toLocaleDateString(),
                     day: new Date().toLocaleDateString('ar-EG', { weekday: 'long' })
                 });
@@ -580,7 +606,7 @@
                 evidenceHtml = `
                     <div class="evidence-folder-box">
                         <div class="evidence-folder-title">📁 [ملف الأدلة المرفقة] - CLASSIFIED EVIDENCE</div>
-                        ${r.imageUrl ? `<div style="margin-bottom:8px;"><b style="font-size:10px; color:#111;">صورة الدليل:</b><br><img src="${r.imageUrl}" class="img-preview" style="border:1px solid #333;" onerror="this.src=''; this.alt='فشل تحميل رابط الصورة';"></div>` : ''}
+                        ${r.imageUrl ? `<div style="margin-bottom:8px;"><b style="font-size:10px; color:#111;">صورة الدليل:</b><br><img src="${r.imageUrl}" class="img-preview" style="border:1px solid #333;"></div>` : ''}
                         ${r.videoUrl ? `<div><b style="font-size:10px; color:#111;">فيديو الدليل:</b><br><video controls src="${r.videoUrl}" style="border:1px solid #333;"></video></div>` : ''}
                     </div>
                 `;
@@ -621,8 +647,20 @@
             openCustomModal("✏️ تعديل التقرير الاستخباراتي", getReportDocHtml(r.title, r.details, r.imageUrl, r.videoUrl, r.author, r.date, r.day, true), async () => {
                 r.title = document.getElementById("editReportTitle").value.trim();
                 r.details = document.getElementById("editReportDetails").value;
-                r.imageUrl = document.getElementById("editReportImageUrl").value.trim();
-                r.videoUrl = document.getElementById("editReportVideoUrl").value.trim();
+
+                // التعامل مع حذف الصور والفيديوهات أو استبدالها
+                const removeImg = document.getElementById("removeImgCheck")?.checked;
+                const removeVid = document.getElementById("removeVidCheck")?.checked;
+                
+                if (removeImg) r.imageUrl = "";
+                if (removeVid) r.videoUrl = "";
+
+                const newImgBase64 = await readFileAsBase64("editReportImageFile");
+                const newVidBase64 = await readFileAsBase64("editReportVideoFile");
+
+                if (newImgBase64) r.imageUrl = newImgBase64;
+                if (newVidBase64) r.videoUrl = newVidBase64;
+
                 await saveCloudData(); 
                 closeModal();
                 viewReportFolder(r.id);
@@ -737,19 +775,20 @@
                     <div class="input-group"><label>Citizen ID</label><input type="text" id="popRecId" placeholder="CIA-102"></div>
                     <div class="input-group"><label>الجنس</label><select id="popRecSex"><option value="MALE">ذكر / MALE</option><option value="FEMALE">أنثى / FEMALE</option></select></div>
                 </div>
-                <div class="input-group"><label>🔗 رابط صورة الهوية (URL)</label><input type="text" id="popRecPhotoUrl" placeholder="https://example.com/photo.jpg"></div>
+                <div class="input-group"><label>📎 إرفاق صورة الهوية</label><input type="file" id="popRecPhotoFile" accept="image/*"></div>
                 <div class="input-group"><label>السجل والملاحظات</label><textarea id="popRecNotes" rows="3"></textarea></div>
             `, async () => {
                 const fn = document.getElementById("popRecFirstName").value.trim();
                 const ln = document.getElementById("popRecLastName").value.trim();
                 if (!fn || !ln) return alert("أدخل اسم المواطن!");
+                const photoBase64 = await readFileAsBase64("popRecPhotoFile");
                 globalDatabase.records.push({ 
                     id: Date.now(), 
                     firstName: fn, lastName: ln, 
                     cid: document.getElementById("popRecId").value.trim() || "N/A", 
                     sex: document.getElementById("popRecSex").value, 
                     notes: document.getElementById("popRecNotes").value.trim(), 
-                    photo: document.getElementById("popRecPhotoUrl").value.trim() 
+                    photo: photoBase64 || "" 
                 });
                 await saveCloudData(); closeModal();
             });
@@ -790,14 +829,15 @@
                     <div class="input-group"><label>Citizen ID</label><input type="text" id="editRecCid" value="${r.cid}"></div>
                     <div class="input-group"><label>الجنس</label><select id="editRecSex"><option value="MALE" ${r.sex==="MALE"?"selected":""}>ذكر</option><option value="FEMALE" ${r.sex==="FEMALE"?"selected":""}>أنثى</option></select></div>
                 </div>
-                <div class="input-group"><label>🔗 رابط صورة الهوية (URL)</label><input type="text" id="editRecPhotoUrl" value="${r.photo || ''}"></div>
+                <div class="input-group"><label>📎 إرفاق صورة جديدة</label><input type="file" id="editRecPhotoFile" accept="image/*"></div>
                 <div class="input-group"><label>الملاحظات</label><textarea id="editRecNotes" rows="3">${r.notes}</textarea></div>
             `, async () => {
                 r.firstName = document.getElementById("editRecFirstName").value.trim();
                 r.lastName = document.getElementById("editRecLastName").value.trim();
                 r.cid = document.getElementById("editRecCid").value.trim();
                 r.sex = document.getElementById("editRecSex").value;
-                r.photo = document.getElementById("editRecPhotoUrl").value.trim();
+                const newPhoto = await readFileAsBase64("editRecPhotoFile");
+                if (newPhoto) r.photo = newPhoto;
                 r.notes = document.getElementById("editRecNotes").value.trim();
                 await saveCloudData(); closeModal();
             });
