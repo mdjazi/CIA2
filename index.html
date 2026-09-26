@@ -60,7 +60,6 @@
             100% { transform: translate(-50%, -50%) scale(1.05) rotate(5deg); opacity: 0.11; }
         }
         
-        /* ===== شاشة فك التشفير والتحميل الاستخباراتية ===== */
         #decryption-screen {
             display: none;
             position: fixed;
@@ -494,7 +493,6 @@
             letter-spacing: 1px;
         }
         
-        /* شبكة الكروت والمجلدات الفردية */
         .folder-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -1186,7 +1184,7 @@
             <div class="input-group">
                 <input type="text" id="recordsSearch" class="search-box" placeholder="🔍 بحث في السجل الجنائي للأشخاص..." oninput="renderRecords()">
             </div>
-            <h4 style="color:var(--gold-color); margin-bottom:15px;">📂 مجلدات الهوايات والسجلات:</h4>
+            <h4 style="color:var(--gold-color); margin-bottom:15px;">📂 مجلدات الهويات والسجلات:</h4>
             <div id="records-list" class="folder-grid"></div>
         </div>
 
@@ -1235,7 +1233,6 @@
                         <th>اسم الوكيل</th>
                         <th>المعرف</th>
                         <th>الرتبة</th>
-                        <th>إجراءات التعديل</th>
                     </tr>
                 </thead>
                 <tbody id="users-table-body"></tbody>
@@ -1647,7 +1644,6 @@
             document.getElementById("customModal").style.display = "flex";
             
             const saveBtn = document.getElementById("modalSaveBtn");
-            const actions = document.getElementById("modalActions");
             
             if (!showSaveBtn) {
                 saveBtn.style.display = "none";
@@ -1656,7 +1652,7 @@
                 saveBtn.onclick = async () => {
                     saveBtn.disabled = true;
                     saveBtn.innerText = "جاري الحفظ...";
-                    await onSave();
+                    if (onSave) await onSave();
                     saveBtn.disabled = false;
                     saveBtn.innerText = "تأكيد وحفظ";
                     closeModal();
@@ -1751,6 +1747,7 @@
                     report.citizen = newCitizen;
                     addLog(`قام [${currentUser}] بتعديل التقرير: ${newTitle}`);
                     await saveCloudData();
+                    closeModal();
                 }
             });
         }
@@ -1863,6 +1860,7 @@
                     wanted.crime = newCrime;
                     addLog(`قام [${currentUser}] بتعديل بيانات المطلوب: ${newName}`);
                     await saveCloudData();
+                    closeModal();
                 }
             });
         }
@@ -2039,6 +2037,7 @@
                     rec.notes = newNotes;
                     addLog(`قام [${currentUser}] بتعديل سجل الهوية: ${newFirstName} ${newLastName}`);
                     await saveCloudData();
+                    closeModal();
                 }
             });
         }
@@ -2173,6 +2172,7 @@
                     gang.details = newDetails;
                     addLog(`قام [${currentUser}] بتعديل هيكل العصابة: ${newName}`);
                     await saveCloudData();
+                    closeModal();
                 }
             });
         }
@@ -2226,8 +2226,8 @@
             const isDirector = globalDatabase.users[currentUser]?.role === "DIRECTOR";
             const userObj = globalDatabase.users[username];
             if(!userObj) return;
-            if(!isDirector && currentUser !== username) {
-                return alert("⚠️ فقط المدير (DIRECTOR) يمكنه تعديل رتب الأعضاء الآخرين!");
+            if(!isDirector) {
+                return alert("⚠️ فقط المدير (DIRECTOR) يمكنه تعديل رتب الأعضاء من مركز الإدارة!");
             }
             const modalContent = `
                 <div class="input-group">
@@ -2262,7 +2262,6 @@
             const container = document.getElementById("users-container");
             const tbody = document.getElementById("users-table-body");
             const q = (document.getElementById("usersSearch")?.value || "").toLowerCase();
-            const isDirector = globalDatabase.users[currentUser]?.role === "DIRECTOR";
             if (container) container.innerHTML = "";
             if (tbody) tbody.innerHTML = "";
             for (let user in globalDatabase.users) {
@@ -2274,9 +2273,6 @@
                             <td>${user}</td>
                             <td>${u.id}</td>
                             <td>${u.role}</td>
-                            <td>
-                                ${(isDirector || currentUser === user) ? `<button class="btn-edit-item" onclick="editUser('${user}')">تعديل الرتبة ✏️</button>` : '-'}
-                            </td>
                         `;
                         tbody.appendChild(tr);
                     }
