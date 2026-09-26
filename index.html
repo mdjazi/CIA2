@@ -59,7 +59,6 @@
             0% { transform: translate(-50%, -50%) scale(0.95) rotate(0deg); opacity: 0.05; }
             100% { transform: translate(-50%, -50%) scale(1.05) rotate(5deg); opacity: 0.11; }
         }
-        /* تحسين خلفية شاشة التحميل وفك التشفير */
         #decryption-screen {
             display: none;
             position: fixed;
@@ -672,6 +671,41 @@
         .user-list-item { display: flex; justify-content: space-between; align-items: center; background: rgba(4, 6, 10, 0.6); padding: 12px 15px; margin-top: 10px; border-radius: 6px; border: 1px solid var(--border-color); font-size: 13px; }
         .img-preview { max-width: 100%; max-height: 250px; border-radius: 5px; margin-top: 8px; border: 1px solid var(--border-color); }
         video { max-width: 100%; border-radius: 5px; margin-top: 8px; border: 1px solid var(--border-color); }
+
+        /* نافذة التعديل المخصصة بدلاً من رسائل جوجل */
+        .custom-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(2, 4, 7, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .custom-modal {
+            background: rgba(11, 16, 23, 0.95);
+            border: 1px solid var(--gold-color);
+            border-radius: 10px;
+            width: 90%;
+            max-width: 550px;
+            padding: 25px;
+            box-shadow: 0 0 30px rgba(197, 160, 89, 0.3);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+        .modal-title { color: var(--gold-color); font-size: 16px; font-weight: bold; }
+        .modal-close { cursor: pointer; color: var(--text-muted); font-size: 18px; font-weight: bold; }
+        .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -680,7 +714,6 @@
         <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Logo">
     </div>
     
-    <!-- شاشة التحميل خلفية احترافية -->
     <div id="decryption-screen">
         <div class="decrypt-box">
             <div class="decrypt-title">🔒 DECRYPTING CLASSIFIED DATA...</div>
@@ -781,7 +814,6 @@
             </div>
         </div>
 
-        <!-- مركز الإدارة -->
         <div class="workspace-panel leader-panel" id="leaderSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-top:0;">👑 مركز إدارة التراخيص والسرية</h3>
@@ -805,7 +837,6 @@
             <div id="users-container" style="margin-top:15px;"></div>
         </div>
 
-        <!-- التقارير -->
         <div class="workspace-panel" id="reportsSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">📝 قسم التقارير والمذكرات الاستخباراتية</h3>
@@ -816,18 +847,15 @@
                 <div class="input-group"><label>عنوان التقرير / المذكرة</label><input type="text" id="reportTitle" placeholder="عنوان التقرير"></div>
                 <div class="input-group"><label>تفاصيل التقرير الاستخباراتي</label><textarea id="reportDetails" rows="4" placeholder="اكتب تفاصيل التقرير..."></textarea></div>
                 <div class="input-group"><label>Citizen ID المرتبط بالتقرير</label><input type="text" id="reportCitizen" placeholder="مثال: CIA-102"></div>
-                
                 <div class="input-group"><label>📁 إرفاق صورة دليل (من الجهاز)</label><input type="file" id="reportImageFile" accept="image/*"></div>
                 <div class="input-group"><label>🎥 إرفاق فيديو دليل (من الجهاز)</label><input type="file" id="reportVideoFile" accept="video/*"></div>
-                
                 <button class="btn-login" style="background:var(--accent-color); font-weight:bold;" onclick="addReport()">إرسال وحفظ التقرير أونلاين</button>
             </div>
-            <h4 style="color:var(--gold-color); margin-bottom:15px;">📑 التقارير المحفوظة بالنظام (اضغط للعرض):</h4>
+            <h4 style="color:var(--gold-color); margin-bottom:15px;">📑 التقارير المحفوظة بالنظام (اضغط للعرض والطي يدويًا):</h4>
             <div id="reports-list"></div>
             <div class="log-box" id="reports-log"></div>
         </div>
 
-        <!-- المطلوبون -->
         <div class="workspace-panel" id="wantedSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">📜 قائمة المطلوبين للعدالة (WANTED LIST)</h3>
@@ -850,7 +878,6 @@
             <div id="wanted-list" style="display:flex; gap:15px; flex-wrap:wrap;"></div>
         </div>
 
-        <!-- السجلات الجنائية -->
         <div class="workspace-panel" id="recordsSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">📂 السجل الجنائي للمواطنين (RECORDS)</h3>
@@ -875,11 +902,10 @@
                 <div class="input-group"><label>سجل الملاحظات والقضايا الجنائية</label><textarea id="recNotes" rows="2" placeholder="أدخل الملاحظات والسجل الجنائي..."></textarea></div>
                 <button class="btn-login" style="background:var(--gold-color); color:#000;" onclick="addRecord()">+ إنشاء وتأكيد بطاقة الهوية أونلاين</button>
             </div>
-            <h4 style="color:var(--gold-color); margin-bottom:15px;">📂 بطاقات الهوية والسجلات المحفوظة (اضغط للعرض والطي):</h4>
+            <h4 style="color:var(--gold-color); margin-bottom:15px;">📂 بطاقات الهوية والسجلات المحفوظة (اضغط للعرض والطي يدويًا):</h4>
             <div id="records-list"></div>
         </div>
 
-        <!-- العصابات -->
         <div class="workspace-panel" id="intelligenceSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">GANG INTELLIGENCE & HIERARCHY 🕵️‍♂️</h3>
@@ -894,11 +920,10 @@
                 <div class="input-group"><label>تفاصيل المخطط والنشاطات</label><textarea id="gangDetails" rows="2" placeholder="التفاصيل والارتباطات"></textarea></div>
                 <button class="btn-login" style="background:var(--gold-color); color:#000;" onclick="addGang()">+ إنشاء مخطط الشجرة والعصابة</button>
             </div>
-            <h4 style="color:var(--gold-color); margin-bottom:15px;">🌐 ملفات العصابات والمخططات (اضغط للتوسع والشجرة):</h4>
+            <h4 style="color:var(--gold-color); margin-bottom:15px;">🌐 ملفات العصابات والمخططات (اضغط للعرض والطي يدويًا):</h4>
             <div id="gangs-list"></div>
         </div>
 
-        <!-- قسم التشفير -->
         <div class="workspace-panel" id="casesSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 20px;">🔓 قسم التشفير وفك التشفير 🔒</h3>
@@ -920,7 +945,6 @@
             </div>
         </div>
 
-        <!-- الأعضاء -->
         <div class="workspace-panel" id="usersSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color);">👥 قائمة الأعضاء المسجلين بالمنظومة</h3>
@@ -938,6 +962,21 @@
                 </thead>
                 <tbody id="users-table-body"></tbody>
             </table>
+        </div>
+    </div>
+
+    <!-- النافذة المخصصة للتعديل المباشر المريحة -->
+    <div class="custom-modal-overlay" id="customModal">
+        <div class="custom-modal">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">✏️ تعديل البيانات</div>
+                <span class="modal-close" onclick="closeModal()">✕</span>
+            </div>
+            <div id="modalBody"></div>
+            <div class="modal-actions">
+                <button class="btn-login" style="background:var(--success-color);" id="modalSaveBtn">تأكيد وحفظ التعديلات</button>
+                <button class="btn-login" style="background:rgba(255,255,255,0.1); color:#fff;" onclick="closeModal()">إلغاء</button>
+            </div>
         </div>
     </div>
 
@@ -1034,6 +1073,13 @@
         };
         let globalDatabase = defaultDatabase;
         let currentUser = "";
+        
+        // تتبع الحالات المفتوحة لتفادي الإغلاق التلقائي نهائيًا
+        let openItemsState = {
+            reports: {},
+            records: {},
+            gangs: {}
+        };
 
         async function fetchCloudData() {
             try {
@@ -1051,6 +1097,7 @@
                 }
             } catch (e) { console.error(e); }
         }
+
         async function saveCloudData() {
             try {
                 const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
@@ -1142,7 +1189,6 @@
             renderLogs();
         }
 
-        /* تحسين قراءة الصور لتفادي حدوث الأخطاء بسلامة */
         function readFileAsBase64(file) {
             return new Promise((resolve) => {
                 if (!file) return resolve("");
@@ -1151,6 +1197,37 @@
                 reader.onerror = () => resolve("");
                 reader.readAsDataURL(file);
             });
+        }
+
+        // تحكم يدوي كامل للفتح والإغلاق ومنع الإغلاق التلقائي
+        function toggleCollapsibleManual(type, id, element) {
+            const body = element.nextElementSibling;
+            if (!body) return;
+            const isVisible = body.style.display === "block";
+            if (isVisible) {
+                body.style.display = "none";
+                openItemsState[type][id] = false;
+            } else {
+                body.style.display = "block";
+                openItemsState[type][id] = true;
+            }
+        }
+
+        // نظام النافذة المنبثقة التفاعلية المخصصة
+        function openCustomModal(title, contentHtml, onSave) {
+            document.getElementById("modalTitle").innerText = title;
+            document.getElementById("modalBody").innerHTML = contentHtml;
+            document.getElementById("customModal").style.display = "flex";
+            
+            const saveBtn = document.getElementById("modalSaveBtn");
+            saveBtn.onclick = async () => {
+                await onSave();
+                closeModal();
+            };
+        }
+
+        function closeModal() {
+            document.getElementById("customModal").style.display = "none";
         }
 
         async function addReport() {
@@ -1181,11 +1258,6 @@
             await saveCloudData();
         }
 
-        function toggleCollapsible(element) {
-            const body = element.nextElementSibling;
-            body.style.display = (body.style.display === "block") ? "none" : "block";
-        }
-
         function renderReports() {
             const list = document.getElementById("reports-list");
             if (!list) return;
@@ -1196,16 +1268,17 @@
                 (r.details && r.details.toLowerCase().includes(q)) || 
                 (r.citizen && r.citizen.toLowerCase().includes(q))
             ).forEach(r => {
+                const isOpen = openItemsState.reports[r.id] === true;
                 const div = document.createElement("div");
                 div.className = "collapsible-item";
                 div.innerHTML = `
-                    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                    <div class="collapsible-header" onclick="toggleCollapsibleManual('reports', ${r.id}, this)">
                         <div class="collapsible-title">📄 ${r.title}</div>
                         <small style="color:var(--text-muted); font-size:11px;">بواسطة: ${r.author} ▼</small>
                     </div>
-                    <div class="collapsible-body">
+                    <div class="collapsible-body" style="display: ${isOpen ? 'block' : 'none'};">
                         <div class="action-btns" style="margin-bottom:10px;">
-                            <button class="btn-edit-item" onclick="editReport(${r.id})">تعديل ✏️</button>
+                            <button class="btn-edit-item" onclick="editReport(${r.id})">تعديل التقرير ✏️</button>
                             <button class="btn-del-item" onclick="deleteReport(${r.id})">حذف التقرير</button>
                         </div>
                         <span class="report-classification">TOP SECRET // CLASSIFIED</span>
@@ -1224,17 +1297,38 @@
             });
         }
 
-        async function editReport(id) {
+        function editReport(id) {
             const report = globalDatabase.reports.find(r => r.id === id);
             if(!report) return;
-            const newTitle = prompt("تعديل عنوان التقرير:", report.title);
-            const newDetails = prompt("تعديل التفاصيل:", report.details);
-            if(newTitle && newDetails) {
-                report.title = newTitle;
-                report.details = newDetails;
-                addLog(`قام [${currentUser}] بتعديل التقرير: ${newTitle}`);
-                await saveCloudData();
-            }
+
+            const modalContent = `
+                <div class="input-group">
+                    <label>عنوان التقرير</label>
+                    <input type="text" id="editReportTitle" value="${report.title}">
+                </div>
+                <div class="input-group">
+                    <label>تفاصيل التقرير</label>
+                    <textarea id="editReportDetails" rows="5">${report.details}</textarea>
+                </div>
+                <div class="input-group">
+                    <label>Citizen ID</label>
+                    <input type="text" id="editReportCitizen" value="${report.citizen || ''}">
+                </div>
+            `;
+
+            openCustomModal("✏️ تعديل التقرير الاستخباراتي", modalContent, async () => {
+                const newTitle = document.getElementById("editReportTitle").value.trim();
+                const newDetails = document.getElementById("editReportDetails").value.trim();
+                const newCitizen = document.getElementById("editReportCitizen").value.trim();
+                
+                if (newTitle && newDetails) {
+                    report.title = newTitle;
+                    report.details = newDetails;
+                    report.citizen = newCitizen;
+                    addLog(`قام [${currentUser}] بتعديل التقرير: ${newTitle}`);
+                    await saveCloudData();
+                }
+            });
         }
 
         async function deleteReport(id) {
@@ -1286,16 +1380,41 @@
             });
         }
 
-        async function editWanted(id) {
+        function editWanted(id) {
             const wanted = globalDatabase.wanted.find(w => w.id === id);
             if(!wanted) return;
-            const newName = prompt("تعديل اسم المطلوب:", wanted.name);
-            const newCrime = prompt("تعديل التهمة:", wanted.crime);
-            if(newName && newCrime) {
-                wanted.name = newName;
-                wanted.crime = newCrime;
-                await saveCloudData();
-            }
+
+            const modalContent = `
+                <div class="input-group">
+                    <label>اسم المطلوب</label>
+                    <input type="text" id="editWantedName" value="${wanted.name}">
+                </div>
+                <div class="input-group">
+                    <label>مستوى الخطورة</label>
+                    <select id="editWantedRisk">
+                        <option value="🟡 منخفض الخطورة" ${wanted.risk.includes("منخفض") ? "selected" : ""}>🟡 منخفض الخطورة</option>
+                        <option value="🟠 متوسط الخطورة" ${wanted.risk.includes("متوسط") ? "selected" : ""}>🟠 متوسط الخطورة</option>
+                        <option value="🔴 خطر جداً" ${wanted.risk.includes("خطر") ? "selected" : ""}>🔴 خطر جداً</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>التهم الجنائية</label>
+                    <textarea id="editWantedCrime" rows="3">${wanted.crime}</textarea>
+                </div>
+            `;
+
+            openCustomModal("✏️ تعديل بيانات المطلوب", modalContent, async () => {
+                const newName = document.getElementById("editWantedName").value.trim();
+                const newRisk = document.getElementById("editWantedRisk").value;
+                const newCrime = document.getElementById("editWantedCrime").value.trim();
+
+                if (newName && newCrime) {
+                    wanted.name = newName;
+                    wanted.risk = newRisk;
+                    wanted.crime = newCrime;
+                    await saveCloudData();
+                }
+            });
         }
 
         async function deleteWanted(id) {
@@ -1343,19 +1462,20 @@
                 (r.cid && r.cid.toLowerCase().includes(q)) || 
                 (r.notes && r.notes.toLowerCase().includes(q))
             ).forEach(r => {
+                const isOpen = openItemsState.records[r.id] === true;
                 const defaultPhoto = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=300&h=350";
                 const div = document.createElement("div");
                 div.className = "collapsible-item";
                 div.innerHTML = `
-                    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                    <div class="collapsible-header" onclick="toggleCollapsibleManual('records', ${r.id}, this)">
                         <div class="collapsible-title">🪪 بطاقة هوية: ${r.firstName} ${r.lastName} (${r.cid})</div>
                         <small style="color:var(--text-muted); font-size:11px;">عرض البطاقة الجنائية ▼</small>
                     </div>
-                    <div class="collapsible-body">
+                    <div class="collapsible-body" style="display: ${isOpen ? 'block' : 'none'};">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                             <span class="report-classification">IDENTIFICATION CARD // CLASSIFIED</span>
                             <div class="action-btns">
-                                <button class="btn-edit-item" onclick="editRecord(${r.id})">تعديل ✏️</button>
+                                <button class="btn-edit-item" onclick="editRecord(${r.id})">تعديل الهوية ✏️</button>
                                 <button class="btn-del-item" onclick="deleteRecord(${r.id})">حذف الملف</button>
                             </div>
                         </div>
@@ -1399,18 +1519,56 @@
             });
         }
 
-        async function editRecord(id) {
+        function editRecord(id) {
             const rec = globalDatabase.records.find(r => r.id === id);
             if(!rec) return;
-            const newFirstName = prompt("تعديل الاسم الأول:", rec.firstName);
-            const newLastName = prompt("تعديل الاسم الأخير:", rec.lastName);
-            const newNotes = prompt("تعديل الملاحظات الجنائية:", rec.notes);
-            if(newFirstName && newLastName) {
-                rec.firstName = newFirstName;
-                rec.lastName = newLastName;
-                if(newNotes) rec.notes = newNotes;
-                await saveCloudData();
-            }
+
+            const modalContent = `
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                    <div class="input-group">
+                        <label>الاسم الأول</label>
+                        <input type="text" id="editRecFirstName" value="${rec.firstName}">
+                    </div>
+                    <div class="input-group">
+                        <label>الاسم الأخير</label>
+                        <input type="text" id="editRecLastName" value="${rec.lastName}">
+                    </div>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                    <div class="input-group">
+                        <label>رقم الهوية (Citizen ID)</label>
+                        <input type="text" id="editRecCid" value="${rec.cid}">
+                    </div>
+                    <div class="input-group">
+                        <label>الجنس</label>
+                        <select id="editRecSex">
+                            <option value="MALE" ${rec.sex === "MALE" ? "selected" : ""}>ذكر / MALE</option>
+                            <option value="FEMALE" ${rec.sex === "FEMALE" ? "selected" : ""}>أنثى / FEMALE</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>السجل الجنائي والملاحظات</label>
+                    <textarea id="editRecNotes" rows="3">${rec.notes}</textarea>
+                </div>
+            `;
+
+            openCustomModal("✏️ تعديل بطاقة الهوية والسجل الجنائي", modalContent, async () => {
+                const newFirstName = document.getElementById("editRecFirstName").value.trim();
+                const newLastName = document.getElementById("editRecLastName").value.trim();
+                const newCid = document.getElementById("editRecCid").value.trim();
+                const newSex = document.getElementById("editRecSex").value;
+                const newNotes = document.getElementById("editRecNotes").value.trim();
+
+                if (newFirstName && newLastName) {
+                    rec.firstName = newFirstName;
+                    rec.lastName = newLastName;
+                    rec.cid = newCid;
+                    rec.sex = newSex;
+                    rec.notes = newNotes;
+                    await saveCloudData();
+                }
+            });
         }
 
         async function deleteRecord(id) {
@@ -1446,19 +1604,20 @@
                 (g.name && g.name.toLowerCase().includes(q)) || 
                 (g.details && g.details.toLowerCase().includes(q))
             ).forEach(g => {
+                const isOpen = openItemsState.gangs[g.id] === true;
                 const memberList = g.members ? g.members.split(',') : [];
                 const div = document.createElement("div");
                 div.className = "collapsible-item";
                 div.innerHTML = `
-                    <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                    <div class="collapsible-header" onclick="toggleCollapsibleManual('gangs', ${g.id}, this)">
                         <div class="collapsible-title">🏴‍☠️ تنظيم: ${g.name}</div>
                         <small style="color:var(--text-muted); font-size:11px;">عرض الشجرة التنظيمية ▼</small>
                     </div>
-                    <div class="collapsible-body">
+                    <div class="collapsible-body" style="display: ${isOpen ? 'block' : 'none'};">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                             <h4 style="color:var(--gold-color);">${g.name}</h4>
                             <div class="action-btns">
-                                <button class="btn-edit-item" onclick="editGang(${g.id})">تعديل ✏️</button>
+                                <button class="btn-edit-item" onclick="editGang(${g.id})">تعديل التنظيم ✏️</button>
                                 <button class="btn-del-item" onclick="deleteGang(${g.id})">حذف الملف</button>
                             </div>
                         </div>
@@ -1484,20 +1643,51 @@
             });
         }
 
-        async function editGang(id) {
+        function editGang(id) {
             const gang = globalDatabase.gangs.find(g => g.id === id);
             if(!gang) return;
-            const newName = prompt("تعديل اسم العصابة:", gang.name);
-            const newLeader = prompt("تعديل اسم القائد:", gang.leader);
-            const newDeputy = prompt("تعديل النائب:", gang.deputy);
-            const newMembers = prompt("تعديل الأعضاء (افصل بفاصلة):", gang.members);
-            if(newName) {
-                gang.name = newName;
-                if(newLeader) gang.leader = newLeader;
-                if(newDeputy) gang.deputy = newDeputy;
-                if(newMembers) gang.members = newMembers;
-                await saveCloudData();
-            }
+
+            const modalContent = `
+                <div class="input-group">
+                    <label>اسم العصابة / التنظيم</label>
+                    <input type="text" id="editGangName" value="${gang.name}">
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                    <div class="input-group">
+                        <label>اسم הקائد (Leader)</label>
+                        <input type="text" id="editGangLeader" value="${gang.leader || ''}">
+                    </div>
+                    <div class="input-group">
+                        <label>اسم النائب (Deputy)</label>
+                        <input type="text" id="editGangDeputy" value="${gang.deputy || ''}">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>الأعضاء (افصل بفاصلة)</label>
+                    <input type="text" id="editGangMembers" value="${gang.members || ''}">
+                </div>
+                <div class="input-group">
+                    <label>تفاصيل المخطط والنشاطات</label>
+                    <textarea id="editGangDetails" rows="3">${gang.details || ''}</textarea>
+                </div>
+            `;
+
+            openCustomModal("✏️ تعديل ملف الشجرة الهيكلية للعصابة", modalContent, async () => {
+                const newName = document.getElementById("editGangName").value.trim();
+                const newLeader = document.getElementById("editGangLeader").value.trim();
+                const newDeputy = document.getElementById("editGangDeputy").value.trim();
+                const newMembers = document.getElementById("editGangMembers").value.trim();
+                const newDetails = document.getElementById("editGangDetails").value.trim();
+
+                if (newName) {
+                    gang.name = newName;
+                    gang.leader = newLeader;
+                    gang.deputy = newDeputy;
+                    gang.members = newMembers;
+                    gang.details = newDetails;
+                    await saveCloudData();
+                }
+            });
         }
 
         async function deleteGang(id) {
@@ -1520,8 +1710,7 @@
             alert(`تم إضافة الحساب (${user}) أونلاين بنجاح!`);
         }
 
-        /* دالة تعديل بيانات ورتب الأعضاء */
-        async function editUser(username) {
+        function editUser(username) {
             const isDirector = globalDatabase.users[currentUser]?.role === "DIRECTOR";
             const userObj = globalDatabase.users[username];
             if(!userObj) return;
@@ -1530,12 +1719,26 @@
                 return alert("⚠️ فقط المدير (DIRECTOR) يمكنه تعديل رتب الأعضاء الآخرين!");
             }
 
-            const newRole = prompt(`تعديل رتبة الوكيل (${username}):\n(مثال: SPECIAL AGENT, CID Member, FIELD AGENT, DIRECTOR)`, userObj.role);
-            if(newRole) {
-                userObj.role = newRole;
-                addLog(`قام [${currentUser}] بتعديل رتبة [${username}] إلى ${newRole}`);
-                await saveCloudData();
-            }
+            const modalContent = `
+                <div class="input-group">
+                    <label>الرتبة التشغيلية الجديدة للوكيل (${username})</label>
+                    <select id="editUserRole">
+                        <option value="SPECIAL AGENT" ${userObj.role === "SPECIAL AGENT" ? "selected" : ""}>SPECIAL AGENT</option>
+                        <option value="CID Member" ${userObj.role === "CID Member" ? "selected" : ""}>CID Member</option>
+                        <option value="FIELD AGENT" ${userObj.role === "FIELD AGENT" ? "selected" : ""}>FIELD AGENT</option>
+                        <option value="DIRECTOR" ${userObj.role === "DIRECTOR" ? "selected" : ""}>DIRECTOR</option>
+                    </select>
+                </div>
+            `;
+
+            openCustomModal(`✏️ تعديل رتبة الوكيل: ${username}`, modalContent, async () => {
+                const newRole = document.getElementById("editUserRole").value;
+                if(newRole) {
+                    userObj.role = newRole;
+                    addLog(`قام [${currentUser}] بتعديل رتبة [${username}] إلى ${newRole}`);
+                    await saveCloudData();
+                }
+            });
         }
 
         async function deleteAccount(username) {
