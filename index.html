@@ -134,6 +134,7 @@
         .modal-title { color: var(--gold-color); font-size: 16px; font-weight: bold; }
         .modal-close { cursor: pointer; color: var(--text-muted); font-size: 18px; font-weight: bold; }
         .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+        
         /* وثيقة التقرير الاستخباراتي */
         .cia-classified-doc { background: #f4f4f0; color: #111; padding: 30px; border-radius: 6px; border: 2px solid #333; font-family: 'Courier New', Courier, monospace; position: relative; direction: rtl; text-align: right; overflow: hidden; font-weight: bold; }
         .cia-classified-doc::before {
@@ -157,9 +158,14 @@
         .cia-doc-meta { font-size: 12px; color: #111; margin-bottom: 10px; line-height: 1.5; border-bottom: 1px solid #b5b9c0; padding-bottom: 8px; position: relative; z-index: 1; font-weight: bold; }
         .cia-doc-body { background: transparent; padding: 2px 0 8px 0; min-height: 120px; font-size: 13px; color: #111; line-height: 1.5; position: relative; z-index: 1; font-weight: bold; white-space: pre-wrap; word-break: break-word; }
         
-        /* ملف الأدلة الاستخباراتي المصغر */
-        .evidence-folder-box { background: rgba(255, 255, 255, 0.9); border: 1.5px dashed #b91c1c; border-radius: 6px; padding: 15px; margin-top: 15px; position: relative; z-index: 1; }
-        .evidence-folder-title { font-size: 11px; font-weight: 900; color: #b91c1c; letter-spacing: 1px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; border-bottom: 1px dashed #ccc; padding-bottom: 5px; }
+        /* ملف الأدلة الاستخباراتي المصغر والجديد */
+        .evidence-folder-box { background: rgba(0, 0, 0, 0.04); border: 1.5px dashed #b91c1c; border-radius: 6px; padding: 12px; margin-top: 15px; position: relative; z-index: 1; }
+        .evidence-folder-title { font-size: 11px; font-weight: 900; color: #b91c1c; letter-spacing: 1px; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .evidence-toggle-btn { background: #b91c1c; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: background 0.2s; }
+        .evidence-toggle-btn:hover { background: #8e1515; }
+        .evidence-content-wrapper { display: none; margin-top: 12px; padding-top: 10px; border-top: 1px dashed #bbb; }
+        .evidence-item-card { background: #fff; border: 1px solid #ccc; border-radius: 6px; padding: 8px; margin-bottom: 10px; }
+
         .broadcast-card-floating { display: none; position: fixed; bottom: 25px; left: 25px; width: 320px; background: rgba(11, 16, 23, 0.95); border: 1px solid var(--danger-color); border-radius: 10px; padding: 16px; z-index: 900; }
         .chat-box-container { height: 380px; overflow-y: auto; background: rgba(4, 6, 10, 0.8); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 12px; }
         .chat-msg { max-width: 80%; padding: 10px 14px; border-radius: 8px; font-size: 12px; line-height: 1.5; }
@@ -503,7 +509,19 @@
                 reader.readAsDataURL(file);
             });
         }
-        /* قالب الوثيقة مع الاعتماد على روابط الصور والفيديوهات */
+        /* دالة فتح/إغلاق استعراض الأدلة المرفقة داخل الوثيقة */
+        function toggleEvidenceContent() {
+            const wrapper = document.getElementById("evidenceContentWrapper");
+            const btn = document.getElementById("evidenceToggleBtn");
+            if (wrapper.style.display === "none" || wrapper.style.display === "") {
+                wrapper.style.display = "block";
+                btn.innerHTML = "👁️ إخفاء الأدلة المرفقة";
+            } else {
+                wrapper.style.display = "none";
+                btn.innerHTML = "👁️ عرض الأدلة المرفقة";
+            }
+        }
+        /* قالب الوثيقة مع خيار الروابط المتعددة المخبأة زر للفتح */
         function getReportDocHtml(titleVal = "", detailsVal = "", imageUrlVal = "", videoUrlVal = "", authorVal = currentUser, dateVal = new Date().toLocaleDateString(), dayVal = new Date().toLocaleDateString('ar-EG', { weekday: 'long' }), isEdit = false) {
             return `
                 <div class="cia-classified-doc">
@@ -525,16 +543,22 @@
                         ${isEdit ? `<textarea id="editReportDetails" rows="5" style="width:100%; padding:6px; background:transparent; border:1px solid #999; font-weight:bold; white-space:pre-wrap;">${detailsVal}</textarea>` : `<textarea id="popReportDetails" rows="5" placeholder="تفاصيل العملية والتحريات..." style="width:100%; padding:6px; background:transparent; border:1px solid #999; font-weight:bold; white-space:pre-wrap;"></textarea>`}
                         
                         ${!isEdit ? `
-                            <div class="input-group" style="margin-top:8px;"><label style="color:#111; font-weight:bold;">🔗 رابط صورة الدليل</label><input type="url" id="popReportImageUrl" placeholder="https://..." style="background:#fff; color:#111;"></div>
-                            <div class="input-group" style="margin-top:4px;"><label style="color:#111; font-weight:bold;">🔗 رابط فيديو الدليل</label><input type="url" id="popReportVideoUrl" placeholder="https://..." style="background:#fff; color:#111;"></div>
-                        ` : `
                             <div class="input-group" style="margin-top:8px;">
-                                <label style="color:#111; font-weight:bold;">🔗 رابط صورة الدليل</label>
-                                <input type="url" id="editReportImageUrl" value="${imageUrlVal || ''}" placeholder="https://..." style="background:#fff; color:#111;">
+                                <label style="color:#111; font-weight:bold;">🔗 روابط الصور (أدخل كل رابط في سطر جديد)</label>
+                                <textarea id="popReportImageUrl" rows="2" placeholder="https://image1.jpg&#10;https://image2.jpg" style="background:#fff; color:#111; font-weight:normal;"></textarea>
                             </div>
                             <div class="input-group" style="margin-top:4px;">
-                                <label style="color:#111; font-weight:bold;">🔗 رابط فيديو الدليل</label>
-                                <input type="url" id="editReportVideoUrl" value="${videoUrlVal || ''}" placeholder="https://..." style="background:#fff; color:#111;">
+                                <label style="color:#111; font-weight:bold;">🔗 روابط الفيديوهات (أدخل كل رابط في سطر جديد)</label>
+                                <textarea id="popReportVideoUrl" rows="2" placeholder="https://video1.mp4&#10;https://video2.mp4" style="background:#fff; color:#111; font-weight:normal;"></textarea>
+                            </div>
+                        ` : `
+                            <div class="input-group" style="margin-top:8px;">
+                                <label style="color:#111; font-weight:bold;">🔗 روابط الصور (كل رابط في سطر)</label>
+                                <textarea id="editReportImageUrl" rows="2" style="background:#fff; color:#111; font-weight:normal;">${imageUrlVal || ''}</textarea>
+                            </div>
+                            <div class="input-group" style="margin-top:4px;">
+                                <label style="color:#111; font-weight:bold;">🔗 روابط الفيديوهات (كل رابط في سطر)</label>
+                                <textarea id="editReportVideoUrl" rows="2" style="background:#fff; color:#111; font-weight:normal;">${videoUrlVal || ''}</textarea>
                             </div>
                         `}
                     </div>
@@ -567,14 +591,36 @@
             
             let evidenceHtml = '';
             if (r.imageUrl || r.videoUrl) {
+                const imagesList = r.imageUrl ? r.imageUrl.split('\n').filter(url => url.trim() !== '') : [];
+                const videosList = r.videoUrl ? r.videoUrl.split('\n').filter(url => url.trim() !== '') : [];
+                
+                let itemsRendered = '';
+                imagesList.forEach((img, index) => {
+                    itemsRendered += `
+                        <div class="evidence-item-card">
+                            <b style="font-size:10px; color:#111;">📷 صورة الدليل #${index + 1}:</b><br>
+                            <img src="${img.trim()}" class="img-preview" style="border:1px solid #333;">
+                        </div>`;
+                });
+                videosList.forEach((vid, index) => {
+                    itemsRendered += `
+                        <div class="evidence-item-card">
+                            <b style="font-size:10px; color:#111;">🎥 فيديو الدليل #${index + 1}:</b><br>
+                            <video controls src="${vid.trim()}" style="border:1px solid #333;"></video>
+                        </div>`;
+                });
+
                 evidenceHtml = `
                     <div class="evidence-folder-box">
-                        <div class="evidence-folder-title">📁 [ملف الأدلة المرفقة] - CLASSIFIED EVIDENCE</div>
-                        ${r.imageUrl ? `<div style="margin-bottom:8px;"><b style="font-size:10px; color:#111;">صورة الدليل:</b><br><img src="${r.imageUrl}" class="img-preview" style="border:1px solid #333;"></div>` : ''}
-                        ${r.videoUrl ? `<div><b style="font-size:10px; color:#111;">فيديو الدليل:</b><br><video controls src="${r.videoUrl}" style="border:1px solid #333;"></video></div>` : ''}
+                        <div class="evidence-folder-title">📁 [ الأدلة المرفقة] - CLASSIFIED EVIDENCE</div>
+                        <button type="button" class="evidence-toggle-btn" id="evidenceToggleBtn" onclick="toggleEvidenceContent()">👁️ عرض الأدلة المرفقة</button>
+                        <div class="evidence-content-wrapper" id="evidenceContentWrapper">
+                            ${itemsRendered}
+                        </div>
                     </div>
                 `;
             }
+
             const contentHtml = `
                 <div style="display:flex; justify-content:flex-end; gap:5px; margin-bottom:10px;">
                     <button class="btn-edit-item" onclick="editReport(${r.id})">تعديل ✏️</button>
