@@ -102,7 +102,7 @@
         .log-box { background: rgba(0, 0, 0, 0.8); border: 1px solid var(--border-color); border-radius: 6px; padding: 15px; font-family: monospace; font-size: 12px; color: #10b981; margin-top: 20px; max-height: 180px; overflow-y: auto; }
         .badge-danger { background: var(--danger-color); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 3px; }
         .action-btns { display: flex; gap: 8px; }
-        .btn-del-item { background: var(--danger-color); color: #fff; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; }
+        .btn-del-item { background: var(--danger-color); color: #fff; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; position: static !important; }
         .btn-edit-item { background: var(--gold-color); color: #000; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; }
         
         .tree-container { margin-top: 15px; padding: 15px; background: rgba(2, 4, 7, 0.9); border: 1px dashed var(--gold-color); border-radius: 8px; text-align: center; }
@@ -209,9 +209,11 @@
             </div>
         </div>
 
+        <!-- مركز الإدارة المخصص لإدارة الأعضاء (تعديل وحذف) -->
         <div class="workspace-panel leader-panel" id="leaderSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-top:0;">👑 مركز إدارة التراخيص والسرية</h3>
+            <p style="font-size:12px; color:#94a3b8; margin-bottom: 15px;">إنشاء، تعديل، وحذف حسابات الوكلاء أونلاين:</p>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
                 <div class="input-group"><label>اسم الوكيل</label><input type="text" id="new-username" placeholder="Username"></div>
                 <div class="input-group"><label>المعرف (Badge ID)</label><input type="text" id="new-id" placeholder="CIA-709"></div>
@@ -228,7 +230,7 @@
                 </div>
             </div>
             <button class="btn-login" style="background:var(--success-color);" onclick="createAccount()">➕ إضافة الحساب أونلاين</button>
-            <div id="users-container" style="margin-top:15px;"></div>
+            <div id="users-management-list" style="margin-top:20px;"></div>
         </div>
 
         <div class="workspace-panel" id="reportsSection">
@@ -490,7 +492,7 @@
             document.getElementById("customModal").style.display = "none";
         }
 
-        /* التقارير (شاملة الصور والفيديو) */
+        /* التقارير */
         function openCreateReportModal() {
             openCustomModal("➕ إضافة تقرير جديد", `
                 <div class="input-group"><label>عنوان التقرير</label><input type="text" id="popReportTitle"></div>
@@ -556,7 +558,7 @@
             if (confirm("حذف؟")) { globalDatabase.reports = globalDatabase.reports.filter(r => r.id !== id); await saveCloudData(); closeModal(); }
         }
 
-        /* المطلوبين (شامل الخطورة والتهم) */
+        /* المطلوبين */
         function openCreateWantedModal() {
             openCustomModal("➕ مطلوب جديد", `
                 <div class="input-group"><label>اسم المطلوب</label><input type="text" id="popWantedName"></div>
@@ -615,7 +617,7 @@
             if (confirm("حذف؟")) { globalDatabase.wanted = globalDatabase.wanted.filter(w => w.id !== id); await saveCloudData(); closeModal(); }
         }
 
-        /* السجلات والهويات (الاسم، الهوية، الجنس، الصورة، والملاحظات) */
+        /* السجلات والهويات */
         function openCreateRecordModal() {
             openCustomModal("🪪 هوية جديدة", `
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
@@ -705,7 +707,7 @@
             if (confirm("حذف؟")) { globalDatabase.records = globalDatabase.records.filter(r => r.id !== id); await saveCloudData(); closeModal(); }
         }
 
-        /* العصابات (القائد، النائب، الأعضاء، والتفاصيل) */
+        /* العصابات */
         function openCreateGangModal() {
             openCustomModal("🏴‍☠️ عصابة جديدة", `
                 <div class="input-group"><label>اسم العصابة</label><input type="text" id="popGangName"></div>
@@ -785,19 +787,72 @@
             if (confirm("حذف؟")) { globalDatabase.gangs = globalDatabase.gangs.filter(g => g.id !== id); await saveCloudData(); closeModal(); }
         }
 
+        /* مركز الإدارة والأعضاء */
         async function createAccount() {
             const user = document.getElementById("new-username").value.trim();
-            if (!user) return;
-            globalDatabase.users[user] = { password: document.getElementById("new-password").value.trim(), pin: document.getElementById("new-pin").value.trim(), id: document.getElementById("new-id").value.trim(), role: document.getElementById("new-role").value };
-            await saveCloudData(); alert("تم إضافة الحساب بنجاح!");
+            if (!user) return alert("أدخل اسم الوكيل!");
+            globalDatabase.users[user] = { 
+                password: document.getElementById("new-password").value.trim(), 
+                pin: document.getElementById("new-pin").value.trim(), 
+                id: document.getElementById("new-id").value.trim(), 
+                role: document.getElementById("new-role").value 
+            };
+            await saveCloudData(); 
+            alert("تم إضافة الحساب بنجاح!");
+        }
+
+        function editUser(username) {
+            const u = globalDatabase.users[username];
+            if (!u) return;
+            openCustomModal(`✏️ تعديل رتبة الوكيل: ${username}`, `
+                <div class="input-group">
+                    <label>الرتبة التشغيلية الجديدة</label>
+                    <select id="editUserRole">
+                        <option value="SPECIAL AGENT" ${u.role==="SPECIAL AGENT"?"selected":""}>SPECIAL AGENT</option>
+                        <option value="CID Member" ${u.role==="CID Member"?"selected":""}>CID Member</option>
+                        <option value="FIELD AGENT" ${u.role==="FIELD AGENT"?"selected":""}>FIELD AGENT</option>
+                        <option value="DIRECTOR" ${u.role==="DIRECTOR"?"selected":""}>DIRECTOR</option>
+                    </select>
+                </div>
+            `, async () => {
+                u.role = document.getElementById("editUserRole").value;
+                await saveCloudData(); 
+                closeModal();
+            });
+        }
+
+        async function deleteAccount(username) {
+            if (username === "Majed") return alert("لا يمكن حذف المدير الرئيسي!");
+            if (confirm(`حذف الحساب (${username})؟`)) {
+                delete globalDatabase.users[username];
+                await saveCloudData();
+            }
         }
 
         function renderUsers() {
             const tbody = document.getElementById("users-table-body");
+            const managementList = document.getElementById("users-management-list");
+            
             if (tbody) {
                 tbody.innerHTML = "";
                 for (let user in globalDatabase.users) {
                     tbody.innerHTML += `<tr><td>${user}</td><td>${globalDatabase.users[user].id}</td><td>${globalDatabase.users[user].role}</td></tr>`;
+                }
+            }
+
+            if (managementList) {
+                managementList.innerHTML = "";
+                for (let user in globalDatabase.users) {
+                    const u = globalDatabase.users[user];
+                    managementList.innerHTML += `
+                        <div class="user-list-item">
+                            <div><b>${user}</b> (${u.id}) - <small style="color:var(--gold-color);">${u.role}</small></div>
+                            <div class="action-btns">
+                                <button class="btn-edit-item" onclick="editUser('${user}')">تعديل ✏️</button>
+                                ${user !== 'Majed' ? `<button class="btn-del-item" onclick="deleteAccount('${user}')">حذف 🗑️</button>` : ''}
+                            </div>
+                        </div>
+                    `;
                 }
             }
         }
