@@ -344,10 +344,10 @@
         };
         let currentUser = "";
         let isSaving = false;
-        let isModalOpen = false; // يمنع تداخل المزامنة أثناء التعديل
+        let isModalOpen = false;
 
         async function fetchCloudData() {
-            if (isSaving || isModalOpen) return; // حماية كاملة لمنع ضياع التعديلات أثناء الكتابة
+            if (isSaving || isModalOpen) return;
             try {
                 const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest?nocache=${Date.now()}`, {
                     headers: { "X-Master-Key": API_KEY }
@@ -459,8 +459,18 @@
             await saveCloudData();
         }
 
+        function readFileAsBase64(file) {
+            return new Promise((resolve) => {
+                if (!file) return resolve("");
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => resolve("");
+                reader.readAsDataURL(file);
+            });
+        }
+
         function openCustomModal(title, html, onSave) {
-            isModalOpen = true; // إيقاف التحديث التلقائي للسحابة تماماً أثناء التعديل لمنع مسح الحقول
+            isModalOpen = true;
             document.getElementById("modalTitle").innerText = title;
             document.getElementById("modalBody").innerHTML = html;
             document.getElementById("customModal").style.display = "flex";
@@ -476,21 +486,29 @@
         }
 
         function closeModal() {
-            isModalOpen = false; // إعادة السماح بالمزامنة بعد إغلاق النافذة
+            isModalOpen = false;
             document.getElementById("customModal").style.display = "none";
         }
 
-        /* التقارير */
+        /* التقارير (شاملة الصور والفيديو) */
         function openCreateReportModal() {
             openCustomModal("➕ إضافة تقرير جديد", `
-                <div class="input-group"><label>العنوان</label><input type="text" id="popReportTitle"></div>
+                <div class="input-group"><label>عنوان التقرير</label><input type="text" id="popReportTitle"></div>
                 <div class="input-group"><label>التفاصيل</label><textarea id="popReportDetails" rows="4"></textarea></div>
-                <div class="input-group"><label>Citizen ID</label><input type="text" id="popReportCitizen"></div>
+                <div class="input-group"><label>Citizen ID المرتبط</label><input type="text" id="popReportCitizen" placeholder="CIA-102"></div>
+                <div class="input-group"><label>📁 إرفاق صورة دليل</label><input type="file" id="popReportImageFile" accept="image/*"></div>
+                <div class="input-group"><label>🎥 إرفاق فيديو دليل</label><input type="file" id="popReportVideoFile" accept="video/*"></div>
             `, async () => {
                 const title = document.getElementById("popReportTitle").value.trim();
                 const details = document.getElementById("popReportDetails").value.trim();
                 if (!title) return alert("أدخل العنوان!");
-                globalDatabase.reports.push({ id: Date.now(), title, details, citizen: document.getElementById("popReportCitizen").value.trim(), author: currentUser, date: new Date().toLocaleTimeString('ar-EG') });
+                const img = await readFileAsBase64(document.getElementById("popReportImageFile").files[0]);
+                const vid = await readFileAsBase64(document.getElementById("popReportVideoFile").files[0]);
+                globalDatabase.reports.push({ 
+                    id: Date.now(), title, details, 
+                    citizen: document.getElementById("popReportCitizen").value.trim(), 
+                    image: img, video: vid, author: currentUser, date: new Date().toLocaleTimeString('ar-EG') 
+                });
                 await saveCloudData(); closeModal();
             });
         }
@@ -503,7 +521,9 @@
                     <button class="btn-edit-item" onclick="editReport(${r.id})">تعديل ✏️</button>
                     <button class="btn-del-item" onclick="deleteReport(${r.id})">حذف 🗑️</button>
                 </div>
-                <div style="background:rgba(4,6,10,0.8); padding:12px; border-radius:6px; color:#e2e8f0;">${r.details}</div>
+                <div style="background:rgba(4,6,10,0.8); padding:12px; border-radius:6px; color:#e2e8f0; line-height:1.6;">${r.details}</div>
+                ${r.image ? `<div style="margin-top:10px;"><small style="color:var(--gold-color);">الصورة المرفقة:</small><br><img src="${r.image}" class="img-preview"></div>` : ''}
+                ${r.video ? `<div style="margin-top:10px;"><small style="color:var(--gold-color);">الفيديو المرفق:</small><br><video controls src="${r.video}"></video></div>` : ''}
             `, null);
             document.getElementById("modalSaveBtn").style.display = "none";
         }
@@ -536,14 +556,19 @@
             if (confirm("حذف؟")) { globalDatabase.reports = globalDatabase.reports.filter(r => r.id !== id); await saveCloudData(); closeModal(); }
         }
 
-        /* المطلوبين */
+        /* المطلوبين (شامل الخطورة والتهم) */
         function openCreateWantedModal() {
             openCustomModal("➕ مطلوب جديد", `
-                <div class="input-group"><label>الاسم</label><input type="text" id="popWantedName"></div>
-                <div class="input-group"><label>الخطورة</label><select id="popWantedRisk"><option>🟡 منخفض</option><option>🟠 متوسط</option><option>🔴 خطير جداً</option></select></div>
-                <div class="input-group"><label>التهم</label><textarea id="popWantedCrime" rows="3"></textarea></div>
+                <div class="input-group"><label>اسم المطلوب</label><input type="text" id="popWantedName"></div>
+                <div class="input-group"><label>مستوى الخطورة</label><select id="popWantedRisk"><option>🟡 منخفض الخطورة</option><option>🟠 متوسط الخطورة</option><option>🔴 خطر جداً</option></select></div>
+                <div class="input-group"><label>التهم الجنائية</label><textarea id="popWantedCrime" rows="3"></textarea></div>
             `, async () => {
-                globalDatabase.wanted.push({ id: Date.now(), name: document.getElementById("popWantedName").value.trim(), risk: document.getElementById("popWantedRisk").value, crime: document.getElementById("popWantedCrime").value.trim() });
+                globalDatabase.wanted.push({ 
+                    id: Date.now(), 
+                    name: document.getElementById("popWantedName").value.trim(), 
+                    risk: document.getElementById("popWantedRisk").value, 
+                    crime: document.getElementById("popWantedCrime").value.trim() 
+                });
                 await saveCloudData(); closeModal();
             });
         }
@@ -557,7 +582,7 @@
                     <button class="btn-del-item" onclick="deleteWanted(${w.id})">حذف 🗑️</button>
                 </div>
                 <div><span class="badge-danger">${w.risk}</span></div>
-                <div style="background:rgba(4,6,10,0.8); padding:12px; border-radius:6px; margin-top:10px;">${w.crime}</div>
+                <div style="background:rgba(4,6,10,0.8); padding:12px; border-radius:6px; margin-top:10px;"><b>التهم:</b><br>${w.crime}</div>
             `, null);
             document.getElementById("modalSaveBtn").style.display = "none";
         }
@@ -566,8 +591,8 @@
             const w = globalDatabase.wanted.find(item => item.id === id);
             if (!w) return;
             openCustomModal("✏️ تعديل المطلوب", `
-                <div class="input-group"><label>الاسم</label><input type="text" id="editWantedName" value="${w.name}"></div>
-                <div class="input-group"><label>الخطورة</label><select id="editWantedRisk"><option ${w.risk.includes("منخفض")?"selected":""}>🟡 منخفض</option><option ${w.risk.includes("متوسط")?"selected":""}>🟠 متوسط</option><option ${w.risk.includes("خطير")?"selected":""}>🔴 خطير جداً</option></select></div>
+                <div class="input-group"><label>اسم المطلوب</label><input type="text" id="editWantedName" value="${w.name}"></div>
+                <div class="input-group"><label>مستوى الخطورة</label><select id="editWantedRisk"><option ${w.risk.includes("منخفض")?"selected":""}>🟡 منخفض الخطورة</option><option ${w.risk.includes("متوسط")?"selected":""}>🟠 متوسط الخطورة</option><option ${w.risk.includes("خطر")?"selected":""}>🔴 خطر جداً</option></select></div>
                 <div class="input-group"><label>التهم</label><textarea id="editWantedCrime" rows="3">${w.crime}</textarea></div>
             `, async () => {
                 w.name = document.getElementById("editWantedName").value.trim();
@@ -590,17 +615,32 @@
             if (confirm("حذف؟")) { globalDatabase.wanted = globalDatabase.wanted.filter(w => w.id !== id); await saveCloudData(); closeModal(); }
         }
 
-        /* السجلات والهويات */
+        /* السجلات والهويات (الاسم، الهوية، الجنس، الصورة، والملاحظات) */
         function openCreateRecordModal() {
             openCustomModal("🪪 هوية جديدة", `
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                     <div class="input-group"><label>الاسم الأول</label><input type="text" id="popRecFirstName"></div>
                     <div class="input-group"><label>الاسم الأخير</label><input type="text" id="popRecLastName"></div>
                 </div>
-                <div class="input-group"><label>Citizen ID</label><input type="text" id="popRecId"></div>
-                <div class="input-group"><label>الملاحظات</label><textarea id="popRecNotes" rows="3"></textarea></div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                    <div class="input-group"><label>Citizen ID</label><input type="text" id="popRecId" placeholder="CIA-102"></div>
+                    <div class="input-group"><label>الجنس</label><select id="popRecSex"><option value="MALE">ذكر / MALE</option><option value="FEMALE">أنثى / FEMALE</option></select></div>
+                </div>
+                <div class="input-group"><label>📁 صورة الهوية</label><input type="file" id="popRecPhotoFile" accept="image/*"></div>
+                <div class="input-group"><label>السجل والملاحظات</label><textarea id="popRecNotes" rows="3"></textarea></div>
             `, async () => {
-                globalDatabase.records.push({ id: Date.now(), firstName: document.getElementById("popRecFirstName").value.trim(), lastName: document.getElementById("popRecLastName").value.trim(), cid: document.getElementById("popRecId").value.trim() || "N/A", notes: document.getElementById("popRecNotes").value.trim() });
+                const fn = document.getElementById("popRecFirstName").value.trim();
+                const ln = document.getElementById("popRecLastName").value.trim();
+                if (!fn || !ln) return alert("أدخل اسم المواطن!");
+                const photo = await readFileAsBase64(document.getElementById("popRecPhotoFile").files[0]);
+                globalDatabase.records.push({ 
+                    id: Date.now(), 
+                    firstName: fn, lastName: ln, 
+                    cid: document.getElementById("popRecId").value.trim() || "N/A", 
+                    sex: document.getElementById("popRecSex").value, 
+                    notes: document.getElementById("popRecNotes").value.trim(), 
+                    photo 
+                });
                 await saveCloudData(); closeModal();
             });
         }
@@ -614,8 +654,15 @@
                     <button class="btn-del-item" onclick="deleteRecord(${r.id})">حذف 🗑️</button>
                 </div>
                 <div class="id-card-tactical">
-                    <div class="id-card-header">ID: ${r.cid}</div>
-                    <div class="id-card-body"><div><b>الاسم:</b> ${r.firstName} ${r.lastName}</div></div>
+                    <div class="id-card-header">IDENTIFICATION CARD</div>
+                    <div class="id-card-body">
+                        <div class="id-card-photo-box"><img src="${r.photo || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=300&h=350'}"></div>
+                        <div class="id-card-details">
+                            <div class="id-field-group"><span class="id-field-label">ID</span><span class="id-field-val">${r.cid}</span></div>
+                            <div class="id-field-group"><span class="id-field-label">NAME</span><span class="id-field-val">${r.firstName} ${r.lastName}</span></div>
+                            <div class="id-field-group"><span class="id-field-label">SEX</span><span class="id-field-val">${r.sex}</span></div>
+                        </div>
+                    </div>
                     <div class="id-card-notes"><b>ملاحظات:</b> ${r.notes}</div>
                 </div>
             `, null);
@@ -630,12 +677,16 @@
                     <div class="input-group"><label>الاسم الأول</label><input type="text" id="editRecFirstName" value="${r.firstName}"></div>
                     <div class="input-group"><label>الاسم الأخير</label><input type="text" id="editRecLastName" value="${r.lastName}"></div>
                 </div>
-                <div class="input-group"><label>Citizen ID</label><input type="text" id="editRecCid" value="${r.cid}"></div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                    <div class="input-group"><label>Citizen ID</label><input type="text" id="editRecCid" value="${r.cid}"></div>
+                    <div class="input-group"><label>الجنس</label><select id="editRecSex"><option value="MALE" ${r.sex==="MALE"?"selected":""}>ذكر</option><option value="FEMALE" ${r.sex==="FEMALE"?"selected":""}>أنثى</option></select></div>
+                </div>
                 <div class="input-group"><label>الملاحظات</label><textarea id="editRecNotes" rows="3">${r.notes}</textarea></div>
             `, async () => {
                 r.firstName = document.getElementById("editRecFirstName").value.trim();
                 r.lastName = document.getElementById("editRecLastName").value.trim();
                 r.cid = document.getElementById("editRecCid").value.trim();
+                r.sex = document.getElementById("editRecSex").value;
                 r.notes = document.getElementById("editRecNotes").value.trim();
                 await saveCloudData(); closeModal();
             });
@@ -654,14 +705,27 @@
             if (confirm("حذف؟")) { globalDatabase.records = globalDatabase.records.filter(r => r.id !== id); await saveCloudData(); closeModal(); }
         }
 
-        /* العصابات */
+        /* العصابات (القائد، النائب، الأعضاء، والتفاصيل) */
         function openCreateGangModal() {
             openCustomModal("🏴‍☠️ عصابة جديدة", `
                 <div class="input-group"><label>اسم العصابة</label><input type="text" id="popGangName"></div>
-                <div class="input-group"><label>القائد</label><input type="text" id="popGangLeader"></div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                    <div class="input-group"><label>👑 الرئيس</label><input type="text" id="popGangLeader"></div>
+                    <div class="input-group"><label>🎖️ النائب</label><input type="text" id="popGangDeputy"></div>
+                </div>
+                <div class="input-group"><label>👥 الأعضاء (افصل بينهم بفاصلة)</label><input type="text" id="popGangMembers" placeholder="عضو 1, عضو 2"></div>
                 <div class="input-group"><label>التفاصيل</label><textarea id="popGangDetails" rows="3"></textarea></div>
             `, async () => {
-                globalDatabase.gangs.push({ id: Date.now(), name: document.getElementById("popGangName").value.trim(), leader: document.getElementById("popGangLeader").value.trim(), details: document.getElementById("popGangDetails").value.trim() });
+                const name = document.getElementById("popGangName").value.trim();
+                if (!name) return alert("أدخل اسم العصابة!");
+                globalDatabase.gangs.push({ 
+                    id: Date.now(), 
+                    name, 
+                    leader: document.getElementById("popGangLeader").value.trim(), 
+                    deputy: document.getElementById("popGangDeputy").value.trim(), 
+                    members: document.getElementById("popGangMembers").value.trim(), 
+                    details: document.getElementById("popGangDetails").value.trim() 
+                });
                 await saveCloudData(); closeModal();
             });
         }
@@ -669,13 +733,20 @@
         function viewGangFolder(id) {
             const g = globalDatabase.gangs.find(item => item.id === id);
             if (!g) return;
+            const members = g.members ? g.members.split(',') : [];
             openCustomModal(`🏴‍☠️ عصابة: ${g.name}`, `
                 <div class="action-btns" style="margin-bottom:10px;">
                     <button class="btn-edit-item" onclick="editGang(${g.id})">تعديل ✏️</button>
                     <button class="btn-del-item" onclick="deleteGang(${g.id})">حذف 🗑️</button>
                 </div>
                 <div style="background:rgba(4,6,10,0.8); padding:10px; border-radius:6px; margin-bottom:10px;">${g.details || ''}</div>
-                <div class="tree-container"><div class="tree-node tree-leader">👑 الرئيس: ${g.leader || 'غير معروف'}</div></div>
+                <div class="tree-container">
+                    <div class="tree-node tree-leader">👑 الرئيس: ${g.leader || 'غير معروف'}</div>
+                    <div class="tree-line"></div>
+                    <div class="tree-node tree-deputy">🎖️ النائب: ${g.deputy || 'غير معروف'}</div>
+                    <div class="tree-line"></div>
+                    <div>${members.map(m => `<div class="tree-node tree-members">👤 ${m.trim()}</div>`).join('')}</div>
+                </div>
             `, null);
             document.getElementById("modalSaveBtn").style.display = "none";
         }
@@ -685,11 +756,17 @@
             if (!g) return;
             openCustomModal("✏️ تعديل العصابة", `
                 <div class="input-group"><label>اسم العصابة</label><input type="text" id="editGangName" value="${g.name}"></div>
-                <div class="input-group"><label>القائد</label><input type="text" id="editGangLeader" value="${g.leader || ''}"></div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                    <div class="input-group"><label>👑 الرئيس</label><input type="text" id="editGangLeader" value="${g.leader || ''}"></div>
+                    <div class="input-group"><label>🎖️ النائب</label><input type="text" id="editGangDeputy" value="${g.deputy || ''}"></div>
+                </div>
+                <div class="input-group"><label>👥 الأعضاء</label><input type="text" id="editGangMembers" value="${g.members || ''}"></div>
                 <div class="input-group"><label>التفاصيل</label><textarea id="editGangDetails" rows="3">${g.details || ''}</textarea></div>
             `, async () => {
                 g.name = document.getElementById("editGangName").value.trim();
                 g.leader = document.getElementById("editGangLeader").value.trim();
+                g.deputy = document.getElementById("editGangDeputy").value.trim();
+                g.members = document.getElementById("editGangMembers").value.trim();
                 g.details = document.getElementById("editGangDetails").value.trim();
                 await saveCloudData(); closeModal();
             });
