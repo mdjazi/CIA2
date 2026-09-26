@@ -165,7 +165,6 @@
         .evidence-toggle-btn:hover { background: #8e1515; }
         .evidence-content-wrapper { display: none; margin-top: 12px; padding-top: 10px; border-top: 1px dashed #bbb; }
         .evidence-item-card { background: #fff; border: 1px solid #ccc; border-radius: 6px; padding: 8px; margin-bottom: 10px; }
-
         .broadcast-card-floating { display: none; position: fixed; bottom: 25px; left: 25px; width: 320px; background: rgba(11, 16, 23, 0.95); border: 1px solid var(--danger-color); border-radius: 10px; padding: 16px; z-index: 900; }
         .chat-box-container { height: 380px; overflow-y: auto; background: rgba(4, 6, 10, 0.8); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 12px; }
         .chat-msg { max-width: 80%; padding: 10px 14px; border-radius: 8px; font-size: 12px; line-height: 1.5; }
@@ -294,16 +293,16 @@
         </div>
         <div class="workspace-panel" id="casesSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            <h3 style="color:var(--gold-color); margin-bottom: 20px;">🔓 قسم التشفير وفك التشفير 🔒</h3>
+            <h3 style="color:var(--gold-color); margin-bottom: 20px;">🔓 قسم التشفير وفك التشفير (عربي / إنجليزي) 🔒</h3>
             <div class="crypto-grid">
                 <div class="crypto-box">
-                    <label style="color:var(--accent-color);">🔒 تشفير رسالة</label>
-                    <input type="text" id="plainText" placeholder="أدخل النص..." style="margin-top:8px;">
+                    <label style="color:var(--accent-color);">🔒 تشفير نص (عربي / إنجليزي)</label>
+                    <input type="text" id="plainText" placeholder="أدخل النص هنا..." style="margin-top:8px;">
                     <button class="btn-login" style="background:var(--accent-color);" onclick="encryptMsg()">تشفير البيانات</button>
                 </div>
                 <div class="crypto-box">
                     <label style="color:var(--gold-color);">🔓 فك التشفير</label>
-                    <input type="text" id="cipherText" placeholder="أدخل الكود..." style="margin-top:8px;">
+                    <input type="text" id="cipherText" placeholder="أدخل الكود المشفر هنا..." style="margin-top:8px;">
                     <button class="btn-login" style="background:var(--gold-color); color:#000;" onclick="decryptMsg()">فك تشفير الكود</button>
                 </div>
             </div>
@@ -494,7 +493,6 @@
             isModalOpen = false;
             document.getElementById("customModal").style.display = "none";
         }
-        /* دالة تحويل الملف المرفق إلى Base64 */
         function readFileAsBase64(fileInputId) {
             return new Promise((resolve) => {
                 const fileInput = document.getElementById(fileInputId);
@@ -509,7 +507,6 @@
                 reader.readAsDataURL(file);
             });
         }
-        /* دالة فتح/إغلاق استعراض الأدلة المرفقة داخل الوثيقة */
         function toggleEvidenceContent() {
             const wrapper = document.getElementById("evidenceContentWrapper");
             const btn = document.getElementById("evidenceToggleBtn");
@@ -521,7 +518,6 @@
                 btn.innerHTML = "👁️ عرض الأدلة المرفقة";
             }
         }
-        /* قالب الوثيقة مع خيار الروابط المتعددة المخبأة زر للفتح */
         function getReportDocHtml(titleVal = "", detailsVal = "", imageUrlVal = "", videoUrlVal = "", authorVal = currentUser, dateVal = new Date().toLocaleDateString(), dayVal = new Date().toLocaleDateString('ar-EG', { weekday: 'long' }), isEdit = false) {
             return `
                 <div class="cia-classified-doc">
@@ -565,7 +561,6 @@
                 </div>
             `;
         }
-        /* التقارير الرسمية */
         function openCreateReportModal() {
             openCustomModal("➕ إنشاء تقرير استخباراتي جديد", getReportDocHtml(), async () => {
                 const title = document.getElementById("popReportTitle").value.trim();
@@ -609,7 +604,6 @@
                             <video controls src="${vid.trim()}" style="border:1px solid #333;"></video>
                         </div>`;
                 });
-
                 evidenceHtml = `
                     <div class="evidence-folder-box">
                         <div class="evidence-folder-title">📁 [ الأدلة المرفقة] - CLASSIFIED EVIDENCE</div>
@@ -620,7 +614,6 @@
                     </div>
                 `;
             }
-
             const contentHtml = `
                 <div style="display:flex; justify-content:flex-end; gap:5px; margin-bottom:10px;">
                     <button class="btn-edit-item" onclick="editReport(${r.id})">تعديل ✏️</button>
@@ -686,7 +679,6 @@
                 closeModal(); 
             }
         }
-        /* المطلوبين */
         function openCreateWantedModal() {
             openCustomModal("➕ مطلوب جديد", `
                 <div class="input-group"><label>اسم المطلوب</label><input type="text" id="popWantedName"></div>
@@ -751,7 +743,6 @@
         async function deleteWanted(id) {
             if (confirm("حذف؟")) { globalDatabase.wanted = globalDatabase.wanted.filter(w => w.id !== id); await saveCloudData(); closeModal(); }
         }
-        /* السجلات والهويات */
         function openCreateRecordModal() {
             openCustomModal("🪪 هوية جديدة", `
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
@@ -839,7 +830,6 @@
         async function deleteRecord(id) {
             if (confirm("حذف؟")) { globalDatabase.records = globalDatabase.records.filter(r => r.id !== id); await saveCloudData(); closeModal(); }
         }
-        /* العصابات */
         function openCreateGangModal() {
             openCustomModal("🏴‍☠️ عصابة جديدة", `
                 <div class="input-group"><label>اسم العصابة</label><input type="text" id="popGangName"></div>
@@ -914,7 +904,6 @@
         async function deleteGang(id) {
             if (confirm("حذف؟")) { globalDatabase.gangs = globalDatabase.gangs.filter(g => g.id !== id); await saveCloudData(); closeModal(); }
         }
-        /* مركز الإدارة والأعضاء */
         async function createAccount() {
             const user = document.getElementById("new-username").value.trim();
             if (!user) return alert("أدخل اسم الوكيل!");
@@ -988,8 +977,36 @@
         function showHome() { document.getElementById("folderHome").style.display = "block"; document.querySelectorAll('.workspace-panel').forEach(p => p.style.display = 'none'); }
         function openSection(id) { document.getElementById("folderHome").style.display = "none"; document.querySelectorAll('.workspace-panel').forEach(p => p.style.display = 'none'); document.getElementById(id).style.display = "block"; }
         function logout() { localStorage.removeItem("active_cia_user"); location.reload(); }
-        function encryptMsg() { const val = document.getElementById("plainText").value; if (val) document.getElementById("cryptoResult").innerText = btoa(val); }
-        function decryptMsg() { const val = document.getElementById("cipherText").value; if (val) { try { document.getElementById("cryptoResult").innerText = atob(val); } catch(e) { document.getElementById("cryptoResult").innerText = "خطأ!"; } } }
+        
+        // تعديل دوال التشفير وفك التشفير لدعم اللغة العربية والإنجليزية بشكل كامل
+        function encryptMsg() {
+            const val = document.getElementById("plainText").value;
+            if (val) {
+                try {
+                    const encoded = encodeURIComponent(val).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+                        return String.fromCharCode('0x' + p1);
+                    });
+                    document.getElementById("cryptoResult").innerText = btoa(encoded);
+                } catch (e) {
+                    document.getElementById("cryptoResult").innerText = "خطأ في عملية التشفير!";
+                }
+            }
+        }
+        
+        function decryptMsg() {
+            const val = document.getElementById("cipherText").value;
+            if (val) {
+                try {
+                    const decoded = decodeURIComponent(Array.prototype.map.call(atob(val), function(c) {
+                        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                    }).join(''));
+                    document.getElementById("cryptoResult").innerText = decoded;
+                } catch(e) { 
+                    document.getElementById("cryptoResult").innerText = "خطأ: الكود غير صالح أو تالف!"; 
+                }
+            }
+        }
+
         fetchCloudData().then(() => checkAutoLogin());
         setInterval(fetchCloudData, 4000);
     </script>
