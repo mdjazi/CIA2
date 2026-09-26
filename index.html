@@ -59,6 +59,7 @@
             0% { transform: translate(-50%, -50%) scale(0.95) rotate(0deg); opacity: 0.05; }
             100% { transform: translate(-50%, -50%) scale(1.05) rotate(5deg); opacity: 0.11; }
         }
+        /* خلفية شاشة التحميل الاحترافية مع الصوت */
         #decryption-screen {
             display: none;
             position: fixed;
@@ -66,7 +67,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: linear-gradient(rgba(2, 4, 7, 0.85), rgba(2, 4, 7, 0.95)), url('https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg') no-repeat center center;
+            background: linear-gradient(rgba(2, 4, 7, 0.88), rgba(2, 4, 7, 0.96)), url('https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg') no-repeat center center;
             background-size: contain;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -77,7 +78,7 @@
             text-align: center;
         }
         .decrypt-box {
-            background: rgba(8, 13, 20, 0.85);
+            background: rgba(8, 13, 20, 0.88);
             border: 1px solid var(--gold-color);
             padding: 35px 40px;
             border-radius: 12px;
@@ -588,8 +589,8 @@
         .wanted-card { border-color: var(--danger-color); background: rgba(217, 4, 41, 0.08); }
         .badge-danger { background: var(--danger-color); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 3px; }
         .action-btns { display: flex; gap: 8px; }
-        .btn-del-item { background: var(--danger-color); color: #fff; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 10px; font-weight: bold; }
-        .btn-edit-item { background: var(--gold-color); color: #000; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 10px; font-weight: bold; }
+        .btn-del-item { background: var(--danger-color); color: #fff; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; }
+        .btn-edit-item { background: var(--gold-color); color: #000; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; }
         
         .collapsible-item {
             background: rgba(9, 14, 21, 0.6);
@@ -672,7 +673,7 @@
         .img-preview { max-width: 100%; max-height: 250px; border-radius: 5px; margin-top: 8px; border: 1px solid var(--border-color); }
         video { max-width: 100%; border-radius: 5px; margin-top: 8px; border: 1px solid var(--border-color); }
 
-        /* نافذة التعديل المخصصة بدلاً من رسائل جوجل */
+        /* نافذة التعديل المخصصة بدلاً من رسائل جوجل المنبثقة */
         .custom-modal-overlay {
             display: none;
             position: fixed;
@@ -721,7 +722,7 @@
             <div class="progress-bar-bg">
                 <div class="progress-bar-fill" id="decrypt-progress"></div>
             </div>
-            <div class="code-stream" id="code-stream-text">0x7F80A... DECRYPTING HASH</div>
+            <div class="code-stream" id="code-stream-text">0x7F80A... DECRYPTING PACKETS</div>
         </div>
     </div>
 
@@ -965,7 +966,7 @@
         </div>
     </div>
 
-    <!-- النافذة المخصصة للتعديل المباشر المريحة -->
+    <!-- نافذة التعديل المخصصة بدلاً من مربعات جوجل المنبثقة -->
     <div class="custom-modal-overlay" id="customModal">
         <div class="custom-modal">
             <div class="modal-header">
@@ -1074,7 +1075,7 @@
         let globalDatabase = defaultDatabase;
         let currentUser = "";
         
-        // تتبع الحالات المفتوحة لتفادي الإغلاق التلقائي نهائيًا
+        // تتبع الحالات المفتوحة لمنع الاختفاء التلقائي نهائياً
         let openItemsState = {
             reports: {},
             records: {},
@@ -1199,7 +1200,7 @@
             });
         }
 
-        // تحكم يدوي كامل للفتح والإغلاق ومنع الإغلاق التلقائي
+        // تحكم يدوي كامل للفتح والإغلاق ومنع الاختفاء التلقائي
         function toggleCollapsibleManual(type, id, element) {
             const body = element.nextElementSibling;
             if (!body) return;
@@ -1213,7 +1214,7 @@
             }
         }
 
-        // نظام النافذة المنبثقة التفاعلية المخصصة
+        // النافذة المخصصة للتعديل دون رسايل جوجل
         function openCustomModal(title, contentHtml, onSave) {
             document.getElementById("modalTitle").innerText = title;
             document.getElementById("modalBody").innerHTML = contentHtml;
@@ -1654,7 +1655,7 @@
                 </div>
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                     <div class="input-group">
-                        <label>اسم הקائد (Leader)</label>
+                        <label>اسم القائد (Leader)</label>
                         <input type="text" id="editGangLeader" value="${gang.leader || ''}">
                     </div>
                     <div class="input-group">
