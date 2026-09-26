@@ -64,11 +64,33 @@
             cursor: pointer; transition: all 0.3s ease; text-align: right; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;
         }
         .item-folder-card::before { content: ''; position: absolute; top: 0; right: 0; width: 4px; height: 100%; background: var(--gold-color); }
-        .item-folder-card:hover { border-color: var(--gold-color); transform: translateY(-4px); background: rgba(15, 25, 40, 0.95); }
+        .item-folder-card:hover { transform: translateY(-4px); background: rgba(15, 25, 40, 0.95); }
         .item-folder-icon { font-size: 32px; margin-bottom: 8px; display: block; }
         .item-folder-title { display: block; color: #ffffff; font-size: 15px; font-weight: bold; margin-bottom: 6px; }
         .item-folder-sub { color: var(--text-muted); font-size: 11px; display: block; margin-bottom: 12px; line-height: 1.4; }
-        .item-folder-btn { display: inline-block; font-size: 10px; color: var(--accent-color); font-weight: bold; text-transform: uppercase; }
+        .item-folder-btn { display: inline-block; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+
+        /* ألوان بطاقات المطلوبين حسب مستوى الخطورة */
+        .wanted-red {
+            border-color: rgba(217, 4, 41, 0.8) !important;
+            background: rgba(45, 8, 14, 0.65) !important;
+        }
+        .wanted-red::before { background: #d90429 !important; width: 6px !important; }
+        .wanted-red:hover { background: rgba(65, 10, 20, 0.85) !important; box-shadow: 0 0 20px rgba(217, 4, 41, 0.4); }
+
+        .wanted-orange {
+            border-color: rgba(249, 115, 22, 0.8) !important;
+            background: rgba(45, 22, 8, 0.65) !important;
+        }
+        .wanted-orange::before { background: #f97316 !important; width: 6px !important; }
+        .wanted-orange:hover { background: rgba(65, 32, 12, 0.85) !important; box-shadow: 0 0 20px rgba(249, 115, 22, 0.4); }
+
+        .wanted-yellow {
+            border-color: rgba(234, 179, 8, 0.8) !important;
+            background: rgba(40, 35, 8, 0.65) !important;
+        }
+        .wanted-yellow::before { background: #eab308 !important; width: 6px !important; }
+        .wanted-yellow:hover { background: rgba(58, 50, 12, 0.85) !important; box-shadow: 0 0 20px rgba(234, 179, 8, 0.4); }
         
         .folder-card {
             background: rgba(9, 16, 26, 0.7); border: 1px solid rgba(22, 34, 53, 0.9); border-radius: 10px; padding: 25px 20px; cursor: pointer; text-align: right; position: relative; overflow: hidden;
@@ -209,7 +231,6 @@
             </div>
         </div>
 
-        <!-- مركز الإدارة المخصص لإدارة الأعضاء (تعديل وحذف) -->
         <div class="workspace-panel leader-panel" id="leaderSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-top:0;">👑 مركز إدارة التراخيص والسرية</h3>
@@ -558,11 +579,11 @@
             if (confirm("حذف؟")) { globalDatabase.reports = globalDatabase.reports.filter(r => r.id !== id); await saveCloudData(); closeModal(); }
         }
 
-        /* المطلوبين */
+        /* المطلوبين (بالألوان المخصصة حسب الخطورة) */
         function openCreateWantedModal() {
             openCustomModal("➕ مطلوب جديد", `
                 <div class="input-group"><label>اسم المطلوب</label><input type="text" id="popWantedName"></div>
-                <div class="input-group"><label>مستوى الخطورة</label><select id="popWantedRisk"><option>🟡 منخفض الخطورة</option><option>🟠 متوسط الخطورة</option><option>🔴 خطر جداً</option></select></div>
+                <div class="input-group"><label>مستوى الخطورة</label><select id="popWantedRisk"><option value="🟡 منخفض الخطورة">🟡 منخفض الخطورة</option><option value="🟠 متوسط الخطورة">🟠 متوسط الخطورة</option><option value="🔴 خطر جداً">🔴 خطر جداً</option></select></div>
                 <div class="input-group"><label>التهم الجنائية</label><textarea id="popWantedCrime" rows="3"></textarea></div>
             `, async () => {
                 globalDatabase.wanted.push({ 
@@ -594,7 +615,7 @@
             if (!w) return;
             openCustomModal("✏️ تعديل المطلوب", `
                 <div class="input-group"><label>اسم المطلوب</label><input type="text" id="editWantedName" value="${w.name}"></div>
-                <div class="input-group"><label>مستوى الخطورة</label><select id="editWantedRisk"><option ${w.risk.includes("منخفض")?"selected":""}>🟡 منخفض الخطورة</option><option ${w.risk.includes("متوسط")?"selected":""}>🟠 متوسط الخطورة</option><option ${w.risk.includes("خطر")?"selected":""}>🔴 خطر جداً</option></select></div>
+                <div class="input-group"><label>مستوى الخطورة</label><select id="editWantedRisk"><option value="🟡 منخفض الخطورة" ${w.risk.includes("منخفض")?"selected":""}>🟡 منخفض الخطورة</option><option value="🟠 متوسط الخطورة" ${w.risk.includes("متوسط")?"selected":""}>🟠 متوسط الخطورة</option><option value="🔴 خطر جداً" ${w.risk.includes("خطر")?"selected":""}>🔴 خطر جداً</option></select></div>
                 <div class="input-group"><label>التهم</label><textarea id="editWantedCrime" rows="3">${w.crime}</textarea></div>
             `, async () => {
                 w.name = document.getElementById("editWantedName").value.trim();
@@ -609,7 +630,19 @@
             if (!list) return;
             list.innerHTML = "";
             globalDatabase.wanted.forEach(w => {
-                list.innerHTML += `<div class="item-folder-card" style="border-color:rgba(217,4,41,0.4);" onclick="viewWantedFolder(${w.id})"><div><span class="item-folder-icon">🚨</span><span class="item-folder-title">${w.name}</span><span class="item-folder-sub">${w.risk}</span></div><span class="item-folder-btn" style="color:var(--danger-color);">دخول ←</span></div>`;
+                let colorClass = "wanted-yellow";
+                if (w.risk.includes("خطر جداً") || w.risk.includes("خطر")) colorClass = "wanted-red";
+                else if (w.risk.includes("متوسط")) colorClass = "wanted-orange";
+
+                list.innerHTML += `
+                    <div class="item-folder-card ${colorClass}" onclick="viewWantedFolder(${w.id})">
+                        <div>
+                            <span class="item-folder-icon">🚨</span>
+                            <span class="item-folder-title">${w.name}</span>
+                            <span class="item-folder-sub">${w.risk}</span>
+                        </div>
+                        <span class="item-folder-btn" style="color:var(--text-color);">دخول الملف ←</span>
+                    </div>`;
             });
         }
 
