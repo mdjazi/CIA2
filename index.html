@@ -60,7 +60,7 @@
             100% { transform: translate(-50%, -50%) scale(1.05) rotate(5deg); opacity: 0.11; }
         }
         
-        /* ===== شاشة فك التشفير والتحميل الاستخباراتية المطورة ===== */
+        /* ===== شاشة فك التشفير والتحميل الاستخباراتية ===== */
         #decryption-screen {
             display: none;
             position: fixed;
@@ -493,6 +493,8 @@
             font-weight: 800;
             letter-spacing: 1px;
         }
+        
+        /* شبكة الكروت والمجلدات الفردية */
         .folder-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -500,6 +502,79 @@
             margin-top: 10px;
         }
         @media (max-width: 800px) { .folder-grid { grid-template-columns: 1fr; } }
+        
+        .item-folder-card {
+            background: rgba(9, 16, 26, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(197, 160, 89, 0.35);
+            border-radius: 10px;
+            padding: 22px 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: right;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .item-folder-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gold-color);
+            transition: 0.3s;
+        }
+        .item-folder-card:hover {
+            border-color: var(--gold-color);
+            transform: translateY(-4px);
+            background: rgba(15, 25, 40, 0.85);
+            box-shadow: 0 10px 25px rgba(197, 160, 89, 0.3);
+        }
+        .item-folder-card:hover::before {
+            width: 8px;
+            background: var(--accent-color);
+        }
+        .item-folder-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .item-folder-title {
+            display: block;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .item-folder-sub {
+            color: var(--text-muted);
+            font-size: 11px;
+            display: block;
+            margin-bottom: 12px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .item-folder-btn {
+            display: inline-block;
+            font-size: 10px;
+            color: var(--accent-color);
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
         
         .folder-card {
             background: rgba(9, 16, 26, 0.45);
@@ -738,38 +813,6 @@
         .btn-del-item { background: var(--danger-color); color: #fff; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; }
         .btn-edit-item { background: var(--gold-color); color: #000; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; }
         
-        .collapsible-item {
-            background: rgba(9, 14, 21, 0.6);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            margin-bottom: 10px;
-            overflow: hidden;
-            transition: 0.2s;
-        }
-        .collapsible-header {
-            padding: 14px 18px;
-            background: rgba(4, 6, 10, 0.6);
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            user-select: none;
-        }
-        .collapsible-header:hover { background: rgba(13, 21, 34, 0.8); }
-        .collapsible-title {
-            color: var(--gold-color);
-            font-weight: bold;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .collapsible-body {
-            display: none;
-            padding: 18px;
-            background: rgba(6, 10, 16, 0.7);
-            border-top: 1px solid var(--border-color);
-        }
         .tree-container {
             margin-top: 15px;
             padding: 15px;
@@ -837,7 +880,7 @@
             border: 1px solid var(--gold-color);
             border-radius: 10px;
             width: 90%;
-            max-width: 550px;
+            max-width: 600px;
             padding: 25px;
             box-shadow: 0 0 30px rgba(197, 160, 89, 0.3);
             max-height: 90vh;
@@ -957,7 +1000,7 @@
         <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Logo">
     </div>
     
-    <!-- ===== شاشة فك التشفير والتحميل الاستخباراتية ===== -->
+    <!-- ===== شاشة فك التشفير والتحميل ===== -->
     <div id="decryption-screen">
         <canvas id="matrix-loader-canvas"></canvas>
         <div class="decrypt-box">
@@ -1024,6 +1067,7 @@
                 <button class="btn-logout" onclick="logout()">تسجيل الخروج</button>
             </div>
         </div>
+        
         <div class="folder-grid-panel" id="folderHome">
             <div class="dashboard-header">
                 <div class="dashboard-logo">
@@ -1114,12 +1158,12 @@
         <div class="workspace-panel" id="reportsSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">📝 قسم التقارير والمذكرات الاستخباراتية</h3>
-            <button class="btn-create-action" onclick="openCreateReportModal()">➕ إضافة تقرير جديد</button>
+            <button class="btn-create-action" onclick="openCreateReportModal()">➕ إنشاء مجلد تقرير جديد</button>
             <div class="input-group">
                 <input type="text" id="reportSearch" class="search-box" placeholder="🔍 بحث في قاعدة بيانات التقارير..." oninput="renderReports()">
             </div>
-            <h4 style="color:var(--gold-color); margin-bottom:15px;">📑 التقارير المحفوظة بالنظام:</h4>
-            <div id="reports-list"></div>
+            <h4 style="color:var(--gold-color); margin-bottom:15px;">📑 مجلدات التقارير المحفوظة بالنظام:</h4>
+            <div id="reports-list" class="folder-grid"></div>
             <div class="log-box" id="reports-log"></div>
         </div>
 
@@ -1127,35 +1171,35 @@
         <div class="workspace-panel" id="wantedSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">📜 قائمة المطلوبين للعدالة (WANTED LIST)</h3>
-            <button class="btn-create-action" style="background: linear-gradient(135deg, #d90429 0%, #a8001d 100%);" onclick="openCreateWantedModal()">➕ إضافة مطلوب جديد</button>
+            <button class="btn-create-action" style="background: linear-gradient(135deg, #d90429 0%, #a8001d 100%);" onclick="openCreateWantedModal()">➕ إنشاء مجلد مطلوب جديد</button>
             <div class="input-group">
                 <input type="text" id="wantedSearch" class="search-box" placeholder="🔍 بحث في داتابيس المطلوبين" oninput="renderWanted()">
             </div>
-            <div id="wanted-list" style="display:flex; gap:15px; flex-wrap:wrap;"></div>
+            <div id="wanted-list" class="folder-grid"></div>
         </div>
 
         <!-- مجلد السجلات -->
         <div class="workspace-panel" id="recordsSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">📂 السجل الجنائي للمواطنين (RECORDS)</h3>
-            <button class="btn-create-action" style="background: linear-gradient(135deg, #c5a059 0%, #9e7d3b 100%); color:#000;" onclick="openCreateRecordModal()">🪪 إنشاء بطاقة هوية جديدة</button>
+            <button class="btn-create-action" style="background: linear-gradient(135deg, #c5a059 0%, #9e7d3b 100%); color:#000;" onclick="openCreateRecordModal()">🪪 إنشاء مجلد هوية جديد</button>
             <div class="input-group">
                 <input type="text" id="recordsSearch" class="search-box" placeholder="🔍 بحث في السجل الجنائي للأشخاص..." oninput="renderRecords()">
             </div>
-            <h4 style="color:var(--gold-color); margin-bottom:15px;">📂 بطاقات الهوية والسجلات المحفوظة:</h4>
-            <div id="records-list"></div>
+            <h4 style="color:var(--gold-color); margin-bottom:15px;">📂 مجلدات الهوايات والسجلات:</h4>
+            <div id="records-list" class="folder-grid"></div>
         </div>
 
         <!-- مجلد العصابات -->
         <div class="workspace-panel" id="intelligenceSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">GANG INTELLIGENCE & HIERARCHY 🕵️‍♂️</h3>
-            <button class="btn-create-action" style="background: linear-gradient(135deg, #c5a059 0%, #9e7d3b 100%); color:#000;" onclick="openCreateGangModal()">🏴‍☠️ إضافة تنظيم / عصابة جديدة</button>
+            <button class="btn-create-action" style="background: linear-gradient(135deg, #c5a059 0%, #9e7d3b 100%); color:#000;" onclick="openCreateGangModal()">🏴‍☠️ إنشاء مجلد عصابة جديد</button>
             <div class="input-group">
                 <input type="text" id="gangsSearch" class="search-box" placeholder="🔍 بحث في مخططات الاستخبارات والعصابات" oninput="renderGangs()">
             </div>
-            <h4 style="color:var(--gold-color); margin-bottom:15px;">🌐 ملفات العصابات والمخططات:</h4>
-            <div id="gangs-list"></div>
+            <h4 style="color:var(--gold-color); margin-bottom:15px;">🌐 مجلدات التنظيمات والعصابات:</h4>
+            <div id="gangs-list" class="folder-grid"></div>
         </div>
 
         <div class="workspace-panel" id="casesSection">
@@ -1207,6 +1251,7 @@
         <div class="broadcast-card-body" id="broadcastTextDisplay">-</div>
     </div>
 
+    <!-- modal الشاشة المنبثقة -->
     <div class="custom-modal-overlay" id="customModal">
         <div class="custom-modal">
             <div class="modal-header">
@@ -1214,7 +1259,7 @@
                 <span class="modal-close" onclick="closeModal()">✕</span>
             </div>
             <div id="modalBody"></div>
-            <div class="modal-actions">
+            <div class="modal-actions" id="modalActions">
                 <button class="btn-login" style="background:var(--success-color);" id="modalSaveBtn">تأكيد وحفظ</button>
                 <button class="btn-login" style="background:rgba(255,255,255,0.1); color:#fff;" onclick="closeModal()">إلغاء</button>
             </div>
@@ -1344,12 +1389,6 @@
         let globalDatabase = defaultDatabase;
         let currentUser = "";
         let isSaving = false;
-        
-        let openItemsState = {
-            reports: {},
-            records: {},
-            gangs: {}
-        };
 
         async function fetchCloudData() {
             if (isSaving) return;
@@ -1602,40 +1641,34 @@
             });
         }
 
-        function toggleCollapsibleManual(type, id, element) {
-            const body = element.nextElementSibling;
-            if (!body) return;
-            const isVisible = body.style.display === "block";
-            if (isVisible) {
-                body.style.display = "none";
-                openItemsState[type][id] = false;
-            } else {
-                body.style.display = "block";
-                openItemsState[type][id] = true;
-            }
-        }
-
-        function openCustomModal(title, contentHtml, onSave) {
+        function openCustomModal(title, contentHtml, onSave, showSaveBtn = true) {
             document.getElementById("modalTitle").innerText = title;
             document.getElementById("modalBody").innerHTML = contentHtml;
             document.getElementById("customModal").style.display = "flex";
             
             const saveBtn = document.getElementById("modalSaveBtn");
-            saveBtn.onclick = async () => {
-                saveBtn.disabled = true;
-                saveBtn.innerText = "جاري الحفظ...";
-                await onSave();
-                saveBtn.disabled = false;
-                saveBtn.innerText = "تأكيد وحفظ";
-                closeModal();
-            };
+            const actions = document.getElementById("modalActions");
+            
+            if (!showSaveBtn) {
+                saveBtn.style.display = "none";
+            } else {
+                saveBtn.style.display = "block";
+                saveBtn.onclick = async () => {
+                    saveBtn.disabled = true;
+                    saveBtn.innerText = "جاري الحفظ...";
+                    await onSave();
+                    saveBtn.disabled = false;
+                    saveBtn.innerText = "تأكيد وحفظ";
+                    closeModal();
+                };
+            }
         }
 
         function closeModal() {
             document.getElementById("customModal").style.display = "none";
         }
 
-        /* ===== إنشاء وتعديل التقارير ===== */
+        /* ===== مجلدات التقارير الفردية ===== */
         function openCreateReportModal() {
             const content = `
                 <div class="input-group"><label>عنوان التقرير / المذكرة</label><input type="text" id="popReportTitle" placeholder="عنوان التقرير"></div>
@@ -1644,7 +1677,7 @@
                 <div class="input-group"><label>📁 إرفاق صورة دليل (من الجهاز)</label><input type="file" id="popReportImageFile" accept="image/*"></div>
                 <div class="input-group"><label>🎥 إرفاق فيديو دليل (من الجهاز)</label><input type="file" id="popReportVideoFile" accept="video/*"></div>
             `;
-            openCustomModal("➕ إضافة تقرير جديد", content, async () => {
+            openCustomModal("➕ إنشاء مجلد تقرير جديد", content, async () => {
                 const title = document.getElementById("popReportTitle").value.trim();
                 const details = document.getElementById("popReportDetails").value.trim();
                 const citizen = document.getElementById("popReportCitizen").value.trim();
@@ -1666,6 +1699,28 @@
                 addLog(`قام [${currentUser}] بإضافة تقرير جديد: ${title}`);
                 await saveCloudData();
             });
+        }
+
+        function viewReportFolder(id) {
+            const r = globalDatabase.reports.find(item => item.id === id);
+            if (!r) return;
+            const content = `
+                <div class="action-btns" style="margin-bottom:15px;">
+                    <button class="btn-edit-item" onclick="editReport(${r.id})">تعديل التقرير ✏️</button>
+                    <button class="btn-del-item" onclick="deleteReport(${r.id})">حذف التقرير 🗑️</button>
+                </div>
+                <span class="report-classification">TOP SECRET // CLASSIFIED</span>
+                <div class="report-meta-grid">
+                    <div>الكاتب: <b>${r.author}</b></div>
+                    <div>الـ ID المرتبط: <b>${r.citizen || 'غير محدد'}</b></div>
+                    <div>تاريخ الصدور: <b>${r.date}</b></div>
+                    <div>رقم المرجعية: <b>#REF-${r.id.toString().slice(-5)}</b></div>
+                </div>
+                <div style="color:#e2e8f0; font-size:13px; line-height:1.6; background:rgba(4, 6, 10, 0.7); padding:12px; border-radius:6px; margin-top:10px;">${r.details}</div>
+                ${r.image ? `<div style="margin-top:12px;"><small style="color:var(--gold-color);">🖼️ صورة الدليل المرفقة:</small><br><img src="${r.image}" class="img-preview"></div>` : ''}
+                ${r.video ? `<div style="margin-top:12px;"><small style="color:var(--gold-color);">🎥 تسجيل الفيديو المرفق:</small><br><video controls src="${r.video}"></video></div>` : ''}
+            `;
+            openCustomModal(`📂 مجلد تقرير: ${r.title}`, content, null, false);
         }
 
         function editReport(id) {
@@ -1710,30 +1765,16 @@
                 (r.details && r.details.toLowerCase().includes(q)) || 
                 (r.citizen && r.citizen.toLowerCase().includes(q))
             ).forEach(r => {
-                const isOpen = openItemsState.reports[r.id] === true;
                 const div = document.createElement("div");
-                div.className = "collapsible-item";
+                div.className = "item-folder-card";
+                div.onclick = () => viewReportFolder(r.id);
                 div.innerHTML = `
-                    <div class="collapsible-header" onclick="toggleCollapsibleManual('reports', ${r.id}, this)">
-                        <div class="collapsible-title">📄 ${r.title}</div>
-                        <small style="color:var(--text-muted); font-size:11px;">بواسطة: ${r.author} ▼</small>
+                    <div>
+                        <span class="item-folder-icon">📂</span>
+                        <span class="item-folder-title">${r.title}</span>
+                        <span class="item-folder-sub">الكاتب: ${r.author} | ID: ${r.citizen || 'N/A'}</span>
                     </div>
-                    <div class="collapsible-body" style="display: ${isOpen ? 'block' : 'none'};">
-                        <div class="action-btns" style="margin-bottom:10px;">
-                            <button class="btn-edit-item" onclick="editReport(${r.id})">تعديل التقرير ✏️</button>
-                            <button class="btn-del-item" onclick="deleteReport(${r.id})">حذف التقرير</button>
-                        </div>
-                        <span class="report-classification">TOP SECRET // CLASSIFIED</span>
-                        <div class="report-meta-grid">
-                            <div>الكاتب: <b>${r.author}</b></div>
-                            <div>الـ ID المرتبط: <b>${r.citizen || 'غير محدد'}</b></div>
-                            <div>تاريخ الصدور: <b>${r.date}</b></div>
-                            <div>رقم المرجعية: <b>#REF-${r.id.toString().slice(-5)}</b></div>
-                        </div>
-                        <div style="color:#e2e8f0; font-size:13px; line-height:1.6; background:rgba(4, 6, 10, 0.7); padding:10px; border-radius:4px;">${r.details}</div>
-                        ${r.image ? `<div style="margin-top:10px;"><small style="color:var(--gold-color);">🖼️ صورة الدليل المرفقة:</small><br><img src="${r.image}" class="img-preview"></div>` : ''}
-                        ${r.video ? `<div style="margin-top:10px;"><small style="color:var(--gold-color);">🎥 تسجيل الفيديو المرفق:</small><br><video controls src="${r.video}"></video></div>` : ''}
-                    </div>
+                    <span class="item-folder-btn">دخول التقرير ←</span>
                 `;
                 list.appendChild(div);
             });
@@ -1743,11 +1784,12 @@
             if (confirm("هل تريد حذف هذا التقرير نهائياً؟")) {
                 globalDatabase.reports = globalDatabase.reports.filter(r => r.id !== id);
                 addLog(`قام [${currentUser}] بحذف تقرير.`);
+                closeModal();
                 await saveCloudData();
             }
         }
 
-        /* ===== إنشاء وتعديل المطلوبين ===== */
+        /* ===== مجلدات المطلوبين الفردية ===== */
         function openCreateWantedModal() {
             const content = `
                 <div class="input-group"><label>اسم المطلوب</label><input type="text" id="popWantedName" placeholder="Name"></div>
@@ -1761,7 +1803,7 @@
                 </div>
                 <div class="input-group"><label>التهم التفصيلية</label><textarea id="popWantedCrime" rows="3" placeholder="التهمة"></textarea></div>
             `;
-            openCustomModal("➕ إضافة مطلوب جديد", content, async () => {
+            openCustomModal("➕ إنشاء مجلد مطلوب جديد", content, async () => {
                 const name = document.getElementById("popWantedName").value.trim();
                 const risk = document.getElementById("popWantedRisk").value;
                 const crime = document.getElementById("popWantedCrime").value.trim();
@@ -1771,6 +1813,23 @@
                 addLog(`قام [${currentUser}] بإضافة مطلوب جديد: ${name}`);
                 await saveCloudData();
             });
+        }
+
+        function viewWantedFolder(id) {
+            const w = globalDatabase.wanted.find(item => item.id === id);
+            if (!w) return;
+            const content = `
+                <div class="action-btns" style="margin-bottom:15px;">
+                    <button class="btn-edit-item" onclick="editWanted(${w.id})">تعديل المطلوب ✏️</button>
+                    <button class="btn-del-item" onclick="deleteWanted(${w.id})">حذف الملف 🗑️</button>
+                </div>
+                <div style="margin-bottom:10px;"><span class="badge-danger">${w.risk}</span></div>
+                <h3 style="color:#fff; margin-bottom:10px;">${w.name}</h3>
+                <div style="background:rgba(4,6,10,0.7); padding:12px; border-radius:6px; color:#d1d9e6; line-height:1.5;">
+                    <b>⚠️ التهم الجنائية المسجلة:</b><br>${w.crime}
+                </div>
+            `;
+            openCustomModal(`🚨 ملف مطلوب: ${w.name}`, content, null, false);
         }
 
         function editWanted(id) {
@@ -1819,19 +1878,16 @@
                 (w.risk && w.risk.toLowerCase().includes(q))
             ).forEach(w => {
                 const div = document.createElement("div");
-                div.className = "data-card wanted-card";
-                div.style.maxWidth = "280px";
-                div.style.width = "100%";
+                div.className = "item-folder-card";
+                div.style.borderColor = "rgba(217, 4, 41, 0.4)";
+                div.onclick = () => viewWantedFolder(w.id);
                 div.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span class="badge-danger">${w.risk}</span>
-                        <div class="action-btns">
-                            <button class="btn-edit-item" onclick="editWanted(${w.id})">تعديل ✏️</button>
-                            <button class="btn-del-item" onclick="deleteWanted(${w.id})">حذف</button>
-                        </div>
+                    <div>
+                        <span class="item-folder-icon">🚨</span>
+                        <span class="item-folder-title">${w.name}</span>
+                        <span class="item-folder-sub">${w.risk}</span>
                     </div>
-                    <h4 style="color:#fff; margin-top:8px;">${w.name}</h4>
-                    <p style="font-size:11px; color:#94a3b8; margin-top:6px;">${w.crime}</p>
+                    <span class="item-folder-btn" style="color:var(--danger-color);">دخول الملف ←</span>
                 `;
                 list.appendChild(div);
             });
@@ -1840,11 +1896,12 @@
         async function deleteWanted(id) {
             if (confirm("حذف الشخص المطلوب؟")) {
                 globalDatabase.wanted = globalDatabase.wanted.filter(w => w.id !== id);
+                closeModal();
                 await saveCloudData();
             }
         }
 
-        /* ===== إنشاء وتعديل بطاقات الهوية ===== */
+        /* ===== مجلدات الهويات الفردية ===== */
         function openCreateRecordModal() {
             const content = `
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
@@ -1862,7 +1919,7 @@
                 <div class="input-group" style="margin-top:10px;"><label>📁 رفع صورة الشخص الجنائية (اختياري)</label><input type="file" id="popRecPhotoFile" accept="image/*"></div>
                 <div class="input-group"><label>سجل الملاحظات والقضايا الجنائية</label><textarea id="popRecNotes" rows="3" placeholder="أدخل الملاحظات والسجل الجنائي..."></textarea></div>
             `;
-            openCustomModal("🪪 إنشاء بطاقة هوية جديدة", content, async () => {
+            openCustomModal("🪪 إنشاء مجلد هوية جديد", content, async () => {
                 const firstName = document.getElementById("popRecFirstName").value.trim();
                 const lastName = document.getElementById("popRecLastName").value.trim();
                 const cid = document.getElementById("popRecId").value.trim();
@@ -1884,6 +1941,56 @@
                 addLog(`قام [${currentUser}] بإنشاء بطاقة هوية لـ: ${firstName} ${lastName}`);
                 await saveCloudData();
             });
+        }
+
+        function viewRecordFolder(id) {
+            const r = globalDatabase.records.find(item => item.id === id);
+            if (!r) return;
+            const defaultPhoto = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=300&h=350";
+            const content = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <span class="report-classification">IDENTIFICATION CARD // CLASSIFIED</span>
+                    <div class="action-btns">
+                        <button class="btn-edit-item" onclick="editRecord(${r.id})">تعديل الهوية ✏️</button>
+                        <button class="btn-del-item" onclick="deleteRecord(${r.id})">حذف الملف 🗑️</button>
+                    </div>
+                </div>
+                <div class="id-card-tactical">
+                    <div class="id-card-header">IDENTIFICATION CARD</div>
+                    <div class="id-card-body">
+                        <div class="id-card-photo-box">
+                            <img src="${r.photo || defaultPhoto}" alt="Photo">
+                        </div>
+                        <div class="id-card-details">
+                            <div class="id-field-group">
+                                <span class="id-field-label">ID / رقم الهوية</span>
+                                <span class="id-field-val">${r.cid}</span>
+                            </div>
+                            <div class="id-field-group">
+                                <span class="id-field-label">FIRST NAME / الاسم الأول</span>
+                                <span class="id-field-val">${r.firstName}</span>
+                            </div>
+                            <div class="id-field-group">
+                                <span class="id-field-label">LAST NAME / الاسم الأخير</span>
+                                <span class="id-field-val">${r.lastName}</span>
+                            </div>
+                            <div class="id-field-group" style="margin-bottom:0;">
+                                <span class="id-field-label">SEX / الجنس</span>
+                                <span class="id-field-val">${r.sex}</span>
+                            </div>
+                        </div>
+                        <div class="id-fingerprint-box">
+                            <svg class="id-fingerprint-img" viewBox="0 0 24 24" fill="none" stroke="#2b3142" stroke-width="1.2">
+                                <path d="M12 2a10 10 0 0 0-10 10c0 5.523 4.477 10 10 10s10-4.477 10-10A10 10 0 0 0 12 2zm0 3a7 7 0 0 1 7 7c0 3.866-3.134 7-7 7s-7-3.134-7-7a7 7 0 0 1 7-7zm0 3a4 4 0 0 0-4 4c0 2.21 1.79 4 4 4s4-1.79 4-4a4 4 0 0 0-4-4z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="id-card-notes">
+                        <b>⚠️ الملاحظات والسجل الجنائي:</b> ${r.notes}
+                    </div>
+                </div>
+            `;
+            openCustomModal(`🪪 بطاقة هوية: ${r.firstName} ${r.lastName}`, content, null, false);
         }
 
         function editRecord(id) {
@@ -1947,58 +2054,16 @@
                 (r.cid && r.cid.toLowerCase().includes(q)) || 
                 (r.notes && r.notes.toLowerCase().includes(q))
             ).forEach(r => {
-                const isOpen = openItemsState.records[r.id] === true;
-                const defaultPhoto = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=300&h=350";
                 const div = document.createElement("div");
-                div.className = "collapsible-item";
+                div.className = "item-folder-card";
+                div.onclick = () => viewRecordFolder(r.id);
                 div.innerHTML = `
-                    <div class="collapsible-header" onclick="toggleCollapsibleManual('records', ${r.id}, this)">
-                        <div class="collapsible-title">🪪 بطاقة هوية: ${r.firstName} ${r.lastName} (${r.cid})</div>
-                        <small style="color:var(--text-muted); font-size:11px;">عرض البطاقة الجنائية ▼</small>
+                    <div>
+                        <span class="item-folder-icon">📁</span>
+                        <span class="item-folder-title">${r.firstName} ${r.lastName}</span>
+                        <span class="item-folder-sub">ID: ${r.cid} | الجنس: ${r.sex}</span>
                     </div>
-                    <div class="collapsible-body" style="display: ${isOpen ? 'block' : 'none'};">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                            <span class="report-classification">IDENTIFICATION CARD // CLASSIFIED</span>
-                            <div class="action-btns">
-                                <button class="btn-edit-item" onclick="editRecord(${r.id})">تعديل الهوية ✏️</button>
-                                <button class="btn-del-item" onclick="deleteRecord(${r.id})">حذف الملف</button>
-                            </div>
-                        </div>
-                        <div class="id-card-tactical">
-                            <div class="id-card-header">IDENTIFICATION CARD</div>
-                            <div class="id-card-body">
-                                <div class="id-card-photo-box">
-                                    <img src="${r.photo || defaultPhoto}" alt="Photo">
-                                </div>
-                                <div class="id-card-details">
-                                    <div class="id-field-group">
-                                        <span class="id-field-label">ID / رقم الهوية</span>
-                                        <span class="id-field-val">${r.cid}</span>
-                                    </div>
-                                    <div class="id-field-group">
-                                        <span class="id-field-label">FIRST NAME / الاسم الأول</span>
-                                        <span class="id-field-val">${r.firstName}</span>
-                                    </div>
-                                    <div class="id-field-group">
-                                        <span class="id-field-label">LAST NAME / الاسم الأخير</span>
-                                        <span class="id-field-val">${r.lastName}</span>
-                                    </div>
-                                    <div class="id-field-group" style="margin-bottom:0;">
-                                        <span class="id-field-label">SEX / الجنس</span>
-                                        <span class="id-field-val">${r.sex}</span>
-                                    </div>
-                                </div>
-                                <div class="id-fingerprint-box">
-                                    <svg class="id-fingerprint-img" viewBox="0 0 24 24" fill="none" stroke="#2b3142" stroke-width="1.2">
-                                        <path d="M12 2a10 10 0 0 0-10 10c0 5.523 4.477 10 10 10s10-4.477 10-10A10 10 0 0 0 12 2zm0 3a7 7 0 0 1 7 7c0 3.866-3.134 7-7 7s-7-3.134-7-7a7 7 0 0 1 7-7zm0 3a4 4 0 0 0-4 4c0 2.21 1.79 4 4 4s4-1.79 4-4a4 4 0 0 0-4-4z"/>
-                                    </svg>
-                                </div>
-                            </div>
-                            <div class="id-card-notes">
-                                <b>⚠️ الملاحظات والسجل الجنائي:</b> ${r.notes}
-                            </div>
-                        </div>
-                    </div>
+                    <span class="item-folder-btn">عرض الهوية ←</span>
                 `;
                 list.appendChild(div);
             });
@@ -2007,11 +2072,12 @@
         async function deleteRecord(id) {
             if (confirm("حذف ملف بطاقة المواطن؟")) {
                 globalDatabase.records = globalDatabase.records.filter(r => r.id !== id);
+                closeModal();
                 await saveCloudData();
             }
         }
 
-        /* ===== إنشاء وتعديل العصابات ===== */
+        /* ===== مجلدات العصابات الفردية ===== */
         function openCreateGangModal() {
             const content = `
                 <div class="input-group"><label>اسم العصابة / التنظيم</label><input type="text" id="popGangName" placeholder="Gang Name"></div>
@@ -2020,7 +2086,7 @@
                 <div class="input-group"><label>👥 الأعضاء (افصل بينهم بفاصلة)</label><input type="text" id="popGangMembers" placeholder="عضو 1, عضو 2, عضو 3"></div>
                 <div class="input-group"><label>تفاصيل المخطط والنشاطات</label><textarea id="popGangDetails" rows="3" placeholder="التفاصيل والارتباطات"></textarea></div>
             `;
-            openCustomModal("🏴‍☠️ إنشاء مخطط عصابة جديد", content, async () => {
+            openCustomModal("🏴‍☠️ إنشاء مجلد عصابة جديد", content, async () => {
                 const name = document.getElementById("popGangName").value.trim();
                 const leader = document.getElementById("popGangLeader").value.trim();
                 const deputy = document.getElementById("popGangDeputy").value.trim();
@@ -2032,6 +2098,38 @@
                 addLog(`قام [${currentUser}] بإضافة ملف مخطط عصابة: ${name}`);
                 await saveCloudData();
             });
+        }
+
+        function viewGangFolder(id) {
+            const g = globalDatabase.gangs.find(item => item.id === id);
+            if (!g) return;
+            const memberList = g.members ? g.members.split(',') : [];
+            const content = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <h3 style="color:var(--gold-color);">${g.name}</h3>
+                    <div class="action-btns">
+                        <button class="btn-edit-item" onclick="editGang(${g.id})">تعديل التنظيم ✏️</button>
+                        <button class="btn-del-item" onclick="deleteGang(${g.id})">حذف الملف 🗑️</button>
+                    </div>
+                </div>
+                <p style="font-size:12px; color:#d1d9e6; margin-bottom:15px; background:rgba(4,6,10,0.6); padding:10px; border-radius:6px;">${g.details || 'لا توجد تفاصيل إضافية'}</p>
+                
+                <div class="tree-container">
+                    <small style="color:var(--gold-color); font-weight:bold; display:block; margin-bottom:8px;">🌳 الشجرة الهيكلية للتنظيم</small>
+                    <div>
+                        <div class="tree-node tree-leader">👑 الرئيس: ${g.leader || 'غير معروف'}</div>
+                    </div>
+                    <div class="tree-line"></div>
+                    <div>
+                        <div class="tree-node tree-deputy">🎖️ النائب: ${g.deputy || 'غير معروف'}</div>
+                    </div>
+                    <div class="tree-line"></div>
+                    <div>
+                        ${memberList.length > 0 ? memberList.map(m => `<div class="tree-node tree-members">👤 ${m.trim()}</div>`).join('') : '<div class="tree-node tree-members">لا يوجد أعضاء مسجلين</div>'}
+                    </div>
+                </div>
+            `;
+            openCustomModal(`🏴‍☠️ ملف عصابة: ${g.name}`, content, null, false);
         }
 
         function editGang(id) {
@@ -2088,40 +2186,16 @@
                 (g.name && g.name.toLowerCase().includes(q)) || 
                 (g.details && g.details.toLowerCase().includes(q))
             ).forEach(g => {
-                const isOpen = openItemsState.gangs[g.id] === true;
-                const memberList = g.members ? g.members.split(',') : [];
                 const div = document.createElement("div");
-                div.className = "collapsible-item";
+                div.className = "item-folder-card";
+                div.onclick = () => viewGangFolder(g.id);
                 div.innerHTML = `
-                    <div class="collapsible-header" onclick="toggleCollapsibleManual('gangs', ${g.id}, this)">
-                        <div class="collapsible-title">🏴‍☠️ تنظيم: ${g.name}</div>
-                        <small style="color:var(--text-muted); font-size:11px;">عرض الشجرة التنظيمية ▼</small>
+                    <div>
+                        <span class="item-folder-icon">🕵️‍♂️</span>
+                        <span class="item-folder-title">${g.name}</span>
+                        <span class="item-folder-sub">القائد: ${g.leader || 'غير محدد'} | النائب: ${g.deputy || 'غير محدد'}</span>
                     </div>
-                    <div class="collapsible-body" style="display: ${isOpen ? 'block' : 'none'};">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                            <h4 style="color:var(--gold-color);">${g.name}</h4>
-                            <div class="action-btns">
-                                <button class="btn-edit-item" onclick="editGang(${g.id})">تعديل التنظيم ✏️</button>
-                                <button class="btn-del-item" onclick="deleteGang(${g.id})">حذف الملف</button>
-                            </div>
-                        </div>
-                        <p style="font-size:12px; color:#d1d9e6;">${g.details || 'لا توجد تفاصيل إضافية'}</p>
-                        
-                        <div class="tree-container">
-                            <small style="color:var(--gold-color); font-weight:bold; display:block; margin-bottom:8px;">🌳 الشجرة الهيكلية للتنظيم</small>
-                            <div>
-                                <div class="tree-node tree-leader">👑 الرئيس: ${g.leader || 'غير معروف'}</div>
-                            </div>
-                            <div class="tree-line"></div>
-                            <div>
-                                <div class="tree-node tree-deputy">🎖️ النائب: ${g.deputy || 'غير معروف'}</div>
-                            </div>
-                            <div class="tree-line"></div>
-                            <div>
-                                ${memberList.length > 0 ? memberList.map(m => `<div class="tree-node tree-members">👤 ${m.trim()}</div>`).join('') : '<div class="tree-node tree-members">لا يوجد أعضاء مسجلين</div>'}
-                            </div>
-                        </div>
-                    </div>
+                    <span class="item-folder-btn">عرض الهيكل ←</span>
                 `;
                 list.appendChild(div);
             });
@@ -2130,6 +2204,7 @@
         async function deleteGang(id) {
             if (confirm("حذف ملف العصابة والشجرة؟")) {
                 globalDatabase.gangs = globalDatabase.gangs.filter(g => g.id !== id);
+                closeModal();
                 await saveCloudData();
             }
         }
