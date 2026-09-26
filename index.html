@@ -56,41 +56,30 @@
         .dashboard-logo img { width: 58px; height: 58px; border-radius: 50%; }
         .grid-title { color: var(--gold-color); font-size: 20px; font-weight: 800; }
         
-        .folder-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 10px; }
-        @media (max-width: 800px) { .folder-grid { grid-template-columns: 1fr; } }
+        .folder-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 10px; }
+        @media (max-width: 900px) { .folder-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 500px) { .folder-grid { grid-template-columns: 1fr; } }
         
+        /* تقليص حجم مربعات التقارير لتكون مرتبة وصغيرة */
         .item-folder-card {
-            background: rgba(9, 16, 26, 0.85); border: 1px solid rgba(197, 160, 89, 0.35); border-radius: 10px; padding: 22px 18px;
+            background: rgba(9, 16, 26, 0.85); border: 1px solid rgba(197, 160, 89, 0.35); border-radius: 8px; padding: 15px 14px;
             cursor: pointer; transition: all 0.3s ease; text-align: right; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;
+            min-height: 120px;
         }
         .item-folder-card::before { content: ''; position: absolute; top: 0; right: 0; width: 4px; height: 100%; background: var(--gold-color); }
-        .item-folder-card:hover { transform: translateY(-4px); background: rgba(15, 25, 40, 0.95); }
-        .item-folder-icon { font-size: 32px; margin-bottom: 8px; display: block; }
-        .item-folder-title { display: block; color: #ffffff; font-size: 15px; font-weight: bold; margin-bottom: 6px; }
-        .item-folder-sub { color: var(--text-muted); font-size: 11px; display: block; margin-bottom: 12px; line-height: 1.4; }
-        .item-folder-btn { display: inline-block; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+        .item-folder-card:hover { transform: translateY(-3px); background: rgba(15, 25, 40, 0.95); border-color: var(--gold-color); }
+        .item-folder-icon { font-size: 22px; margin-bottom: 6px; display: block; }
+        .item-folder-title { display: block; color: #ffffff; font-size: 13px; font-weight: bold; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .item-folder-sub { color: var(--text-muted); font-size: 10px; display: block; margin-bottom: 8px; }
+        .item-folder-btn { display: inline-block; font-size: 9px; color: var(--accent-color); font-weight: bold; text-transform: uppercase; }
 
-        /* ألوان بطاقات المطلوبين حسب مستوى الخطورة */
-        .wanted-red {
-            border-color: rgba(217, 4, 41, 0.8) !important;
-            background: rgba(45, 8, 14, 0.65) !important;
-        }
-        .wanted-red::before { background: #d90429 !important; width: 6px !important; }
-        .wanted-red:hover { background: rgba(65, 10, 20, 0.85) !important; box-shadow: 0 0 20px rgba(217, 4, 41, 0.4); }
-
-        .wanted-orange {
-            border-color: rgba(249, 115, 22, 0.8) !important;
-            background: rgba(45, 22, 8, 0.65) !important;
-        }
-        .wanted-orange::before { background: #f97316 !important; width: 6px !important; }
-        .wanted-orange:hover { background: rgba(65, 32, 12, 0.85) !important; box-shadow: 0 0 20px rgba(249, 115, 22, 0.4); }
-
-        .wanted-yellow {
-            border-color: rgba(234, 179, 8, 0.8) !important;
-            background: rgba(40, 35, 8, 0.65) !important;
-        }
-        .wanted-yellow::before { background: #eab308 !important; width: 6px !important; }
-        .wanted-yellow:hover { background: rgba(58, 50, 12, 0.85) !important; box-shadow: 0 0 20px rgba(234, 179, 8, 0.4); }
+        /* ألوان مربعات المطلوبين */
+        .wanted-red { border-color: rgba(217, 4, 41, 0.8) !important; background: rgba(45, 8, 14, 0.65) !important; }
+        .wanted-red::before { background: #d90429 !important; width: 5px !important; }
+        .wanted-orange { border-color: rgba(249, 115, 22, 0.8) !important; background: rgba(45, 22, 8, 0.65) !important; }
+        .wanted-orange::before { background: #f97316 !important; width: 5px !important; }
+        .wanted-yellow { border-color: rgba(234, 179, 8, 0.8) !important; background: rgba(40, 35, 8, 0.65) !important; }
+        .wanted-yellow::before { background: #eab308 !important; width: 5px !important; }
         
         .folder-card {
             background: rgba(9, 16, 26, 0.7); border: 1px solid rgba(22, 34, 53, 0.9); border-radius: 10px; padding: 25px 20px; cursor: pointer; text-align: right; position: relative; overflow: hidden;
@@ -123,9 +112,9 @@
         
         .log-box { background: rgba(0, 0, 0, 0.8); border: 1px solid var(--border-color); border-radius: 6px; padding: 15px; font-family: monospace; font-size: 12px; color: #10b981; margin-top: 20px; max-height: 180px; overflow-y: auto; }
         .badge-danger { background: var(--danger-color); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 3px; }
-        .action-btns { display: flex; gap: 8px; }
-        .btn-del-item { background: var(--danger-color); color: #fff; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; position: static !important; }
-        .btn-edit-item { background: var(--gold-color); color: #000; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; }
+        .action-btns { display: flex; gap: 5px; align-items: center; }
+        .btn-del-item { background: var(--danger-color); color: #fff; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px; font-weight: bold; }
+        .btn-edit-item { background: var(--gold-color); color: #000; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px; font-weight: bold; }
         
         .tree-container { margin-top: 15px; padding: 15px; background: rgba(2, 4, 7, 0.9); border: 1px dashed var(--gold-color); border-radius: 8px; text-align: center; }
         .tree-node { display: inline-block; padding: 8px 16px; border-radius: 5px; font-size: 12px; font-weight: bold; margin: 5px; }
@@ -143,11 +132,19 @@
         video { max-width: 100%; border-radius: 5px; margin-top: 8px; }
         
         .custom-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(2, 4, 7, 0.9); z-index: 2000; justify-content: center; align-items: center; }
-        .custom-modal { background: rgba(11, 16, 23, 0.98); border: 1px solid var(--gold-color); border-radius: 10px; width: 90%; max-width: 600px; padding: 25px; max-height: 90vh; overflow-y: auto; }
+        .custom-modal { background: rgba(11, 16, 23, 0.98); border: 1px solid var(--gold-color); border-radius: 10px; width: 90%; max-width: 650px; padding: 25px; max-height: 90vh; overflow-y: auto; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 20px; }
         .modal-title { color: var(--gold-color); font-size: 16px; font-weight: bold; }
         .modal-close { cursor: pointer; color: var(--text-muted); font-size: 18px; font-weight: bold; }
         .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+
+        /* تصميم وثيقة التقرير الاستخباراتي الحقيقي داخل المودال */
+        .cia-classified-doc { background: #f4f4f0; color: #111; padding: 25px; border-radius: 6px; border: 2px solid #333; font-family: 'Courier New', Courier, monospace; position: relative; direction: rtl; text-align: right; }
+        .cia-doc-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px dashed #b91c1c; padding-bottom: 12px; margin-bottom: 15px; }
+        .cia-doc-logo { width: 50px; height: 50px; border-radius: 50%; border: 1px solid #000; }
+        .cia-top-secret-stamp { color: #b91c1c; font-size: 16px; font-weight: 900; letter-spacing: 2px; border: 2px solid #b91c1c; padding: 4px 10px; transform: rotate(-3deg); display: inline-block; }
+        .cia-doc-meta { font-size: 11px; color: #374151; margin-bottom: 15px; line-height: 1.5; border-bottom: 1px solid #d1d5db; padding-bottom: 10px; }
+        .cia-doc-body { background: #fff; padding: 15px; border: 1px solid #d1d5db; min-height: 120px; font-size: 13px; color: #1f2937; line-height: 1.6; }
         
         .broadcast-card-floating { display: none; position: fixed; bottom: 25px; left: 25px; width: 320px; background: rgba(11, 16, 23, 0.95); border: 1px solid var(--danger-color); border-radius: 10px; padding: 16px; z-index: 900; }
         .chat-box-container { height: 380px; overflow-y: auto; background: rgba(4, 6, 10, 0.8); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 12px; }
@@ -211,7 +208,7 @@
                     <small style="color:var(--text-muted)">اختر المجلد الاستخباراتي للوصول إلى قاعدة البيانات</small>
                 </div>
             </div>
-            <div class="folder-grid">
+            <div class="folder-grid" style="grid-template-columns: repeat(3, 1fr);">
                 <div class="folder-card" onclick="openSection('reportsSection')"><span class="folder-card-icon">📂</span><b>REPORTS</b><small>التقارير الرسمية</small><span class="open-lbl">فتح المجلد ←</span></div>
                 <div class="folder-card" onclick="openSection('wantedSection')"><span class="folder-card-icon">🚨</span><b>WANTED</b><small>المطلوبون للعدالة</small><span class="open-lbl">فتح المجلد ←</span></div>
                 <div class="folder-card" onclick="openSection('recordsSection')"><span class="folder-card-icon">📁</span><b>RECORDS</b><small>السجلات الجنائية</small><span class="open-lbl">فتح المجلد ←</span></div>
@@ -234,7 +231,6 @@
         <div class="workspace-panel leader-panel" id="leaderSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-top:0;">👑 مركز إدارة التراخيص والسرية</h3>
-            <p style="font-size:12px; color:#94a3b8; margin-bottom: 15px;">إنشاء، تعديل، وحذف حسابات الوكلاء أونلاين:</p>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
                 <div class="input-group"><label>اسم الوكيل</label><input type="text" id="new-username" placeholder="Username"></div>
                 <div class="input-group"><label>المعرف (Badge ID)</label><input type="text" id="new-id" placeholder="CIA-709"></div>
@@ -259,8 +255,8 @@
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">📝 قسم التقارير والمذكرات الاستخباراتية</h3>
             <button class="btn-create-action" onclick="openCreateReportModal()">➕ إنشاء مجلد تقرير جديد</button>
             <div class="input-group"><input type="text" id="reportSearch" class="search-box" placeholder="🔍 بحث في التقارير..." oninput="renderReports()"></div>
+            <!-- شبكة تقارير مصغرة ومنظمة -->
             <div id="reports-list" class="folder-grid"></div>
-            <div class="log-box" id="reports-log"></div>
         </div>
 
         <div class="workspace-panel" id="wantedSection">
@@ -268,7 +264,7 @@
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">📜 قائمة المطلوبين للعدالة</h3>
             <button class="btn-create-action" style="background: var(--danger-color);" onclick="openCreateWantedModal()">➕ إنشاء مطلوب جديد</button>
             <div class="input-group"><input type="text" id="wantedSearch" class="search-box" placeholder="🔍 بحث في المطلوبين..." oninput="renderWanted()"></div>
-            <div id="wanted-list" class="folder-grid"></div>
+            <div id="wanted-list" class="folder-grid" style="grid-template-columns: repeat(3, 1fr);"></div>
         </div>
 
         <div class="workspace-panel" id="recordsSection">
@@ -276,7 +272,7 @@
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">📂 السجل الجنائي للمواطنين</h3>
             <button class="btn-create-action" style="background: var(--gold-color); color:#000;" onclick="openCreateRecordModal()">🪪 إنشاء هوية جديدة</button>
             <div class="input-group"><input type="text" id="recordsSearch" class="search-box" placeholder="🔍 بحث في السجلات..." oninput="renderRecords()"></div>
-            <div id="records-list" class="folder-grid"></div>
+            <div id="records-list" class="folder-grid" style="grid-template-columns: repeat(3, 1fr);"></div>
         </div>
 
         <div class="workspace-panel" id="intelligenceSection">
@@ -284,7 +280,7 @@
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">GANG INTELLIGENCE & HIERARCHY 🕵️‍♂️</h3>
             <button class="btn-create-action" style="background: var(--gold-color); color:#000;" onclick="openCreateGangModal()">🏴‍☠️ إنشاء عصابة جديدة</button>
             <div class="input-group"><input type="text" id="gangsSearch" class="search-box" placeholder="🔍 بحث في العصابات..." oninput="renderGangs()"></div>
-            <div id="gangs-list" class="folder-grid"></div>
+            <div id="gangs-list" class="folder-grid" style="grid-template-columns: repeat(3, 1fr);"></div>
         </div>
 
         <div class="workspace-panel" id="casesSection">
@@ -330,13 +326,13 @@
     <div class="custom-modal-overlay" id="customModal">
         <div class="custom-modal">
             <div class="modal-header">
-                <div class="modal-title" id="modalTitle">✏️ تعديل البيانات</div>
+                <div class="modal-title" id="modalTitle">✏️ التقرير الاستخباراتي</div>
                 <span class="modal-close" onclick="closeModal()">✕</span>
             </div>
             <div id="modalBody"></div>
             <div class="modal-actions" id="modalActions">
-                <button class="btn-login" style="background:var(--success-color); margin-top:0;" id="modalSaveBtn">تأكيد وحفظ التعديل</button>
-                <button class="btn-login" style="background:rgba(255,255,255,0.1); color:#fff; margin-top:0;" onclick="closeModal()">إلغاء</button>
+                <button class="btn-login" style="background:var(--success-color); margin-top:0;" id="modalSaveBtn">تأكيد وحفظ</button>
+                <button class="btn-login" style="background:rgba(255,255,255,0.1); color:#fff; margin-top:0;" onclick="closeModal()">إغلاق</button>
             </div>
         </div>
     </div>
@@ -498,14 +494,18 @@
             document.getElementById("modalBody").innerHTML = html;
             document.getElementById("customModal").style.display = "flex";
             const saveBtn = document.getElementById("modalSaveBtn");
-            saveBtn.style.display = "block";
-            saveBtn.onclick = async () => {
-                saveBtn.disabled = true;
-                saveBtn.innerText = "جاري الحفظ الفوري...";
-                if (onSave) await onSave();
-                saveBtn.disabled = false;
-                saveBtn.innerText = "تأكيد وحفظ التعديل";
-            };
+            if (onSave) {
+                saveBtn.style.display = "block";
+                saveBtn.onclick = async () => {
+                    saveBtn.disabled = true;
+                    saveBtn.innerText = "جاري الحفظ الفوري...";
+                    await onSave();
+                    saveBtn.disabled = false;
+                    saveBtn.innerText = "تأكيد وحفظ";
+                };
+            } else {
+                saveBtn.style.display = "none";
+            }
         }
 
         function closeModal() {
@@ -513,11 +513,11 @@
             document.getElementById("customModal").style.display = "none";
         }
 
-        /* التقارير */
+        /* التقارير الرسمية بتصميم وثيقة استخباراتية حقيقية */
         function openCreateReportModal() {
-            openCustomModal("➕ إضافة تقرير جديد", `
-                <div class="input-group"><label>عنوان التقرير</label><input type="text" id="popReportTitle"></div>
-                <div class="input-group"><label>التفاصيل</label><textarea id="popReportDetails" rows="4"></textarea></div>
+            openCustomModal("➕ إنشاء تقرير استخباراتي جديد", `
+                <div class="input-group"><label>عنوان التقرير</label><input type="text" id="popReportTitle" placeholder="مثال: رصد تحركات مشبوهة"></div>
+                <div class="input-group"><label>نص التقرير والتفاصيل</label><textarea id="popReportDetails" rows="4" placeholder="تفاصيل العملية..."></textarea></div>
                 <div class="input-group"><label>Citizen ID المرتبط</label><input type="text" id="popReportCitizen" placeholder="CIA-102"></div>
                 <div class="input-group"><label>📁 إرفاق صورة دليل</label><input type="file" id="popReportImageFile" accept="image/*"></div>
                 <div class="input-group"><label>🎥 إرفاق فيديو دليل</label><input type="file" id="popReportVideoFile" accept="video/*"></div>
@@ -530,7 +530,7 @@
                 globalDatabase.reports.push({ 
                     id: Date.now(), title, details, 
                     citizen: document.getElementById("popReportCitizen").value.trim(), 
-                    image: img, video: vid, author: currentUser, date: new Date().toLocaleTimeString('ar-EG') 
+                    image: img, video: vid, author: currentUser, date: new Date().toLocaleDateString() 
                 });
                 await saveCloudData(); closeModal();
             });
@@ -539,16 +539,37 @@
         function viewReportFolder(id) {
             const r = globalDatabase.reports.find(item => item.id === id);
             if (!r) return;
-            openCustomModal(`📂 تقرير: ${r.title}`, `
-                <div class="action-btns" style="margin-bottom:15px;">
+            
+            const contentHtml = `
+                <div style="display:flex; justify-content:flex-end; gap:5px; margin-bottom:10px;">
                     <button class="btn-edit-item" onclick="editReport(${r.id})">تعديل ✏️</button>
                     <button class="btn-del-item" onclick="deleteReport(${r.id})">حذف 🗑️</button>
                 </div>
-                <div style="background:rgba(4,6,10,0.8); padding:12px; border-radius:6px; color:#e2e8f0; line-height:1.6;">${r.details}</div>
-                ${r.image ? `<div style="margin-top:10px;"><small style="color:var(--gold-color);">الصورة المرفقة:</small><br><img src="${r.image}" class="img-preview"></div>` : ''}
-                ${r.video ? `<div style="margin-top:10px;"><small style="color:var(--gold-color);">الفيديو المرفق:</small><br><video controls src="${r.video}"></video></div>` : ''}
-            `, null);
-            document.getElementById("modalSaveBtn").style.display = "none";
+                <div class="cia-classified-doc">
+                    <div class="cia-doc-header">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" class="cia-doc-logo" alt="CIA">
+                            <div>
+                                <b style="font-size:13px; display:block;">CENTRAL INTELLIGENCE AGENCY</b>
+                                <small style="font-size:9px; color:#555;">FEDERAL BUREAU RECORDS</small>
+                            </div>
+                        </div>
+                        <div class="cia-top-secret-stamp">TOP SECRET // EYES ONLY</div>
+                    </div>
+                    <div class="cia-doc-meta">
+                        <div><b>العنوان:</b> ${r.title}</div>
+                        <div><b>الكاتب / الوكيل:</b> ${r.author} | <b>التاريخ:</b> ${r.date || 'اليوم'}</div>
+                        <div><b>Citizen ID:</b> ${r.citizen || 'N/A'}</div>
+                    </div>
+                    <div class="cia-doc-body">
+                        <div style="margin-bottom:8px; font-weight:bold; color:#b91c1c; font-size:11px;">[مضمون التقرير الاستخباراتي]:</div>
+                        ${r.details}
+                        ${r.image ? `<div style="margin-top:12px;"><b style="font-size:10px; color:#333;">المرفقات البصرية:</b><br><img src="${r.image}" class="img-preview" style="border:1px solid #999;"></div>` : ''}
+                        ${r.video ? `<div style="margin-top:12px;"><b style="font-size:10px; color:#333;">المرفقات المرئية:</b><br><video controls src="${r.video}"></video></div>` : ''}
+                    </div>
+                </div>
+            `;
+            openCustomModal(`📋 وثيقة رسمية - ${r.title}`, contentHtml, null);
         }
 
         function editReport(id) {
@@ -562,7 +583,9 @@
                 r.title = document.getElementById("editReportTitle").value.trim();
                 r.details = document.getElementById("editReportDetails").value.trim();
                 r.citizen = document.getElementById("editReportCitizen").value.trim();
-                await saveCloudData(); closeModal();
+                await saveCloudData(); 
+                closeModal();
+                viewReportFolder(r.id);
             });
         }
 
@@ -571,15 +594,27 @@
             if (!list) return;
             list.innerHTML = "";
             globalDatabase.reports.forEach(r => {
-                list.innerHTML += `<div class="item-folder-card" onclick="viewReportFolder(${r.id})"><div><span class="item-folder-icon">📂</span><span class="item-folder-title">${r.title}</span><span class="item-folder-sub">الكاتب: ${r.author}</span></div><span class="item-folder-btn">دخول ←</span></div>`;
+                list.innerHTML += `
+                    <div class="item-folder-card" onclick="viewReportFolder(${r.id})">
+                        <div>
+                            <span class="item-folder-icon">📂</span>
+                            <span class="item-folder-title">${r.title}</span>
+                            <span class="item-folder-sub">الكاتب: ${r.author}</span>
+                        </div>
+                        <span class="item-folder-btn">فتح الملف ←</span>
+                    </div>`;
             });
         }
 
         async function deleteReport(id) {
-            if (confirm("حذف؟")) { globalDatabase.reports = globalDatabase.reports.filter(r => r.id !== id); await saveCloudData(); closeModal(); }
+            if (confirm("هل أنت متأكد من حذف هذا التقرير نهائياً؟")) { 
+                globalDatabase.reports = globalDatabase.reports.filter(r => r.id !== id); 
+                await saveCloudData(); 
+                closeModal(); 
+            }
         }
 
-        /* المطلوبين (بالألوان المخصصة حسب الخطورة) */
+        /* المطلوبين */
         function openCreateWantedModal() {
             openCustomModal("➕ مطلوب جديد", `
                 <div class="input-group"><label>اسم المطلوب</label><input type="text" id="popWantedName"></div>
@@ -600,14 +635,13 @@
             const w = globalDatabase.wanted.find(item => item.id === id);
             if (!w) return;
             openCustomModal(`🚨 مطلوب: ${w.name}`, `
-                <div class="action-btns" style="margin-bottom:15px;">
+                <div style="display:flex; justify-content:flex-end; gap:5px; margin-bottom:10px;">
                     <button class="btn-edit-item" onclick="editWanted(${w.id})">تعديل ✏️</button>
                     <button class="btn-del-item" onclick="deleteWanted(${w.id})">حذف 🗑️</button>
                 </div>
                 <div><span class="badge-danger">${w.risk}</span></div>
                 <div style="background:rgba(4,6,10,0.8); padding:12px; border-radius:6px; margin-top:10px;"><b>التهم:</b><br>${w.crime}</div>
             `, null);
-            document.getElementById("modalSaveBtn").style.display = "none";
         }
 
         function editWanted(id) {
@@ -641,7 +675,7 @@
                             <span class="item-folder-title">${w.name}</span>
                             <span class="item-folder-sub">${w.risk}</span>
                         </div>
-                        <span class="item-folder-btn" style="color:var(--text-color);">دخول الملف ←</span>
+                        <span class="item-folder-btn" style="color:var(--text-color);">فتح الملف ←</span>
                     </div>`;
             });
         }
@@ -684,7 +718,7 @@
             const r = globalDatabase.records.find(item => item.id === id);
             if (!r) return;
             openCustomModal(`🪪 هوية: ${r.firstName} ${r.lastName}`, `
-                <div class="action-btns" style="margin-bottom:12px;">
+                <div style="display:flex; justify-content:flex-end; gap:5px; margin-bottom:10px;">
                     <button class="btn-edit-item" onclick="editRecord(${r.id})">تعديل ✏️</button>
                     <button class="btn-del-item" onclick="deleteRecord(${r.id})">حذف 🗑️</button>
                 </div>
@@ -701,7 +735,6 @@
                     <div class="id-card-notes"><b>ملاحظات:</b> ${r.notes}</div>
                 </div>
             `, null);
-            document.getElementById("modalSaveBtn").style.display = "none";
         }
 
         function editRecord(id) {
@@ -732,7 +765,7 @@
             if (!list) return;
             list.innerHTML = "";
             globalDatabase.records.forEach(r => {
-                list.innerHTML += `<div class="item-folder-card" onclick="viewRecordFolder(${r.id})"><div><span class="item-folder-icon">📁</span><span class="item-folder-title">${r.firstName} ${r.lastName}</span><span class="item-folder-sub">ID: ${r.cid}</span></div><span class="item-folder-btn">عرض ←</span></div>`;
+                list.innerHTML += `<div class="item-folder-card" onclick="viewRecordFolder(${r.id})"><div><span class="item-folder-icon">📁</span><span class="item-folder-title">${r.firstName} ${r.lastName}</span><span class="item-folder-sub">ID: ${r.cid}</span></div><span class="item-folder-btn">فتح الهوية ←</span></div>`;
             });
         }
 
@@ -770,7 +803,7 @@
             if (!g) return;
             const members = g.members ? g.members.split(',') : [];
             openCustomModal(`🏴‍☠️ عصابة: ${g.name}`, `
-                <div class="action-btns" style="margin-bottom:10px;">
+                <div style="display:flex; justify-content:flex-end; gap:5px; margin-bottom:10px;">
                     <button class="btn-edit-item" onclick="editGang(${g.id})">تعديل ✏️</button>
                     <button class="btn-del-item" onclick="deleteGang(${g.id})">حذف 🗑️</button>
                 </div>
@@ -783,7 +816,6 @@
                     <div>${members.map(m => `<div class="tree-node tree-members">👤 ${m.trim()}</div>`).join('')}</div>
                 </div>
             `, null);
-            document.getElementById("modalSaveBtn").style.display = "none";
         }
 
         function editGang(id) {
@@ -812,7 +844,7 @@
             if (!list) return;
             list.innerHTML = "";
             globalDatabase.gangs.forEach(g => {
-                list.innerHTML += `<div class="item-folder-card" onclick="viewGangFolder(${g.id})"><div><span class="item-folder-icon">🕵️‍♂️</span><span class="item-folder-title">${g.name}</span><span class="item-folder-sub">القائد: ${g.leader || 'N/A'}</span></div><span class="item-folder-btn">عرض ←</span></div>`;
+                list.innerHTML += `<div class="item-folder-card" onclick="viewGangFolder(${g.id})"><div><span class="item-folder-icon">🕵️‍♂️</span><span class="item-folder-title">${g.name}</span><span class="item-folder-sub">القائد: ${g.leader || 'N/A'}</span></div><span class="item-folder-btn">فتح الملف ←</span></div>`;
             });
         }
 
