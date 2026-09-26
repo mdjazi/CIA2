@@ -3,24 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CIA CENTRAL SYSTEM</title>
-    <!-- FontAwesome للأيقونات -->
+    <title>CENTRAL INTELLIGENCE AGENCY // SYSTEM ACCESS</title>
+    <!-- FontAwesome icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
         :root {
             --primary-color: #00ffcc;
+            --secondary-color: #0088cc;
             --bg-color: #050b14;
             --panel-bg: rgba(10, 25, 47, 0.85);
             --border-color: rgba(0, 255, 204, 0.3);
             --text-color: #e6f1ff;
+            --text-dim: #8892b0;
+            --danger-color: #ff3366;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Courier New', Courier, monospace;
         }
 
         body {
@@ -30,7 +32,7 @@
             min-height: 100vh;
         }
 
-        /* خلفية الماتريكس/البرمجة */
+        /* خلفية الماتريكس والبرمجة */
         #matrixCanvas {
             position: fixed;
             top: 0;
@@ -38,11 +40,11 @@
             width: 100vw;
             height: 100vh;
             z-index: 1;
-            opacity: 0.15;
+            opacity: 0.18;
             pointer-events: none;
         }
 
-        /* شاشة التحميل - بدون شعار */
+        /* 1. شاشة التحميل (بدون شعار - خلفية برمجة فقط) */
         #splashScreen {
             position: fixed;
             top: 0;
@@ -57,25 +59,33 @@
             align-items: center;
         }
 
+        .loader-title {
+            color: var(--primary-color);
+            font-size: 20px;
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px var(--primary-color);
+        }
+
         .loader-bar {
-            width: 300px;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
-            overflow: hidden;
-            margin-top: 20px;
+            width: 320px;
+            height: 8px;
+            background: rgba(0, 255, 204, 0.1);
             border: 1px solid var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
         }
 
         .loader-progress {
             width: 0%;
             height: 100%;
             background: var(--primary-color);
-            box-shadow: 0 0 10px var(--primary-color);
+            box-shadow: 0 0 15px var(--primary-color);
             transition: width 0.1s linear;
         }
 
-        /* شاشة الدخول */
+        /* 2. شاشة تسجيل الدخول */
         #loginScreen {
             position: fixed;
             top: 0;
@@ -93,56 +103,76 @@
             border: 1px solid var(--border-color);
             padding: 40px;
             border-radius: 8px;
-            width: 380px;
+            width: 400px;
             text-align: center;
-            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
-            backdrop-filter: blur(5px);
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.15);
+            backdrop-filter: blur(8px);
+            position: relative;
         }
 
         .login-card img {
-            width: 100px;
+            width: 110px;
             margin-bottom: 20px;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 204, 0.4));
         }
 
         .input-group {
-            margin-bottom: 15px;
+            margin-bottom: 18px;
+            text-align: right;
         }
 
-        .input-group input {
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .input-group input, .input-group textarea {
             width: 100%;
             padding: 12px;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             border: 1px solid var(--border-color);
             color: var(--primary-color);
             border-radius: 4px;
             outline: none;
-            text-align: center;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus, .input-group textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
         }
 
         .btn {
             background: transparent;
             color: var(--primary-color);
             border: 1px solid var(--primary-color);
-            padding: 10px 20px;
+            padding: 12px 24px;
             cursor: pointer;
             border-radius: 4px;
-            transition: 0.3s;
+            transition: all 0.3s ease;
             width: 100%;
             font-weight: bold;
+            letter-spacing: 1.5px;
         }
 
         .btn:hover {
             background: var(--primary-color);
             color: #000;
-            box-shadow: 0 0 15px var(--primary-color);
+            box-shadow: 0 0 20px var(--primary-color);
         }
 
-        /* الواجهة الرئيسية */
+        /* 3. التطبيق والواجهة الرئيسية */
         #mainApp {
             display: none;
             position: relative;
             z-index: 2;
-            padding: 20px;
+            padding: 25px;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         /* شريط الملاحة والتنقل العلوي */
@@ -155,15 +185,16 @@
             border: 1px solid var(--border-color);
             border-radius: 8px;
             margin-bottom: 25px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
         }
 
         .nav-controls {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             align-items: center;
         }
 
-        /* أزرار الأسهم والبيت بنفس اللون وبدون نص */
+        /* أزرار السهم والبيت موحدة الألوان وبدون نصوص */
         .icon-nav-btn {
             background: rgba(0, 255, 204, 0.05);
             border: 1px solid var(--border-color);
@@ -182,36 +213,42 @@
         .icon-nav-btn:hover {
             background: var(--primary-color);
             color: #000;
-            box-shadow: 0 0 10px var(--primary-color);
+            box-shadow: 0 0 12px var(--primary-color);
         }
 
-        /* شبكة المجلدات */
+        /* شبكة المجلدات الرئيسية */
         .folders-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
             gap: 20px;
         }
 
         .folder-card {
             background: var(--panel-bg);
             border: 1px solid var(--border-color);
-            padding: 30px 20px;
+            padding: 35px 20px;
             border-radius: 8px;
             text-align: center;
             cursor: pointer;
-            transition: 0.3s;
+            transition: all 0.3s ease;
         }
 
         .folder-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 0 15px var(--border-color);
             border-color: var(--primary-color);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.25);
         }
 
         .folder-card i {
-            font-size: 40px;
+            font-size: 45px;
             color: var(--primary-color);
             margin-bottom: 15px;
+        }
+
+        .folder-card h3 {
+            font-size: 16px;
+            letter-spacing: 1px;
+            color: var(--text-color);
         }
 
         /* واجهة عرض المجلد الداخلي */
@@ -219,8 +256,9 @@
             display: none;
             background: var(--panel-bg);
             border: 1px solid var(--border-color);
-            padding: 25px;
+            padding: 30px;
             border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
         }
 
         .folder-header {
@@ -229,18 +267,19 @@
             align-items: center;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .btn-create {
             width: auto;
-            padding: 8px 18px;
-            display: flex;
+            padding: 10px 22px;
+            display: inline-flex;
             align-items: center;
             gap: 8px;
+            font-size: 14px;
         }
 
-        /* النوافذ المنبثقة (Modal) */
+        /* قائمة النوافذ المنبثقة (Modal) للإنشاء/التعديل */
         .modal {
             display: none;
             position: fixed;
@@ -248,10 +287,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             z-index: 1000;
             justify-content: center;
             align-items: center;
+            backdrop-filter: blur(5px);
         }
 
         .modal-content {
@@ -259,8 +299,9 @@
             border: 1px solid var(--primary-color);
             padding: 30px;
             border-radius: 8px;
-            width: 450px;
-            box-shadow: 0 0 25px rgba(0, 255, 204, 0.3);
+            width: 500px;
+            max-width: 90%;
+            box-shadow: 0 0 30px rgba(0, 255, 204, 0.3);
         }
 
         .modal-header {
@@ -269,25 +310,43 @@
             align-items: center;
             margin-bottom: 20px;
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
+            padding-bottom: 12px;
         }
 
         .close-btn {
             color: var(--primary-color);
-            font-size: 20px;
+            font-size: 22px;
             cursor: pointer;
+            transition: 0.2s;
         }
 
-        textarea {
-            width: 100%;
-            height: 100px;
+        .close-btn:hover {
+            color: var(--danger-color);
+        }
+
+        .items-container {
+            display: grid;
+            gap: 15px;
+        }
+
+        .data-card {
             background: rgba(0, 0, 0, 0.5);
             border: 1px solid var(--border-color);
+            padding: 18px;
+            border-radius: 6px;
+            position: relative;
+        }
+
+        .data-card h4 {
             color: var(--primary-color);
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            outline: none;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .data-card p {
+            color: var(--text-dim);
+            font-size: 13px;
+            line-height: 1.5;
         }
     </style>
 </head>
@@ -298,28 +357,30 @@
 
     <!-- 1. شاشة التحميل (بدون شعار - فقط خلفية برمجة ومؤشر تقدم) -->
     <div id="splashScreen">
-        <h2 style="color: var(--primary-color); letter-spacing: 2px;">INITIALIZING SYSTEM...</h2>
+        <div class="loader-title">SYSTEM INITIALIZATION...</div>
         <div class="loader-bar">
             <div class="loader-progress" id="loaderProgress"></div>
         </div>
     </div>
 
-    <!-- 2. شاشة الدخول -->
+    <!-- 2. شاشة تسجيل الدخول -->
     <div id="loginScreen" style="display: none;">
         <div class="login-card">
-            <img src="https://i.ibb.co/L5QG2Q5/CIA-Logo.png" alt="CIA Logo">
-            <h3 style="margin-bottom: 20px; color: var(--primary-color);">SYSTEM ACCESS</h3>
+            <img src="https://i.ibb.co/L5QG2Q5/CIA-Logo.png" alt="CIA Emblem">
+            <h3 style="margin-bottom: 25px; color: var(--primary-color); letter-spacing: 2px;">CENTRAL SYSTEM ACCESS</h3>
             <div class="input-group">
-                <input type="text" placeholder="USERNAME">
+                <label>USER ID / AGENT NAME</label>
+                <input type="text" placeholder="ENTER USERNAME">
             </div>
             <div class="input-group">
-                <input type="password" placeholder="PASSCODE">
+                <label>SECURITY PASSCODE</label>
+                <input type="password" placeholder="ENTER PASSCODE">
             </div>
-            <button class="btn" onclick="login()">LOGIN</button>
+            <button class="btn" onclick="login()">AUTHENTICATE</button>
         </div>
     </div>
 
-    <!-- 3. التطبيق الرئيسي -->
+    <!-- 3. الواجهة الرئيسية -->
     <div id="mainApp">
         <!-- شريط الملاحة -->
         <div class="top-nav">
@@ -328,15 +389,17 @@
                 <button class="icon-nav-btn" onclick="goBack()" title="رجوع للخلف">
                     <i class="fas fa-arrow-right"></i>
                 </button>
-                <!-- زر الصفحة الرئيسية (بيت فقط وبنفس اللون) -->
+                <!-- زر الصفحة الرئيسية (بيت فقط وبنفس لون سهم الرجوع) -->
                 <button class="icon-nav-btn" onclick="goHome()" title="الصفحة الرئيسية">
                     <i class="fas fa-home"></i>
                 </button>
             </div>
-            <div style="font-weight: bold; color: var(--primary-color);">CIA SYSTEM // AUTHORIZED ACCESS ONLY</div>
+            <div style="font-weight: bold; color: var(--primary-color); letter-spacing: 1px;">
+                CENTRAL INTELLIGENCE AGENCY // CLASSIFIED DATABASE
+            </div>
         </div>
 
-        <!-- شبكة المجلدات الرئيسية -->
+        <!-- الصفحة الرئيسية (المجلدات) -->
         <div id="homeView" class="folders-grid">
             <div class="folder-card" onclick="openFolder('REPORTS')">
                 <i class="fas fa-folder-open"></i>
@@ -344,46 +407,48 @@
             </div>
             <div class="folder-card" onclick="openFolder('WANTED')">
                 <i class="fas fa-user-ninja"></i>
-                <h3>WANTED</h3>
+                <h3>WANTED LIST</h3>
             </div>
             <div class="folder-card" onclick="openFolder('RECORDS')">
                 <i class="fas fa-id-card"></i>
-                <h3>RECORDS</h3>
+                <h3>DOSSIER RECORDS</h3>
             </div>
             <div class="folder-card" onclick="openFolder('INTELLIGENCE')">
                 <i class="fas fa-sitemap"></i>
-                <h3>INTELLIGENCE</h3>
+                <h3>INTELLIGENCE NET</h3>
             </div>
         </div>
 
-        <!-- عرض المجلد الداخلي -->
+        <!-- واجهة عرض المجلد الداخلي -->
         <div id="folderView">
             <div class="folder-header">
-                <h2 id="folderTitle" style="color: var(--primary-color);">اسم المجلد</h2>
-                <!-- زر إنشاء القائمة داخل المجلد -->
+                <h2 id="folderTitle" style="color: var(--primary-color); font-size: 20px;">FOLDER VIEW</h2>
+                <!-- زر إنشاء قائمة جديدة داخل المجلد -->
                 <button class="btn btn-create" onclick="openCreateModal()">
                     <i class="fas fa-plus"></i> إنشاء
                 </button>
             </div>
-            <div id="folderContent">
-                <p>لا توجد عناصر حالياً...</p>
+            <div id="folderContent" class="items-container">
+                <p style="color: var(--text-dim); text-align: center;">لا توجد سجلاّت حالياً داخل هذا المجلد.</p>
             </div>
         </div>
     </div>
 
-    <!-- النافذة المنبثقة لـ (إنشاء) -->
+    <!-- قائمة إنشاء عنصر جديد (Modal) -->
     <div id="createModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 style="color: var(--primary-color);">إنشاء عنصر جديد</h3>
+                <h3 style="color: var(--primary-color);">إنشاء / إضافة عنصر جديد</h3>
                 <span class="close-btn" onclick="closeCreateModal()">&times;</span>
             </div>
             <form onsubmit="handleCreate(event)">
                 <div class="input-group">
-                    <input type="text" id="createTitle" placeholder="العنوان / الاسم" required>
+                    <label>العنوان / اسم السجل</label>
+                    <input type="text" id="createTitle" placeholder="أدخل العنوان..." required>
                 </div>
                 <div class="input-group">
-                    <textarea id="createDetails" placeholder="التفاصيل والمعلومات..." required></textarea>
+                    <label>التفاصيل والمعلومات</label>
+                    <textarea id="createDetails" rows="4" placeholder="أدخل بيانات التقرير أو الملاحظات..." required></textarea>
                 </div>
                 <button type="submit" class="btn">حفظ وإنشاء</button>
             </form>
@@ -391,12 +456,17 @@
     </div>
 
     <script>
-        // خلفية الماتريكس (البرمجة)
+        // خلفية الماتريكس (خلفية البرمجة السيبرانية)
         const canvas = document.getElementById('matrixCanvas');
         const ctx = canvas.getContext('2d');
 
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
 
         const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZCIA';
         const fontSize = 14;
@@ -426,14 +496,14 @@
         let progress = 0;
         const progressBar = document.getElementById('loaderProgress');
         const interval = setInterval(() => {
-            progress += 5;
+            progress += 4;
             progressBar.style.width = progress + '%';
             if (progress >= 100) {
                 clearInterval(interval);
                 document.getElementById('splashScreen').style.display = 'none';
                 document.getElementById('loginScreen').style.display = 'flex';
             }
-        }, 100);
+        }, 80);
 
         // تسجيل الدخول
         function login() {
@@ -448,7 +518,7 @@
             currentFolder = folderName;
             document.getElementById('homeView').style.display = 'none';
             document.getElementById('folderView').style.display = 'block';
-            document.getElementById('folderTitle').innerText = 'مجلد // ' + folderName;
+            document.getElementById('folderTitle').innerText = 'FOLDER // ' + folderName;
         }
 
         function goHome() {
@@ -462,7 +532,7 @@
             }
         }
 
-        // نوافذ الإنشاء
+        // إدارة فتح وإغلاق نافذة "إنشاء"
         function openCreateModal() {
             document.getElementById('createModal').style.display = 'flex';
         }
@@ -471,23 +541,29 @@
             document.getElementById('createModal').style.display = 'none';
         }
 
+        // حفظ بيانات عنصر جديد داخل المجلد
         function handleCreate(e) {
             e.preventDefault();
             const title = document.getElementById('createTitle').value;
             const details = document.getElementById('createDetails').value;
 
             const folderContent = document.getElementById('folderContent');
+            
+            // إزالة الرسالة التلقائية إذا كانت موجودة
             if (folderContent.querySelector('p')) {
                 folderContent.innerHTML = '';
             }
 
             const itemCard = document.createElement('div');
-            itemCard.style.cssText = 'background: rgba(0,0,0,0.4); border: 1px solid var(--border-color); padding: 15px; margin-bottom: 10px; border-radius: 4px;';
-            itemCard.innerHTML = `<h4 style="color: var(--primary-color);">${title}</h4><p style="margin-top: 5px; font-size: 14px;">${details}</p>`;
+            itemCard.className = 'data-card';
+            itemCard.innerHTML = `
+                <h4>${title}</h4>
+                <p>${details}</p>
+            `;
             
-            folderContent.appendChild(itemCard);
+            folderContent.prepend(itemCard);
 
-            // تفريغ الحقول وإغلاق النافذة
+            // إعادة تعيين المدخلات وإغلاق النافذة
             document.getElementById('createTitle').value = '';
             document.getElementById('createDetails').value = '';
             closeCreateModal();
