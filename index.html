@@ -165,7 +165,7 @@
         .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
         
         /* وثيقة التقرير الاستخباراتي */
-        .cia-classified-doc { background: #f4f4f0; color: #111; padding: 30px; border-radius: 6px; border: 2px solid #333; font-family: 'Courier New', Courier, monospace; position: relative; direction: rtl; text-align: right; overflow: hidden; font-weight: bold; }
+        .cia-classified-doc { background: #f4f4f0; color: #111; padding: 30px; border-radius: 6px; border: 2px solid #333; font-family: Tahoma, 'Segoe UI', Arial, sans-serif; position: relative; direction: rtl; text-align: right; overflow: hidden; font-weight: bold; }
         .cia-classified-doc::before {
             content: "";
             position: absolute;
@@ -183,7 +183,21 @@
             z-index: 0;
         }
         .cia-doc-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px dashed #b91c1c; padding-bottom: 15px; margin-bottom: 12px; position: relative; z-index: 1; }
-        .cia-top-secret-stamp { color: #b91c1c; font-size: 10px; font-weight: 900; letter-spacing: 1px; border: 1.5px solid #b91c1c; padding: 2px 6px; transform: rotate(-3deg); display: inline-block; background: rgba(185, 28, 28, 0.05); }
+        
+        /* تحسين واستقرار خط وختم سري للغاية لتجنب التداخل عند التصدير كصورة */
+        .cia-top-secret-stamp { 
+            color: #b91c1c; 
+            font-size: 12px; 
+            font-weight: 900; 
+            letter-spacing: 1px; 
+            border: 2px solid #b91c1c; 
+            padding: 4px 10px; 
+            display: inline-block; 
+            background: rgba(185, 28, 28, 0.05); 
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+        
         .cia-doc-meta { font-size: 12px; color: #111; margin-bottom: 10px; line-height: 1.5; border-bottom: 1px solid #b5b9c0; padding-bottom: 8px; position: relative; z-index: 1; font-weight: bold; }
         .cia-doc-body { background: transparent; padding: 2px 0 8px 0; min-height: 120px; font-size: 13px; color: #111; line-height: 1.5; position: relative; z-index: 1; font-weight: bold; white-space: pre-wrap; word-break: break-word; }
         
@@ -540,10 +554,10 @@
             const btn = document.getElementById("evidenceToggleBtn");
             if (wrapper.style.display === "none" || wrapper.style.display === "") {
                 wrapper.style.display = "block";
-                btn.innerHTML = "👁️ إخفاء الأدلة المرفقة";
+                if(btn) btn.innerHTML = "👁️ إخفاء الأدلة المرفقة";
             } else {
                 wrapper.style.display = "none";
-                btn.innerHTML = "👁️ عرض الأدلة المرفقة";
+                if(btn) btn.innerHTML = "👁️ عرض الأدلة المرفقة";
             }
         }
         function getReportDocHtml(titleVal = "", detailsVal = "", imageUrlVal = "", videoUrlVal = "", authorVal = currentUser, dateVal = new Date().toLocaleDateString(), dayVal = new Date().toLocaleDateString('ar-EG', { weekday: 'long' }), isEdit = false) {
@@ -622,7 +636,7 @@
                     itemsRendered += `
                         <div class="evidence-item-card">
                             <b style="font-size:10px; color:#111;">📷 صورة الدليل #${index + 1}:</b><br>
-                            <img src="${img.trim()}" class="img-preview" style="border:1px solid #333;">
+                            <img src="${img.trim()}" class="img-preview" style="border:1px solid #333;" crossorigin="anonymous">
                         </div>`;
                 });
                 videosList.forEach((vid, index) => {
@@ -634,7 +648,7 @@
                 });
                 evidenceHtml = `
                     <div class="evidence-folder-box">
-                        <div class="evidence-folder-title">📁 [ الأدلة المرفقة] - CLASSIFIED EVIDENCE</div>
+                        <div class="evidence-folder-title">📁 [الأدلة المرفقة] - CLASSIFIED EVIDENCE</div>
                         <button type="button" class="evidence-toggle-btn" id="evidenceToggleBtn" onclick="toggleEvidenceContent()">👁️ عرض الأدلة المرفقة</button>
                         <div class="evidence-content-wrapper" id="evidenceContentWrapper">
                             ${itemsRendered}
@@ -652,7 +666,7 @@
                     <div class="cia-doc-header">
                         <div style="font-size:20px; font-weight:900; letter-spacing:2px; color:#111;">CIA</div>
                         <div style="text-align:center;">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" style="width:60px; height:60px; border-radius:50%; border:1px solid #000; display:inline-block;" alt="CIA">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" style="width:60px; height:60px; border-radius:50%; border:1px solid #000; display:inline-block;" alt="CIA" crossorigin="anonymous">
                             <div style="font-size:8px; color:#444; margin-top:8px; font-weight:900; letter-spacing:1px;">FEDERAL BUREAU RECORDS</div>
                         </div>
                         <div class="cia-top-secret-stamp">سري للغاية</div>
@@ -671,22 +685,42 @@
             `;
             openCustomModal(`📋 وثيقة رسمية - ${r.title}`, contentHtml, null);
         }
+
         async function saveReportAsImage() {
             const docElement = document.getElementById("docToCapture");
             if (!docElement) return alert("لم يتم العثور على وثيقة التقرير!");
 
             const statusElem = document.getElementById("loading-status");
-            if (statusElem) statusElem.innerText = "⏳ جاري تحويل التقرير إلى صورة...";
+            if (statusElem) statusElem.innerText = "⏳ جاري فتح الأدلة وتحويل التقرير إلى صورة...";
+
+            // 1. فتح قسم الأدلة وتنسيقه ليكون ظاهراً في الصورة بشكل تلقائي
+            const evidenceWrapper = document.getElementById("evidenceContentWrapper");
+            const evidenceBtn = document.getElementById("evidenceToggleBtn");
+            let originalWrapperDisplay = "";
+            let originalBtnDisplay = "";
+
+            if (evidenceWrapper) {
+                originalWrapperDisplay = evidenceWrapper.style.display;
+                evidenceWrapper.style.display = "block"; // إظهار الأدلة في الصورة
+            }
+            if (evidenceBtn) {
+                originalBtnDisplay = evidenceBtn.style.display;
+                evidenceBtn.style.display = "none"; // إخفاء زر الضغط التفاعلي داخل الصورة النهائية
+            }
 
             try {
+                // التقاط الصورة بدقة عالية مع معالجة الخطوط
                 const canvas = await html2canvas(docElement, {
                     scale: 2,
                     useCORS: true,
-                    backgroundColor: "#f4f4f0"
+                    allowTaint: true,
+                    backgroundColor: "#f4f4f0",
+                    logging: false
                 });
 
                 const imageUrl = canvas.toDataURL("image/png");
 
+                // تنزيل الصورة
                 const downloadLink = document.createElement("a");
                 downloadLink.href = imageUrl;
                 downloadLink.download = `تقرير_استخباراتي_${Date.now()}.png`;
@@ -694,10 +728,11 @@
                 downloadLink.click();
                 document.body.removeChild(downloadLink);
 
-                openCustomModal("📸 رابط صورة التقرير", `
+                // إظهار نافذة تحتوي على رابط الصورة المعالجة
+                openCustomModal("📸 رابط صورة التقرير مع الأدلة", `
                     <div style="text-align:center;">
-                        <p style="color:var(--gold-color); font-size:13px; margin-bottom:10px;">✅ تم حفظ التقرير كصورة بنجاح!</p>
-                        <img src="${imageUrl}" style="max-width:100%; border:1px solid #c5a059; border-radius:6px; margin-bottom:12px;">
+                        <p style="color:var(--gold-color); font-size:13px; margin-bottom:10px;">✅ تم حفظ التقرير بجميع أدلته كصورة بنجاح!</p>
+                        <img src="${imageUrl}" style="max-width:100%; max-height:350px; border:1px solid #c5a059; border-radius:6px; margin-bottom:12px;">
                         <div class="input-group">
                             <label>🔗 رابط الصورة (Data URL):</label>
                             <textarea rows="3" readonly style="font-size:10px; word-break:break-all; text-align:left; direction:ltr;" onclick="this.select()">${imageUrl}</textarea>
@@ -705,12 +740,17 @@
                     </div>
                 `, null);
 
-                if (statusElem) statusElem.innerText = "✅ تم حفظ التقرير كصورة ورابط بنجاح";
+                if (statusElem) statusElem.innerText = "✅ تم حفظ التقرير كصورة بنجاح";
             } catch (err) {
                 console.error(err);
                 alert("⚠️ حدث خطأ أثناء تحويل التقرير إلى صورة!");
+            } finally {
+                // إرجاع خيارات العرض للوضع التفاعلي بعد الانتهاء من التقاط الصورة
+                if (evidenceWrapper) evidenceWrapper.style.display = originalWrapperDisplay;
+                if (evidenceBtn) evidenceBtn.style.display = originalBtnDisplay;
             }
         }
+
         function editReport(id) {
             const r = globalDatabase.reports.find(item => item.id === id);
             if (!r) return;
@@ -881,7 +921,7 @@
                 <div class="id-card-tactical">
                     <div class="id-card-header">IDENTIFICATION CARD</div>
                     <div class="id-card-body">
-                        <div class="id-card-photo-box"><img src="${r.photo || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=300&h=350'}"></div>
+                        <div class="id-card-photo-box"><img src="${r.photo || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=300&h=350'}" crossorigin="anonymous"></div>
                         <div class="id-card-details">
                             <div class="id-field-group"><span class="id-field-label">ID</span><span class="id-field-val">${r.cid}</span></div>
                             <div class="id-field-group"><span class="id-field-label">NAME</span><span class="id-field-val">${r.firstName} ${r.lastName}</span></div>
