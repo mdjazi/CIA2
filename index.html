@@ -30,7 +30,6 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            padding-bottom: 70px; /* مسافة لشريط التعميمات الأسفل */
             overflow-x: hidden;
             position: relative;
         }
@@ -61,7 +60,7 @@
             100% { transform: translate(-50%, -50%) scale(1.05) rotate(5deg); opacity: 0.11; }
         }
         
-        /* خلفية برمجة وتشفير جديدة وأفخم */
+        /* شاشة انتظار وتحميل برمجية حية بمؤثرات CIA */
         #decryption-screen {
             display: none;
             position: fixed;
@@ -69,25 +68,33 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: radial-gradient(circle, rgba(0, 20, 10, 0.9) 0%, rgba(2, 4, 7, 0.98) 100%),
-                        url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?fit=crop&w=1920&q=80') no-repeat center center;
-            background-size: cover;
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            background: rgba(3, 5, 8, 0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             z-index: 999;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
         }
+        #matrix-loader-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.6;
+        }
         .decrypt-box {
-            background: rgba(4, 10, 15, 0.9);
+            background: rgba(4, 10, 15, 0.92);
             border: 1px solid var(--success-color);
             padding: 35px 40px;
             border-radius: 12px;
-            box-shadow: 0 0 50px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 0 50px rgba(16, 185, 129, 0.35);
             max-width: 480px;
             width: 90%;
+            position: relative;
         }
         .decrypt-title {
             color: var(--success-color);
@@ -728,46 +735,51 @@
         .modal-close { cursor: pointer; color: var(--text-muted); font-size: 18px; font-weight: bold; }
         .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
 
-        /* شريط التعميمات المباشر للرئيس بالأسفل */
-        .broadcast-bar {
+        /* بطاقة مربع التعميمات العاجل في الزاوية اليسرى السفلى */
+        .broadcast-card-floating {
+            display: none; /* يظهر بالسي اس اس إذا وجد تعميم */
             position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(217, 4, 41, 0.9);
-            border-top: 2px solid #ff4d4d;
-            color: #fff;
-            padding: 12px 25px;
+            bottom: 25px;
+            left: 25px;
+            width: 320px;
+            background: rgba(11, 16, 23, 0.92);
+            border: 1px solid var(--danger-color);
+            border-radius: 10px;
+            padding: 16px;
+            box-shadow: 0 10px 30px rgba(217, 4, 41, 0.35);
+            backdrop-filter: blur(15px);
+            z-index: 900;
+            animation: slideInBroadcast 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes slideInBroadcast {
+            0% { transform: translateY(50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        .broadcast-card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 1000;
-            box-shadow: 0 -5px 20px rgba(217, 4, 41, 0.5);
-            backdrop-filter: blur(10px);
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(217, 4, 41, 0.3);
+            padding-bottom: 6px;
         }
-        .broadcast-content {
+        .broadcast-card-title {
+            color: #f87171;
+            font-size: 12px;
+            font-weight: 800;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 6px;
+        }
+        .broadcast-card-body {
+            color: #f1f5f9;
             font-size: 13px;
-            font-weight: bold;
-        }
-        .broadcast-tag {
-            background: #fff;
-            color: #d90429;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 800;
-            animation: pulseBg 1.5s infinite;
-        }
-        @keyframes pulseBg {
-            0% { opacity: 0.8; }
-            50% { opacity: 1; }
-            100% { opacity: 0.8; }
+            line-height: 1.5;
+            font-weight: 600;
+            word-break: break-word;
         }
 
-        /* نظام نافذة المحادثة الشات بين الأعضاء */
+        /* تصميم الشات المحدث */
         .chat-box-container {
             height: 380px;
             overflow-y: auto;
@@ -807,7 +819,18 @@
             display: flex;
             justify-content: space-between;
             gap: 10px;
+            align-items: center;
         }
+        .btn-del-msg {
+            background: transparent;
+            color: var(--danger-color);
+            border: none;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 0 4px;
+        }
+        .btn-del-msg:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -816,10 +839,11 @@
         <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Logo">
     </div>
     
-    <!-- شاشة التحميل والتشفير المحدثة بخلفية هكر رقمية -->
+    <!-- شاشة انتظار برمجية متحركة حية بالكامل ذات طابع CIA -->
     <div id="decryption-screen">
+        <canvas id="matrix-loader-canvas"></canvas>
         <div class="decrypt-box">
-            <div class="decrypt-title">🔒 SYSTEM ENCRYPTION TERMINAL...</div>
+            <div class="decrypt-title">🔒 CIA SYSTEM ENCRYPTION TERMINAL</div>
             <div style="font-size: 12px; color: #10b981;">جاري فك تشفير البيانات واستعراض الملفات الفدرالية</div>
             <div class="progress-bar-bg">
                 <div class="progress-bar-fill" id="decrypt-progress"></div>
@@ -921,10 +945,13 @@
         <!-- قسم الدردشة والمحادثات المباشرة بين الأعضاء -->
         <div class="workspace-panel" id="chatSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            <h3 style="color:var(--gold-color); margin-bottom: 15px;">💬 غرف التواصل المباشر بين الوكلاء</h3>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
+                <h3 style="color:var(--gold-color); margin:0;">💬 غرف التواصل المباشر بين الوكلاء</h3>
+                <button id="btnClearAllChat" class="btn-del-item" style="display:none;" onclick="clearAllChatMessages()">🗑️ مسح جميع المحادثات (المدير)</button>
+            </div>
             <div class="chat-box-container" id="chatMessagesBox"></div>
             <div style="display:flex; gap:10px;">
-                <input type="text" id="chatInputText" placeholder="اكتب رسالتك للوكلاء هنا..." style="flex-grow:1; margin:0;">
+                <input type="text" id="chatInputText" placeholder="اكتب رسالتك للوكلاء هنا..." style="flex-grow:1; margin:0;" onkeypress="if(event.key === 'Enter') sendChatMessage()">
                 <button class="btn-login" style="width:auto; margin:0; padding:0 25px; background:var(--accent-color);" onclick="sendChatMessage()">إرسال 🚀</button>
             </div>
         </div>
@@ -1080,13 +1107,15 @@
         </div>
     </div>
 
-    <!-- شريط التعميمات العاجل بأسفل الشاشة لجميع الأعضاء -->
-    <div class="broadcast-bar" id="broadcastBar">
-        <div class="broadcast-content">
-            <span class="broadcast-tag">🚨 تعميم عاجل من القيادة</span>
-            <span id="broadcastTextDisplay">نرجو من كافة الوكلاء والأعضاء الالتزام بالتواجد الميداني.</span>
+    <!-- بطاقة التعميم العاجل الطافية في اليسار تحت -->
+    <div class="broadcast-card-floating" id="broadcastCard">
+        <div class="broadcast-card-header">
+            <div class="broadcast-card-title">🚨 تعميم عاجل من القيادة</div>
+            <button id="btnEditBroadcast" class="btn-edit-item" style="display:none;" onclick="updateBroadcast()">تعديل 📢</button>
         </div>
-        <button id="btnEditBroadcast" class="btn-edit-item" style="display:none;" onclick="updateBroadcast()">تعديل التعميم 📢</button>
+        <div class="broadcast-card-body" id="broadcastTextDisplay">
+            -
+        </div>
     </div>
 
     <!-- نافذة التعديل المخصصة بدلاً من مربعات جوجل المنبثقة -->
@@ -1105,6 +1134,7 @@
     </div>
 
     <script>
+        // Matrix Background Canvas الرئيسي
         const canvas = document.getElementById('cyber-canvas');
         const ctx = canvas.getContext('2d');
         function resizeCanvas() {
@@ -1132,6 +1162,34 @@
             }
         }
         setInterval(drawMatrix, 35);
+
+        // Matrix Background لشاشة الانتظار
+        const loaderCanvas = document.getElementById('matrix-loader-canvas');
+        const loaderCtx = loaderCanvas ? loaderCanvas.getContext('2d') : null;
+        let loaderDrops = [];
+        function initLoaderCanvas() {
+            if(!loaderCanvas) return;
+            loaderCanvas.width = window.innerWidth;
+            loaderCanvas.height = window.innerHeight;
+            const lCols = Math.floor(loaderCanvas.width / 14);
+            loaderDrops = Array(lCols).fill(1);
+        }
+        function drawLoaderMatrix() {
+            if(!loaderCtx) return;
+            loaderCtx.fillStyle = 'rgba(4, 10, 15, 0.1)';
+            loaderCtx.fillRect(0, 0, loaderCanvas.width, loaderCanvas.height);
+            loaderCtx.fillStyle = '#0084ff';
+            loaderCtx.font = '14px monospace';
+            for (let i = 0; i < loaderDrops.length; i++) {
+                const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                loaderCtx.fillText(text, i * 14, loaderDrops[i] * 14);
+                if (loaderDrops[i] * 14 > loaderCanvas.height && Math.random() > 0.95) {
+                    loaderDrops[i] = 0;
+                }
+                loaderDrops[i]++;
+            }
+        }
+        let loaderInterval = null;
 
         let globalAudioCtx = null;
         let cipherSoundInterval = null;
@@ -1194,7 +1252,7 @@
             records: [],
             gangs: [],
             chat: [],
-            broadcast: "نرجو من كافة الأعضاء والوكلاء الالتزام بالتواجد الميداني.",
+            broadcast: "",
             logs: ["[SYSTEM READY]: تم الاتصال بالسحابة الفدرالية."]
         };
         let globalDatabase = defaultDatabase;
@@ -1216,7 +1274,7 @@
                     if (data.record && data.record.users) {
                         globalDatabase = data.record;
                         if (!globalDatabase.chat) globalDatabase.chat = [];
-                        if (!globalDatabase.broadcast) globalDatabase.broadcast = "نرجو من كافة الوكلاء التواجد الميداني.";
+                        if (globalDatabase.broadcast === undefined) globalDatabase.broadcast = "";
                         
                         renderAllData();
                         const statusElem = document.getElementById("loading-status");
@@ -1264,6 +1322,10 @@
                 const decryptScreen = document.getElementById("decryption-screen");
                 decryptScreen.style.display = "flex";
                 
+                initLoaderCanvas();
+                if(loaderInterval) clearInterval(loaderInterval);
+                loaderInterval = setInterval(drawLoaderMatrix, 30);
+
                 startCipherSound();
                 let progress = 0;
                 const progressBar = document.getElementById("decrypt-progress");
@@ -1275,6 +1337,7 @@
                     
                     if (progress >= 100) {
                         clearInterval(interval);
+                        if(loaderInterval) clearInterval(loaderInterval);
                         stopCipherSound();
                         decryptScreen.style.display = "none";
                         
@@ -1296,17 +1359,21 @@
             const roleDisplay = document.getElementById("current-role-display");
             const leaderBtn = document.getElementById("btn-leader-toggle");
             const editBroadcastBtn = document.getElementById("btnEditBroadcast");
+            const clearChatBtn = document.getElementById("btnClearAllChat");
             
             const isDirector = globalDatabase.users[user].role === "DIRECTOR";
             roleDisplay.innerText = globalDatabase.users[user].role;
+            
             if (isDirector) {
                 roleDisplay.className = "badge badge-leader";
                 leaderBtn.style.display = "inline-block";
                 editBroadcastBtn.style.display = "inline-block";
+                if(clearChatBtn) clearChatBtn.style.display = "inline-block";
             } else {
                 roleDisplay.className = "badge";
                 leaderBtn.style.display = "none";
                 editBroadcastBtn.style.display = "none";
+                if(clearChatBtn) clearChatBtn.style.display = "none";
             }
             renderAllData();
             showHome();
@@ -1324,9 +1391,15 @@
         }
 
         function renderBroadcast() {
-            const broadcastElem = document.getElementById("broadcastTextDisplay");
-            if (broadcastElem) {
-                broadcastElem.innerText = globalDatabase.broadcast || "لا يوجد تعميم حالي من القيادة.";
+            const cardElem = document.getElementById("broadcastCard");
+            const textElem = document.getElementById("broadcastTextDisplay");
+            const bcText = (globalDatabase.broadcast || "").trim();
+
+            if (bcText === "" || bcText.includes("لا يوجد تعميم")) {
+                if(cardElem) cardElem.style.display = "none";
+            } else {
+                if(textElem) textElem.innerText = bcText;
+                if(cardElem) cardElem.style.display = "block";
             }
         }
 
@@ -1336,18 +1409,16 @@
 
             const modalContent = `
                 <div class="input-group">
-                    <label>نص التعميم العاجل لجميع الأعضاء</label>
+                    <label>نص التعميم العاجل (اكتب "لا يوجد تعميم" لإخفائه عن الجميع)</label>
                     <textarea id="editBroadcastInput" rows="4">${globalDatabase.broadcast || ''}</textarea>
                 </div>
             `;
 
             openCustomModal("📢 تعديل التعميم العاجل", modalContent, async () => {
                 const newText = document.getElementById("editBroadcastInput").value.trim();
-                if (newText) {
-                    globalDatabase.broadcast = newText;
-                    addLog(`قام [${currentUser}] بتحديث التعميم العاجل.`);
-                    await saveCloudData();
-                }
+                globalDatabase.broadcast = newText;
+                addLog(`قام [${currentUser}] بتحديث التعميم العاجل.`);
+                await saveCloudData();
             });
         }
 
@@ -1355,14 +1426,21 @@
             const chatBox = document.getElementById("chatMessagesBox");
             if (!chatBox) return;
             chatBox.innerHTML = "";
+            const isDirector = globalDatabase.users[currentUser]?.role === "DIRECTOR";
+
             (globalDatabase.chat || []).forEach(msg => {
                 const isMe = msg.user === currentUser;
+                const canDelete = isMe || isDirector;
+                
                 const div = document.createElement("div");
                 div.className = `chat-msg ${isMe ? 'chat-msg-me' : 'chat-msg-other'}`;
                 div.innerHTML = `
                     <div class="chat-meta">
                         <span><b>${msg.user}</b> (${msg.role})</span>
-                        <span>${msg.time}</span>
+                        <div>
+                            <span style="margin-left:6px;">${msg.time}</span>
+                            ${canDelete ? `<button class="btn-del-msg" onclick="deleteSingleChatMessage(${msg.id})">حذف 🗑️</button>` : ''}
+                        </div>
                     </div>
                     <div>${msg.text}</div>
                 `;
@@ -1381,15 +1459,32 @@
 
             if (!globalDatabase.chat) globalDatabase.chat = [];
             globalDatabase.chat.push({
+                id: Date.now(),
                 user: currentUser,
                 role: userRole,
                 text: text,
                 time: time
             });
 
-            if (globalDatabase.chat.length > 50) globalDatabase.chat.shift();
+            if (globalDatabase.chat.length > 60) globalDatabase.chat.shift();
             input.value = "";
             await saveCloudData();
+        }
+
+        async function deleteSingleChatMessage(msgId) {
+            globalDatabase.chat = globalDatabase.chat.filter(m => m.id !== msgId);
+            await saveCloudData();
+        }
+
+        async function clearAllChatMessages() {
+            const isDirector = globalDatabase.users[currentUser]?.role === "DIRECTOR";
+            if (!isDirector) return alert("فقط المدير يمكنه مسح جميع المحادثات!");
+            
+            if (confirm("هل أصلًا تريد مسح جميع رسائل المحادثات نهائياً؟")) {
+                globalDatabase.chat = [];
+                addLog(`قام المدير [${currentUser}] بمسح كافة سجلات المحادثات.`);
+                await saveCloudData();
+            }
         }
 
         function readFileAsBase64(file) {
@@ -2037,6 +2132,8 @@
             localStorage.removeItem("active_cia_user");
             document.getElementById("login-screen").style.display = "block";
             document.getElementById("main-system").style.display = "none";
+            const cardElem = document.getElementById("broadcastCard");
+            if(cardElem) cardElem.style.display = "none";
         }
 
         fetchCloudData().then(() => {
