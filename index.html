@@ -1,4 +1,4 @@
-[source: 1]<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -395,7 +395,7 @@
                     renderAllData();
                     if (statusElem) statusElem.innerText = "✅ تم الحفظ والتحديث بنجاح تام";
                 } else {
-                    alert("⚠️ فشل الحفظ بالسحابة! الحجم قد يكون كبيراً جداً.");
+                    alert("⚠️ فشل الحفظ بالسحابة!");
                 }
             } catch (e) { 
                 alert("⚠️ خطأ بالاتصال أثناء الحفظ!"); 
@@ -488,7 +488,7 @@
             isModalOpen = false;
             document.getElementById("customModal").style.display = "none";
         }
-        /* دالة تحويل وضغط الملفات لتفادي خطأ الاتصال بالسحابة */
+        /* دالة تحويل الملف المرفق إلى Base64 */
         function readFileAsBase64(fileInputId) {
             return new Promise((resolve) => {
                 const fileInput = document.getElementById(fileInputId);
@@ -497,56 +497,13 @@
                     return;
                 }
                 const file = fileInput.files[0];
-
-                if (file.type.startsWith('video/')) {
-                    if (file.size > 2 * 1024 * 1024) { // أكبر من 2 ميجا
-                        alert("⚠️ حجم الفيديو كبير جداً بالنسبة للسحابة! يرجى إرفاق مقطع قصير جداً لتفادي خطأ الحفظ.");
-                        resolve(null);
-                        return;
-                    }
-                }
-
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    if (file.type.startsWith('image/')) {
-                        const img = new Image();
-                        img.src = e.target.result;
-                        img.onload = function() {
-                            const canvas = document.createElement('canvas');
-                            const ctx = canvas.getContext('2d');
-                            const MAX_WIDTH = 800;
-                            const MAX_HEIGHT = 800;
-                            let width = img.width;
-                            let height = img.height;
-
-                            if (width > height) {
-                                if (width > MAX_WIDTH) {
-                                    height *= MAX_WIDTH / width;
-                                    width = MAX_WIDTH;
-                                }
-                            } else {
-                                if (height > MAX_HEIGHT) {
-                                    width *= MAX_HEIGHT / height;
-                                    height = MAX_HEIGHT;
-                                }
-                            }
-
-                            canvas.width = width;
-                            canvas.height = height;
-                            ctx.drawImage(img, 0, 0, width, height);
-
-                            const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
-                            resolve(compressedBase64);
-                        };
-                    } else {
-                        resolve(e.target.result);
-                    }
-                };
+                reader.onload = function(e) { resolve(e.target.result); };
                 reader.onerror = function() { resolve(null); };
                 reader.readAsDataURL(file);
             });
         }
-        /* قالب الوثيقة مع إرفاق الملفات الحقيقية وزر إزالة الصور/الفيديوهات */
+        /* قالب الوثيقة مع الاعتماد على روابط الصور والفيديوهات */
         function getReportDocHtml(titleVal = "", detailsVal = "", imageUrlVal = "", videoUrlVal = "", authorVal = currentUser, dateVal = new Date().toLocaleDateString(), dayVal = new Date().toLocaleDateString('ar-EG', { weekday: 'long' }), isEdit = false) {
             return `
                 <div class="cia-classified-doc">
@@ -568,18 +525,16 @@
                         ${isEdit ? `<textarea id="editReportDetails" rows="5" style="width:100%; padding:6px; background:transparent; border:1px solid #999; font-weight:bold; white-space:pre-wrap;">${detailsVal}</textarea>` : `<textarea id="popReportDetails" rows="5" placeholder="تفاصيل العملية والتحريات..." style="width:100%; padding:6px; background:transparent; border:1px solid #999; font-weight:bold; white-space:pre-wrap;"></textarea>`}
                         
                         ${!isEdit ? `
-                            <div class="input-group" style="margin-top:8px;"><label style="color:#111; font-weight:bold;">📎 إرفاق صورة الدليل (مضغوطة تلقائياً)</label><input type="file" id="popReportImageFile" accept="image/*" style="background:#fff; color:#111;"></div>
-                            <div class="input-group" style="margin-top:4px;"><label style="color:#111; font-weight:bold;">📎 إرفاق فيديو الدليل (مقطع قصير)</label><input type="file" id="popReportVideoFile" accept="video/*" style="background:#fff; color:#111;"></div>
+                            <div class="input-group" style="margin-top:8px;"><label style="color:#111; font-weight:bold;">🔗 رابط صورة الدليل</label><input type="url" id="popReportImageUrl" placeholder="https://..." style="background:#fff; color:#111;"></div>
+                            <div class="input-group" style="margin-top:4px;"><label style="color:#111; font-weight:bold;">🔗 رابط فيديو الدليل</label><input type="url" id="popReportVideoUrl" placeholder="https://..." style="background:#fff; color:#111;"></div>
                         ` : `
                             <div class="input-group" style="margin-top:8px;">
-                                <label style="color:#111; font-weight:bold;">📎 إرفاق صورة جديدة (اختياري للاستبدال)</label>
-                                <input type="file" id="editReportImageFile" accept="image/*" style="background:#fff; color:#111;">
-                                ${imageUrlVal ? `<div style="margin-top:5px; display:flex; align-items:center; gap:10px;"><img src="${imageUrlVal}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;"><label style="font-size:10px; color:#b91c1c; cursor:pointer;"><input type="checkbox" id="removeImgCheck"> حذف الصورة الحالية</label></div>` : ''}
+                                <label style="color:#111; font-weight:bold;">🔗 رابط صورة الدليل</label>
+                                <input type="url" id="editReportImageUrl" value="${imageUrlVal || ''}" placeholder="https://..." style="background:#fff; color:#111;">
                             </div>
                             <div class="input-group" style="margin-top:4px;">
-                                <label style="color:#111; font-weight:bold;">📎 إرفاق فيديو جديد (اختياري للاستبدال)</label>
-                                <input type="file" id="editReportVideoFile" accept="video/*" style="background:#fff; color:#111;">
-                                ${videoUrlVal ? `<div style="margin-top:5px;"><label style="font-size:10px; color:#b91c1c; cursor:pointer;"><input type="checkbox" id="removeVidCheck"> حذف الفيديو الحالي</label></div>` : ''}
+                                <label style="color:#111; font-weight:bold;">🔗 رابط فيديو الدليل</label>
+                                <input type="url" id="editReportVideoUrl" value="${videoUrlVal || ''}" placeholder="https://..." style="background:#fff; color:#111;">
                             </div>
                         `}
                     </div>
@@ -593,12 +548,12 @@
                 const details = document.getElementById("popReportDetails").value;
                 if (!title) return alert("أدخل عنوان التقرير!");
                 
-                const imageBase64 = await readFileAsBase64("popReportImageFile");
-                const videoBase64 = await readFileAsBase64("popReportVideoFile");
+                const imageUrl = document.getElementById("popReportImageUrl").value.trim();
+                const videoUrl = document.getElementById("popReportVideoUrl").value.trim();
                 globalDatabase.reports.push({ 
                     id: Date.now(), title, details, 
-                    imageUrl: imageBase64 || "", 
-                    videoUrl: videoBase64 || "", 
+                    imageUrl: imageUrl || "", 
+                    videoUrl: videoUrl || "", 
                     author: currentUser, 
                     date: new Date().toLocaleDateString(),
                     day: new Date().toLocaleDateString('ar-EG', { weekday: 'long' })
@@ -654,15 +609,8 @@
             openCustomModal("✏️ تعديل التقرير الاستخباراتي", getReportDocHtml(r.title, r.details, r.imageUrl, r.videoUrl, r.author, r.date, r.day, true), async () => {
                 r.title = document.getElementById("editReportTitle").value.trim();
                 r.details = document.getElementById("editReportDetails").value;
-                const removeImg = document.getElementById("removeImgCheck")?.checked;
-                const removeVid = document.getElementById("removeVidCheck")?.checked;
-                
-                if (removeImg) r.imageUrl = "";
-                if (removeVid) r.videoUrl = "";
-                const newImgBase64 = await readFileAsBase64("editReportImageFile");
-                const newVidBase64 = await readFileAsBase64("editReportVideoFile");
-                if (newImgBase64) r.imageUrl = newImgBase64;
-                if (newVidBase64) r.videoUrl = newVidBase64;
+                r.imageUrl = document.getElementById("editReportImageUrl").value.trim();
+                r.videoUrl = document.getElementById("editReportVideoUrl").value.trim();
                 await saveCloudData(); 
                 closeModal();
                 viewReportFolder(r.id);
