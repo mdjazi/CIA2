@@ -15,7 +15,6 @@
             --gold-color: #c5a059;
             --success-color: #10b981;
             --text-muted: #8191a5;
-            --cyber-cyan: #00ffcc;
         }
         * {
             box-sizing: border-box;
@@ -42,21 +41,25 @@
             height: 100vh;
             z-index: 0;
             pointer-events: none;
-            opacity: 0.35;
+            opacity: 0.45;
         }
         .bg-watermark-logo {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) scale(1);
-            width: 550px;
-            height: 550px;
-            opacity: 0.04; /* شعار غامق وخفيف للجميع */
+            width: 600px;
+            height: 600px;
+            opacity: 0.08;
             z-index: 1;
             pointer-events: none;
-            filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.9));
+            animation: pulseLogo 12s infinite alternate ease-in-out;
         }
-
+        @keyframes pulseLogo {
+            0% { transform: translate(-50%, -50%) scale(0.95) rotate(0deg); opacity: 0.05; }
+            100% { transform: translate(-50%, -50%) scale(1.05) rotate(5deg); opacity: 0.11; }
+        }
+        
         #decryption-screen {
             display: none;
             position: fixed;
@@ -126,7 +129,7 @@
             overflow: hidden;
             word-break: break-all;
         }
-
+        
         .login-card {
             position: relative;
             z-index: 10;
@@ -377,7 +380,7 @@
             margin-top: 10px;
         }
         @media (max-width: 800px) { .folder-grid { grid-template-columns: 1fr; } }
-
+        
         .folder-card {
             background: rgba(9, 16, 26, 0.45);
             backdrop-filter: blur(12px);
@@ -455,93 +458,6 @@
             font-size: 12px;
         }
         .btn-back:hover { border-color: var(--gold-color); color: var(--gold-color); }
-
-        /* ====================================
-           تنسيق تصميم قسم التشفير السيبراني المطور
-           ==================================== */
-        .cyber-machine-box {
-            position: relative;
-            background: linear-gradient(145deg, #070c14, #020408);
-            border: 1px solid var(--cyber-cyan);
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 0 20px rgba(0, 255, 204, 0.15);
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-        .cyber-machine-box::before {
-            content: 'CIA DECRYPTION SYSTEM // CYBER-MACHINE-01';
-            position: absolute;
-            top: 8px;
-            right: 15px;
-            font-size: 9px;
-            color: rgba(0, 255, 204, 0.4);
-            letter-spacing: 1.5px;
-            font-family: monospace;
-        }
-        .cyber-scan-line {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--cyber-cyan);
-            box-shadow: 0 0 8px var(--cyber-cyan);
-            animation: cyberScan 3.5s infinite linear;
-            pointer-events: none;
-        }
-        @keyframes cyberScan {
-            0% { top: 0%; }
-            50% { top: 100%; }
-            100% { top: 0%; }
-        }
-        .cyber-input-field {
-            width: 100%;
-            height: 100px;
-            background: rgba(1, 6, 12, 0.85) !important;
-            border: 1px solid var(--cyber-cyan) !important;
-            color: var(--cyber-cyan) !important;
-            padding: 12px;
-            font-family: monospace;
-            border-radius: 6px;
-            resize: none;
-            margin-top: 15px;
-            outline: none;
-        }
-        .cyber-loading-overlay {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(3, 5, 8, 0.92);
-            z-index: 20;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(4px);
-        }
-        .cyber-loader-spinner {
-            width: 45px;
-            height: 45px;
-            border: 3px solid rgba(0, 255, 204, 0.15);
-            border-top-color: var(--cyber-cyan);
-            border-radius: 50%;
-            animation: spinCyber 0.8s infinite linear;
-            margin-bottom: 12px;
-        }
-        @keyframes spinCyber {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .cyber-loader-text {
-            color: var(--cyber-cyan);
-            font-size: 12px;
-            font-family: monospace;
-            letter-spacing: 1px;
-        }
-
         .id-card-tactical {
             background: #cdcece;
             border-radius: 12px;
@@ -634,6 +550,19 @@
             font-weight: 600;
             direction: rtl;
             text-align: right;
+        }
+        .crypto-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 768px) { .crypto-grid { grid-template-columns: 1fr; } }
+        .crypto-box {
+            background: rgba(4, 6, 10, 0.6);
+            border: 1px solid var(--border-color);
+            padding: 18px;
+            border-radius: 8px;
         }
         .crypto-result-box {
             background: rgba(9, 18, 29, 0.65);
@@ -985,7 +914,7 @@
                     <span class="open-lbl">فتح المجلد ←</span>
                 </div>
                 <div class="folder-card" onclick="openSection('intelligenceSection')">
-                    <span class="folder-card-icon">🕵️‍♂️</span>
+                    <span class="folder-card-icon">🕵️♂️</span>
                     <b>INTELLIGENCE</b>
                     <small>ملفات العصابات والهيكل التنظيمي</small>
                     <span class="open-lbl">فتح المجلد ←</span>
@@ -1004,6 +933,7 @@
                 </div>
             </div>
         </div>
+
         <div class="workspace-panel" id="chatSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
@@ -1016,6 +946,7 @@
                 <button class="btn-login" style="width:auto; margin:0; padding:0 25px; background:var(--accent-color);" onclick="sendChatMessage()">إرسال 🚀</button>
             </div>
         </div>
+
         <div class="workspace-panel leader-panel" id="leaderSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-top:0;">👑 مركز إدارة التراخيص والسرية</h3>
@@ -1038,6 +969,7 @@
             <button class="btn-login" style="background:var(--success-color); font-size: 13px;" onclick="createAccount()">➕ إضافة الحساب أونلاين</button>
             <div id="users-container" style="margin-top:15px;"></div>
         </div>
+
         <div class="workspace-panel" id="reportsSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">📝 قسم التقارير والمذكرات الاستخباراتية</h3>
@@ -1056,6 +988,7 @@
             <div id="reports-list"></div>
             <div class="log-box" id="reports-log"></div>
         </div>
+
         <div class="workspace-panel" id="wantedSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">📜 قائمة المطلوبين للعدالة (WANTED LIST)</h3>
@@ -1077,6 +1010,7 @@
             </div>
             <div id="wanted-list" style="display:flex; gap:15px; flex-wrap:wrap;"></div>
         </div>
+
         <div class="workspace-panel" id="recordsSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">📂 السجل الجنائي للمواطنين (RECORDS)</h3>
@@ -1104,9 +1038,10 @@
             <h4 style="color:var(--gold-color); margin-bottom:15px;">📂 بطاقات الهوية والسجلات المحفوظة (اضغط للعرض والطي يدويًا):</h4>
             <div id="records-list"></div>
         </div>
+
         <div class="workspace-panel" id="intelligenceSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            <h3 style="color:var(--gold-color); margin-bottom: 15px;">GANG INTELLIGENCE & HIERARCHY 🕵️‍♂️</h3>
+            <h3 style="color:var(--gold-color); margin-bottom: 15px;">GANG INTELLIGENCE & HIERARCHY 🕵️♂️</h3>
             <div class="input-group">
                 <input type="text" id="gangsSearch" class="search-box" placeholder="🔍 بحث في مخططات الاستخبارات والعصابات" oninput="renderGangs()">
             </div>
@@ -1122,29 +1057,21 @@
             <div id="gangs-list"></div>
         </div>
 
-        <!-- قسم التشفير وفك التشفير المطور فقط بداخل المجلد دون الإضرار بباقي النظام -->
         <div class="workspace-panel" id="casesSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            <h3 style="color:var(--gold-color); margin-bottom: 20px;">🔓 قسم التشفير وفك التشفير السيبراني 🔒</h3>
-            
-            <div class="cyber-machine-box">
-                <div class="cyber-scan-line"></div>
-                
-                <label style="color:var(--cyber-cyan); font-weight:bold; font-size:12px; display:block;">📟 جهاز معالجة البيانات وتشفير الحزم</label>
-                <textarea id="cyberCipherInput" class="cyber-input-field" placeholder="أدخل النص أو الكود التشفيري هنا لمعالجته عبر الجهاز..."></textarea>
-                
-                <div style="display:flex; gap:12px; margin-top:15px;">
-                    <button class="btn-login" style="margin:0; background:var(--accent-color);" onclick="executeCyberAction('encode')">🔒 تشفير البيانات</button>
-                    <button class="btn-login" style="margin:0; background:var(--gold-color); color:#000;" onclick="executeCyberAction('decode')">🔓 فك تشفير الكود</button>
+            <h3 style="color:var(--gold-color); margin-bottom: 20px;">🔓 قسم التشفير وفك التشفير 🔒</h3>
+            <div class="crypto-grid">
+                <div class="crypto-box">
+                    <label style="color:var(--accent-color); font-weight:bold; font-size:12px;">🔒 تشفير رسالة</label>
+                    <input type="text" id="plainText" placeholder="أدخل النص للتشفير..." style="margin-top:8px;">
+                    <button class="btn-login" style="margin-top:12px; background:var(--accent-color);" onclick="encryptMsg()">تشفير البيانات</button>
                 </div>
-
-                <!-- شاشة الانتظار والتحميل المخصصة للتشفير (3 ثوانٍ) -->
-                <div id="cyberLoadingOverlay" class="cyber-loading-overlay">
-                    <div class="cyber-loader-spinner"></div>
-                    <div class="cyber-loader-text" id="cyberLoadingText">جاري تشفير البيانات وتخطي حواجز الأمان... [00:03]</div>
+                <div class="crypto-box">
+                    <label style="color:var(--gold-color); font-weight:bold; font-size:12px;">🔓 فك التشفير</label>
+                    <input type="text" id="cipherText" placeholder="أدخل الكود لفك التشفير..." style="margin-top:8px;">
+                    <button class="btn-login" style="margin-top:12px; background:var(--gold-color); color:#000;" onclick="decryptMsg()">فك تشفير الكود</button>
                 </div>
             </div>
-
             <div class="crypto-result-box">
                 <div class="crypto-result-title">📋 النتيجة التشفيرية المخرجة</div>
                 <div class="crypto-result-value" id="cryptoResult">- في انتظار الإدخال -</div>
@@ -1170,6 +1097,7 @@
             </table>
         </div>
     </div>
+
     <div class="broadcast-card-floating" id="broadcastCard">
         <div class="broadcast-card-header">
             <div class="broadcast-card-title">🚨 تعميم عاجل من القيادة</div>
@@ -1177,6 +1105,7 @@
         </div>
         <div class="broadcast-card-body" id="broadcastTextDisplay">-</div>
     </div>
+
     <div class="custom-modal-overlay" id="customModal">
         <div class="custom-modal">
             <div class="modal-header">
@@ -1190,6 +1119,7 @@
             </div>
         </div>
     </div>
+
     <script>
         const canvas = document.getElementById('cyber-canvas');
         const ctx = canvas.getContext('2d');
@@ -1218,6 +1148,7 @@
             }
         }
         setInterval(drawMatrix, 35);
+
         const loaderCanvas = document.getElementById('matrix-loader-canvas');
         const loaderCtx = loaderCanvas ? loaderCanvas.getContext('2d') : null;
         let loaderDrops = [];
@@ -1246,29 +1177,6 @@
         let loaderInterval = null;
         let globalAudioCtx = null;
         let cipherSoundInterval = null;
-
-        /* تشغيل أصوات الراديو والبرمجيات عند استخدام الجهاز */
-        function triggerRadioChatterSound() {
-            try {
-                if (!globalAudioCtx) {
-                    globalAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                }
-                if (globalAudioCtx.state === 'suspended') {
-                    globalAudioCtx.resume();
-                }
-                const osc = globalAudioCtx.createOscillator();
-                const gain = globalAudioCtx.createGain();
-                osc.type = "sawtooth";
-                osc.frequency.setValueAtTime(400 + Math.random() * 600, globalAudioCtx.currentTime);
-                gain.gain.setValueAtTime(0.015, globalAudioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, globalAudioCtx.currentTime + 0.12);
-                osc.connect(gain);
-                gain.connect(globalAudioCtx.destination);
-                osc.start();
-                osc.stop(globalAudioCtx.currentTime + 0.12);
-            } catch(e){}
-        }
-
         function startCipherSound() {
             try {
                 if (!globalAudioCtx) {
@@ -1315,6 +1223,7 @@
                 }
             } catch(e) { console.log(e); }
         }
+
         const BIN_ID = "6ab719faffd5d160532fe4cd"; 
         const API_KEY = "$2a$10$AlBdQgKayB/o7aIaPD42L.khi.iGvmNkXo5WPklHsUpYNmCMMxe0q"; 
         let defaultDatabase = {
@@ -1332,15 +1241,16 @@
         };
         let globalDatabase = defaultDatabase;
         let currentUser = "";
-        let isSaving = false;
+        let isSaving = false; // متغير لمنع التعارض بين المزامنة والتعديل
         
         let openItemsState = {
             reports: {},
             records: {},
             gangs: {}
         };
+
         async function fetchCloudData() {
-            if (isSaving) return;
+            if (isSaving) return; // إلغاء الجلب المباشر أثناء عملية الحفظ والتعديل
             try {
                 const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest?nocache=${Date.now()}`, {
                     headers: { "X-Master-Key": API_KEY }
@@ -1359,6 +1269,7 @@
                 }
             } catch (e) { console.error(e); }
         }
+
         async function saveCloudData() {
             isSaving = true;
             const statusElem = document.getElementById("loading-status");
@@ -1384,12 +1295,14 @@
                 isSaving = false;
             }
         }
+
         function checkAutoLogin() {
             const savedUser = localStorage.getItem("active_cia_user");
             if (savedUser && globalDatabase.users[savedUser]) {
                 openMainSystem(savedUser);
             }
         }
+
         function login() {
             const user = document.getElementById("login-username").value.trim();
             const pass = document.getElementById("login-password").value.trim();
@@ -1429,6 +1342,7 @@
                 errorMsg.style.display = "block";
             }
         }
+
         function openMainSystem(user) {
             currentUser = user;
             document.getElementById("login-screen").style.display = "none";
@@ -1457,6 +1371,7 @@
             renderAllData();
             showHome();
         }
+
         function renderAllData() {
             renderReports();
             renderWanted();
@@ -1467,6 +1382,7 @@
             renderChatMessages();
             renderBroadcast();
         }
+
         function renderBroadcast() {
             const cardElem = document.getElementById("broadcastCard");
             const textElem = document.getElementById("broadcastTextDisplay");
@@ -1478,6 +1394,7 @@
                 if(cardElem) cardElem.style.display = "block";
             }
         }
+
         function updateBroadcast() {
             const isDirector = globalDatabase.users[currentUser]?.role === "DIRECTOR";
             if (!isDirector) return alert("فقط مدير النظام يمكنه تعديل التعميم!");
@@ -1494,6 +1411,7 @@
                 await saveCloudData();
             });
         }
+
         function renderChatMessages() {
             const chatBox = document.getElementById("chatMessagesBox");
             if (!chatBox) return;
@@ -1519,6 +1437,7 @@
             });
             chatBox.scrollTop = chatBox.scrollHeight;
         }
+
         async function sendChatMessage() {
             const input = document.getElementById("chatInputText");
             const text = input.value.trim();
@@ -1537,10 +1456,12 @@
             input.value = "";
             await saveCloudData();
         }
+
         async function deleteSingleChatMessage(msgId) {
             globalDatabase.chat = globalDatabase.chat.filter(m => m.id !== msgId);
             await saveCloudData();
         }
+
         async function clearAllChatMessages() {
             const isDirector = globalDatabase.users[currentUser]?.role === "DIRECTOR";
             if (!isDirector) return alert("فقط المدير يمكنه مسح جميع المحادثات!");
@@ -1551,6 +1472,7 @@
                 await saveCloudData();
             }
         }
+
         function readFileAsBase64(file) {
             return new Promise((resolve) => {
                 if (!file) return resolve("");
@@ -1560,6 +1482,7 @@
                 reader.readAsDataURL(file);
             });
         }
+
         function toggleCollapsibleManual(type, id, element) {
             const body = element.nextElementSibling;
             if (!body) return;
@@ -1572,6 +1495,7 @@
                 openItemsState[type][id] = true;
             }
         }
+
         function openCustomModal(title, contentHtml, onSave) {
             document.getElementById("modalTitle").innerText = title;
             document.getElementById("modalBody").innerHTML = contentHtml;
@@ -1587,9 +1511,11 @@
                 closeModal();
             };
         }
+
         function closeModal() {
             document.getElementById("customModal").style.display = "none";
         }
+
         async function addReport() {
             const title = document.getElementById("reportTitle").value.trim();
             const details = document.getElementById("reportDetails").value.trim();
@@ -1617,6 +1543,7 @@
             document.getElementById("reportVideoFile").value = "";
             await saveCloudData();
         }
+
         function renderReports() {
             const list = document.getElementById("reports-list");
             if (!list) return;
@@ -1655,6 +1582,7 @@
                 list.appendChild(div);
             });
         }
+
         function editReport(id) {
             const report = globalDatabase.reports.find(r => r.id === id);
             if(!report) return;
@@ -1686,6 +1614,7 @@
                 }
             });
         }
+
         async function deleteReport(id) {
             if (confirm("هل تريد حذف هذا التقرير نهائياً؟")) {
                 globalDatabase.reports = globalDatabase.reports.filter(r => r.id !== id);
@@ -1693,6 +1622,7 @@
                 await saveCloudData();
             }
         }
+
         async function addWanted() {
             const name = document.getElementById("wantedName").value.trim();
             const risk = document.getElementById("wantedRisk").value;
@@ -1704,6 +1634,7 @@
             document.getElementById("wantedCrime").value = "";
             await saveCloudData();
         }
+
         function renderWanted() {
             const list = document.getElementById("wanted-list");
             if(!list) return;
@@ -1732,6 +1663,7 @@
                 list.appendChild(div);
             });
         }
+
         function editWanted(id) {
             const wanted = globalDatabase.wanted.find(w => w.id === id);
             if(!wanted) return;
@@ -1765,12 +1697,14 @@
                 }
             });
         }
+
         async function deleteWanted(id) {
             if (confirm("حذف الشخص المطلوب؟")) {
                 globalDatabase.wanted = globalDatabase.wanted.filter(w => w.id !== id);
                 await saveCloudData();
             }
         }
+
         async function addRecord() {
             const firstName = document.getElementById("recFirstName").value.trim();
             const lastName = document.getElementById("recLastName").value.trim();
@@ -1797,6 +1731,7 @@
             document.getElementById("recPhotoFile").value = "";
             await saveCloudData();
         }
+
         function renderRecords() {
             const list = document.getElementById("records-list");
             if(!list) return;
@@ -1864,6 +1799,7 @@
                 list.appendChild(div);
             });
         }
+
         function editRecord(id) {
             const rec = globalDatabase.records.find(r => r.id === id);
             if(!rec) return;
@@ -1912,12 +1848,14 @@
                 }
             });
         }
+
         async function deleteRecord(id) {
             if (confirm("حذف ملف بطاقة المواطن؟")) {
                 globalDatabase.records = globalDatabase.records.filter(r => r.id !== id);
                 await saveCloudData();
             }
         }
+
         async function addGang() {
             const name = document.getElementById("gangName").value.trim();
             const leader = document.getElementById("gangLeader").value.trim();
@@ -1934,6 +1872,7 @@
             document.getElementById("gangDetails").value = "";
             await saveCloudData();
         }
+
         function renderGangs() {
             const list = document.getElementById("gangs-list");
             if(!list) return;
@@ -1981,6 +1920,7 @@
                 list.appendChild(div);
             });
         }
+
         function editGang(id) {
             const gang = globalDatabase.gangs.find(g => g.id === id);
             if(!gang) return;
@@ -2024,12 +1964,14 @@
                 }
             });
         }
+
         async function deleteGang(id) {
             if (confirm("حذف ملف العصابة والشجرة؟")) {
                 globalDatabase.gangs = globalDatabase.gangs.filter(g => g.id !== id);
                 await saveCloudData();
             }
         }
+
         async function createAccount() {
             const user = document.getElementById("new-username").value.trim();
             const id = document.getElementById("new-id").value.trim();
@@ -2042,6 +1984,7 @@
             await saveCloudData();
             alert(`تم إضافة الحساب (${user}) أونلاين بنجاح!`);
         }
+
         function editUser(username) {
             const isDirector = globalDatabase.users[currentUser]?.role === "DIRECTOR";
             const userObj = globalDatabase.users[username];
@@ -2069,6 +2012,7 @@
                 }
             });
         }
+
         async function deleteAccount(username) {
             if (username === "Majed") return alert("لا يمكنك حذف المدير!");
             if (confirm(`حذف (${username})؟`)) {
@@ -2076,6 +2020,7 @@
                 await saveCloudData();
             }
         }
+
         function renderUsers() {
             const container = document.getElementById("users-container");
             const tbody = document.getElementById("users-table-body");
@@ -2114,11 +2059,13 @@
                 }
             }
         }
+
         function addLog(text) {
             const time = new Date().toLocaleTimeString('ar-EG');
             globalDatabase.logs.unshift(`[${time}] ${text}`);
             if (globalDatabase.logs.length > 20) globalDatabase.logs.pop();
         }
+
         function renderLogs() {
             const logBox = document.getElementById("reports-log");
             if (logBox) {
@@ -2126,11 +2073,13 @@
                     globalDatabase.logs.map(l => `<div>${l}</div>`).join('');
             }
         }
+
         function showHome() {
             document.getElementById("folderHome").style.display = "block";
             const panels = document.querySelectorAll('.workspace-panel');
             panels.forEach(p => p.style.display = 'none');
         }
+
         function openSection(sectionId) {
             document.getElementById("folderHome").style.display = "none";
             const panels = document.querySelectorAll('.workspace-panel');
@@ -2139,45 +2088,18 @@
             if (target) target.style.display = "block";
         }
 
-        /* تنفيذ التشفير وفك التشفير التفاعلي لمدة 3 ثوانٍ فقط داخل قسم التشفير */
-        function executeCyberAction(mode) {
-            const inputVal = document.getElementById("cyberCipherInput").value.trim();
-            if (!inputVal) return alert("يرجى إدخال النص أولاً للتشفير أو فك التشفير!");
-            
-            triggerRadioChatterSound();
-            
-            const overlay = document.getElementById("cyberLoadingOverlay");
-            const loadingText = document.getElementById("cyberLoadingText");
-            const resultBox = document.getElementById("cryptoResult");
-            
-            overlay.style.display = "flex";
-            let timer = 3;
-            
-            loadingText.innerText = mode === 'encode' 
-                ? `جاري تشفير البيانات وتخطي حواجز الأمان... [00:0${timer}]`
-                : `جاري تحليل الشفرة واختراق الحزم... [00:0${timer}]`;
-                
-            const countdown = setInterval(() => {
-                timer--;
-                triggerRadioChatterSound();
-                if (timer > 0) {
-                    loadingText.innerText = mode === 'encode' 
-                        ? `جاري تشفير البيانات وتخطي حواجز الأمان... [00:0${timer}]`
-                        : `جاري تحليل الشفرة واختراق الحزم... [00:0${timer}]`;
-                } else {
-                    clearInterval(countdown);
-                    overlay.style.display = "none";
-                    if (mode === 'encode') {
-                        resultBox.innerText = btoa(unescape(encodeURIComponent(inputVal)));
-                    } else {
-                        try {
-                            resultBox.innerText = decodeURIComponent(escape(atob(inputVal)));
-                        } catch(e) {
-                            resultBox.innerText = "⚠️ كود خاطئ أو غير صالح!";
-                        }
-                    }
-                }
-            }, 1000);
+        function encryptMsg() {
+            const val = document.getElementById("plainText").value.trim();
+            if (!val) return;
+            document.getElementById("cryptoResult").innerText = btoa(unescape(encodeURIComponent(val)));
+        }
+
+        function decryptMsg() {
+            const val = document.getElementById("cipherText").value.trim();
+            if (!val) return;
+            try {
+                document.getElementById("cryptoResult").innerText = decodeURIComponent(escape(atob(val)));
+            } catch (e) { document.getElementById("cryptoResult").innerText = "⚠️ كود خاطئ أو غير صالح!"; }
         }
 
         function logout() {
@@ -2187,6 +2109,7 @@
             const cardElem = document.getElementById("broadcastCard");
             if(cardElem) cardElem.style.display = "none";
         }
+
         fetchCloudData().then(() => {
             checkAutoLogin();
         });
