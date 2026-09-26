@@ -797,15 +797,6 @@
             overflow-y: auto;
         }
         .log-title { color: var(--accent-color); font-weight: bold; margin-bottom: 8px; }
-        .data-card {
-            border: 1px solid var(--border-color);
-            background: rgba(4, 6, 10, 0.6);
-            border-radius: 6px;
-            padding: 15px;
-            margin-bottom: 12px;
-            position: relative;
-        }
-        .wanted-card { border-color: var(--danger-color); background: rgba(217, 4, 41, 0.08); }
         .badge-danger { background: var(--danger-color); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 3px; }
         .action-btns { display: flex; gap: 8px; }
         .btn-del-item { background: var(--danger-color); color: #fff; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; }
@@ -1564,6 +1555,7 @@
                 globalDatabase.broadcast = newText;
                 addLog(`قام [${currentUser}] بتحديث التعميم العاجل.`);
                 await saveCloudData();
+                closeModal();
             });
         }
 
@@ -1651,11 +1643,10 @@
                 saveBtn.style.display = "block";
                 saveBtn.onclick = async () => {
                     saveBtn.disabled = true;
-                    saveBtn.innerText = "جاري الحفظ...";
+                    saveBtn.innerText = "جاري الحفظ بالسحابة...";
                     if (onSave) await onSave();
                     saveBtn.disabled = false;
                     saveBtn.innerText = "تأكيد وحفظ";
-                    closeModal();
                 };
             }
         }
@@ -1664,7 +1655,7 @@
             document.getElementById("customModal").style.display = "none";
         }
 
-        /* ===== مجلدات التقارير الفردية ===== */
+        /* ===== التقارير ===== */
         function openCreateReportModal() {
             const content = `
                 <div class="input-group"><label>عنوان التقرير / المذكرة</label><input type="text" id="popReportTitle" placeholder="عنوان التقرير"></div>
@@ -1694,6 +1685,7 @@
                 });
                 addLog(`قام [${currentUser}] بإضافة تقرير جديد: ${title}`);
                 await saveCloudData();
+                closeModal();
             });
         }
 
@@ -1723,18 +1715,9 @@
             const report = globalDatabase.reports.find(r => r.id === id);
             if(!report) return;
             const modalContent = `
-                <div class="input-group">
-                    <label>عنوان التقرير</label>
-                    <input type="text" id="editReportTitle" value="${report.title}">
-                </div>
-                <div class="input-group">
-                    <label>تفاصيل التقرير</label>
-                    <textarea id="editReportDetails" rows="5">${report.details}</textarea>
-                </div>
-                <div class="input-group">
-                    <label>Citizen ID</label>
-                    <input type="text" id="editReportCitizen" value="${report.citizen || ''}">
-                </div>
+                <div class="input-group"><label>عنوان التقرير</label><input type="text" id="editReportTitle" value="${report.title}"></div>
+                <div class="input-group"><label>تفاصيل التقرير</label><textarea id="editReportDetails" rows="5">${report.details}</textarea></div>
+                <div class="input-group"><label>Citizen ID</label><input type="text" id="editReportCitizen" value="${report.citizen || ''}"></div>
             `;
             openCustomModal("✏️ تعديل التقرير الاستخباراتي", modalContent, async () => {
                 const newTitle = document.getElementById("editReportTitle").value.trim();
@@ -1786,7 +1769,7 @@
             }
         }
 
-        /* ===== مجلدات المطلوبين الفردية ===== */
+        /* ===== المطلوبين ===== */
         function openCreateWantedModal() {
             const content = `
                 <div class="input-group"><label>اسم المطلوب</label><input type="text" id="popWantedName" placeholder="Name"></div>
@@ -1809,6 +1792,7 @@
                 globalDatabase.wanted.push({ id: Date.now(), name, risk, crime });
                 addLog(`قام [${currentUser}] بإضافة مطلوب جديد: ${name}`);
                 await saveCloudData();
+                closeModal();
             });
         }
 
@@ -1833,10 +1817,7 @@
             const wanted = globalDatabase.wanted.find(w => w.id === id);
             if(!wanted) return;
             const modalContent = `
-                <div class="input-group">
-                    <label>اسم المطلوب</label>
-                    <input type="text" id="editWantedName" value="${wanted.name}">
-                </div>
+                <div class="input-group"><label>اسم المطلوب</label><input type="text" id="editWantedName" value="${wanted.name}"></div>
                 <div class="input-group">
                     <label>مستوى الخطورة</label>
                     <select id="editWantedRisk">
@@ -1845,10 +1826,7 @@
                         <option value="🔴 خطر جداً" ${wanted.risk.includes("خطر") ? "selected" : ""}>🔴 خطر جداً</option>
                     </select>
                 </div>
-                <div class="input-group">
-                    <label>التهم الجنائية</label>
-                    <textarea id="editWantedCrime" rows="3">${wanted.crime}</textarea>
-                </div>
+                <div class="input-group"><label>التهم الجنائية</label><textarea id="editWantedCrime" rows="3">${wanted.crime}</textarea></div>
             `;
             openCustomModal("✏️ تعديل بيانات المطلوب", modalContent, async () => {
                 const newName = document.getElementById("editWantedName").value.trim();
@@ -1899,7 +1877,7 @@
             }
         }
 
-        /* ===== مجلدات الهويات الفردية ===== */
+        /* ===== السجلات / الهويات ===== */
         function openCreateRecordModal() {
             const content = `
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
@@ -1938,6 +1916,7 @@
                 });
                 addLog(`قام [${currentUser}] بإنشاء بطاقة هوية لـ: ${firstName} ${lastName}`);
                 await saveCloudData();
+                closeModal();
             });
         }
 
@@ -1996,20 +1975,11 @@
             if(!rec) return;
             const modalContent = `
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                    <div class="input-group">
-                        <label>الاسم الأول</label>
-                        <input type="text" id="editRecFirstName" value="${rec.firstName}">
-                    </div>
-                    <div class="input-group">
-                        <label>الاسم الأخير</label>
-                        <input type="text" id="editRecLastName" value="${rec.lastName}">
-                    </div>
+                    <div class="input-group"><label>الاسم الأول</label><input type="text" id="editRecFirstName" value="${rec.firstName}"></div>
+                    <div class="input-group"><label>الاسم الأخير</label><input type="text" id="editRecLastName" value="${rec.lastName}"></div>
                 </div>
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                    <div class="input-group">
-                        <label>رقم الهوية (Citizen ID)</label>
-                        <input type="text" id="editRecCid" value="${rec.cid}">
-                    </div>
+                    <div class="input-group"><label>رقم الهوية (Citizen ID)</label><input type="text" id="editRecCid" value="${rec.cid}"></div>
                     <div class="input-group">
                         <label>الجنس</label>
                         <select id="editRecSex">
@@ -2018,10 +1988,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="input-group">
-                    <label>السجل الجنائي والملاحظات</label>
-                    <textarea id="editRecNotes" rows="3">${rec.notes}</textarea>
-                </div>
+                <div class="input-group"><label>السجل الجنائي والملاحظات</label><textarea id="editRecNotes" rows="3">${rec.notes}</textarea></div>
             `;
             openCustomModal("✏️ تعديل بطاقة الهوية والسجل الجنائي", modalContent, async () => {
                 const newFirstName = document.getElementById("editRecFirstName").value.trim();
@@ -2076,7 +2043,7 @@
             }
         }
 
-        /* ===== مجلدات العصابات الفردية ===== */
+        /* ===== العصابات ===== */
         function openCreateGangModal() {
             const content = `
                 <div class="input-group"><label>اسم العصابة / التنظيم</label><input type="text" id="popGangName" placeholder="Gang Name"></div>
@@ -2096,6 +2063,7 @@
                 globalDatabase.gangs.push({ id: Date.now(), name, leader, deputy, members, details });
                 addLog(`قام [${currentUser}] بإضافة ملف مخطط عصابة: ${name}`);
                 await saveCloudData();
+                closeModal();
             });
         }
 
@@ -2135,28 +2103,13 @@
             const gang = globalDatabase.gangs.find(g => g.id === id);
             if(!gang) return;
             const modalContent = `
-                <div class="input-group">
-                    <label>اسم العصابة / التنظيم</label>
-                    <input type="text" id="editGangName" value="${gang.name}">
-                </div>
+                <div class="input-group"><label>اسم العصابة / التنظيم</label><input type="text" id="editGangName" value="${gang.name}"></div>
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                    <div class="input-group">
-                        <label>اسم القائد (Leader)</label>
-                        <input type="text" id="editGangLeader" value="${gang.leader || ''}">
-                    </div>
-                    <div class="input-group">
-                        <label>اسم النائب (Deputy)</label>
-                        <input type="text" id="editGangDeputy" value="${gang.deputy || ''}">
-                    </div>
+                    <div class="input-group"><label>اسم القائد (Leader)</label><input type="text" id="editGangLeader" value="${gang.leader || ''}"></div>
+                    <div class="input-group"><label>اسم النائب (Deputy)</label><input type="text" id="editGangDeputy" value="${gang.deputy || ''}"></div>
                 </div>
-                <div class="input-group">
-                    <label>الأعضاء (افصل بفاصلة)</label>
-                    <input type="text" id="editGangMembers" value="${gang.members || ''}">
-                </div>
-                <div class="input-group">
-                    <label>تفاصيل المخطط والنشاطات</label>
-                    <textarea id="editGangDetails" rows="3">${gang.details || ''}</textarea>
-                </div>
+                <div class="input-group"><label>الأعضاء (افصل بفاصلة)</label><input type="text" id="editGangMembers" value="${gang.members || ''}"></div>
+                <div class="input-group"><label>تفاصيل المخطط والنشاطات</label><textarea id="editGangDetails" rows="3">${gang.details || ''}</textarea></div>
             `;
             openCustomModal("✏️ تعديل ملف الشجرة الهيكلية للعصابة", modalContent, async () => {
                 const newName = document.getElementById("editGangName").value.trim();
@@ -2246,6 +2199,7 @@
                     userObj.role = newRole;
                     addLog(`قام [${currentUser}] بتعديل رتبة [${username}] إلى ${newRole}`);
                     await saveCloudData();
+                    closeModal();
                 }
             });
         }
