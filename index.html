@@ -60,7 +60,6 @@
             100% { transform: translate(-50%, -50%) scale(1.05) rotate(5deg); opacity: 0.11; }
         }
         
-        /* شاشة انتظار وتحميل برمجية حية بمؤثرات CIA */
         #decryption-screen {
             display: none;
             position: fixed;
@@ -699,8 +698,7 @@
         .user-list-item { display: flex; justify-content: space-between; align-items: center; background: rgba(4, 6, 10, 0.6); padding: 12px 15px; margin-top: 10px; border-radius: 6px; border: 1px solid var(--border-color); font-size: 13px; }
         .img-preview { max-width: 100%; max-height: 250px; border-radius: 5px; margin-top: 8px; border: 1px solid var(--border-color); }
         video { max-width: 100%; border-radius: 5px; margin-top: 8px; border: 1px solid var(--border-color); }
-
-        /* نافذة التعديل المخصصة بدلاً من مربعات جوجل المنبثقة */
+        
         .custom-modal-overlay {
             display: none;
             position: fixed;
@@ -734,10 +732,9 @@
         .modal-title { color: var(--gold-color); font-size: 16px; font-weight: bold; }
         .modal-close { cursor: pointer; color: var(--text-muted); font-size: 18px; font-weight: bold; }
         .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
-
-        /* بطاقة مربع التعميمات العاجل في الزاوية اليسرى السفلى */
+        
         .broadcast-card-floating {
-            display: none; /* يظهر بالسي اس اس إذا وجد تعميم */
+            display: none;
             position: fixed;
             bottom: 25px;
             left: 25px;
@@ -778,8 +775,7 @@
             font-weight: 600;
             word-break: break-word;
         }
-
-        /* تصميم الشات المحدث */
+        
         .chat-box-container {
             height: 380px;
             overflow-y: auto;
@@ -839,7 +835,6 @@
         <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Logo">
     </div>
     
-    <!-- شاشة انتظار برمجية متحركة حية بالكامل ذات طابع CIA -->
     <div id="decryption-screen">
         <canvas id="matrix-loader-canvas"></canvas>
         <div class="decrypt-box">
@@ -851,7 +846,6 @@
             <div class="code-stream" id="code-stream-text">0x7F80A... CONNECTING SECURE PACKETS</div>
         </div>
     </div>
-
     <div class="login-card" id="login-screen">
         <div class="subtitle-top">CIA • FEDERAL DATA TERMINAL</div>
         <div class="logo-container">
@@ -875,7 +869,6 @@
         <div class="sync-status" id="loading-status">🔄 جاري الاتصال بالسحابة...</div>
         <div class="error-msg" id="error-msg">⚠️ خطأ: اسم المستخدم، كلمة السر، أو الرمز غير صحيح!</div>
     </div>
-
     <div id="main-system">
         <div class="header-system">
             <div>
@@ -891,7 +884,6 @@
                 <button class="btn-logout" onclick="logout()">تسجيل الخروج</button>
             </div>
         </div>
-
         <div class="folder-grid-panel" id="folderHome">
             <div class="dashboard-header">
                 <div class="dashboard-logo">
@@ -942,7 +934,6 @@
             </div>
         </div>
 
-        <!-- قسم الدردشة والمحادثات المباشرة بين الأعضاء -->
         <div class="workspace-panel" id="chatSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
@@ -1107,18 +1098,14 @@
         </div>
     </div>
 
-    <!-- بطاقة التعميم العاجل الطافية في اليسار تحت -->
     <div class="broadcast-card-floating" id="broadcastCard">
         <div class="broadcast-card-header">
             <div class="broadcast-card-title">🚨 تعميم عاجل من القيادة</div>
             <button id="btnEditBroadcast" class="btn-edit-item" style="display:none;" onclick="updateBroadcast()">تعديل 📢</button>
         </div>
-        <div class="broadcast-card-body" id="broadcastTextDisplay">
-            -
-        </div>
+        <div class="broadcast-card-body" id="broadcastTextDisplay">-</div>
     </div>
 
-    <!-- نافذة التعديل المخصصة بدلاً من مربعات جوجل المنبثقة -->
     <div class="custom-modal-overlay" id="customModal">
         <div class="custom-modal">
             <div class="modal-header">
@@ -1134,7 +1121,6 @@
     </div>
 
     <script>
-        // Matrix Background Canvas الرئيسي
         const canvas = document.getElementById('cyber-canvas');
         const ctx = canvas.getContext('2d');
         function resizeCanvas() {
@@ -1163,7 +1149,6 @@
         }
         setInterval(drawMatrix, 35);
 
-        // Matrix Background لشاشة الانتظار
         const loaderCanvas = document.getElementById('matrix-loader-canvas');
         const loaderCtx = loaderCanvas ? loaderCanvas.getContext('2d') : null;
         let loaderDrops = [];
@@ -1190,7 +1175,6 @@
             }
         }
         let loaderInterval = null;
-
         let globalAudioCtx = null;
         let cipherSoundInterval = null;
         function startCipherSound() {
@@ -1257,6 +1241,7 @@
         };
         let globalDatabase = defaultDatabase;
         let currentUser = "";
+        let isSaving = false; // متغير لمنع التعارض بين المزامنة والتعديل
         
         let openItemsState = {
             reports: {},
@@ -1265,6 +1250,7 @@
         };
 
         async function fetchCloudData() {
+            if (isSaving) return; // إلغاء الجلب المباشر أثناء عملية الحفظ والتعديل
             try {
                 const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest?nocache=${Date.now()}`, {
                     headers: { "X-Master-Key": API_KEY }
@@ -1285,6 +1271,9 @@
         }
 
         async function saveCloudData() {
+            isSaving = true;
+            const statusElem = document.getElementById("loading-status");
+            if (statusElem) statusElem.innerText = "⏳ جاري حفظ التعديل في السحابة...";
             try {
                 const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
                     method: "PUT",
@@ -1296,10 +1285,15 @@
                 });
                 if(res.ok) {
                     renderAllData();
+                    if (statusElem) statusElem.innerText = "✅ تم حفظ التعديل بنجاح في السحابة أونلاين";
                 } else {
-                    alert("⚠️ فشل الحفظ في السحابة! تحقق من API_KEY أو BIN_ID");
+                    alert("⚠️ فشل الحفظ في السحابة!");
                 }
-            } catch (e) { alert("⚠️ خطأ في الاتصال أثناء حفظ البيانات!"); }
+            } catch (e) { 
+                alert("⚠️ خطأ في الاتصال أثناء حفظ البيانات!"); 
+            } finally {
+                isSaving = false;
+            }
         }
 
         function checkAutoLogin() {
@@ -1325,7 +1319,6 @@
                 initLoaderCanvas();
                 if(loaderInterval) clearInterval(loaderInterval);
                 loaderInterval = setInterval(drawLoaderMatrix, 30);
-
                 startCipherSound();
                 let progress = 0;
                 const progressBar = document.getElementById("decrypt-progress");
@@ -1394,7 +1387,6 @@
             const cardElem = document.getElementById("broadcastCard");
             const textElem = document.getElementById("broadcastTextDisplay");
             const bcText = (globalDatabase.broadcast || "").trim();
-
             if (bcText === "" || bcText.includes("لا يوجد تعميم")) {
                 if(cardElem) cardElem.style.display = "none";
             } else {
@@ -1406,14 +1398,12 @@
         function updateBroadcast() {
             const isDirector = globalDatabase.users[currentUser]?.role === "DIRECTOR";
             if (!isDirector) return alert("فقط مدير النظام يمكنه تعديل التعميم!");
-
             const modalContent = `
                 <div class="input-group">
                     <label>نص التعميم العاجل (اكتب "لا يوجد تعميم" لإخفائه عن الجميع)</label>
                     <textarea id="editBroadcastInput" rows="4">${globalDatabase.broadcast || ''}</textarea>
                 </div>
             `;
-
             openCustomModal("📢 تعديل التعميم العاجل", modalContent, async () => {
                 const newText = document.getElementById("editBroadcastInput").value.trim();
                 globalDatabase.broadcast = newText;
@@ -1427,7 +1417,6 @@
             if (!chatBox) return;
             chatBox.innerHTML = "";
             const isDirector = globalDatabase.users[currentUser]?.role === "DIRECTOR";
-
             (globalDatabase.chat || []).forEach(msg => {
                 const isMe = msg.user === currentUser;
                 const canDelete = isMe || isDirector;
@@ -1453,10 +1442,8 @@
             const input = document.getElementById("chatInputText");
             const text = input.value.trim();
             if (!text) return;
-
             const userRole = globalDatabase.users[currentUser]?.role || "CID Member";
             const time = new Date().toLocaleTimeString('ar-EG');
-
             if (!globalDatabase.chat) globalDatabase.chat = [];
             globalDatabase.chat.push({
                 id: Date.now(),
@@ -1465,7 +1452,6 @@
                 text: text,
                 time: time
             });
-
             if (globalDatabase.chat.length > 60) globalDatabase.chat.shift();
             input.value = "";
             await saveCloudData();
@@ -1480,7 +1466,7 @@
             const isDirector = globalDatabase.users[currentUser]?.role === "DIRECTOR";
             if (!isDirector) return alert("فقط المدير يمكنه مسح جميع المحادثات!");
             
-            if (confirm("هل أصلًا تريد مسح جميع رسائل المحادثات نهائياً؟")) {
+            if (confirm("هل تريد مسح جميع المحادثات نهائياً؟")) {
                 globalDatabase.chat = [];
                 addLog(`قام المدير [${currentUser}] بمسح كافة سجلات المحادثات.`);
                 await saveCloudData();
@@ -1517,7 +1503,11 @@
             
             const saveBtn = document.getElementById("modalSaveBtn");
             saveBtn.onclick = async () => {
+                saveBtn.disabled = true;
+                saveBtn.innerText = "جاري الحفظ...";
                 await onSave();
+                saveBtn.disabled = false;
+                saveBtn.innerText = "تأكيد وحفظ التعديلات";
                 closeModal();
             };
         }
@@ -1596,7 +1586,6 @@
         function editReport(id) {
             const report = globalDatabase.reports.find(r => r.id === id);
             if(!report) return;
-
             const modalContent = `
                 <div class="input-group">
                     <label>عنوان التقرير</label>
@@ -1611,7 +1600,6 @@
                     <input type="text" id="editReportCitizen" value="${report.citizen || ''}">
                 </div>
             `;
-
             openCustomModal("✏️ تعديل التقرير الاستخباراتي", modalContent, async () => {
                 const newTitle = document.getElementById("editReportTitle").value.trim();
                 const newDetails = document.getElementById("editReportDetails").value.trim();
@@ -1679,7 +1667,6 @@
         function editWanted(id) {
             const wanted = globalDatabase.wanted.find(w => w.id === id);
             if(!wanted) return;
-
             const modalContent = `
                 <div class="input-group">
                     <label>اسم المطلوب</label>
@@ -1698,12 +1685,10 @@
                     <textarea id="editWantedCrime" rows="3">${wanted.crime}</textarea>
                 </div>
             `;
-
             openCustomModal("✏️ تعديل بيانات المطلوب", modalContent, async () => {
                 const newName = document.getElementById("editWantedName").value.trim();
                 const newRisk = document.getElementById("editWantedRisk").value;
                 const newCrime = document.getElementById("editWantedCrime").value.trim();
-
                 if (newName && newCrime) {
                     wanted.name = newName;
                     wanted.risk = newRisk;
@@ -1818,7 +1803,6 @@
         function editRecord(id) {
             const rec = globalDatabase.records.find(r => r.id === id);
             if(!rec) return;
-
             const modalContent = `
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                     <div class="input-group">
@@ -1848,14 +1832,12 @@
                     <textarea id="editRecNotes" rows="3">${rec.notes}</textarea>
                 </div>
             `;
-
             openCustomModal("✏️ تعديل بطاقة الهوية والسجل الجنائي", modalContent, async () => {
                 const newFirstName = document.getElementById("editRecFirstName").value.trim();
                 const newLastName = document.getElementById("editRecLastName").value.trim();
                 const newCid = document.getElementById("editRecCid").value.trim();
                 const newSex = document.getElementById("editRecSex").value;
                 const newNotes = document.getElementById("editRecNotes").value.trim();
-
                 if (newFirstName && newLastName) {
                     rec.firstName = newFirstName;
                     rec.lastName = newLastName;
@@ -1942,7 +1924,6 @@
         function editGang(id) {
             const gang = globalDatabase.gangs.find(g => g.id === id);
             if(!gang) return;
-
             const modalContent = `
                 <div class="input-group">
                     <label>اسم العصابة / التنظيم</label>
@@ -1967,14 +1948,12 @@
                     <textarea id="editGangDetails" rows="3">${gang.details || ''}</textarea>
                 </div>
             `;
-
             openCustomModal("✏️ تعديل ملف الشجرة الهيكلية للعصابة", modalContent, async () => {
                 const newName = document.getElementById("editGangName").value.trim();
                 const newLeader = document.getElementById("editGangLeader").value.trim();
                 const newDeputy = document.getElementById("editGangDeputy").value.trim();
                 const newMembers = document.getElementById("editGangMembers").value.trim();
                 const newDetails = document.getElementById("editGangDetails").value.trim();
-
                 if (newName) {
                     gang.name = newName;
                     gang.leader = newLeader;
@@ -2010,11 +1989,9 @@
             const isDirector = globalDatabase.users[currentUser]?.role === "DIRECTOR";
             const userObj = globalDatabase.users[username];
             if(!userObj) return;
-
             if(!isDirector && currentUser !== username) {
                 return alert("⚠️ فقط المدير (DIRECTOR) يمكنه تعديل رتب الأعضاء الآخرين!");
             }
-
             const modalContent = `
                 <div class="input-group">
                     <label>الرتبة التشغيلية الجديدة للوكيل (${username})</label>
@@ -2026,7 +2003,6 @@
                     </select>
                 </div>
             `;
-
             openCustomModal(`✏️ تعديل رتبة الوكيل: ${username}`, modalContent, async () => {
                 const newRole = document.getElementById("editUserRole").value;
                 if(newRole) {
@@ -2050,10 +2026,8 @@
             const tbody = document.getElementById("users-table-body");
             const q = (document.getElementById("usersSearch")?.value || "").toLowerCase();
             const isDirector = globalDatabase.users[currentUser]?.role === "DIRECTOR";
-
             if (container) container.innerHTML = "";
             if (tbody) tbody.innerHTML = "";
-
             for (let user in globalDatabase.users) {
                 const u = globalDatabase.users[user];
                 if (user.toLowerCase().includes(q) || u.id.toLowerCase().includes(q) || u.role.toLowerCase().includes(q)) {
