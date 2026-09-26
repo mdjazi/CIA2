@@ -159,7 +159,7 @@
         .cia-doc-logo { width: 65px; height: 65px; border-radius: 50%; border: 1px solid #000; }
         .cia-top-secret-stamp { color: #b91c1c; font-size: 10px; font-weight: 900; letter-spacing: 1px; border: 1.5px solid #b91c1c; padding: 2px 6px; transform: rotate(-3deg); display: inline-block; background: rgba(185, 28, 28, 0.05); }
         .cia-doc-meta { font-size: 12px; color: #111; margin-bottom: 15px; line-height: 1.6; border-bottom: 1px solid #b5b9c0; padding-bottom: 10px; position: relative; z-index: 1; font-weight: bold; }
-        .cia-doc-body { background: transparent; padding: 15px 0; min-height: 140px; font-size: 13px; color: #111; line-height: 1.6; position: relative; z-index: 1; font-weight: bold; }
+        .cia-doc-body { background: transparent; padding: 15px 0; min-height: 140px; font-size: 13px; color: #111; line-height: 1.6; position: relative; z-index: 1; font-weight: bold; white-space: pre-wrap; word-break: break-word; }
         
         .broadcast-card-floating { display: none; position: fixed; bottom: 25px; left: 25px; width: 320px; background: rgba(11, 16, 23, 0.95); border: 1px solid var(--danger-color); border-radius: 10px; padding: 16px; z-index: 900; }
         .chat-box-container { height: 380px; overflow-y: auto; background: rgba(4, 6, 10, 0.8); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 12px; }
@@ -527,7 +527,7 @@
             document.getElementById("customModal").style.display = "none";
         }
 
-        /* دالة توليد قالب الوثيقة الاستخباراتية بالتعديلات المطلوبة (CIA يمين الشعار وسط FEDERAL BUREAU RECORDS أسفل بمسافة) */
+        /* دالة توليد قالب الوثيقة الاستخباراتية بحيث يكون اليوم والتاريخ في سطر واحد مستقل تحت الكاتب */
         function getReportDocHtml(titleVal = "", detailsVal = "", authorVal = currentUser, dateVal = new Date().toLocaleDateString(), dayVal = new Date().toLocaleDateString('ar-EG', { weekday: 'long' }), isEdit = false) {
             return `
                 <div class="cia-classified-doc">
@@ -540,12 +540,13 @@
                         <div class="cia-top-secret-stamp">سري للغاية</div>
                     </div>
                     <div class="cia-doc-meta">
-                        <div style="margin-bottom:8px;"><b>عنوان التقرير:</b> ${isEdit ? `<input type="text" id="editReportTitle" value="${titleVal}" style="margin-top:4px; font-weight:bold;">` : `<input type="text" id="popReportTitle" placeholder="مثال: رصد تحركات مشبوهة" style="margin-top:4px; font-weight:bold;">`}</div>
-                        <div><b>الكاتب:</b> ${authorVal} | <b>اليوم:</b> ${dayVal} | <b>التاريخ:</b> ${dateVal}</div>
+                        <div style="font-size:15px; margin-bottom:8px;"><b>عنوان التقرير:</b> ${isEdit ? `<input type="text" id="editReportTitle" value="${titleVal}" style="margin-top:4px; font-weight:bold;">` : `<input type="text" id="popReportTitle" placeholder="مثال: رصد تحركات مشبوهة" style="margin-top:4px; font-weight:bold;">`}</div>
+                        <div style="margin-bottom:4px;"><b>الكاتب:</b> ${authorVal}</div>
+                        <div><b>اليوم:</b> ${dayVal} &nbsp;|&nbsp; <b>التاريخ:</b> ${dateVal}</div>
                     </div>
                     <div class="cia-doc-body">
                         <div style="margin-bottom:6px; font-weight:900; color:#b91c1c; font-size:11px;">[مضمون التقرير الاستخباراتي]:</div>
-                        ${isEdit ? `<textarea id="editReportDetails" rows="5" style="width:100%; padding:8px; background:transparent; border:1px solid #999; font-weight:bold;">${detailsVal}</textarea>` : `<textarea id="popReportDetails" rows="5" placeholder="تفاصيل العملية والتحريات..." style="width:100%; padding:8px; background:transparent; border:1px solid #999; font-weight:bold;"></textarea>`}
+                        ${isEdit ? `<textarea id="editReportDetails" rows="6" style="width:100%; padding:8px; background:transparent; border:1px solid #999; font-weight:bold; white-space:pre-wrap;">${detailsVal}</textarea>` : `<textarea id="popReportDetails" rows="6" placeholder="تفاصيل العملية والتحريات..." style="width:100%; padding:8px; background:transparent; border:1px solid #999; font-weight:bold; white-space:pre-wrap;"></textarea>`}
                         ${!isEdit ? `
                             <div class="input-group" style="margin-top:12px;"><label style="color:#111; font-weight:bold;">📁 إرفاق صورة دليل</label><input type="file" id="popReportImageFile" accept="image/*"></div>
                             <div class="input-group" style="margin-top:6px;"><label style="color:#111; font-weight:bold;">🎥 إرفاق فيديو دليل</label><input type="file" id="popReportVideoFile" accept="video/*"></div>
@@ -559,7 +560,7 @@
         function openCreateReportModal() {
             openCustomModal("➕ إنشاء تقرير استخباراتي جديد", getReportDocHtml(), async () => {
                 const title = document.getElementById("popReportTitle").value.trim();
-                const details = document.getElementById("popReportDetails").value.trim();
+                const details = document.getElementById("popReportDetails").value;
                 if (!title) return alert("أدخل عنوان التقرير!");
                 const img = await readFileAsBase64(document.getElementById("popReportImageFile").files[0]);
                 const vid = await readFileAsBase64(document.getElementById("popReportVideoFile").files[0]);
@@ -592,12 +593,13 @@
                         <div class="cia-top-secret-stamp">سري للغاية</div>
                     </div>
                     <div class="cia-doc-meta">
-                        <div style="font-size:15px; margin-bottom:6px;"><b>العنوان:</b> ${r.title}</div>
-                        <div><b>الكاتب:</b> ${r.author} | <b>اليوم:</b> ${r.day || 'الأحد'} | <b>التاريخ:</b> ${r.date || 'اليوم'}</div>
+                        <div style="font-size:15px; margin-bottom:8px;"><b>العنوان:</b> ${r.title}</div>
+                        <div style="margin-bottom:4px;"><b>الكاتب:</b> ${r.author}</div>
+                        <div><b>اليوم:</b> ${r.day || 'الأحد'} &nbsp;|&nbsp; <b>التاريخ:</b> ${r.date || 'اليوم'}</div>
                     </div>
                     <div class="cia-doc-body">
                         <div style="margin-bottom:8px; font-weight:900; color:#b91c1c; font-size:11px;">[مضمون التقرير الاستخباراتي]:</div>
-                        <div style="font-weight:bold;">${r.details}</div>
+                        <div style="font-weight:bold; white-space:pre-wrap;">${r.details}</div>
                         ${r.image ? `<div style="margin-top:12px;"><b style="font-size:10px; color:#111;">المرفقات البصرية:</b><br><img src="${r.image}" class="img-preview" style="border:1px solid #999;"></div>` : ''}
                         ${r.video ? `<div style="margin-top:12px;"><b style="font-size:10px; color:#111;">المرفقات المرئية:</b><br><video controls src="${r.video}"></video></div>` : ''}
                     </div>
@@ -611,7 +613,7 @@
             if (!r) return;
             openCustomModal("✏️ تعديل التقرير الاستخباراتي", getReportDocHtml(r.title, r.details, r.author, r.date, r.day, true), async () => {
                 r.title = document.getElementById("editReportTitle").value.trim();
-                r.details = document.getElementById("editReportDetails").value.trim();
+                r.details = document.getElementById("editReportDetails").value;
                 await saveCloudData(); 
                 closeModal();
                 viewReportFolder(r.id);
