@@ -3,570 +3,586 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CENTRAL INTELLIGENCE AGENCY // SYSTEM ACCESS</title>
-    <!-- FontAwesome icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>CIA SYSTEM | نظام التحكم والاستخبارات الفدرالي</title>
     <style>
         :root {
-            --primary-color: #00ffcc;
-            --secondary-color: #0088cc;
-            --bg-color: #050b14;
-            --panel-bg: rgba(10, 25, 47, 0.85);
-            --border-color: rgba(0, 255, 204, 0.3);
-            --text-color: #e6f1ff;
-            --text-dim: #8892b0;
-            --danger-color: #ff3366;
+            --bg-color: #030508;
+            --card-bg: rgba(11, 16, 23, 0.45);
+            --accent-color: #0084ff;
+            --border-color: rgba(22, 34, 53, 0.8);
+            --text-color: #d1d9e6;
+            --danger-color: #d90429;
+            --gold-color: #c5a059;
+            --success-color: #10b981;
+            --text-muted: #8191a5;
         }
-
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Courier New', Courier, monospace;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
         }
-
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            overflow-x: hidden;
             min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
         }
-
-        /* خلفية الماتريكس والبرمجة */
-        #matrixCanvas {
+        #cyber-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: 1;
-            opacity: 0.18;
+            z-index: 0;
             pointer-events: none;
+            opacity: 0.45;
         }
-
-        /* 1. شاشة التحميل (بدون شعار - خلفية برمجة فقط) */
-        #splashScreen {
+        .bg-watermark-logo {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            width: 600px;
+            height: 600px;
+            opacity: 0.08;
+            z-index: 1;
+            pointer-events: none;
+            animation: pulseLogo 12s infinite alternate ease-in-out;
+        }
+        @keyframes pulseLogo {
+            0% { transform: translate(-50%, -50%) scale(0.95) rotate(0deg); opacity: 0.05; }
+            100% { transform: translate(-50%, -50%) scale(1.05) rotate(5deg); opacity: 0.11; }
+        }
+        
+        /* ===== شاشة فك التشفير الاستخباراتية المطورة ===== */
+        #decryption-screen {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--bg-color);
-            z-index: 9999;
-            display: flex;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, rgba(8, 14, 24, 0.95) 0%, rgba(3, 5, 8, 0.98) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 999;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-        }
-
-        .loader-title {
-            color: var(--primary-color);
-            font-size: 20px;
-            letter-spacing: 3px;
-            margin-bottom: 15px;
-            text-shadow: 0 0 10px var(--primary-color);
-        }
-
-        .loader-bar {
-            width: 320px;
-            height: 8px;
-            background: rgba(0, 255, 204, 0.1);
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
+            text-align: center;
             overflow: hidden;
-            box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
         }
-
-        .loader-progress {
-            width: 0%;
-            height: 100%;
-            background: var(--primary-color);
-            box-shadow: 0 0 15px var(--primary-color);
-            transition: width 0.1s linear;
+        #decryption-screen::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 1;
         }
-
-        /* 2. شاشة تسجيل الدخول */
-        #loginScreen {
-            position: fixed;
+        #matrix-loader-canvas {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 100;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            z-index: 0;
+            opacity: 0.4;
         }
-
-        .login-card {
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            padding: 40px;
-            border-radius: 8px;
-            width: 400px;
-            text-align: center;
-            box-shadow: 0 0 30px rgba(0, 255, 204, 0.15);
-            backdrop-filter: blur(8px);
-            position: relative;
-        }
-
-        .login-card img {
-            width: 110px;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 0 10px rgba(0, 255, 204, 0.4));
-        }
-
-        .input-group {
-            margin-bottom: 18px;
-            text-align: right;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 12px;
-            color: var(--primary-color);
-            margin-bottom: 5px;
-            letter-spacing: 1px;
-        }
-
-        .input-group input, .input-group textarea {
-            width: 100%;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid var(--border-color);
-            color: var(--primary-color);
-            border-radius: 4px;
-            outline: none;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        .input-group input:focus, .input-group textarea:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
-        }
-
-        .btn {
-            background: transparent;
-            color: var(--primary-color);
-            border: 1px solid var(--primary-color);
-            padding: 12px 24px;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-            width: 100%;
-            font-weight: bold;
-            letter-spacing: 1.5px;
-        }
-
-        .btn:hover {
-            background: var(--primary-color);
-            color: #000;
-            box-shadow: 0 0 20px var(--primary-color);
-        }
-
-        /* 3. التطبيق والواجهة الرئيسية */
-        #mainApp {
-            display: none;
+        .decrypt-box {
             position: relative;
             z-index: 2;
-            padding: 25px;
-            max-width: 1400px;
-            margin: 0 auto;
+            background: rgba(6, 11, 18, 0.85);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            padding: 40px 45px;
+            border-radius: 16px;
+            box-shadow: 0 0 60px rgba(16, 185, 129, 0.2), inset 0 0 30px rgba(0, 132, 255, 0.1);
+            max-width: 520px;
+            width: 90%;
+            backdrop-filter: blur(15px);
+        }
+        
+        /* عناصر الرادار التكتيكي */
+        .radar-spinner {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px auto;
+            border-radius: 50%;
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            border-top: 2px solid var(--success-color);
+            border-right: 2px solid var(--accent-color);
+            animation: spinRadar 1.5s linear infinite;
+            position: relative;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+        }
+        .radar-spinner::after {
+            content: "";
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px; height: 10px;
+            background: var(--success-color);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--success-color);
+        }
+        @keyframes spinRadar {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        /* شريط الملاحة والتنقل العلوي */
-        .top-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--panel-bg);
-            padding: 15px 25px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            margin-bottom: 25px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        .decrypt-header-badge {
+            display: inline-block;
+            font-family: monospace;
+            font-size: 10px;
+            letter-spacing: 3px;
+            color: var(--gold-color);
+            background: rgba(197, 160, 89, 0.1);
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
         }
-
-        .nav-controls {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        /* أزرار السهم والبيت موحدة الألوان وبدون نصوص */
-        .icon-nav-btn {
-            background: rgba(0, 255, 204, 0.05);
-            border: 1px solid var(--border-color);
-            color: var(--primary-color);
-            width: 42px;
-            height: 42px;
-            border-radius: 6px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
+        .decrypt-title {
+            color: #ffffff;
             font-size: 18px;
-            transition: all 0.3s ease;
+            font-weight: 800;
+            letter-spacing: 2px;
+            margin-bottom: 6px;
+            font-family: 'Segoe UI', sans-serif;
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
         }
-
-        .icon-nav-btn:hover {
-            background: var(--primary-color);
-            color: #000;
-            box-shadow: 0 0 12px var(--primary-color);
-        }
-
-        /* شبكة المجلدات الرئيسية */
-        .folders-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 20px;
-        }
-
-        .folder-card {
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            padding: 35px 20px;
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .folder-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary-color);
-            box-shadow: 0 0 20px rgba(0, 255, 204, 0.25);
-        }
-
-        .folder-card i {
-            font-size: 45px;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-        }
-
-        .folder-card h3 {
-            font-size: 16px;
+        .decrypt-subtext {
+            font-size: 12px;
+            color: var(--success-color);
+            font-family: monospace;
+            margin-bottom: 20px;
             letter-spacing: 1px;
-            color: var(--text-color);
         }
-
-        /* واجهة عرض المجلد الداخلي */
-        #folderView {
-            display: none;
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            padding: 30px;
+        .progress-container {
+            position: relative;
+            margin: 20px 0 10px 0;
+        }
+        .progress-bar-bg {
+            width: 100%;
+            height: 14px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(16, 185, 129, 0.3);
             border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            padding: 2px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
         }
-
-        .folder-header {
+        .progress-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #10b981 0%, #0084ff 100%);
+            border-radius: 6px;
+            box-shadow: 0 0 15px var(--accent-color);
+            transition: width 0.1s linear;
+        }
+        .progress-percentage {
+            position: absolute;
+            top: -24px;
+            left: 0;
+            font-family: monospace;
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--gold-color);
+        }
+        .progress-status-txt {
+            position: absolute;
+            top: -24px;
+            right: 0;
+            font-family: monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        .code-stream {
+            font-family: monospace;
+            font-size: 11px;
+            color: #10b981;
+            margin-top: 15px;
+            height: 22px;
+            overflow: hidden;
+            word-break: break-all;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(16, 185, 129, 0.15);
+        }
+        .tactical-footer-info {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 15px;
-            margin-bottom: 25px;
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 9px;
+            color: rgba(129, 145, 165, 0.6);
         }
 
-        .btn-create {
-            width: auto;
-            padding: 10px 22px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-        }
-
-        /* قائمة النوافذ المنبثقة (Modal) للإنشاء/التعديل */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
+        /* ===== باقي كود التصميم الأصلي ===== */
+        .login-card {
+            position: relative;
+            z-index: 10;
+            background: rgba(8, 13, 20, 0.55);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(197, 160, 89, 0.4);
+            border-radius: 14px;
+            padding: 40px 35px;
             width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 1000;
+            max-width: 430px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 20px rgba(197, 160, 89, 0.15);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .subtitle-top {
+            font-size: 10px;
+            letter-spacing: 3px;
+            color: var(--gold-color);
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        .logo-container {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 18px auto;
+            border-radius: 50%;
+            border: 2px solid var(--gold-color);
+            display: flex;
             justify-content: center;
             align-items: center;
-            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 25px rgba(197, 160, 89, 0.35);
+            animation: glowPulse 3s infinite alternate;
         }
-
-        .modal-content {
-            background: var(--panel-bg);
-            border: 1px solid var(--primary-color);
-            padding: 30px;
-            border-radius: 8px;
-            width: 500px;
-            max-width: 90%;
-            box-shadow: 0 0 30px rgba(0, 255, 204, 0.3);
+        @keyframes glowPulse {
+            0% { box-shadow: 0 0 15px rgba(197, 160, 89, 0.2); }
+            100% { box-shadow: 0 0 30px rgba(197, 160, 89, 0.5); }
         }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 12px;
+        .logo-container img {
+            width: 84px;
+            height: 84px;
+            border-radius: 50%;
         }
-
-        .close-btn {
-            color: var(--primary-color);
+        .title {
+            color: var(--gold-color);
             font-size: 22px;
-            cursor: pointer;
+            font-weight: 800;
+            margin: 5px 0 0 0;
+            letter-spacing: 1.5px;
+        }
+        .agency-name {
+            color: #8a9bb0;
+            font-size: 10px;
+            letter-spacing: 2.5px;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        .input-group {
+            text-align: right;
+            margin-bottom: 14px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 11px;
+            color: var(--accent-color);
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        .input-group input, .input-group select, .input-group textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(4, 6, 10, 0.65);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: #fff;
+            box-sizing: border-box;
+            font-size: 13px;
+            text-align: right;
+            outline: none;
             transition: 0.2s;
         }
-
-        .close-btn:hover {
-            color: var(--danger-color);
-        }
-
-        .items-container {
-            display: grid;
-            gap: 15px;
-        }
-
-        .data-card {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--border-color);
-            padding: 18px;
+        .btn-login {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, var(--accent-color) 0%, #0052a3 100%);
+            color: #fff;
+            border: none;
             border-radius: 6px;
-            position: relative;
-        }
-
-        .data-card h4 {
-            color: var(--primary-color);
-            margin-bottom: 8px;
-            font-size: 16px;
-        }
-
-        .data-card p {
-            color: var(--text-dim);
+            font-weight: 700;
             font-size: 13px;
-            line-height: 1.5;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 132, 255, 0.3);
+        }
+        .error-msg {
+            color: var(--danger-color);
+            font-size: 12px;
+            margin-top: 12px;
+            display: none;
+            font-weight: 600;
+        }
+        .sync-status {
+            font-size: 11px;
+            color: var(--gold-color);
+            margin-top: 10px;
+        }
+        #main-system {
+            display: none;
+            width: 100%;
+            max-width: 1150px;
+            box-sizing: border-box;
+            position: relative;
+            z-index: 10;
+        }
+        .header-system {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(11, 16, 23, 0.55);
+            backdrop-filter: blur(20px);
+            padding: 18px 25px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        .badge {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            background: var(--accent-color);
+            color: #fff;
         }
     </style>
 </head>
 <body>
-
-    <!-- خلفية البرمجة (Matrix Rain) -->
-    <canvas id="matrixCanvas"></canvas>
-
-    <!-- 1. شاشة التحميل (بدون شعار - فقط خلفية برمجة ومؤشر تقدم) -->
-    <div id="splashScreen">
-        <div class="loader-title">SYSTEM INITIALIZATION...</div>
-        <div class="loader-bar">
-            <div class="loader-progress" id="loaderProgress"></div>
-        </div>
+    <canvas id="cyber-canvas"></canvas>
+    <div class="bg-watermark-logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Logo">
     </div>
-
-    <!-- 2. شاشة تسجيل الدخول -->
-    <div id="loginScreen" style="display: none;">
-        <div class="login-card">
-            <img src="https://i.ibb.co/L5QG2Q5/CIA-Logo.png" alt="CIA Emblem">
-            <h3 style="margin-bottom: 25px; color: var(--primary-color); letter-spacing: 2px;">CENTRAL SYSTEM ACCESS</h3>
-            <div class="input-group">
-                <label>USER ID / AGENT NAME</label>
-                <input type="text" placeholder="ENTER USERNAME">
-            </div>
-            <div class="input-group">
-                <label>SECURITY PASSCODE</label>
-                <input type="password" placeholder="ENTER PASSCODE">
-            </div>
-            <button class="btn" onclick="login()">AUTHENTICATE</button>
-        </div>
-    </div>
-
-    <!-- 3. الواجهة الرئيسية -->
-    <div id="mainApp">
-        <!-- شريط الملاحة -->
-        <div class="top-nav">
-            <div class="nav-controls">
-                <!-- زر رجوع خطوة للخلف (سهم فقط) -->
-                <button class="icon-nav-btn" onclick="goBack()" title="رجوع للخلف">
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-                <!-- زر الصفحة الرئيسية (بيت فقط وبنفس لون سهم الرجوع) -->
-                <button class="icon-nav-btn" onclick="goHome()" title="الصفحة الرئيسية">
-                    <i class="fas fa-home"></i>
-                </button>
-            </div>
-            <div style="font-weight: bold; color: var(--primary-color); letter-spacing: 1px;">
-                CENTRAL INTELLIGENCE AGENCY // CLASSIFIED DATABASE
-            </div>
-        </div>
-
-        <!-- الصفحة الرئيسية (المجلدات) -->
-        <div id="homeView" class="folders-grid">
-            <div class="folder-card" onclick="openFolder('REPORTS')">
-                <i class="fas fa-folder-open"></i>
-                <h3>REPORTS</h3>
-            </div>
-            <div class="folder-card" onclick="openFolder('WANTED')">
-                <i class="fas fa-user-ninja"></i>
-                <h3>WANTED LIST</h3>
-            </div>
-            <div class="folder-card" onclick="openFolder('RECORDS')">
-                <i class="fas fa-id-card"></i>
-                <h3>DOSSIER RECORDS</h3>
-            </div>
-            <div class="folder-card" onclick="openFolder('INTELLIGENCE')">
-                <i class="fas fa-sitemap"></i>
-                <h3>INTELLIGENCE NET</h3>
-            </div>
-        </div>
-
-        <!-- واجهة عرض المجلد الداخلي -->
-        <div id="folderView">
-            <div class="folder-header">
-                <h2 id="folderTitle" style="color: var(--primary-color); font-size: 20px;">FOLDER VIEW</h2>
-                <!-- زر إنشاء قائمة جديدة داخل المجلد -->
-                <button class="btn btn-create" onclick="openCreateModal()">
-                    <i class="fas fa-plus"></i> إنشاء
-                </button>
-            </div>
-            <div id="folderContent" class="items-container">
-                <p style="color: var(--text-dim); text-align: center;">لا توجد سجلاّت حالياً داخل هذا المجلد.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- قائمة إنشاء عنصر جديد (Modal) -->
-    <div id="createModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 style="color: var(--primary-color);">إنشاء / إضافة عنصر جديد</h3>
-                <span class="close-btn" onclick="closeCreateModal()">&times;</span>
-            </div>
-            <form onsubmit="handleCreate(event)">
-                <div class="input-group">
-                    <label>العنوان / اسم السجل</label>
-                    <input type="text" id="createTitle" placeholder="أدخل العنوان..." required>
+    
+    <!-- ===== شاشة فك التشفير الاستخباراتية الجديدة ===== -->
+    <div id="decryption-screen">
+        <canvas id="matrix-loader-canvas"></canvas>
+        <div class="decrypt-box">
+            <div class="radar-spinner"></div>
+            <div class="decrypt-header-badge">AES-256 / SHA-512 ENCRYPTED TERMINAL</div>
+            <div class="decrypt-title">DECRYPTING CLASSIFIED DATA</div>
+            <div class="decrypt-subtext">جاري جلب وفك تشفير الملفات والبيانات الاستخباراتية...</div>
+            
+            <div class="progress-container">
+                <span class="progress-percentage" id="decrypt-percentage">0%</span>
+                <span class="progress-status-txt" id="decrypt-status-txt">ESTABLISHING SECURE NODE...</span>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="decrypt-progress"></div>
                 </div>
-                <div class="input-group">
-                    <label>التفاصيل والمعلومات</label>
-                    <textarea id="createDetails" rows="4" placeholder="أدخل بيانات التقرير أو الملاحظات..." required></textarea>
-                </div>
-                <button type="submit" class="btn">حفظ وإنشاء</button>
-            </form>
+            </div>
+            
+            <div class="code-stream" id="code-stream-text">0x7F80A... INITIALIZING PACKET STREAM</div>
+            
+            <div class="tactical-footer-info">
+                <span>LAT: 38.9517° N | LON: 77.1465° W</span>
+                <span>SECURE CLEARANCE: LEVEL 5</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- شاشة تسجيل الدخول -->
+    <div class="login-card" id="login-screen">
+        <div class="subtitle-top">CIA • FEDERAL DATA TERMINAL</div>
+        <div class="logo-container">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Emblem">
+        </div>
+        <div class="title">CIA FEDERAL SYSTEM</div>
+        <div class="agency-name">CENTRAL INTELLIGENCE AGENCY</div>
+        <div class="input-group">
+            <label>معرف الوكيل / اسم المستخدم (Username)</label>
+            <input type="text" id="login-username" placeholder="Name" autocomplete="off">
+        </div>
+        <div class="input-group">
+            <label>كلمة المرور التشفيرية (Passcode)</label>
+            <input type="password" id="login-password" placeholder="•••••" autocomplete="new-password">
+        </div>
+        <div class="input-group">
+            <label>رمز الأمان التشغيلي (PIN Code)</label>
+            <input type="password" id="login-pin" placeholder="••••" autocomplete="off">
+        </div>
+        <button class="btn-login" onclick="login()">تسجيل الدخول للمنظومة الفدرالية</button>
+        <div class="sync-status" id="loading-status">🔄 جاري الاتصال بالسحابة...</div>
+        <div class="error-msg" id="error-msg">⚠️ خطأ: اسم المستخدم، كلمة السر، أو الرمز غير صحيح!</div>
+    </div>
+
+    <!-- المنظومة الرئيسية -->
+    <div id="main-system">
+        <div class="header-system">
+            <div>
+                <h3 style="margin:0; color:var(--gold-color); font-size:18px;">🛡️ CIA SYSTEM | نظام التحكم والاستخبارات</h3>
+                <small style="color:#94a3b8;">
+                    العضو: <span id="current-user-display" style="color:var(--accent-color); font-weight:bold;">Mutleq</span> 
+                    | الرتبة: <span id="current-role-display" class="badge">CID Member</span>
+                </small>
+            </div>
+            <div>
+                <button class="btn-login" style="width:auto; padding: 8px 16px; background:var(--danger-color);" onclick="logout()">تسجيل الخروج</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // خلفية الماتريكس (خلفية البرمجة السيبرانية)
-        const canvas = document.getElementById('matrixCanvas');
+        // Matrix Background Effect
+        const canvas = document.getElementById('cyber-canvas');
         const ctx = canvas.getContext('2d');
-
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
-
-        const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZCIA';
-        const fontSize = 14;
-        const columns = canvas.width / fontSize;
-        const drops = Array(Math.floor(columns)).fill(1);
-
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        const chars = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$#@%&*';
+        const fontSize = 13;
+        const columns = Math.floor(window.innerWidth / fontSize);
+        const drops = Array(columns).fill(1);
         function drawMatrix() {
-            ctx.fillStyle = 'rgba(5, 11, 20, 0.05)';
+            ctx.fillStyle = 'rgba(3, 5, 8, 0.08)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.fillStyle = '#00ffcc';
+            ctx.fillStyle = '#10b981';
             ctx.font = fontSize + 'px monospace';
-
             for (let i = 0; i < drops.length; i++) {
                 const text = chars.charAt(Math.floor(Math.random() * chars.length));
                 ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
-                }
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
                 drops[i]++;
             }
         }
-        setInterval(drawMatrix, 33);
+        setInterval(drawMatrix, 35);
 
-        // محاكاة شاشة التحميل
-        let progress = 0;
-        const progressBar = document.getElementById('loaderProgress');
-        const interval = setInterval(() => {
-            progress += 4;
-            progressBar.style.width = progress + '%';
-            if (progress >= 100) {
-                clearInterval(interval);
-                document.getElementById('splashScreen').style.display = 'none';
-                document.getElementById('loginScreen').style.display = 'flex';
+        // Matrix Loader Background Effect
+        const loaderCanvas = document.getElementById('matrix-loader-canvas');
+        const loaderCtx = loaderCanvas ? loaderCanvas.getContext('2d') : null;
+        let loaderDrops = [];
+        function initLoaderCanvas() {
+            if(!loaderCanvas) return;
+            loaderCanvas.width = window.innerWidth;
+            loaderCanvas.height = window.innerHeight;
+            const lCols = Math.floor(loaderCanvas.width / 14);
+            loaderDrops = Array(lCols).fill(1);
+        }
+        function drawLoaderMatrix() {
+            if(!loaderCtx) return;
+            loaderCtx.fillStyle = 'rgba(4, 10, 15, 0.12)';
+            loaderCtx.fillRect(0, 0, loaderCanvas.width, loaderCanvas.height);
+            loaderCtx.fillStyle = '#0084ff';
+            loaderCtx.font = '14px monospace';
+            for (let i = 0; i < loaderDrops.length; i++) {
+                const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                loaderCtx.fillText(text, i * 14, loaderDrops[i] * 14);
+                if (loaderDrops[i] * 14 > loaderCanvas.height && Math.random() > 0.95) loaderDrops[i] = 0;
+                loaderDrops[i]++;
             }
-        }, 80);
+        }
 
-        // تسجيل الدخول
+        let loaderInterval = null;
+        let globalAudioCtx = null;
+        let cipherSoundInterval = null;
+
+        function startCipherSound() {
+            try {
+                if (!globalAudioCtx) globalAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (globalAudioCtx.state === 'suspended') globalAudioCtx.resume();
+                cipherSoundInterval = setInterval(() => {
+                    if (!globalAudioCtx) return;
+                    const osc = globalAudioCtx.createOscillator();
+                    const gain = globalAudioCtx.createGain();
+                    osc.type = Math.random() > 0.5 ? "sine" : "triangle";
+                    osc.frequency.setValueAtTime(400 + (Math.random() * 600), globalAudioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.03, globalAudioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, globalAudioCtx.currentTime + 0.06);
+                    osc.connect(gain);
+                    gain.connect(globalAudioCtx.destination);
+                    osc.start();
+                    osc.stop(globalAudioCtx.currentTime + 0.06);
+                }, 80);
+            } catch(e) { console.log(e); }
+        }
+        function stopCipherSound() {
+            if (cipherSoundInterval) { clearInterval(cipherSoundInterval); cipherSoundInterval = null; }
+        }
+
+        let globalDatabase = {
+            users: { "Mutleq": { password: "123", pin: "1234", id: "CIA-102", role: "CID Member" } }
+        };
+
         function login() {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('mainApp').style.display = 'block';
-        }
+            const user = document.getElementById("login-username").value.trim();
+            const pass = document.getElementById("login-password").value.trim();
+            const pin = document.getElementById("login-pin").value.trim();
+            const errorMsg = document.getElementById("error-msg");
 
-        // التنقل بين الشاشات والمجلدات
-        let currentFolder = '';
+            if (globalDatabase.users[user] && globalDatabase.users[user].password === pass && globalDatabase.users[user].pin === pin) {
+                errorMsg.style.display = "none";
+                document.getElementById("login-screen").style.display = "none";
+                
+                const decryptScreen = document.getElementById("decryption-screen");
+                decryptScreen.style.display = "flex";
+                
+                initLoaderCanvas();
+                if(loaderInterval) clearInterval(loaderInterval);
+                loaderInterval = setInterval(drawLoaderMatrix, 30);
+                startCipherSound();
 
-        function openFolder(folderName) {
-            currentFolder = folderName;
-            document.getElementById('homeView').style.display = 'none';
-            document.getElementById('folderView').style.display = 'block';
-            document.getElementById('folderTitle').innerText = 'FOLDER // ' + folderName;
-        }
+                let progress = 0;
+                const progressBar = document.getElementById("decrypt-progress");
+                const percentageTxt = document.getElementById("decrypt-percentage");
+                const statusTxt = document.getElementById("decrypt-status-txt");
+                const codeStream = document.getElementById("code-stream-text");
 
-        function goHome() {
-            document.getElementById('folderView').style.display = 'none';
-            document.getElementById('homeView').style.display = 'grid';
-        }
+                const statusMessages = [
+                    "CONNECTING SECURE NODES...",
+                    "AUTHENTICATING CLEARANCE...",
+                    "DECRYPTING DATABASE PACKETS...",
+                    "SYNCHRONIZING CLOUD DATA...",
+                    "FINALIZING TERMINAL ACCESS..."
+                ];
 
-        function goBack() {
-            if (document.getElementById('folderView').style.display === 'block') {
-                goHome();
+                const interval = setInterval(() => {
+                    progress += 2;
+                    progressBar.style.width = progress + "%";
+                    percentageTxt.innerText = progress + "%";
+                    
+                    const msgIdx = Math.min(Math.floor(progress / 22), statusMessages.length - 1);
+                    statusTxt.innerText = statusMessages[msgIdx];
+
+                    codeStream.innerText = "0x" + Math.random().toString(16).substr(2, 10).toUpperCase() + " | SHA-256 PACKET [" + progress + "%]";
+
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        if(loaderInterval) clearInterval(loaderInterval);
+                        stopCipherSound();
+                        decryptScreen.style.display = "none";
+                        document.getElementById("main-system").style.display = "block";
+                    }
+                }, 80);
+            } else {
+                errorMsg.style.display = "block";
             }
         }
 
-        // إدارة فتح وإغلاق نافذة "إنشاء"
-        function openCreateModal() {
-            document.getElementById('createModal').style.display = 'flex';
-        }
-
-        function closeCreateModal() {
-            document.getElementById('createModal').style.display = 'none';
-        }
-
-        // حفظ بيانات عنصر جديد داخل المجلد
-        function handleCreate(e) {
-            e.preventDefault();
-            const title = document.getElementById('createTitle').value;
-            const details = document.getElementById('createDetails').value;
-
-            const folderContent = document.getElementById('folderContent');
-            
-            // إزالة الرسالة التلقائية إذا كانت موجودة
-            if (folderContent.querySelector('p')) {
-                folderContent.innerHTML = '';
-            }
-
-            const itemCard = document.createElement('div');
-            itemCard.className = 'data-card';
-            itemCard.innerHTML = `
-                <h4>${title}</h4>
-                <p>${details}</p>
-            `;
-            
-            folderContent.prepend(itemCard);
-
-            // إعادة تعيين المدخلات وإغلاق النافذة
-            document.getElementById('createTitle').value = '';
-            document.getElementById('createDetails').value = '';
-            closeCreateModal();
+        function logout() {
+            document.getElementById("login-screen").style.display = "block";
+            document.getElementById("main-system").style.display = "none";
         }
     </script>
 </body>
