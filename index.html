@@ -26,7 +26,8 @@
             box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
         }
         .subtitle-top { font-size: 10px; letter-spacing: 3px; color: var(--gold-color); font-weight: 800; margin-bottom: 20px; }
-        .logo-container { width: 100px; height: 100px; margin: 0 auto 18px auto; border-radius: 50%; border: 2px solid var(--gold-color); display: flex; justify-content: center; align-items: center; background: rgba(0, 0, 0, 0.7); }
+        .logo-container { width: 100px; height: 100px; margin: 0 auto 18px auto; border-radius: 50%; border: 2px solid var(--gold-color); display: flex; justify-content: center; align-items: center; background: rgba(0, 0, 0, 0.7); animation: pulseLogo 3s infinite ease-in-out; }
+        @keyframes pulseLogo { 0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(197,160,89,0.3); } 50% { transform: scale(1.05); box-shadow: 0 0 25px rgba(197,160,89,0.6); } }
         .logo-container img { width: 84px; height: 84px; border-radius: 50%; }
         .title { color: var(--gold-color); font-size: 22px; font-weight: 800; margin: 5px 0 0 0; }
         .agency-name { color: #8a9bb0; font-size: 10px; letter-spacing: 2.5px; margin-bottom: 25px; }
@@ -60,7 +61,6 @@
         @media (max-width: 900px) { .folder-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 500px) { .folder-grid { grid-template-columns: 1fr; } }
         
-        /* تقليص حجم مربعات التقارير لتكون مرتبة وصغيرة */
         .item-folder-card {
             background: rgba(9, 16, 26, 0.85); border: 1px solid rgba(197, 160, 89, 0.35); border-radius: 8px; padding: 15px 14px;
             cursor: pointer; transition: all 0.3s ease; text-align: right; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;
@@ -73,7 +73,6 @@
         .item-folder-sub { color: var(--text-muted); font-size: 10px; display: block; margin-bottom: 8px; }
         .item-folder-btn { display: inline-block; font-size: 9px; color: var(--accent-color); font-weight: bold; text-transform: uppercase; }
 
-        /* ألوان مربعات المطلوبين */
         .wanted-red { border-color: rgba(217, 4, 41, 0.8) !important; background: rgba(45, 8, 14, 0.65) !important; }
         .wanted-red::before { background: #d90429 !important; width: 5px !important; }
         .wanted-orange { border-color: rgba(249, 115, 22, 0.8) !important; background: rgba(45, 22, 8, 0.65) !important; }
@@ -132,19 +131,35 @@
         video { max-width: 100%; border-radius: 5px; margin-top: 8px; }
         
         .custom-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(2, 4, 7, 0.9); z-index: 2000; justify-content: center; align-items: center; }
-        .custom-modal { background: rgba(11, 16, 23, 0.98); border: 1px solid var(--gold-color); border-radius: 10px; width: 90%; max-width: 650px; padding: 25px; max-height: 90vh; overflow-y: auto; }
+        .custom-modal { background: rgba(11, 16, 23, 0.98); border: 1px solid var(--gold-color); border-radius: 10px; width: 90%; max-width: 700px; padding: 25px; max-height: 90vh; overflow-y: auto; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 20px; }
         .modal-title { color: var(--gold-color); font-size: 16px; font-weight: bold; }
         .modal-close { cursor: pointer; color: var(--text-muted); font-size: 18px; font-weight: bold; }
         .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
 
-        /* تصميم وثيقة التقرير الاستخباراتي الحقيقي داخل المودال */
-        .cia-classified-doc { background: #f4f4f0; color: #111; padding: 25px; border-radius: 6px; border: 2px solid #333; font-family: 'Courier New', Courier, monospace; position: relative; direction: rtl; text-align: right; }
-        .cia-doc-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px dashed #b91c1c; padding-bottom: 12px; margin-bottom: 15px; }
-        .cia-doc-logo { width: 50px; height: 50px; border-radius: 50%; border: 1px solid #000; }
-        .cia-top-secret-stamp { color: #b91c1c; font-size: 16px; font-weight: 900; letter-spacing: 2px; border: 2px solid #b91c1c; padding: 4px 10px; transform: rotate(-3deg); display: inline-block; }
-        .cia-doc-meta { font-size: 11px; color: #374151; margin-bottom: 15px; line-height: 1.5; border-bottom: 1px solid #d1d5db; padding-bottom: 10px; }
-        .cia-doc-body { background: #fff; padding: 15px; border: 1px solid #d1d5db; min-height: 120px; font-size: 13px; color: #1f2937; line-height: 1.6; }
+        /* وثيقة التقرير الاستخباراتي بتصميم قالب العرض الموحد */
+        .cia-classified-doc { background: #f4f4f0; color: #111; padding: 30px; border-radius: 6px; border: 2px solid #333; font-family: 'Courier New', Courier, monospace; position: relative; direction: rtl; text-align: right; overflow: hidden; }
+        .cia-classified-doc::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 320px;
+            height: 320px;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.08;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .cia-doc-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px dashed #b91c1c; padding-bottom: 12px; margin-bottom: 15px; position: relative; z-index: 1; }
+        .cia-doc-logo { width: 55px; height: 55px; border-radius: 50%; border: 1px solid #000; }
+        .cia-top-secret-stamp { color: #b91c1c; font-size: 13px; font-weight: 900; letter-spacing: 1px; border: 1.5px solid #b91c1c; padding: 3px 8px; transform: rotate(-3deg); display: inline-block; background: rgba(185, 28, 28, 0.05); }
+        .cia-doc-meta { font-size: 11px; color: #374151; margin-bottom: 15px; line-height: 1.5; border-bottom: 1px solid #d1d5db; padding-bottom: 10px; position: relative; z-index: 1; }
+        .cia-doc-body { background: rgba(255, 255, 255, 0.92); padding: 18px; border: 1px solid #d1d5db; min-height: 140px; font-size: 13px; color: #1f2937; line-height: 1.6; position: relative; z-index: 1; }
         
         .broadcast-card-floating { display: none; position: fixed; bottom: 25px; left: 25px; width: 320px; background: rgba(11, 16, 23, 0.95); border: 1px solid var(--danger-color); border-radius: 10px; padding: 16px; z-index: 900; }
         .chat-box-container { height: 380px; overflow-y: auto; background: rgba(4, 6, 10, 0.8); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 12px; }
@@ -158,6 +173,7 @@
 <body>
     <canvas id="cyber-canvas"></canvas>
 
+    <!-- شاشة تسجيل الدخول الأصلية -->
     <div class="login-card" id="login-screen">
         <div class="subtitle-top">CIA • FEDERAL DATA TERMINAL</div>
         <div class="logo-container">
@@ -254,8 +270,7 @@
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">📝 قسم التقارير والمذكرات الاستخباراتية</h3>
             <button class="btn-create-action" onclick="openCreateReportModal()">➕ إنشاء مجلد تقرير جديد</button>
-            <div class="input-group"><input type="text" id="reportSearch" class="search-box" placeholder="🔍 بحث في التقارير..." oninput="renderReports()"></div>
-            <!-- شبكة تقارير مصغرة ومنظمة -->
+            <div class="input-group"><input type="text" id="reportSearch" class="search-box" placeholder="🔍 بحث شامل في التقارير..." oninput="renderReports()"></div>
             <div id="reports-list" class="folder-grid"></div>
         </div>
 
@@ -263,7 +278,7 @@
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">📜 قائمة المطلوبين للعدالة</h3>
             <button class="btn-create-action" style="background: var(--danger-color);" onclick="openCreateWantedModal()">➕ إنشاء مطلوب جديد</button>
-            <div class="input-group"><input type="text" id="wantedSearch" class="search-box" placeholder="🔍 بحث في المطلوبين..." oninput="renderWanted()"></div>
+            <div class="input-group"><input type="text" id="wantedSearch" class="search-box" placeholder="🔍 بحث شامل في المطلوبين..." oninput="renderWanted()"></div>
             <div id="wanted-list" class="folder-grid" style="grid-template-columns: repeat(3, 1fr);"></div>
         </div>
 
@@ -271,7 +286,7 @@
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">📂 السجل الجنائي للمواطنين</h3>
             <button class="btn-create-action" style="background: var(--gold-color); color:#000;" onclick="openCreateRecordModal()">🪪 إنشاء هوية جديدة</button>
-            <div class="input-group"><input type="text" id="recordsSearch" class="search-box" placeholder="🔍 بحث في السجلات..." oninput="renderRecords()"></div>
+            <div class="input-group"><input type="text" id="recordsSearch" class="search-box" placeholder="🔍 بحث شامل في السجلات..." oninput="renderRecords()"></div>
             <div id="records-list" class="folder-grid" style="grid-template-columns: repeat(3, 1fr);"></div>
         </div>
 
@@ -279,7 +294,7 @@
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">GANG INTELLIGENCE & HIERARCHY 🕵️‍♂️</h3>
             <button class="btn-create-action" style="background: var(--gold-color); color:#000;" onclick="openCreateGangModal()">🏴‍☠️ إنشاء عصابة جديدة</button>
-            <div class="input-group"><input type="text" id="gangsSearch" class="search-box" placeholder="🔍 بحث في العصابات..." oninput="renderGangs()"></div>
+            <div class="input-group"><input type="text" id="gangsSearch" class="search-box" placeholder="🔍 بحث شامل في العصابات..." oninput="renderGangs()"></div>
             <div id="gangs-list" class="folder-grid" style="grid-template-columns: repeat(3, 1fr);"></div>
         </div>
 
@@ -307,7 +322,7 @@
         <div class="workspace-panel" id="usersSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color);">👥 قائمة الأعضاء المسجلين</h3>
-            <div class="input-group"><input type="text" id="usersSearch" class="search-box" placeholder="🔍 بحث..." oninput="renderUsers()"></div>
+            <div class="input-group"><input type="text" id="usersSearch" class="search-box" placeholder="🔍 بحث شامل في الأعضاء..." oninput="renderUsers()"></div>
             <table>
                 <thead><tr><th>اسم الوكيل</th><th>المعرف</th><th>الرتبة</th></tr></thead>
                 <tbody id="users-table-body"></tbody>
@@ -326,7 +341,7 @@
     <div class="custom-modal-overlay" id="customModal">
         <div class="custom-modal">
             <div class="modal-header">
-                <div class="modal-title" id="modalTitle">✏️ التقرير الاستخباراتي</div>
+                <div class="modal-title" id="modalTitle" style="font-size: 18px; font-weight: 900;">✏️ التقرير الاستخباراتي</div>
                 <span class="modal-close" onclick="closeModal()">✕</span>
             </div>
             <div id="modalBody"></div>
@@ -513,18 +528,43 @@
             document.getElementById("customModal").style.display = "none";
         }
 
-        /* التقارير الرسمية بتصميم وثيقة استخباراتية حقيقية */
+        /* دالة توليد قالب الوثيقة الاستخباراتية الموحد (للعرض والإنشاء والتعديل) */
+        function getReportDocHtml(titleVal = "", detailsVal = "", citizenVal = "", authorVal = currentUser, dateVal = new Date().toLocaleDateString(), isEdit = false) {
+            return `
+                <div class="cia-classified-doc">
+                    <div class="cia-doc-header">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" class="cia-doc-logo" alt="CIA">
+                            <div>
+                                <b style="font-size:15px; display:block; letter-spacing:1px;">CIA</b>
+                                <small style="font-size:9px; color:#555;">FEDERAL BUREAU RECORDS</small>
+                            </div>
+                        </div>
+                        <div class="cia-top-secret-stamp" style="font-size:11px; padding:2px 6px;">سري للغاية</div>
+                    </div>
+                    <div class="cia-doc-meta">
+                        <div style="margin-bottom:6px;"><b>عنوان التقرير:</b> ${isEdit ? `<input type="text" id="editReportTitle" value="${titleVal}" style="margin-top:4px;">` : `<input type="text" id="popReportTitle" placeholder="مثال: رصد تحركات مشبوهة" style="margin-top:4px;">`}</div>
+                        <div><b>الكاتب / الوكيل:</b> ${authorVal} | <b>التاريخ:</b> ${dateVal}</div>
+                        <div style="margin-top:6px;"><b>Citizen ID:</b> ${isEdit ? `<input type="text" id="editReportCitizen" value="${citizenVal}" style="margin-top:4px;">` : `<input type="text" id="popReportCitizen" placeholder="CIA-102" style="margin-top:4px;">`}</div>
+                    </div>
+                    <div class="cia-doc-body" style="background:rgba(255,255,255,0.95);">
+                        <div style="margin-bottom:6px; font-weight:bold; color:#b91c1c; font-size:11px;">[مضمون التقرير الاستخباراتي]:</div>
+                        ${isEdit ? `<textarea id="editReportDetails" rows="5" style="width:100%; padding:8px;">${detailsVal}</textarea>` : `<textarea id="popReportDetails" rows="5" placeholder="تفاصيل العملية والتحريات..." style="width:100%; padding:8px;"></textarea>`}
+                        ${!isEdit ? `
+                            <div class="input-group" style="margin-top:10px;"><label style="color:#333;">📁 إرفاق صورة دليل</label><input type="file" id="popReportImageFile" accept="image/*"></div>
+                            <div class="input-group" style="margin-top:5px;"><label style="color:#333;">🎥 إرفاق فيديو دليل</label><input type="file" id="popReportVideoFile" accept="video/*"></div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        /* التقارير الرسمية */
         function openCreateReportModal() {
-            openCustomModal("➕ إنشاء تقرير استخباراتي جديد", `
-                <div class="input-group"><label>عنوان التقرير</label><input type="text" id="popReportTitle" placeholder="مثال: رصد تحركات مشبوهة"></div>
-                <div class="input-group"><label>نص التقرير والتفاصيل</label><textarea id="popReportDetails" rows="4" placeholder="تفاصيل العملية..."></textarea></div>
-                <div class="input-group"><label>Citizen ID المرتبط</label><input type="text" id="popReportCitizen" placeholder="CIA-102"></div>
-                <div class="input-group"><label>📁 إرفاق صورة دليل</label><input type="file" id="popReportImageFile" accept="image/*"></div>
-                <div class="input-group"><label>🎥 إرفاق فيديو دليل</label><input type="file" id="popReportVideoFile" accept="video/*"></div>
-            `, async () => {
+            openCustomModal("➕ إنشاء تقرير استخباراتي جديد", getReportDocHtml(), async () => {
                 const title = document.getElementById("popReportTitle").value.trim();
                 const details = document.getElementById("popReportDetails").value.trim();
-                if (!title) return alert("أدخل العنوان!");
+                if (!title) return alert("أدخل عنوان التقرير!");
                 const img = await readFileAsBase64(document.getElementById("popReportImageFile").files[0]);
                 const vid = await readFileAsBase64(document.getElementById("popReportVideoFile").files[0]);
                 globalDatabase.reports.push({ 
@@ -547,14 +587,14 @@
                 </div>
                 <div class="cia-classified-doc">
                     <div class="cia-doc-header">
-                        <div style="display:flex; align-items:center; gap:10px;">
+                        <div style="display:flex; align-items:center; gap:12px;">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" class="cia-doc-logo" alt="CIA">
                             <div>
-                                <b style="font-size:13px; display:block;">CENTRAL INTELLIGENCE AGENCY</b>
+                                <b style="font-size:15px; display:block; letter-spacing:1px;">CIA</b>
                                 <small style="font-size:9px; color:#555;">FEDERAL BUREAU RECORDS</small>
                             </div>
                         </div>
-                        <div class="cia-top-secret-stamp">TOP SECRET // EYES ONLY</div>
+                        <div class="cia-top-secret-stamp" style="font-size:11px; padding:2px 6px;">سري للغاية</div>
                     </div>
                     <div class="cia-doc-meta">
                         <div><b>العنوان:</b> ${r.title}</div>
@@ -575,11 +615,7 @@
         function editReport(id) {
             const r = globalDatabase.reports.find(item => item.id === id);
             if (!r) return;
-            openCustomModal("✏️ تعديل التقرير", `
-                <div class="input-group"><label>العنوان</label><input type="text" id="editReportTitle" value="${r.title}"></div>
-                <div class="input-group"><label>التفاصيل</label><textarea id="editReportDetails" rows="4">${r.details}</textarea></div>
-                <div class="input-group"><label>Citizen ID</label><input type="text" id="editReportCitizen" value="${r.citizen || ''}"></div>
-            `, async () => {
+            openCustomModal("✏️ تعديل التقرير الاستخباراتي", getReportDocHtml(r.title, r.details, r.citizen, r.author, r.date, true), async () => {
                 r.title = document.getElementById("editReportTitle").value.trim();
                 r.details = document.getElementById("editReportDetails").value.trim();
                 r.citizen = document.getElementById("editReportCitizen").value.trim();
@@ -592,8 +628,9 @@
         function renderReports() {
             const list = document.getElementById("reports-list");
             if (!list) return;
+            const query = (document.getElementById("reportSearch")?.value || "").toLowerCase();
             list.innerHTML = "";
-            globalDatabase.reports.forEach(r => {
+            globalDatabase.reports.filter(r => r.title.toLowerCase().includes(query) || (r.details && r.details.toLowerCase().includes(query)) || (r.author && r.author.toLowerCase().includes(query))).forEach(r => {
                 list.innerHTML += `
                     <div class="item-folder-card" onclick="viewReportFolder(${r.id})">
                         <div>
@@ -614,7 +651,7 @@
             }
         }
 
-        /* المطلوبين */
+        /* المطلوبين (بحث شامل) */
         function openCreateWantedModal() {
             openCustomModal("➕ مطلوب جديد", `
                 <div class="input-group"><label>اسم المطلوب</label><input type="text" id="popWantedName"></div>
@@ -662,8 +699,9 @@
         function renderWanted() {
             const list = document.getElementById("wanted-list");
             if (!list) return;
+            const query = (document.getElementById("wantedSearch")?.value || "").toLowerCase();
             list.innerHTML = "";
-            globalDatabase.wanted.forEach(w => {
+            globalDatabase.wanted.filter(w => w.name.toLowerCase().includes(query) || (w.crime && w.crime.toLowerCase().includes(query)) || (w.risk && w.risk.toLowerCase().includes(query))).forEach(w => {
                 let colorClass = "wanted-yellow";
                 if (w.risk.includes("خطر جداً") || w.risk.includes("خطر")) colorClass = "wanted-red";
                 else if (w.risk.includes("متوسط")) colorClass = "wanted-orange";
@@ -684,7 +722,7 @@
             if (confirm("حذف؟")) { globalDatabase.wanted = globalDatabase.wanted.filter(w => w.id !== id); await saveCloudData(); closeModal(); }
         }
 
-        /* السجلات والهويات */
+        /* السجلات والهويات (بحث شامل) */
         function openCreateRecordModal() {
             openCustomModal("🪪 هوية جديدة", `
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
@@ -763,8 +801,9 @@
         function renderRecords() {
             const list = document.getElementById("records-list");
             if (!list) return;
+            const query = (document.getElementById("recordsSearch")?.value || "").toLowerCase();
             list.innerHTML = "";
-            globalDatabase.records.forEach(r => {
+            globalDatabase.records.filter(r => `${r.firstName} ${r.lastName}`.toLowerCase().includes(query) || (r.cid && r.cid.toLowerCase().includes(query)) || (r.notes && r.notes.toLowerCase().includes(query))).forEach(r => {
                 list.innerHTML += `<div class="item-folder-card" onclick="viewRecordFolder(${r.id})"><div><span class="item-folder-icon">📁</span><span class="item-folder-title">${r.firstName} ${r.lastName}</span><span class="item-folder-sub">ID: ${r.cid}</span></div><span class="item-folder-btn">فتح الهوية ←</span></div>`;
             });
         }
@@ -773,7 +812,7 @@
             if (confirm("حذف؟")) { globalDatabase.records = globalDatabase.records.filter(r => r.id !== id); await saveCloudData(); closeModal(); }
         }
 
-        /* العصابات */
+        /* العصابات (بحث شامل) */
         function openCreateGangModal() {
             openCustomModal("🏴‍☠️ عصابة جديدة", `
                 <div class="input-group"><label>اسم العصابة</label><input type="text" id="popGangName"></div>
@@ -842,8 +881,9 @@
         function renderGangs() {
             const list = document.getElementById("gangs-list");
             if (!list) return;
+            const query = (document.getElementById("gangsSearch")?.value || "").toLowerCase();
             list.innerHTML = "";
-            globalDatabase.gangs.forEach(g => {
+            globalDatabase.gangs.filter(g => g.name.toLowerCase().includes(query) || (g.leader && g.leader.toLowerCase().includes(query)) || (g.members && g.members.toLowerCase().includes(query))).forEach(g => {
                 list.innerHTML += `<div class="item-folder-card" onclick="viewGangFolder(${g.id})"><div><span class="item-folder-icon">🕵️‍♂️</span><span class="item-folder-title">${g.name}</span><span class="item-folder-sub">القائد: ${g.leader || 'N/A'}</span></div><span class="item-folder-btn">فتح الملف ←</span></div>`;
             });
         }
@@ -852,7 +892,7 @@
             if (confirm("حذف؟")) { globalDatabase.gangs = globalDatabase.gangs.filter(g => g.id !== id); await saveCloudData(); closeModal(); }
         }
 
-        /* مركز الإدارة والأعضاء */
+        /* مركز الإدارة والأعضاء (بحث شامل) */
         async function createAccount() {
             const user = document.getElementById("new-username").value.trim();
             if (!user) return alert("أدخل اسم الوكيل!");
@@ -897,11 +937,14 @@
         function renderUsers() {
             const tbody = document.getElementById("users-table-body");
             const managementList = document.getElementById("users-management-list");
+            const query = (document.getElementById("usersSearch")?.value || "").toLowerCase();
             
             if (tbody) {
                 tbody.innerHTML = "";
                 for (let user in globalDatabase.users) {
-                    tbody.innerHTML += `<tr><td>${user}</td><td>${globalDatabase.users[user].id}</td><td>${globalDatabase.users[user].role}</td></tr>`;
+                    if (user.toLowerCase().includes(query) || globalDatabase.users[user].id.toLowerCase().includes(query)) {
+                        tbody.innerHTML += `<tr><td>${user}</td><td>${globalDatabase.users[user].id}</td><td>${globalDatabase.users[user].role}</td></tr>`;
+                    }
                 }
             }
 
@@ -909,15 +952,17 @@
                 managementList.innerHTML = "";
                 for (let user in globalDatabase.users) {
                     const u = globalDatabase.users[user];
-                    managementList.innerHTML += `
-                        <div class="user-list-item">
-                            <div><b>${user}</b> (${u.id}) - <small style="color:var(--gold-color);">${u.role}</small></div>
-                            <div class="action-btns">
-                                <button class="btn-edit-item" onclick="editUser('${user}')">تعديل ✏️</button>
-                                ${user !== 'Majed' ? `<button class="btn-del-item" onclick="deleteAccount('${user}')">حذف 🗑️</button>` : ''}
+                    if (user.toLowerCase().includes(query) || u.id.toLowerCase().includes(query)) {
+                        managementList.innerHTML += `
+                            <div class="user-list-item">
+                                <div><b>${user}</b> (${u.id}) - <small style="color:var(--gold-color);">${u.role}</small></div>
+                                <div class="action-btns">
+                                    <button class="btn-edit-item" onclick="editUser('${user}')">تعديل ✏️</button>
+                                    ${user !== 'Majed' ? `<button class="btn-del-item" onclick="deleteAccount('${user}')">حذف 🗑️</button>` : ''}
+                                </div>
                             </div>
-                        </div>
-                    `;
+                        `;
+                    }
                 }
             }
         }
