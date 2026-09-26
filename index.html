@@ -114,7 +114,6 @@
             backdrop-filter: blur(15px);
         }
         
-        /* عناصر الرادار التكتيكي */
         .radar-spinner {
             width: 80px;
             height: 80px;
@@ -325,6 +324,25 @@
             border-color: var(--gold-color) !important;
             background: rgba(9, 16, 26, 0.6) !important;
         }
+        .btn-create-action {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-create-action:hover { opacity: 0.9; transform: translateY(-1px); }
         .btn-login {
             width: 100%;
             padding: 13px;
@@ -822,6 +840,8 @@
             max-width: 550px;
             padding: 25px;
             box-shadow: 0 0 30px rgba(197, 160, 89, 0.3);
+            max-height: 90vh;
+            overflow-y: auto;
         }
         .modal-header {
             display: flex;
@@ -937,7 +957,7 @@
         <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Logo">
     </div>
     
-    <!-- ===== شاشة فك التشفير والتحميل الاستخباراتية المطورة ===== -->
+    <!-- ===== شاشة فك التشفير والتحميل الاستخباراتية ===== -->
     <div id="decryption-screen">
         <canvas id="matrix-loader-canvas"></canvas>
         <div class="decrypt-box">
@@ -1053,6 +1073,7 @@
                 </div>
             </div>
         </div>
+
         <div class="workspace-panel" id="chatSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
@@ -1065,6 +1086,7 @@
                 <button class="btn-login" style="width:auto; margin:0; padding:0 25px; background:var(--accent-color);" onclick="sendChatMessage()">إرسال 🚀</button>
             </div>
         </div>
+
         <div class="workspace-panel leader-panel" id="leaderSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-top:0;">👑 مركز إدارة التراخيص والسرية</h3>
@@ -1087,89 +1109,55 @@
             <button class="btn-login" style="background:var(--success-color); font-size: 13px;" onclick="createAccount()">➕ إضافة الحساب أونلاين</button>
             <div id="users-container" style="margin-top:15px;"></div>
         </div>
+
+        <!-- مجلد التقارير -->
         <div class="workspace-panel" id="reportsSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">📝 قسم التقارير والمذكرات الاستخباراتية</h3>
+            <button class="btn-create-action" onclick="openCreateReportModal()">➕ إضافة تقرير جديد</button>
             <div class="input-group">
                 <input type="text" id="reportSearch" class="search-box" placeholder="🔍 بحث في قاعدة بيانات التقارير..." oninput="renderReports()">
             </div>
-            <div style="background:rgba(4, 6, 10, 0.6); padding:15px; border-radius:6px; margin-bottom:20px; border:1px solid var(--border-color);">
-                <div class="input-group"><label>عنوان التقرير / المذكرة</label><input type="text" id="reportTitle" placeholder="عنوان التقرير"></div>
-                <div class="input-group"><label>تفاصيل التقرير الاستخباراتي</label><textarea id="reportDetails" rows="4" placeholder="اكتب تفاصيل التقرير..."></textarea></div>
-                <div class="input-group"><label>Citizen ID المرتبط بالتقرير</label><input type="text" id="reportCitizen" placeholder="مثال: CIA-102"></div>
-                <div class="input-group"><label>📁 إرفاق صورة دليل (من الجهاز)</label><input type="file" id="reportImageFile" accept="image/*"></div>
-                <div class="input-group"><label>🎥 إرفاق فيديو دليل (من الجهاز)</label><input type="file" id="reportVideoFile" accept="video/*"></div>
-                <button class="btn-login" style="background:var(--accent-color); font-weight:bold;" onclick="addReport()">إرسال وحفظ التقرير أونلاين</button>
-            </div>
-            <h4 style="color:var(--gold-color); margin-bottom:15px;">📑 التقارير المحفوظة بالنظام (اضغط للعرض والطي يدويًا):</h4>
+            <h4 style="color:var(--gold-color); margin-bottom:15px;">📑 التقارير المحفوظة بالنظام:</h4>
             <div id="reports-list"></div>
             <div class="log-box" id="reports-log"></div>
         </div>
+
+        <!-- مجلد المطلوبين -->
         <div class="workspace-panel" id="wantedSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">📜 قائمة المطلوبين للعدالة (WANTED LIST)</h3>
+            <button class="btn-create-action" style="background: linear-gradient(135deg, #d90429 0%, #a8001d 100%);" onclick="openCreateWantedModal()">➕ إضافة مطلوب جديد</button>
             <div class="input-group">
                 <input type="text" id="wantedSearch" class="search-box" placeholder="🔍 بحث في داتابيس المطلوبين" oninput="renderWanted()">
             </div>
-            <div style="background:rgba(4, 6, 10, 0.6); padding:15px; border-radius:6px; margin-bottom:15px; border:1px solid var(--border-color);">
-                <div class="input-group"><label>اسم المطلوب</label><input type="text" id="wantedName" placeholder="Name"></div>
-                <div class="input-group">
-                    <label>مستوى الخطورة</label>
-                    <select id="wantedRisk">
-                        <option value="🟡 منخفض الخطورة">🟡 منخفض الخطورة</option>
-                        <option value="🟠 متوسط الخطورة">🟠 متوسط الخطورة</option>
-                        <option value="🔴 خطر جداً">🔴 خطر جداً</option>
-                    </select>
-                </div>
-                <div class="input-group"><label>التهم التفصيلية</label><textarea id="wantedCrime" rows="2" placeholder="التهمة"></textarea></div>
-                <button class="btn-login" style="background:var(--danger-color);" onclick="addWanted()">+ إضافة مطلوب إلى القائمة</button>
-            </div>
             <div id="wanted-list" style="display:flex; gap:15px; flex-wrap:wrap;"></div>
         </div>
+
+        <!-- مجلد السجلات -->
         <div class="workspace-panel" id="recordsSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">📂 السجل الجنائي للمواطنين (RECORDS)</h3>
+            <button class="btn-create-action" style="background: linear-gradient(135deg, #c5a059 0%, #9e7d3b 100%); color:#000;" onclick="openCreateRecordModal()">🪪 إنشاء بطاقة هوية جديدة</button>
             <div class="input-group">
                 <input type="text" id="recordsSearch" class="search-box" placeholder="🔍 بحث في السجل الجنائي للأشخاص..." oninput="renderRecords()">
             </div>
-            <div style="background:rgba(4, 6, 10, 0.6); padding:20px; border-radius:8px; margin-bottom:20px; border:1px solid var(--border-color);">
-                <h4 style="color:var(--gold-color); margin-bottom:15px; font-size:14px;">🪪 إنشاء بطاقة هوية وملف جنائي جديد:</h4>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
-                    <div class="input-group"><label>الاسم الأول (First Name)</label><input type="text" id="recFirstName" placeholder="مثال: John"></div>
-                    <div class="input-group"><label>الاسم الأخير (Last Name)</label><input type="text" id="recLastName" placeholder="مثال: Doe"></div>
-                    <div class="input-group"><label>رقم الهوية (Citizen ID)</label><input type="text" id="recId" placeholder="مثال: CIA-102"></div>
-                    <div class="input-group">
-                        <label>الجنس (SEX)</label>
-                        <select id="recSex">
-                            <option value="MALE">ذكر / MALE</option>
-                            <option value="FEMALE">أنثى / FEMALE</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="input-group" style="margin-top:10px;"><label>📁 رفع صورة الشخص الجنائية (اختياري)</label><input type="file" id="recPhotoFile" accept="image/*"></div>
-                <div class="input-group"><label>سجل الملاحظات والقضايا الجنائية</label><textarea id="recNotes" rows="2" placeholder="أدخل الملاحظات والسجل الجنائي..."></textarea></div>
-                <button class="btn-login" style="background:var(--gold-color); color:#000;" onclick="addRecord()">+ إنشاء وتأكيد بطاقة الهوية أونلاين</button>
-            </div>
-            <h4 style="color:var(--gold-color); margin-bottom:15px;">📂 بطاقات الهوية والسجلات المحفوظة (اضغط للعرض والطي يدويًا):</h4>
+            <h4 style="color:var(--gold-color); margin-bottom:15px;">📂 بطاقات الهوية والسجلات المحفوظة:</h4>
             <div id="records-list"></div>
         </div>
+
+        <!-- مجلد العصابات -->
         <div class="workspace-panel" id="intelligenceSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">GANG INTELLIGENCE & HIERARCHY 🕵️‍♂️</h3>
+            <button class="btn-create-action" style="background: linear-gradient(135deg, #c5a059 0%, #9e7d3b 100%); color:#000;" onclick="openCreateGangModal()">🏴‍☠️ إضافة تنظيم / عصابة جديدة</button>
             <div class="input-group">
                 <input type="text" id="gangsSearch" class="search-box" placeholder="🔍 بحث في مخططات الاستخبارات والعصابات" oninput="renderGangs()">
             </div>
-            <div style="background:rgba(4, 6, 10, 0.6); padding:15px; border-radius:6px; margin-bottom:15px; border:1px solid var(--border-color);">
-                <div class="input-group"><label>اسم العصابة / التنظيم</label><input type="text" id="gangName" placeholder="Gang Name"></div>
-                <div class="input-group"><label>👑 اسم الرئيس (Leader)</label><input type="text" id="gangLeader" placeholder="اسم قائد العصابة"></div>
-                <div class="input-group"><label>🎖️ اسم النائب (Deputy)</label><input type="text" id="gangDeputy" placeholder="اسم نائب القائد"></div>
-                <div class="input-group"><label>👥 الأعضاء (افصل بينهم بفاصلة)</label><input type="text" id="gangMembers" placeholder="عضو 1, عضو 2, عضو 3"></div>
-                <div class="input-group"><label>تفاصيل المخطط والنشاطات</label><textarea id="gangDetails" rows="2" placeholder="التفاصيل والارتباطات"></textarea></div>
-                <button class="btn-login" style="background:var(--gold-color); color:#000;" onclick="addGang()">+ إنشاء مخطط الشجرة والعصابة</button>
-            </div>
-            <h4 style="color:var(--gold-color); margin-bottom:15px;">🌐 ملفات العصابات والمخططات (اضغط للعرض والطي يدويًا):</h4>
+            <h4 style="color:var(--gold-color); margin-bottom:15px;">🌐 ملفات العصابات والمخططات:</h4>
             <div id="gangs-list"></div>
         </div>
+
         <div class="workspace-panel" id="casesSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 20px;">🔓 قسم التشفير وفك التشفير 🔒</h3>
@@ -1190,6 +1178,7 @@
                 <div class="crypto-result-value" id="cryptoResult">- في انتظار الإدخال -</div>
             </div>
         </div>
+
         <div class="workspace-panel" id="usersSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color);">👥 قائمة الأعضاء المسجلين بالمنظومة</h3>
@@ -1209,6 +1198,7 @@
             </table>
         </div>
     </div>
+
     <div class="broadcast-card-floating" id="broadcastCard">
         <div class="broadcast-card-header">
             <div class="broadcast-card-title">🚨 تعميم عاجل من القيادة</div>
@@ -1216,6 +1206,7 @@
         </div>
         <div class="broadcast-card-body" id="broadcastTextDisplay">-</div>
     </div>
+
     <div class="custom-modal-overlay" id="customModal">
         <div class="custom-modal">
             <div class="modal-header">
@@ -1224,7 +1215,7 @@
             </div>
             <div id="modalBody"></div>
             <div class="modal-actions">
-                <button class="btn-login" style="background:var(--success-color);" id="modalSaveBtn">تأكيد وحفظ التعديلات</button>
+                <button class="btn-login" style="background:var(--success-color);" id="modalSaveBtn">تأكيد وحفظ</button>
                 <button class="btn-login" style="background:rgba(255,255,255,0.1); color:#fff;" onclick="closeModal()">إلغاء</button>
             </div>
         </div>
@@ -1258,6 +1249,7 @@
             }
         }
         setInterval(drawMatrix, 35);
+
         const loaderCanvas = document.getElementById('matrix-loader-canvas');
         const loaderCtx = loaderCanvas ? loaderCanvas.getContext('2d') : null;
         let loaderDrops = [];
@@ -1283,6 +1275,7 @@
                 loaderDrops[i]++;
             }
         }
+
         let loaderInterval = null;
         let globalAudioCtx = null;
         let cipherSoundInterval = null;
@@ -1332,6 +1325,7 @@
                 }
             } catch(e) { console.log(e); }
         }
+
         const BIN_ID = "6ab719faffd5d160532fe4cd"; 
         const API_KEY = "$2a$10$AlBdQgKayB/o7aIaPD42L.khi.iGvmNkXo5WPklHsUpYNmCMMxe0q"; 
         let defaultDatabase = {
@@ -1356,6 +1350,7 @@
             records: {},
             gangs: {}
         };
+
         async function fetchCloudData() {
             if (isSaving) return;
             try {
@@ -1376,6 +1371,7 @@
                 }
             } catch (e) { console.error(e); }
         }
+
         async function saveCloudData() {
             isSaving = true;
             const statusElem = document.getElementById("loading-status");
@@ -1401,12 +1397,14 @@
                 isSaving = false;
             }
         }
+
         function checkAutoLogin() {
             const savedUser = localStorage.getItem("active_cia_user");
             if (savedUser && globalDatabase.users[savedUser]) {
                 openMainSystem(savedUser);
             }
         }
+
         function login() {
             const user = document.getElementById("login-username").value.trim();
             const pass = document.getElementById("login-password").value.trim();
@@ -1463,6 +1461,7 @@
                 errorMsg.style.display = "block";
             }
         }
+
         function openMainSystem(user) {
             currentUser = user;
             document.getElementById("login-screen").style.display = "none";
@@ -1491,6 +1490,7 @@
             renderAllData();
             showHome();
         }
+
         function renderAllData() {
             renderReports();
             renderWanted();
@@ -1501,6 +1501,7 @@
             renderChatMessages();
             renderBroadcast();
         }
+
         function renderBroadcast() {
             const cardElem = document.getElementById("broadcastCard");
             const textElem = document.getElementById("broadcastTextDisplay");
@@ -1512,6 +1513,7 @@
                 if(cardElem) cardElem.style.display = "block";
             }
         }
+
         function updateBroadcast() {
             const isDirector = globalDatabase.users[currentUser]?.role === "DIRECTOR";
             if (!isDirector) return alert("فقط مدير النظام يمكنه تعديل التعميم!");
@@ -1528,6 +1530,7 @@
                 await saveCloudData();
             });
         }
+
         function renderChatMessages() {
             const chatBox = document.getElementById("chatMessagesBox");
             if (!chatBox) return;
@@ -1553,6 +1556,7 @@
             });
             chatBox.scrollTop = chatBox.scrollHeight;
         }
+
         async function sendChatMessage() {
             const input = document.getElementById("chatInputText");
             const text = input.value.trim();
@@ -1571,10 +1575,12 @@
             input.value = "";
             await saveCloudData();
         }
+
         async function deleteSingleChatMessage(msgId) {
             globalDatabase.chat = globalDatabase.chat.filter(m => m.id !== msgId);
             await saveCloudData();
         }
+
         async function clearAllChatMessages() {
             const isDirector = globalDatabase.users[currentUser]?.role === "DIRECTOR";
             if (!isDirector) return alert("فقط المدير يمكنه مسح جميع المحادثات!");
@@ -1585,6 +1591,7 @@
                 await saveCloudData();
             }
         }
+
         function readFileAsBase64(file) {
             return new Promise((resolve) => {
                 if (!file) return resolve("");
@@ -1594,6 +1601,7 @@
                 reader.readAsDataURL(file);
             });
         }
+
         function toggleCollapsibleManual(type, id, element) {
             const body = element.nextElementSibling;
             if (!body) return;
@@ -1606,6 +1614,7 @@
                 openItemsState[type][id] = true;
             }
         }
+
         function openCustomModal(title, contentHtml, onSave) {
             document.getElementById("modalTitle").innerText = title;
             document.getElementById("modalBody").innerHTML = contentHtml;
@@ -1617,40 +1626,80 @@
                 saveBtn.innerText = "جاري الحفظ...";
                 await onSave();
                 saveBtn.disabled = false;
-                saveBtn.innerText = "تأكيد وحفظ التعديلات";
+                saveBtn.innerText = "تأكيد وحفظ";
                 closeModal();
             };
         }
+
         function closeModal() {
             document.getElementById("customModal").style.display = "none";
         }
-        async function addReport() {
-            const title = document.getElementById("reportTitle").value.trim();
-            const details = document.getElementById("reportDetails").value.trim();
-            const citizen = document.getElementById("reportCitizen").value.trim();
-            const imageFile = document.getElementById("reportImageFile").files[0];
-            const videoFile = document.getElementById("reportVideoFile").files[0];
-            if (!title || !details) return alert("يرجى كتابة عنوان وتفاصيل التقرير!");
-            
-            const imageBase64 = imageFile ? await readFileAsBase64(imageFile) : "";
-            const videoBase64 = videoFile ? await readFileAsBase64(videoFile) : "";
-            
-            globalDatabase.reports.push({
-                id: Date.now(),
-                title, details, citizen,
-                image: imageBase64,
-                video: videoBase64,
-                author: currentUser,
-                date: new Date().toLocaleTimeString('ar-EG')
+
+        /* ===== إنشاء وتعديل التقارير ===== */
+        function openCreateReportModal() {
+            const content = `
+                <div class="input-group"><label>عنوان التقرير / المذكرة</label><input type="text" id="popReportTitle" placeholder="عنوان التقرير"></div>
+                <div class="input-group"><label>تفاصيل التقرير الاستخباراتي</label><textarea id="popReportDetails" rows="4" placeholder="اكتب تفاصيل التقرير..."></textarea></div>
+                <div class="input-group"><label>Citizen ID المرتبط بالتقرير</label><input type="text" id="popReportCitizen" placeholder="مثال: CIA-102"></div>
+                <div class="input-group"><label>📁 إرفاق صورة دليل (من الجهاز)</label><input type="file" id="popReportImageFile" accept="image/*"></div>
+                <div class="input-group"><label>🎥 إرفاق فيديو دليل (من الجهاز)</label><input type="file" id="popReportVideoFile" accept="video/*"></div>
+            `;
+            openCustomModal("➕ إضافة تقرير جديد", content, async () => {
+                const title = document.getElementById("popReportTitle").value.trim();
+                const details = document.getElementById("popReportDetails").value.trim();
+                const citizen = document.getElementById("popReportCitizen").value.trim();
+                const imageFile = document.getElementById("popReportImageFile").files[0];
+                const videoFile = document.getElementById("popReportVideoFile").files[0];
+                if (!title || !details) return alert("يرجى كتابة عنوان وتفاصيل التقرير!");
+                
+                const imageBase64 = imageFile ? await readFileAsBase64(imageFile) : "";
+                const videoBase64 = videoFile ? await readFileAsBase64(videoFile) : "";
+                
+                globalDatabase.reports.push({
+                    id: Date.now(),
+                    title, details, citizen,
+                    image: imageBase64,
+                    video: videoBase64,
+                    author: currentUser,
+                    date: new Date().toLocaleTimeString('ar-EG')
+                });
+                addLog(`قام [${currentUser}] بإضافة تقرير جديد: ${title}`);
+                await saveCloudData();
             });
-            addLog(`قام [${currentUser}] بإضافة تقرير جديد: ${title}`);
-            document.getElementById("reportTitle").value = "";
-            document.getElementById("reportDetails").value = "";
-            document.getElementById("reportCitizen").value = "";
-            document.getElementById("reportImageFile").value = "";
-            document.getElementById("reportVideoFile").value = "";
-            await saveCloudData();
         }
+
+        function editReport(id) {
+            const report = globalDatabase.reports.find(r => r.id === id);
+            if(!report) return;
+            const modalContent = `
+                <div class="input-group">
+                    <label>عنوان التقرير</label>
+                    <input type="text" id="editReportTitle" value="${report.title}">
+                </div>
+                <div class="input-group">
+                    <label>تفاصيل التقرير</label>
+                    <textarea id="editReportDetails" rows="5">${report.details}</textarea>
+                </div>
+                <div class="input-group">
+                    <label>Citizen ID</label>
+                    <input type="text" id="editReportCitizen" value="${report.citizen || ''}">
+                </div>
+            `;
+            openCustomModal("✏️ تعديل التقرير الاستخباراتي", modalContent, async () => {
+                const newTitle = document.getElementById("editReportTitle").value.trim();
+                const newDetails = document.getElementById("editReportDetails").value.trim();
+                const newCitizen = document.getElementById("editReportCitizen").value.trim();
+                
+                if (newTitle && newDetails) {
+                    report.title = newTitle;
+                    report.details = newDetails;
+                    report.citizen = newCitizen;
+                    addLog(`قام [${currentUser}] بتعديل التقرير: ${newTitle}`);
+                    await saveCloudData();
+                }
+            });
+        }
+
         function renderReports() {
             const list = document.getElementById("reports-list");
             if (!list) return;
@@ -1689,37 +1738,7 @@
                 list.appendChild(div);
             });
         }
-        function editReport(id) {
-            const report = globalDatabase.reports.find(r => r.id === id);
-            if(!report) return;
-            const modalContent = `
-                <div class="input-group">
-                    <label>عنوان التقرير</label>
-                    <input type="text" id="editReportTitle" value="${report.title}">
-                </div>
-                <div class="input-group">
-                    <label>تفاصيل التقرير</label>
-                    <textarea id="editReportDetails" rows="5">${report.details}</textarea>
-                </div>
-                <div class="input-group">
-                    <label>Citizen ID</label>
-                    <input type="text" id="editReportCitizen" value="${report.citizen || ''}">
-                </div>
-            `;
-            openCustomModal("✏️ تعديل التقرير الاستخباراتي", modalContent, async () => {
-                const newTitle = document.getElementById("editReportTitle").value.trim();
-                const newDetails = document.getElementById("editReportDetails").value.trim();
-                const newCitizen = document.getElementById("editReportCitizen").value.trim();
-                
-                if (newTitle && newDetails) {
-                    report.title = newTitle;
-                    report.details = newDetails;
-                    report.citizen = newCitizen;
-                    addLog(`قام [${currentUser}] بتعديل التقرير: ${newTitle}`);
-                    await saveCloudData();
-                }
-            });
-        }
+
         async function deleteReport(id) {
             if (confirm("هل تريد حذف هذا التقرير نهائياً؟")) {
                 globalDatabase.reports = globalDatabase.reports.filter(r => r.id !== id);
@@ -1727,45 +1746,33 @@
                 await saveCloudData();
             }
         }
-        async function addWanted() {
-            const name = document.getElementById("wantedName").value.trim();
-            const risk = document.getElementById("wantedRisk").value;
-            const crime = document.getElementById("wantedCrime").value.trim();
-            if (!name || !crime) return alert("يرجى تعبئة بيانات المطلوب!");
-            globalDatabase.wanted.push({ id: Date.now(), name, risk: risk, crime });
-            addLog(`قام [${currentUser}] بإضافة مطلوب جديد: ${name}`);
-            document.getElementById("wantedName").value = "";
-            document.getElementById("wantedCrime").value = "";
-            await saveCloudData();
-        }
-        function renderWanted() {
-            const list = document.getElementById("wanted-list");
-            if(!list) return;
-            const q = (document.getElementById("wantedSearch")?.value || "").toLowerCase();
-            list.innerHTML = "";
-            globalDatabase.wanted.filter(w => 
-                (w.name && w.name.toLowerCase().includes(q)) || 
-                (w.crime && w.crime.toLowerCase().includes(q)) || 
-                (w.risk && w.risk.toLowerCase().includes(q))
-            ).forEach(w => {
-                const div = document.createElement("div");
-                div.className = "data-card wanted-card";
-                div.style.maxWidth = "280px";
-                div.style.width = "100%";
-                div.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span class="badge-danger">${w.risk}</span>
-                        <div class="action-btns">
-                            <button class="btn-edit-item" onclick="editWanted(${w.id})">تعديل ✏️</button>
-                            <button class="btn-del-item" onclick="deleteWanted(${w.id})">حذف</button>
-                        </div>
-                    </div>
-                    <h4 style="color:#fff; margin-top:8px;">${w.name}</h4>
-                    <p style="font-size:11px; color:#94a3b8; margin-top:6px;">${w.crime}</p>
-                `;
-                list.appendChild(div);
+
+        /* ===== إنشاء وتعديل المطلوبين ===== */
+        function openCreateWantedModal() {
+            const content = `
+                <div class="input-group"><label>اسم المطلوب</label><input type="text" id="popWantedName" placeholder="Name"></div>
+                <div class="input-group">
+                    <label>مستوى الخطورة</label>
+                    <select id="popWantedRisk">
+                        <option value="🟡 منخفض الخطورة">🟡 منخفض الخطورة</option>
+                        <option value="🟠 متوسط الخطورة">🟠 متوسط الخطورة</option>
+                        <option value="🔴 خطر جداً">🔴 خطر جداً</option>
+                    </select>
+                </div>
+                <div class="input-group"><label>التهم التفصيلية</label><textarea id="popWantedCrime" rows="3" placeholder="التهمة"></textarea></div>
+            `;
+            openCustomModal("➕ إضافة مطلوب جديد", content, async () => {
+                const name = document.getElementById("popWantedName").value.trim();
+                const risk = document.getElementById("popWantedRisk").value;
+                const crime = document.getElementById("popWantedCrime").value.trim();
+                if (!name || !crime) return alert("يرجى تعبئة بيانات المطلوب!");
+                
+                globalDatabase.wanted.push({ id: Date.now(), name, risk, crime });
+                addLog(`قام [${currentUser}] بإضافة مطلوب جديد: ${name}`);
+                await saveCloudData();
             });
         }
+
         function editWanted(id) {
             const wanted = globalDatabase.wanted.find(w => w.id === id);
             if(!wanted) return;
@@ -1795,42 +1802,140 @@
                     wanted.name = newName;
                     wanted.risk = newRisk;
                     wanted.crime = newCrime;
+                    addLog(`قام [${currentUser}] بتعديل بيانات المطلوب: ${newName}`);
                     await saveCloudData();
                 }
             });
         }
+
+        function renderWanted() {
+            const list = document.getElementById("wanted-list");
+            if(!list) return;
+            const q = (document.getElementById("wantedSearch")?.value || "").toLowerCase();
+            list.innerHTML = "";
+            globalDatabase.wanted.filter(w => 
+                (w.name && w.name.toLowerCase().includes(q)) || 
+                (w.crime && w.crime.toLowerCase().includes(q)) || 
+                (w.risk && w.risk.toLowerCase().includes(q))
+            ).forEach(w => {
+                const div = document.createElement("div");
+                div.className = "data-card wanted-card";
+                div.style.maxWidth = "280px";
+                div.style.width = "100%";
+                div.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span class="badge-danger">${w.risk}</span>
+                        <div class="action-btns">
+                            <button class="btn-edit-item" onclick="editWanted(${w.id})">تعديل ✏️</button>
+                            <button class="btn-del-item" onclick="deleteWanted(${w.id})">حذف</button>
+                        </div>
+                    </div>
+                    <h4 style="color:#fff; margin-top:8px;">${w.name}</h4>
+                    <p style="font-size:11px; color:#94a3b8; margin-top:6px;">${w.crime}</p>
+                `;
+                list.appendChild(div);
+            });
+        }
+
         async function deleteWanted(id) {
             if (confirm("حذف الشخص المطلوب؟")) {
                 globalDatabase.wanted = globalDatabase.wanted.filter(w => w.id !== id);
                 await saveCloudData();
             }
         }
-        async function addRecord() {
-            const firstName = document.getElementById("recFirstName").value.trim();
-            const lastName = document.getElementById("recLastName").value.trim();
-            const cid = document.getElementById("recId").value.trim();
-            const sex = document.getElementById("recSex").value;
-            const notes = document.getElementById("recNotes").value.trim();
-            const photoFile = document.getElementById("recPhotoFile").files[0];
-            if (!firstName || !lastName) return alert("يرجى إدخال الاسم الأول والاسم الأخير!");
-            const photoBase64 = photoFile ? await readFileAsBase64(photoFile) : "";
-            globalDatabase.records.push({
-                id: Date.now(),
-                firstName,
-                lastName,
-                cid: cid || "N/A",
-                sex: sex || "MALE",
-                notes: notes || "لا توجد ملاحظات جنائية مسجلة.",
-                photo: photoBase64
+
+        /* ===== إنشاء وتعديل بطاقات الهوية ===== */
+        function openCreateRecordModal() {
+            const content = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+                    <div class="input-group"><label>الاسم الأول (First Name)</label><input type="text" id="popRecFirstName" placeholder="مثال: John"></div>
+                    <div class="input-group"><label>الاسم الأخير (Last Name)</label><input type="text" id="popRecLastName" placeholder="مثال: Doe"></div>
+                    <div class="input-group"><label>رقم الهوية (Citizen ID)</label><input type="text" id="popRecId" placeholder="مثال: CIA-102"></div>
+                    <div class="input-group">
+                        <label>الجنس (SEX)</label>
+                        <select id="popRecSex">
+                            <option value="MALE">ذكر / MALE</option>
+                            <option value="FEMALE">أنثى / FEMALE</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group" style="margin-top:10px;"><label>📁 رفع صورة الشخص الجنائية (اختياري)</label><input type="file" id="popRecPhotoFile" accept="image/*"></div>
+                <div class="input-group"><label>سجل الملاحظات والقضايا الجنائية</label><textarea id="popRecNotes" rows="3" placeholder="أدخل الملاحظات والسجل الجنائي..."></textarea></div>
+            `;
+            openCustomModal("🪪 إنشاء بطاقة هوية جديدة", content, async () => {
+                const firstName = document.getElementById("popRecFirstName").value.trim();
+                const lastName = document.getElementById("popRecLastName").value.trim();
+                const cid = document.getElementById("popRecId").value.trim();
+                const sex = document.getElementById("popRecSex").value;
+                const notes = document.getElementById("popRecNotes").value.trim();
+                const photoFile = document.getElementById("popRecPhotoFile").files[0];
+                if (!firstName || !lastName) return alert("يرجى إدخال الاسم الأول والاسم الأخير!");
+                
+                const photoBase64 = photoFile ? await readFileAsBase64(photoFile) : "";
+                globalDatabase.records.push({
+                    id: Date.now(),
+                    firstName,
+                    lastName,
+                    cid: cid || "N/A",
+                    sex: sex || "MALE",
+                    notes: notes || "لا توجد ملاحظات جنائية مسجلة.",
+                    photo: photoBase64
+                });
+                addLog(`قام [${currentUser}] بإنشاء بطاقة هوية لـ: ${firstName} ${lastName}`);
+                await saveCloudData();
             });
-            addLog(`قام [${currentUser}] بإنشاء بطاقة هوية لـ: ${firstName} ${lastName}`);
-            document.getElementById("recFirstName").value = "";
-            document.getElementById("recLastName").value = "";
-            document.getElementById("recId").value = "";
-            document.getElementById("recNotes").value = "";
-            document.getElementById("recPhotoFile").value = "";
-            await saveCloudData();
         }
+
+        function editRecord(id) {
+            const rec = globalDatabase.records.find(r => r.id === id);
+            if(!rec) return;
+            const modalContent = `
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                    <div class="input-group">
+                        <label>الاسم الأول</label>
+                        <input type="text" id="editRecFirstName" value="${rec.firstName}">
+                    </div>
+                    <div class="input-group">
+                        <label>الاسم الأخير</label>
+                        <input type="text" id="editRecLastName" value="${rec.lastName}">
+                    </div>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                    <div class="input-group">
+                        <label>رقم الهوية (Citizen ID)</label>
+                        <input type="text" id="editRecCid" value="${rec.cid}">
+                    </div>
+                    <div class="input-group">
+                        <label>الجنس</label>
+                        <select id="editRecSex">
+                            <option value="MALE" ${rec.sex === "MALE" ? "selected" : ""}>ذكر / MALE</option>
+                            <option value="FEMALE" ${rec.sex === "FEMALE" ? "selected" : ""}>أنثى / FEMALE</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>السجل الجنائي والملاحظات</label>
+                    <textarea id="editRecNotes" rows="3">${rec.notes}</textarea>
+                </div>
+            `;
+            openCustomModal("✏️ تعديل بطاقة الهوية والسجل الجنائي", modalContent, async () => {
+                const newFirstName = document.getElementById("editRecFirstName").value.trim();
+                const newLastName = document.getElementById("editRecLastName").value.trim();
+                const newCid = document.getElementById("editRecCid").value.trim();
+                const newSex = document.getElementById("editRecSex").value;
+                const newNotes = document.getElementById("editRecNotes").value.trim();
+                if (newFirstName && newLastName) {
+                    rec.firstName = newFirstName;
+                    rec.lastName = newLastName;
+                    rec.cid = newCid;
+                    rec.sex = newSex;
+                    rec.notes = newNotes;
+                    addLog(`قام [${currentUser}] بتعديل سجل الهوية: ${newFirstName} ${newLastName}`);
+                    await saveCloudData();
+                }
+            });
+        }
+
         function renderRecords() {
             const list = document.getElementById("records-list");
             if(!list) return;
@@ -1898,76 +2003,82 @@
                 list.appendChild(div);
             });
         }
-        function editRecord(id) {
-            const rec = globalDatabase.records.find(r => r.id === id);
-            if(!rec) return;
-            const modalContent = `
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                    <div class="input-group">
-                        <label>الاسم الأول</label>
-                        <input type="text" id="editRecFirstName" value="${rec.firstName}">
-                    </div>
-                    <div class="input-group">
-                        <label>الاسم الأخير</label>
-                        <input type="text" id="editRecLastName" value="${rec.lastName}">
-                    </div>
-                </div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                    <div class="input-group">
-                        <label>رقم الهوية (Citizen ID)</label>
-                        <input type="text" id="editRecCid" value="${rec.cid}">
-                    </div>
-                    <div class="input-group">
-                        <label>الجنس</label>
-                        <select id="editRecSex">
-                            <option value="MALE" ${rec.sex === "MALE" ? "selected" : ""}>ذكر / MALE</option>
-                            <option value="FEMALE" ${rec.sex === "FEMALE" ? "selected" : ""}>أنثى / FEMALE</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="input-group">
-                    <label>السجل الجنائي والملاحظات</label>
-                    <textarea id="editRecNotes" rows="3">${rec.notes}</textarea>
-                </div>
-            `;
-            openCustomModal("✏️ تعديل بطاقة الهوية والسجل الجنائي", modalContent, async () => {
-                const newFirstName = document.getElementById("editRecFirstName").value.trim();
-                const newLastName = document.getElementById("editRecLastName").value.trim();
-                const newCid = document.getElementById("editRecCid").value.trim();
-                const newSex = document.getElementById("editRecSex").value;
-                const newNotes = document.getElementById("editRecNotes").value.trim();
-                if (newFirstName && newLastName) {
-                    rec.firstName = newFirstName;
-                    rec.lastName = newLastName;
-                    rec.cid = newCid;
-                    rec.sex = newSex;
-                    rec.notes = newNotes;
-                    await saveCloudData();
-                }
-            });
-        }
+
         async function deleteRecord(id) {
             if (confirm("حذف ملف بطاقة المواطن؟")) {
                 globalDatabase.records = globalDatabase.records.filter(r => r.id !== id);
                 await saveCloudData();
             }
         }
-        async function addGang() {
-            const name = document.getElementById("gangName").value.trim();
-            const leader = document.getElementById("gangLeader").value.trim();
-            const deputy = document.getElementById("gangDeputy").value.trim();
-            const members = document.getElementById("gangMembers").value.trim();
-            const details = document.getElementById("gangDetails").value.trim();
-            if (!name) return alert("يرجى كتابة اسم العصابة!");
-            globalDatabase.gangs.push({ id: Date.now(), name, leader, deputy, members, details });
-            addLog(`قام [${currentUser}] بإضافة ملف مخطط عصابة: ${name}`);
-            document.getElementById("gangName").value = "";
-            document.getElementById("gangLeader").value = "";
-            document.getElementById("gangDeputy").value = "";
-            document.getElementById("gangMembers").value = "";
-            document.getElementById("gangDetails").value = "";
-            await saveCloudData();
+
+        /* ===== إنشاء وتعديل العصابات ===== */
+        function openCreateGangModal() {
+            const content = `
+                <div class="input-group"><label>اسم العصابة / التنظيم</label><input type="text" id="popGangName" placeholder="Gang Name"></div>
+                <div class="input-group"><label>👑 اسم الرئيس (Leader)</label><input type="text" id="popGangLeader" placeholder="اسم قائد العصابة"></div>
+                <div class="input-group"><label>🎖️ اسم النائب (Deputy)</label><input type="text" id="popGangDeputy" placeholder="اسم نائب القائد"></div>
+                <div class="input-group"><label>👥 الأعضاء (افصل بينهم بفاصلة)</label><input type="text" id="popGangMembers" placeholder="عضو 1, عضو 2, عضو 3"></div>
+                <div class="input-group"><label>تفاصيل المخطط والنشاطات</label><textarea id="popGangDetails" rows="3" placeholder="التفاصيل والارتباطات"></textarea></div>
+            `;
+            openCustomModal("🏴‍☠️ إنشاء مخطط عصابة جديد", content, async () => {
+                const name = document.getElementById("popGangName").value.trim();
+                const leader = document.getElementById("popGangLeader").value.trim();
+                const deputy = document.getElementById("popGangDeputy").value.trim();
+                const members = document.getElementById("popGangMembers").value.trim();
+                const details = document.getElementById("popGangDetails").value.trim();
+                if (!name) return alert("يرجى كتابة اسم العصابة!");
+                
+                globalDatabase.gangs.push({ id: Date.now(), name, leader, deputy, members, details });
+                addLog(`قام [${currentUser}] بإضافة ملف مخطط عصابة: ${name}`);
+                await saveCloudData();
+            });
         }
+
+        function editGang(id) {
+            const gang = globalDatabase.gangs.find(g => g.id === id);
+            if(!gang) return;
+            const modalContent = `
+                <div class="input-group">
+                    <label>اسم العصابة / التنظيم</label>
+                    <input type="text" id="editGangName" value="${gang.name}">
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                    <div class="input-group">
+                        <label>اسم القائد (Leader)</label>
+                        <input type="text" id="editGangLeader" value="${gang.leader || ''}">
+                    </div>
+                    <div class="input-group">
+                        <label>اسم النائب (Deputy)</label>
+                        <input type="text" id="editGangDeputy" value="${gang.deputy || ''}">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>الأعضاء (افصل بفاصلة)</label>
+                    <input type="text" id="editGangMembers" value="${gang.members || ''}">
+                </div>
+                <div class="input-group">
+                    <label>تفاصيل المخطط والنشاطات</label>
+                    <textarea id="editGangDetails" rows="3">${gang.details || ''}</textarea>
+                </div>
+            `;
+            openCustomModal("✏️ تعديل ملف الشجرة الهيكلية للعصابة", modalContent, async () => {
+                const newName = document.getElementById("editGangName").value.trim();
+                const newLeader = document.getElementById("editGangLeader").value.trim();
+                const newDeputy = document.getElementById("editGangDeputy").value.trim();
+                const newMembers = document.getElementById("editGangMembers").value.trim();
+                const newDetails = document.getElementById("editGangDetails").value.trim();
+                if (newName) {
+                    gang.name = newName;
+                    gang.leader = newLeader;
+                    gang.deputy = newDeputy;
+                    gang.members = newMembers;
+                    gang.details = newDetails;
+                    addLog(`قام [${currentUser}] بتعديل هيكل العصابة: ${newName}`);
+                    await saveCloudData();
+                }
+            });
+        }
+
         function renderGangs() {
             const list = document.getElementById("gangs-list");
             if(!list) return;
@@ -2015,55 +2126,14 @@
                 list.appendChild(div);
             });
         }
-        function editGang(id) {
-            const gang = globalDatabase.gangs.find(g => g.id === id);
-            if(!gang) return;
-            const modalContent = `
-                <div class="input-group">
-                    <label>اسم العصابة / التنظيم</label>
-                    <input type="text" id="editGangName" value="${gang.name}">
-                </div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                    <div class="input-group">
-                        <label>اسم القائد (Leader)</label>
-                        <input type="text" id="editGangLeader" value="${gang.leader || ''}">
-                    </div>
-                    <div class="input-group">
-                        <label>اسم النائب (Deputy)</label>
-                        <input type="text" id="editGangDeputy" value="${gang.deputy || ''}">
-                    </div>
-                </div>
-                <div class="input-group">
-                    <label>الأعضاء (افصل بفاصلة)</label>
-                    <input type="text" id="editGangMembers" value="${gang.members || ''}">
-                </div>
-                <div class="input-group">
-                    <label>تفاصيل المخطط والنشاطات</label>
-                    <textarea id="editGangDetails" rows="3">${gang.details || ''}</textarea>
-                </div>
-            `;
-            openCustomModal("✏️ تعديل ملف الشجرة الهيكلية للعصابة", modalContent, async () => {
-                const newName = document.getElementById("editGangName").value.trim();
-                const newLeader = document.getElementById("editGangLeader").value.trim();
-                const newDeputy = document.getElementById("editGangDeputy").value.trim();
-                const newMembers = document.getElementById("editGangMembers").value.trim();
-                const newDetails = document.getElementById("editGangDetails").value.trim();
-                if (newName) {
-                    gang.name = newName;
-                    gang.leader = newLeader;
-                    gang.deputy = newDeputy;
-                    gang.members = newMembers;
-                    gang.details = newDetails;
-                    await saveCloudData();
-                }
-            });
-        }
+
         async function deleteGang(id) {
             if (confirm("حذف ملف العصابة والشجرة؟")) {
                 globalDatabase.gangs = globalDatabase.gangs.filter(g => g.id !== id);
                 await saveCloudData();
             }
         }
+
         async function createAccount() {
             const user = document.getElementById("new-username").value.trim();
             const id = document.getElementById("new-id").value.trim();
@@ -2076,6 +2146,7 @@
             await saveCloudData();
             alert(`تم إضافة الحساب (${user}) أونلاين بنجاح!`);
         }
+
         function editUser(username) {
             const isDirector = globalDatabase.users[currentUser]?.role === "DIRECTOR";
             const userObj = globalDatabase.users[username];
@@ -2103,6 +2174,7 @@
                 }
             });
         }
+
         async function deleteAccount(username) {
             if (username === "Majed") return alert("لا يمكنك حذف المدير!");
             if (confirm(`حذف (${username})؟`)) {
@@ -2110,6 +2182,7 @@
                 await saveCloudData();
             }
         }
+
         function renderUsers() {
             const container = document.getElementById("users-container");
             const tbody = document.getElementById("users-table-body");
@@ -2148,11 +2221,13 @@
                 }
             }
         }
+
         function addLog(text) {
             const time = new Date().toLocaleTimeString('ar-EG');
             globalDatabase.logs.unshift(`[${time}] ${text}`);
             if (globalDatabase.logs.length > 20) globalDatabase.logs.pop();
         }
+
         function renderLogs() {
             const logBox = document.getElementById("reports-log");
             if (logBox) {
@@ -2160,11 +2235,13 @@
                     globalDatabase.logs.map(l => `<div>${l}</div>`).join('');
             }
         }
+
         function showHome() {
             document.getElementById("folderHome").style.display = "block";
             const panels = document.querySelectorAll('.workspace-panel');
             panels.forEach(p => p.style.display = 'none');
         }
+
         function openSection(sectionId) {
             document.getElementById("folderHome").style.display = "none";
             const panels = document.querySelectorAll('.workspace-panel');
@@ -2172,11 +2249,13 @@
             const target = document.getElementById(sectionId);
             if (target) target.style.display = "block";
         }
+
         function encryptMsg() {
             const val = document.getElementById("plainText").value.trim();
             if (!val) return;
             document.getElementById("cryptoResult").innerText = btoa(unescape(encodeURIComponent(val)));
         }
+
         function decryptMsg() {
             const val = document.getElementById("cipherText").value.trim();
             if (!val) return;
@@ -2184,6 +2263,7 @@
                 document.getElementById("cryptoResult").innerText = decodeURIComponent(escape(atob(val)));
             } catch (e) { document.getElementById("cryptoResult").innerText = "⚠️ كود خاطئ أو غير صالح!"; }
         }
+
         function logout() {
             localStorage.removeItem("active_cia_user");
             document.getElementById("login-screen").style.display = "block";
@@ -2191,6 +2271,7 @@
             const cardElem = document.getElementById("broadcastCard");
             if(cardElem) cardElem.style.display = "none";
         }
+
         fetchCloudData().then(() => {
             checkAutoLogin();
         });
