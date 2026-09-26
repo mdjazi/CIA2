@@ -30,6 +30,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            padding-bottom: 70px; /* مسافة لشريط التعميمات الأسفل */
             overflow-x: hidden;
             position: relative;
         }
@@ -59,7 +60,8 @@
             0% { transform: translate(-50%, -50%) scale(0.95) rotate(0deg); opacity: 0.05; }
             100% { transform: translate(-50%, -50%) scale(1.05) rotate(5deg); opacity: 0.11; }
         }
-        /* خلفية شاشة التحميل الاحترافية مع الصوت */
+        
+        /* خلفية برمجة وتشفير جديدة وأفخم */
         #decryption-screen {
             display: none;
             position: fixed;
@@ -67,10 +69,11 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: linear-gradient(rgba(2, 4, 7, 0.88), rgba(2, 4, 7, 0.96)), url('https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg') no-repeat center center;
-            background-size: contain;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: radial-gradient(circle, rgba(0, 20, 10, 0.9) 0%, rgba(2, 4, 7, 0.98) 100%),
+                        url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?fit=crop&w=1920&q=80') no-repeat center center;
+            background-size: cover;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             z-index: 999;
             flex-direction: column;
             justify-content: center;
@@ -78,21 +81,22 @@
             text-align: center;
         }
         .decrypt-box {
-            background: rgba(8, 13, 20, 0.88);
-            border: 1px solid var(--gold-color);
+            background: rgba(4, 10, 15, 0.9);
+            border: 1px solid var(--success-color);
             padding: 35px 40px;
             border-radius: 12px;
-            box-shadow: 0 0 40px rgba(197, 160, 89, 0.25);
+            box-shadow: 0 0 50px rgba(16, 185, 129, 0.3);
             max-width: 480px;
             width: 90%;
         }
         .decrypt-title {
-            color: var(--gold-color);
+            color: var(--success-color);
             font-size: 16px;
             font-weight: 800;
             letter-spacing: 2px;
             margin-bottom: 15px;
             font-family: monospace;
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
         }
         .progress-bar-bg {
             width: 100%;
@@ -106,7 +110,7 @@
         .progress-bar-fill {
             width: 0%;
             height: 100%;
-            background: linear-gradient(90deg, var(--gold-color), var(--accent-color));
+            background: linear-gradient(90deg, var(--success-color), var(--accent-color));
             box-shadow: 0 0 10px var(--accent-color);
             transition: width 0.1s linear;
         }
@@ -119,6 +123,7 @@
             overflow: hidden;
             word-break: break-all;
         }
+        
         .login-card {
             position: relative;
             z-index: 10;
@@ -269,6 +274,21 @@
             display: flex;
             gap: 10px;
             align-items: center;
+        }
+        .btn-chat-nav {
+            background: rgba(0, 132, 255, 0.2);
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            padding: 8px 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+        .btn-chat-nav:hover {
+            background: var(--accent-color);
+            color: #fff;
         }
         .btn-leader-nav {
             background: rgba(23, 16, 4, 0.8);
@@ -673,7 +693,7 @@
         .img-preview { max-width: 100%; max-height: 250px; border-radius: 5px; margin-top: 8px; border: 1px solid var(--border-color); }
         video { max-width: 100%; border-radius: 5px; margin-top: 8px; border: 1px solid var(--border-color); }
 
-        /* نافذة التعديل المخصصة بدلاً من رسائل جوجل المنبثقة */
+        /* نافذة التعديل المخصصة بدلاً من مربعات جوجل المنبثقة */
         .custom-modal-overlay {
             display: none;
             position: fixed;
@@ -707,6 +727,87 @@
         .modal-title { color: var(--gold-color); font-size: 16px; font-weight: bold; }
         .modal-close { cursor: pointer; color: var(--text-muted); font-size: 18px; font-weight: bold; }
         .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+
+        /* شريط التعميمات المباشر للرئيس بالأسفل */
+        .broadcast-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(217, 4, 41, 0.9);
+            border-top: 2px solid #ff4d4d;
+            color: #fff;
+            padding: 12px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 -5px 20px rgba(217, 4, 41, 0.5);
+            backdrop-filter: blur(10px);
+        }
+        .broadcast-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .broadcast-tag {
+            background: #fff;
+            color: #d90429;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 800;
+            animation: pulseBg 1.5s infinite;
+        }
+        @keyframes pulseBg {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+
+        /* نظام نافذة المحادثة الشات بين الأعضاء */
+        .chat-box-container {
+            height: 380px;
+            overflow-y: auto;
+            background: rgba(4, 6, 10, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .chat-msg {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            line-height: 1.5;
+            position: relative;
+        }
+        .chat-msg-me {
+            align-self: flex-start;
+            background: rgba(0, 132, 255, 0.2);
+            border: 1px solid var(--accent-color);
+            color: #fff;
+        }
+        .chat-msg-other {
+            align-self: flex-end;
+            background: rgba(22, 34, 53, 0.8);
+            border: 1px solid var(--border-color);
+            color: #d1d9e6;
+        }
+        .chat-meta {
+            font-size: 9px;
+            color: var(--gold-color);
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
     </style>
 </head>
 <body>
@@ -715,14 +816,15 @@
         <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Logo">
     </div>
     
+    <!-- شاشة التحميل والتشفير المحدثة بخلفية هكر رقمية -->
     <div id="decryption-screen">
         <div class="decrypt-box">
-            <div class="decrypt-title">🔒 DECRYPTING CLASSIFIED DATA...</div>
-            <div style="font-size: 12px; color: #8a9bb0;">جاري فك تشفير البيانات الاستخباراتية وتأكيد الهوية</div>
+            <div class="decrypt-title">🔒 SYSTEM ENCRYPTION TERMINAL...</div>
+            <div style="font-size: 12px; color: #10b981;">جاري فك تشفير البيانات واستعراض الملفات الفدرالية</div>
             <div class="progress-bar-bg">
                 <div class="progress-bar-fill" id="decrypt-progress"></div>
             </div>
-            <div class="code-stream" id="code-stream-text">0x7F80A... DECRYPTING PACKETS</div>
+            <div class="code-stream" id="code-stream-text">0x7F80A... CONNECTING SECURE PACKETS</div>
         </div>
     </div>
 
@@ -760,6 +862,7 @@
                 </small>
             </div>
             <div class="header-actions">
+                <button class="btn-chat-nav" onclick="openSection('chatSection')">💬 دردشة الأعضاء</button>
                 <button class="btn-leader-nav" id="btn-leader-toggle" onclick="openSection('leaderSection')">👑 مركز الإدارة والتراخيص</button>
                 <button class="btn-logout" onclick="logout()">تسجيل الخروج</button>
             </div>
@@ -812,6 +915,17 @@
                     <small>سجل الوكلاء والأعضاء المتصلين</small>
                     <span class="open-lbl">فتح المجلد ←</span>
                 </div>
+            </div>
+        </div>
+
+        <!-- قسم الدردشة والمحادثات المباشرة بين الأعضاء -->
+        <div class="workspace-panel" id="chatSection">
+            <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
+            <h3 style="color:var(--gold-color); margin-bottom: 15px;">💬 غرف التواصل المباشر بين الوكلاء</h3>
+            <div class="chat-box-container" id="chatMessagesBox"></div>
+            <div style="display:flex; gap:10px;">
+                <input type="text" id="chatInputText" placeholder="اكتب رسالتك للوكلاء هنا..." style="flex-grow:1; margin:0;">
+                <button class="btn-login" style="width:auto; margin:0; padding:0 25px; background:var(--accent-color);" onclick="sendChatMessage()">إرسال 🚀</button>
             </div>
         </div>
 
@@ -966,6 +1080,15 @@
         </div>
     </div>
 
+    <!-- شريط التعميمات العاجل بأسفل الشاشة لجميع الأعضاء -->
+    <div class="broadcast-bar" id="broadcastBar">
+        <div class="broadcast-content">
+            <span class="broadcast-tag">🚨 تعميم عاجل من القيادة</span>
+            <span id="broadcastTextDisplay">نرجو من كافة الوكلاء والأعضاء الالتزام بالتواجد الميداني.</span>
+        </div>
+        <button id="btnEditBroadcast" class="btn-edit-item" style="display:none;" onclick="updateBroadcast()">تعديل التعميم 📢</button>
+    </div>
+
     <!-- نافذة التعديل المخصصة بدلاً من مربعات جوجل المنبثقة -->
     <div class="custom-modal-overlay" id="customModal">
         <div class="custom-modal">
@@ -1070,12 +1193,13 @@
             wanted: [],
             records: [],
             gangs: [],
+            chat: [],
+            broadcast: "نرجو من كافة الأعضاء والوكلاء الالتزام بالتواجد الميداني.",
             logs: ["[SYSTEM READY]: تم الاتصال بالسحابة الفدرالية."]
         };
         let globalDatabase = defaultDatabase;
         let currentUser = "";
         
-        // تتبع الحالات المفتوحة لمنع الاختفاء التلقائي نهائياً
         let openItemsState = {
             reports: {},
             records: {},
@@ -1091,6 +1215,9 @@
                     const data = await res.json();
                     if (data.record && data.record.users) {
                         globalDatabase = data.record;
+                        if (!globalDatabase.chat) globalDatabase.chat = [];
+                        if (!globalDatabase.broadcast) globalDatabase.broadcast = "نرجو من كافة الوكلاء التواجد الميداني.";
+                        
                         renderAllData();
                         const statusElem = document.getElementById("loading-status");
                         if(statusElem) statusElem.innerText = "✅ متصل بالمنظومة الفدرالية ومُزامن بنجاح";
@@ -1168,14 +1295,18 @@
             document.getElementById("current-user-display").innerText = `${user}`;
             const roleDisplay = document.getElementById("current-role-display");
             const leaderBtn = document.getElementById("btn-leader-toggle");
+            const editBroadcastBtn = document.getElementById("btnEditBroadcast");
             
+            const isDirector = globalDatabase.users[user].role === "DIRECTOR";
             roleDisplay.innerText = globalDatabase.users[user].role;
-            if (globalDatabase.users[user].role === "DIRECTOR") {
+            if (isDirector) {
                 roleDisplay.className = "badge badge-leader";
                 leaderBtn.style.display = "inline-block";
+                editBroadcastBtn.style.display = "inline-block";
             } else {
                 roleDisplay.className = "badge";
                 leaderBtn.style.display = "none";
+                editBroadcastBtn.style.display = "none";
             }
             renderAllData();
             showHome();
@@ -1188,6 +1319,77 @@
             renderGangs();
             renderUsers();
             renderLogs();
+            renderChatMessages();
+            renderBroadcast();
+        }
+
+        function renderBroadcast() {
+            const broadcastElem = document.getElementById("broadcastTextDisplay");
+            if (broadcastElem) {
+                broadcastElem.innerText = globalDatabase.broadcast || "لا يوجد تعميم حالي من القيادة.";
+            }
+        }
+
+        function updateBroadcast() {
+            const isDirector = globalDatabase.users[currentUser]?.role === "DIRECTOR";
+            if (!isDirector) return alert("فقط مدير النظام يمكنه تعديل التعميم!");
+
+            const modalContent = `
+                <div class="input-group">
+                    <label>نص التعميم العاجل لجميع الأعضاء</label>
+                    <textarea id="editBroadcastInput" rows="4">${globalDatabase.broadcast || ''}</textarea>
+                </div>
+            `;
+
+            openCustomModal("📢 تعديل التعميم العاجل", modalContent, async () => {
+                const newText = document.getElementById("editBroadcastInput").value.trim();
+                if (newText) {
+                    globalDatabase.broadcast = newText;
+                    addLog(`قام [${currentUser}] بتحديث التعميم العاجل.`);
+                    await saveCloudData();
+                }
+            });
+        }
+
+        function renderChatMessages() {
+            const chatBox = document.getElementById("chatMessagesBox");
+            if (!chatBox) return;
+            chatBox.innerHTML = "";
+            (globalDatabase.chat || []).forEach(msg => {
+                const isMe = msg.user === currentUser;
+                const div = document.createElement("div");
+                div.className = `chat-msg ${isMe ? 'chat-msg-me' : 'chat-msg-other'}`;
+                div.innerHTML = `
+                    <div class="chat-meta">
+                        <span><b>${msg.user}</b> (${msg.role})</span>
+                        <span>${msg.time}</span>
+                    </div>
+                    <div>${msg.text}</div>
+                `;
+                chatBox.appendChild(div);
+            });
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById("chatInputText");
+            const text = input.value.trim();
+            if (!text) return;
+
+            const userRole = globalDatabase.users[currentUser]?.role || "CID Member";
+            const time = new Date().toLocaleTimeString('ar-EG');
+
+            if (!globalDatabase.chat) globalDatabase.chat = [];
+            globalDatabase.chat.push({
+                user: currentUser,
+                role: userRole,
+                text: text,
+                time: time
+            });
+
+            if (globalDatabase.chat.length > 50) globalDatabase.chat.shift();
+            input.value = "";
+            await saveCloudData();
         }
 
         function readFileAsBase64(file) {
@@ -1200,7 +1402,6 @@
             });
         }
 
-        // تحكم يدوي كامل للفتح والإغلاق ومنع الاختفاء التلقائي
         function toggleCollapsibleManual(type, id, element) {
             const body = element.nextElementSibling;
             if (!body) return;
@@ -1214,7 +1415,6 @@
             }
         }
 
-        // النافذة المخصصة للتعديل دون رسايل جوجل
         function openCustomModal(title, contentHtml, onSave) {
             document.getElementById("modalTitle").innerText = title;
             document.getElementById("modalBody").innerHTML = contentHtml;
@@ -1842,7 +2042,7 @@
         fetchCloudData().then(() => {
             checkAutoLogin();
         });
-        setInterval(fetchCloudData, 5000);
+        setInterval(fetchCloudData, 4000);
     </script>
 </body>
 </html>
