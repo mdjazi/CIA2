@@ -67,9 +67,9 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(3, 5, 8, 0.75);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            background: rgba(3, 5, 8, 0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             z-index: 999;
             flex-direction: column;
             justify-content: center;
@@ -838,9 +838,6 @@
     <div id="decryption-screen">
         <canvas id="matrix-loader-canvas"></canvas>
         <div class="decrypt-box">
-            <div class="logo-container" style="width: 80px; height: 80px; margin: 0 auto 15px auto;">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Emblem">
-            </div>
             <div class="decrypt-title">🔒 CIA SYSTEM ENCRYPTION TERMINAL</div>
             <div style="font-size: 12px; color: #10b981;">جاري فك تشفير البيانات واستعراض الملفات الفدرالية</div>
             <div class="progress-bar-bg">
@@ -917,7 +914,7 @@
                     <span class="open-lbl">فتح المجلد ←</span>
                 </div>
                 <div class="folder-card" onclick="openSection('intelligenceSection')">
-                    <span class="folder-card-icon">🕵️‍♂️</span>
+                    <span class="folder-card-icon">🕵️♂️</span>
                     <b>INTELLIGENCE</b>
                     <small>ملفات العصابات والهيكل التنظيمي</small>
                     <span class="open-lbl">فتح المجلد ←</span>
@@ -936,6 +933,7 @@
                 </div>
             </div>
         </div>
+
         <div class="workspace-panel" id="chatSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
@@ -948,6 +946,7 @@
                 <button class="btn-login" style="width:auto; margin:0; padding:0 25px; background:var(--accent-color);" onclick="sendChatMessage()">إرسال 🚀</button>
             </div>
         </div>
+
         <div class="workspace-panel leader-panel" id="leaderSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-top:0;">👑 مركز إدارة التراخيص والسرية</h3>
@@ -970,6 +969,7 @@
             <button class="btn-login" style="background:var(--success-color); font-size: 13px;" onclick="createAccount()">➕ إضافة الحساب أونلاين</button>
             <div id="users-container" style="margin-top:15px;"></div>
         </div>
+
         <div class="workspace-panel" id="reportsSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">📝 قسم التقارير والمذكرات الاستخباراتية</h3>
@@ -988,6 +988,7 @@
             <div id="reports-list"></div>
             <div class="log-box" id="reports-log"></div>
         </div>
+
         <div class="workspace-panel" id="wantedSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">📜 قائمة المطلوبين للعدالة (WANTED LIST)</h3>
@@ -1009,6 +1010,7 @@
             </div>
             <div id="wanted-list" style="display:flex; gap:15px; flex-wrap:wrap;"></div>
         </div>
+
         <div class="workspace-panel" id="recordsSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">📂 السجل الجنائي للمواطنين (RECORDS)</h3>
@@ -1036,9 +1038,10 @@
             <h4 style="color:var(--gold-color); margin-bottom:15px;">📂 بطاقات الهوية والسجلات المحفوظة (اضغط للعرض والطي يدويًا):</h4>
             <div id="records-list"></div>
         </div>
+
         <div class="workspace-panel" id="intelligenceSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            <h3 style="color:var(--gold-color); margin-bottom: 15px;">GANG INTELLIGENCE & HIERARCHY 🕵️‍♂️</h3>
+            <h3 style="color:var(--gold-color); margin-bottom: 15px;">GANG INTELLIGENCE & HIERARCHY 🕵️♂️</h3>
             <div class="input-group">
                 <input type="text" id="gangsSearch" class="search-box" placeholder="🔍 بحث في مخططات الاستخبارات والعصابات" oninput="renderGangs()">
             </div>
@@ -1053,6 +1056,7 @@
             <h4 style="color:var(--gold-color); margin-bottom:15px;">🌐 ملفات العصابات والمخططات (اضغط للعرض والطي يدويًا):</h4>
             <div id="gangs-list"></div>
         </div>
+
         <div class="workspace-panel" id="casesSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 20px;">🔓 قسم التشفير وفك التشفير 🔒</h3>
@@ -1073,6 +1077,7 @@
                 <div class="crypto-result-value" id="cryptoResult">- في انتظار الإدخال -</div>
             </div>
         </div>
+
         <div class="workspace-panel" id="usersSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color);">👥 قائمة الأعضاء المسجلين بالمنظومة</h3>
@@ -1092,6 +1097,7 @@
             </table>
         </div>
     </div>
+
     <div class="broadcast-card-floating" id="broadcastCard">
         <div class="broadcast-card-header">
             <div class="broadcast-card-title">🚨 تعميم عاجل من القيادة</div>
@@ -1099,6 +1105,7 @@
         </div>
         <div class="broadcast-card-body" id="broadcastTextDisplay">-</div>
     </div>
+
     <div class="custom-modal-overlay" id="customModal">
         <div class="custom-modal">
             <div class="modal-header">
@@ -1112,6 +1119,7 @@
             </div>
         </div>
     </div>
+
     <script>
         const canvas = document.getElementById('cyber-canvas');
         const ctx = canvas.getContext('2d');
@@ -1140,6 +1148,7 @@
             }
         }
         setInterval(drawMatrix, 35);
+
         const loaderCanvas = document.getElementById('matrix-loader-canvas');
         const loaderCtx = loaderCanvas ? loaderCanvas.getContext('2d') : null;
         let loaderDrops = [];
@@ -1214,6 +1223,7 @@
                 }
             } catch(e) { console.log(e); }
         }
+
         const BIN_ID = "6ab719faffd5d160532fe4cd"; 
         const API_KEY = "$2a$10$AlBdQgKayB/o7aIaPD42L.khi.iGvmNkXo5WPklHsUpYNmCMMxe0q"; 
         let defaultDatabase = {
@@ -1231,15 +1241,16 @@
         };
         let globalDatabase = defaultDatabase;
         let currentUser = "";
-        let isSaving = false;
+        let isSaving = false; // متغير لمنع التعارض بين المزامنة والتعديل
         
         let openItemsState = {
             reports: {},
             records: {},
             gangs: {}
         };
+
         async function fetchCloudData() {
-            if (isSaving) return;
+            if (isSaving) return; // إلغاء الجلب المباشر أثناء عملية الحفظ والتعديل
             try {
                 const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest?nocache=${Date.now()}`, {
                     headers: { "X-Master-Key": API_KEY }
@@ -1258,6 +1269,7 @@
                 }
             } catch (e) { console.error(e); }
         }
+
         async function saveCloudData() {
             isSaving = true;
             const statusElem = document.getElementById("loading-status");
@@ -1283,12 +1295,14 @@
                 isSaving = false;
             }
         }
+
         function checkAutoLogin() {
             const savedUser = localStorage.getItem("active_cia_user");
             if (savedUser && globalDatabase.users[savedUser]) {
                 openMainSystem(savedUser);
             }
         }
+
         function login() {
             const user = document.getElementById("login-username").value.trim();
             const pass = document.getElementById("login-password").value.trim();
@@ -1328,6 +1342,7 @@
                 errorMsg.style.display = "block";
             }
         }
+
         function openMainSystem(user) {
             currentUser = user;
             document.getElementById("login-screen").style.display = "none";
@@ -1356,6 +1371,7 @@
             renderAllData();
             showHome();
         }
+
         function renderAllData() {
             renderReports();
             renderWanted();
@@ -1366,6 +1382,7 @@
             renderChatMessages();
             renderBroadcast();
         }
+
         function renderBroadcast() {
             const cardElem = document.getElementById("broadcastCard");
             const textElem = document.getElementById("broadcastTextDisplay");
@@ -1377,6 +1394,7 @@
                 if(cardElem) cardElem.style.display = "block";
             }
         }
+
         function updateBroadcast() {
             const isDirector = globalDatabase.users[currentUser]?.role === "DIRECTOR";
             if (!isDirector) return alert("فقط مدير النظام يمكنه تعديل التعميم!");
@@ -1393,6 +1411,7 @@
                 await saveCloudData();
             });
         }
+
         function renderChatMessages() {
             const chatBox = document.getElementById("chatMessagesBox");
             if (!chatBox) return;
@@ -1418,6 +1437,7 @@
             });
             chatBox.scrollTop = chatBox.scrollHeight;
         }
+
         async function sendChatMessage() {
             const input = document.getElementById("chatInputText");
             const text = input.value.trim();
@@ -1436,10 +1456,12 @@
             input.value = "";
             await saveCloudData();
         }
+
         async function deleteSingleChatMessage(msgId) {
             globalDatabase.chat = globalDatabase.chat.filter(m => m.id !== msgId);
             await saveCloudData();
         }
+
         async function clearAllChatMessages() {
             const isDirector = globalDatabase.users[currentUser]?.role === "DIRECTOR";
             if (!isDirector) return alert("فقط المدير يمكنه مسح جميع المحادثات!");
@@ -1450,6 +1472,7 @@
                 await saveCloudData();
             }
         }
+
         function readFileAsBase64(file) {
             return new Promise((resolve) => {
                 if (!file) return resolve("");
@@ -1459,6 +1482,7 @@
                 reader.readAsDataURL(file);
             });
         }
+
         function toggleCollapsibleManual(type, id, element) {
             const body = element.nextElementSibling;
             if (!body) return;
@@ -1471,6 +1495,7 @@
                 openItemsState[type][id] = true;
             }
         }
+
         function openCustomModal(title, contentHtml, onSave) {
             document.getElementById("modalTitle").innerText = title;
             document.getElementById("modalBody").innerHTML = contentHtml;
@@ -1486,9 +1511,11 @@
                 closeModal();
             };
         }
+
         function closeModal() {
             document.getElementById("customModal").style.display = "none";
         }
+
         async function addReport() {
             const title = document.getElementById("reportTitle").value.trim();
             const details = document.getElementById("reportDetails").value.trim();
@@ -1516,6 +1543,7 @@
             document.getElementById("reportVideoFile").value = "";
             await saveCloudData();
         }
+
         function renderReports() {
             const list = document.getElementById("reports-list");
             if (!list) return;
@@ -1554,6 +1582,7 @@
                 list.appendChild(div);
             });
         }
+
         function editReport(id) {
             const report = globalDatabase.reports.find(r => r.id === id);
             if(!report) return;
@@ -1585,6 +1614,7 @@
                 }
             });
         }
+
         async function deleteReport(id) {
             if (confirm("هل تريد حذف هذا التقرير نهائياً؟")) {
                 globalDatabase.reports = globalDatabase.reports.filter(r => r.id !== id);
@@ -1592,6 +1622,7 @@
                 await saveCloudData();
             }
         }
+
         async function addWanted() {
             const name = document.getElementById("wantedName").value.trim();
             const risk = document.getElementById("wantedRisk").value;
@@ -1603,6 +1634,7 @@
             document.getElementById("wantedCrime").value = "";
             await saveCloudData();
         }
+
         function renderWanted() {
             const list = document.getElementById("wanted-list");
             if(!list) return;
@@ -1631,6 +1663,7 @@
                 list.appendChild(div);
             });
         }
+
         function editWanted(id) {
             const wanted = globalDatabase.wanted.find(w => w.id === id);
             if(!wanted) return;
@@ -1664,12 +1697,14 @@
                 }
             });
         }
+
         async function deleteWanted(id) {
             if (confirm("حذف الشخص المطلوب؟")) {
                 globalDatabase.wanted = globalDatabase.wanted.filter(w => w.id !== id);
                 await saveCloudData();
             }
         }
+
         async function addRecord() {
             const firstName = document.getElementById("recFirstName").value.trim();
             const lastName = document.getElementById("recLastName").value.trim();
@@ -1696,6 +1731,7 @@
             document.getElementById("recPhotoFile").value = "";
             await saveCloudData();
         }
+
         function renderRecords() {
             const list = document.getElementById("records-list");
             if(!list) return;
@@ -1763,6 +1799,7 @@
                 list.appendChild(div);
             });
         }
+
         function editRecord(id) {
             const rec = globalDatabase.records.find(r => r.id === id);
             if(!rec) return;
@@ -1811,12 +1848,14 @@
                 }
             });
         }
+
         async function deleteRecord(id) {
             if (confirm("حذف ملف بطاقة المواطن؟")) {
                 globalDatabase.records = globalDatabase.records.filter(r => r.id !== id);
                 await saveCloudData();
             }
         }
+
         async function addGang() {
             const name = document.getElementById("gangName").value.trim();
             const leader = document.getElementById("gangLeader").value.trim();
@@ -1833,6 +1872,7 @@
             document.getElementById("gangDetails").value = "";
             await saveCloudData();
         }
+
         function renderGangs() {
             const list = document.getElementById("gangs-list");
             if(!list) return;
@@ -1880,6 +1920,7 @@
                 list.appendChild(div);
             });
         }
+
         function editGang(id) {
             const gang = globalDatabase.gangs.find(g => g.id === id);
             if(!gang) return;
@@ -1923,12 +1964,14 @@
                 }
             });
         }
+
         async function deleteGang(id) {
             if (confirm("حذف ملف العصابة والشجرة؟")) {
                 globalDatabase.gangs = globalDatabase.gangs.filter(g => g.id !== id);
                 await saveCloudData();
             }
         }
+
         async function createAccount() {
             const user = document.getElementById("new-username").value.trim();
             const id = document.getElementById("new-id").value.trim();
@@ -1941,6 +1984,7 @@
             await saveCloudData();
             alert(`تم إضافة الحساب (${user}) أونلاين بنجاح!`);
         }
+
         function editUser(username) {
             const isDirector = globalDatabase.users[currentUser]?.role === "DIRECTOR";
             const userObj = globalDatabase.users[username];
@@ -1968,6 +2012,7 @@
                 }
             });
         }
+
         async function deleteAccount(username) {
             if (username === "Majed") return alert("لا يمكنك حذف المدير!");
             if (confirm(`حذف (${username})؟`)) {
@@ -1975,6 +2020,7 @@
                 await saveCloudData();
             }
         }
+
         function renderUsers() {
             const container = document.getElementById("users-container");
             const tbody = document.getElementById("users-table-body");
@@ -2013,11 +2059,13 @@
                 }
             }
         }
+
         function addLog(text) {
             const time = new Date().toLocaleTimeString('ar-EG');
             globalDatabase.logs.unshift(`[${time}] ${text}`);
             if (globalDatabase.logs.length > 20) globalDatabase.logs.pop();
         }
+
         function renderLogs() {
             const logBox = document.getElementById("reports-log");
             if (logBox) {
@@ -2025,11 +2073,13 @@
                     globalDatabase.logs.map(l => `<div>${l}</div>`).join('');
             }
         }
+
         function showHome() {
             document.getElementById("folderHome").style.display = "block";
             const panels = document.querySelectorAll('.workspace-panel');
             panels.forEach(p => p.style.display = 'none');
         }
+
         function openSection(sectionId) {
             document.getElementById("folderHome").style.display = "none";
             const panels = document.querySelectorAll('.workspace-panel');
@@ -2037,11 +2087,13 @@
             const target = document.getElementById(sectionId);
             if (target) target.style.display = "block";
         }
+
         function encryptMsg() {
             const val = document.getElementById("plainText").value.trim();
             if (!val) return;
             document.getElementById("cryptoResult").innerText = btoa(unescape(encodeURIComponent(val)));
         }
+
         function decryptMsg() {
             const val = document.getElementById("cipherText").value.trim();
             if (!val) return;
@@ -2049,6 +2101,7 @@
                 document.getElementById("cryptoResult").innerText = decodeURIComponent(escape(atob(val)));
             } catch (e) { document.getElementById("cryptoResult").innerText = "⚠️ كود خاطئ أو غير صالح!"; }
         }
+
         function logout() {
             localStorage.removeItem("active_cia_user");
             document.getElementById("login-screen").style.display = "block";
@@ -2056,6 +2109,7 @@
             const cardElem = document.getElementById("broadcastCard");
             if(cardElem) cardElem.style.display = "none";
         }
+
         fetchCloudData().then(() => {
             checkAutoLogin();
         });
