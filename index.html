@@ -132,19 +132,40 @@
         .drawio-tool-btn { background: rgba(197, 160, 89, 0.15); color: var(--gold-color); border: 1px solid var(--gold-color); padding: 8px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: bold; text-align: right; }
         .drawio-tool-btn:hover { background: rgba(197, 160, 89, 0.3); }
         
-        /* عناصر الشجرة (المستطيل والدائرة بنفس اللون والنمط) */
-        .draggable-node { position: absolute; min-width: 140px; padding: 12px; border-radius: 6px; cursor: move; user-select: none; box-shadow: 0 4px 15px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 4px; z-index: 20; background: #162235; border: 1.5px solid var(--accent-color); color: #fff; }
-        .node-circle { border-radius: 50%; width: 110px; height: 110px; align-items: center; justify-content: center; text-align: center; padding: 15px; background: #162235; border: 1.5px solid var(--accent-color); }
-        .node-text { background: rgba(0,0,0,0.6); border: 1px dashed var(--gold-color); color: var(--gold-color); font-size: 13px; padding: 8px; }
+        /* عناصر الشجرة (تم احتواء النص بدقة داخل الحدود وعدم خروجه نهائياً) */
+        .draggable-node { 
+            position: absolute; min-width: 140px; padding: 12px; border-radius: 6px; cursor: move; user-select: none; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 4px; z-index: 20; 
+            background: #162235; border: 1.5px solid var(--accent-color); color: #fff; 
+            overflow: hidden; word-break: break-word; overflow-wrap: break-word; 
+        }
+        .node-circle { 
+            border-radius: 50% !important; width: 120px !important; height: 120px !important; 
+            align-items: center; justify-content: center; text-align: center; padding: 15px; 
+            background: #162235; border: 1.5px solid var(--accent-color); 
+            overflow: hidden !important; display: flex !important;
+        }
+        .node-text { 
+            background: rgba(0,0,0,0.6); border: 1px dashed var(--gold-color); color: var(--gold-color); 
+            font-size: 13px; padding: 8px; overflow: hidden; word-break: break-word; overflow-wrap: break-word;
+        }
         
-        /* الخط المستقيم المستقل */
-        .node-line { position: absolute; background: var(--gold-color); cursor: move; user-select: none; z-index: 20; min-width: 30px; min-height: 4px; border-radius: 2px; }
+        /* محتوى النص الداخلي للعنصر لضمان عدم الخروج وعمله كحاوية مرنة */
+        .node-content-editable {
+            outline: none; width: 100%; height: 100%; word-break: break-word; overflow-wrap: break-word;
+            max-height: 100%; overflow-y: auto; white-space: pre-wrap;
+        }
+
+        /* الخط المستقيم مع مقبض لتغيير الطول والزاوية */
+        .node-line { position: absolute; background: var(--gold-color); cursor: move; user-select: none; z-index: 20; min-width: 30px; min-height: 4px; border-radius: 2px; transform-origin: left center; }
         
-        /* إطار التحديد عند النقر على أي عنصر استعداداً لحذفه بزر Delete */
+        /* إطار التحديد عند النقر على العنصر لحذفه بـ Delete */
         .selected-element { outline: 2px dashed var(--success-color) !important; box-shadow: 0 0 15px var(--success-color) !important; z-index: 100 !important; }
 
-        /* مقبض لتغيير حجم الخط المستقيم عند سحبه أفقياً */
-        .line-resize-handle { position: absolute; right: 0; top: 0; width: 12px; height: 100%; cursor: ew-resize; background: rgba(255,255,255,0.4); border-radius: 0 2px 2px 0; }
+        /* مقبض تغيير الطول */
+        .line-resize-handle { position: absolute; right: 0; top: 0; width: 14px; height: 100%; cursor: ew-resize; background: rgba(255,255,255,0.6); border-radius: 0 2px 2px 0; }
+        /* مقبض تدوير الزاوية للخط */
+        .line-rotate-handle { position: absolute; left: 0; top: -14px; width: 14px; height: 14px; background: var(--accent-color); border-radius: 50%; cursor: grab; border: 2px solid #fff; }
         
         /* وثيقة التقرير الاستخباراتي */
         .cia-classified-doc { background: #f4f4f0; color: #111; padding: 30px; border-radius: 6px; border: 2px solid #333; font-family: 'Courier New', Courier, monospace; position: relative; direction: rtl; text-align: right; overflow: hidden; font-weight: bold; }
@@ -361,7 +382,8 @@
                 <button class="drawio-tool-btn" style="background:rgba(197,160,89,0.3); border-color:var(--gold-color);" onclick="spawnLine()">➖ خط مستقيم جديد</button>
                 
                 <div style="font-size: 10px; color: var(--text-muted); line-height: 1.4; margin-top: 5px;">
-                    💡 <b>طريقة الحذف:</b> انقر على أي عنصر لتحديده ثم اضغط زر <b>Delete</b> من لوحة المفاتيح.
+                    💡 <b>الخط:</b> اسحب النقطة الزرقاء لتدوير الزاوية، والمقبض الأيمن لتغيير الطول.<br>
+                    🗑️ <b>الحذف:</b> انقر على أي عنصر واضغط <b>Delete</b>.
                 </div>
                 
                 <h5 style="color: var(--gold-color); font-size: 12px; margin-top: 15px; margin-bottom: 5px;">📋 نبذة العصابة</h5>
@@ -936,9 +958,9 @@
             if (g.nodes && Array.isArray(g.nodes) && g.nodes.length > 0) {
                 g.nodes.forEach(nodeData => renderNodeElement(nodeData));
             } else {
-                renderNodeElement({ id: 'node_' + Date.now() + 1, type: 'circle', text: '👑 القائد', x: 250, y: 60, width: 110, height: 110 });
-                renderNodeElement({ id: 'node_' + Date.now() + 2, type: 'rect', text: 'مسؤول العمليات', x: 120, y: 220, width: 150, height: 50 });
-                renderNodeElement({ id: 'node_' + Date.now() + 3, type: 'line', text: '', x: 200, y: 180, width: 150, height: 4 });
+                renderNodeElement({ id: 'node_' + Date.now() + 1, type: 'circle', text: '👑 القائد', x: 250, y: 60, width: 120, height: 120, angle: 0 });
+                renderNodeElement({ id: 'node_' + Date.now() + 2, type: 'rect', text: 'مسؤول العمليات', x: 120, y: 220, width: 150, height: 60, angle: 0 });
+                renderNodeElement({ id: 'node_' + Date.now() + 3, type: 'line', text: '', x: 200, y: 180, width: 150, height: 4, angle: 0 });
             }
             
             document.getElementById("gangFullscreenModal").style.display = "flex";
@@ -957,8 +979,9 @@
                 text: type === 'circle' ? 'عضو جديد' : (type === 'rect' ? 'مسؤول جديد' : 'ملاحظة نصية...'),
                 x: 180 + Math.random() * 150,
                 y: 150 + Math.random() * 100,
-                width: type === 'circle' ? 110 : 150,
-                height: type === 'circle' ? 110 : 50
+                width: type === 'circle' ? 120 : 150,
+                height: type === 'circle' ? 120 : 60,
+                angle: 0
             };
             renderNodeElement(nodeData);
         }
@@ -971,7 +994,8 @@
                 x: 200 + Math.random() * 100,
                 y: 200 + Math.random() * 100,
                 width: 150,
-                height: 4
+                height: 4,
+                angle: 0
             };
             renderNodeElement(lineData);
         }
@@ -987,12 +1011,18 @@
             div.style.top = data.y + 'px';
             if (data.width) div.style.width = data.width + 'px';
             if (data.height) div.style.height = data.height + 'px';
+            if (data.angle !== undefined) div.style.transform = `rotate(${data.angle}deg)`;
             
             div.setAttribute('data-id', data.id);
+            div.setAttribute('data-angle', data.angle || 0);
             
             if (isLine) {
-                div.innerHTML = `<div class="line-resize-handle" title="اسحب لتغيير الطول"></div>`;
+                div.innerHTML = `
+                    <div class="line-rotate-handle" title="اسحب لتدوير زاوية الخط"></div>
+                    <div class="line-resize-handle" title="اسحب لتغيير الطول"></div>
+                `;
                 
+                // التحكم بالطول
                 const handle = div.querySelector('.line-resize-handle');
                 let isResizing = false, startX, startWidth;
                 handle.addEventListener('mousedown', (e) => {
@@ -1008,11 +1038,30 @@
                 });
                 window.addEventListener('mouseup', () => { isResizing = false; });
 
+                // التحكم بزاوية الدوران للخط المستقيم
+                const rotHandle = div.querySelector('.line-rotate-handle');
+                let isRotating = false;
+                rotHandle.addEventListener('mousedown', (e) => {
+                    isRotating = true;
+                    e.stopPropagation();
+                });
+                window.addEventListener('mousemove', (e) => {
+                    if (!isRotating) return;
+                    const rect = div.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+                    const radians = Math.atan2(e.clientY - centerY, e.clientX - centerX);
+                    let degree = radians * (180 / Math.PI);
+                    div.style.transform = `rotate(${degree}deg)`;
+                    div.setAttribute('data-angle', degree);
+                });
+                window.addEventListener('mouseup', () => { isRotating = false; });
+
             } else {
-                div.innerHTML = `<div contenteditable="true" style="outline:none; width:100%; min-height:25px; word-break:break-all;">${data.text}</div>`;
+                div.innerHTML = `<div class="node-content-editable" contenteditable="true">${data.text}</div>`;
             }
             
-            // النقر لتحديد العنصر (لاختياره ثم حذفه عبر لوحة المفاتيح)
+            // النقر لتحديد العنصر لحذفه بزر Delete
             div.addEventListener('click', (e) => {
                 document.querySelectorAll('.draggable-node, .node-line').forEach(el => el.classList.remove('selected-element'));
                 div.classList.add('selected-element');
@@ -1024,7 +1073,7 @@
             let isDragging = false, startX, startY;
             
             div.addEventListener('mousedown', (e) => {
-                if (e.target.classList.contains('line-resize-handle') || e.target.getAttribute('contenteditable') === 'true') return;
+                if (e.target.classList.contains('line-resize-handle') || e.target.classList.contains('line-rotate-handle') || e.target.classList.contains('node-content-editable') || e.target.getAttribute('contenteditable') === 'true') return;
                 isDragging = true;
                 startX = e.clientX - div.offsetLeft;
                 startY = e.clientY - div.offsetTop;
@@ -1047,18 +1096,15 @@
             area.appendChild(div);
         }
 
-        // الاستماع لضغط زر Delete على الكيبورد لحذف العنصر المختار
+        // الاستماع لضغط زر Delete من لوحة المفاتيح
         window.addEventListener('keydown', (e) => {
             if ((e.key === 'Delete' || e.key === 'Backspace') && selectedElementForDeletion) {
-                // التأكد من أننا لسنا نكتب داخل حقل نصي أو محرر النصوص
                 if (document.activeElement.getAttribute('contenteditable') === 'true' || document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
-                
                 selectedElementForDeletion.remove();
                 selectedElementForDeletion = null;
             }
         });
 
-        // إلغاء التحديد عند النقر على مساحة فارغة في اللوحة
         document.getElementById("gangCanvasArea").addEventListener('click', () => {
             document.querySelectorAll('.draggable-node, .node-line').forEach(el => el.classList.remove('selected-element'));
             selectedElementForDeletion = null;
@@ -1090,17 +1136,18 @@
                 nodes.push({
                     id: el.getAttribute('data-id'),
                     type: type,
-                    text: type === 'line' ? '' : el.querySelector('[contenteditable]').innerText,
+                    text: type === 'line' ? '' : el.querySelector('.node-content-editable').innerText,
                     x: parseInt(el.style.left) || 0,
                     y: parseInt(el.style.top) || 0,
                     width: el.offsetWidth,
-                    height: el.offsetHeight
+                    height: el.offsetHeight,
+                    angle: parseFloat(el.getAttribute('data-angle')) || 0
                 });
             });
 
             g.nodes = nodes;
             await saveCloudData();
-            alert("✅ تم حفظ الشجرة والخطوط المستقيمة بكامل مواقعها وأحجامها بنجاح في السحابة!");
+            alert("✅ تم حفظ الشجرة والزوايا والخطوط بنجاح في السحابة!");
         }
 
         function renderGangs() {
