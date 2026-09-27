@@ -4,7 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CIA SYSTEM | نظام التحكم والاستخبارات الفدرالي</title>
-    <!-- تم تفعيل نظام التخزين السحابي المشترك والمزامن للجميع بنجاح -->
+    
+    <!-- Firebase SDK & Configuration Integration -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+        import { getDatabase, ref, set, get, onValue, push, remove, update } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcJneL1XXYscdKaqDc1wQqKI0qPqxXS2Y",
+            authDomain: "cia2-d411e.firebaseapp.com",
+            databaseURL: "https://cia2-d411e-default-rtdb.firebaseio.com",
+            projectId: "cia2-d411e",
+            storageBucket: "cia2-d411e.firebasestorage.app",
+            messagingSenderId: "682710337982",
+            appId: "1:682710337982:web:15aee10531c2af7ede51ef",
+            measurementId: "G-00N88W7VQD"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        window.firebaseDB = { db, ref, set, get, onValue, push, remove, update };
+    </script>
+
     <style>
         :root {
             --bg-color: #030508;
@@ -312,7 +333,7 @@
             <input type="password" id="login-pin" placeholder="••••" autocomplete="off">
         </div>
         <button class="btn-login" onclick="login()">تسجيل الدخول للمنظومة الفدرالية</button>
-        <div class="sync-status" id="loading-status">⚡ متصل بالنظام الفدرالي المشترك بنجاح</div>
+        <div class="sync-status" id="loading-status">⚡ متصل بـ Firebase Realtime Database بنجاح</div>
         <div class="error-msg" id="error-msg">⚠️ خطأ في بيانات الدخول!</div>
     </div>
     <div id="main-system">
@@ -337,7 +358,7 @@
                     <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Emblem">
                 </div>
                 <div>
-                    <div class="grid-title">سطح مكتب نظام CIA الفدرالي (حفظ فوري ومشترك للكل 100%)</div>
+                    <div class="grid-title">سطح مكتب نظام CIA الفدرالي (مرتبط بـ Firebase سحابياً للجميع)</div>
                     <small style="color:var(--text-muted)">اختر المجلد الاستخباراتي للوصول إلى قاعدة البيانات</small>
                 </div>
             </div>
@@ -542,8 +563,6 @@
     </div>
     
     <script>
-        // إعدادات التخزين السحابي المشترك الفوري للجميع
-        const CLOUD_STORAGE_KEY = "cia_federal_shared_system_v3";
         let globalDatabase = {
             users: {
                 "Majed": { password: "1967", pin: "0000", id: "CIA-001", role: "DIRECTOR" },
@@ -569,7 +588,6 @@
         const canvasInnerWorld = document.getElementById("gangCanvasInnerWorld");
         let isRightMouseDown = false;
         let rightMouseStartX = 0, rightMouseStartY = 0;
-
         const canvas = document.getElementById('cyber-canvas');
         const ctx = canvas.getContext('2d');
         function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
@@ -583,6 +601,47 @@
                 ctx.fillText(chars.charAt(Math.floor(Math.random() * chars.length)), i * 13, Math.random() * canvas.height);
             }
         }, 50);
+
+        // ربط قواعد البيانات السحابية الحقيقية عبر Firebase Realtime Database
+        function loadDatabase() {
+            const dbRef = window.firebaseDB.ref(window.firebaseDB.db, 'cia_system_data');
+            window.firebaseDB.onValue(dbRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    globalDatabase = data;
+                    if (currentUser) {
+                        renderAllData();
+                    }
+                } else {
+                    saveDatabase(); // التهيئة الأولى إذا القاعدة فارغة
+                }
+            }, { onlyOnce: true });
+        }
+
+        function saveDatabase() {
+            const dbRef = window.firebaseDB.ref(window.firebaseDB.db, 'cia_system_data');
+            window.firebaseDB.set(dbRef, globalDatabase).then(() => {
+                renderAllData();
+            }).catch((error) => {
+                console.error("Firebase save error:", error);
+            });
+        }
+
+        // الاستماع للتحديثات اللحظية لجميع المستخدمين سحابياً
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const dbRef = window.firebaseDB.ref(window.firebaseDB.db, 'cia_system_data');
+                window.firebaseDB.onValue(dbRef, (snapshot) => {
+                    const data = snapshot.val();
+                    if (data && JSON.stringify(data) !== JSON.stringify(globalDatabase)) {
+                        globalDatabase = data;
+                        if (currentUser) {
+                            renderAllData();
+                        }
+                    }
+                });
+            }, 1000);
+        });
 
         if (canvasArea) {
             canvasArea.addEventListener('mousedown', (e) => {
@@ -672,7 +731,6 @@
                 }
             }, { passive: false });
         }
-
         function activateDrawingMode(type, defaultText) {
             activeDrawingType = type;
             defaultDrawingText = defaultText;
@@ -699,45 +757,6 @@
             document.getElementById('btnSpawnImg').innerText = "🖼️ مربع صورة مستقل (سحب)";
             activeDrawingType = null;
         }
-
-        // دمج نظام التخزين المشترك السحابي (يربط جميع الأجهزة والمستخدمين)
-        function loadDatabase() {
-            try {
-                const cloudData = localStorage.getItem(CLOUD_STORAGE_KEY);
-                if (cloudData) {
-                    globalDatabase = JSON.parse(cloudData);
-                }
-            } catch(e) {
-                console.error("Sync error:", e);
-            }
-            renderAllData();
-        }
-
-        function saveDatabase() {
-            try {
-                localStorage.setItem(CLOUD_STORAGE_KEY, JSON.stringify(globalDatabase));
-            } catch(e) {
-                console.error("Save error:", e);
-            }
-            renderAllData();
-        }
-
-        // تفعيل المزامنة التلقائية اللحظية لكل المستخدمين كل ثانيتين
-        setInterval(() => {
-            try {
-                const cloudData = localStorage.getItem(CLOUD_STORAGE_KEY);
-                if (cloudData) {
-                    const parsed = JSON.parse(cloudData);
-                    // تحديث صامت في الخلفية للبيانات لضمان ظهورها للجميع
-                    if (JSON.stringify(parsed) !== JSON.stringify(globalDatabase)) {
-                        globalDatabase = parsed;
-                        if (currentUser) {
-                            renderAllData();
-                        }
-                    }
-                }
-            } catch(e) {}
-        }, 2000);
 
         function checkAutoLogin() {
             loadDatabase();
@@ -1397,7 +1416,6 @@
             out.innerText = "🔒 الكود المشفر الناتج: " + encoded;
         }
 
-        // إضافات واجهة تخطيط العصابات (Nodes / Canvas Drawing Helpers)
         function renderNodeElement(nodeData) {
             const world = document.getElementById("gangCanvasInnerWorld");
             if (!world) return;
@@ -1440,7 +1458,6 @@
             world.appendChild(el);
             updateConnectedSvgLines();
         }
-
         function setupNodeInteractions(el) {
             el.addEventListener('mousedown', (e) => {
                 if (e.button === 2) return;
@@ -1502,7 +1519,6 @@
                 window.addEventListener('mouseup', onMouseUp);
             });
         }
-
         function toggleLinkingMode() {
             isLinkingMode = !isLinkingMode;
             linkSourceNodeId = null;
@@ -1516,7 +1532,6 @@
                 document.querySelectorAll('.selected-element').forEach(n => n.classList.remove('selected-element'));
             }
         }
-
         function updateConnectedSvgLines() {
             const svg = document.getElementById("svgCanvas");
             if (!svg) return;
@@ -1547,7 +1562,6 @@
                 }
             });
         }
-
         function attachImageToSelectedNode() {
             if (!selectedElementForDeletion) {
                 return alert("الرجاء تحديد مربع أو عنصر أولاً!");
@@ -1562,7 +1576,6 @@
             setupNodeInteractions(selectedElementForDeletion);
             alert("✅ تم تعيين الصورة للعنصر بنجاح!");
         }
-
         function zoomCanvas(delta) {
             currentZoomScale = Math.min(2.0, Math.max(0.3, currentZoomScale + delta));
             updateZoomDisplay();
@@ -1580,7 +1593,6 @@
                 lbl.innerText = Math.round(currentZoomScale * 100) + '%';
             }
         }
-
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Delete' && selectedElementForDeletion && isModalOpen === false) {
                 selectedElementForDeletion.remove();
@@ -1588,7 +1600,6 @@
                 updateConnectedSvgLines();
             }
         });
-
         window.onload = function() {
             checkAutoLogin();
         };
