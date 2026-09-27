@@ -397,7 +397,7 @@
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
                 <h3 style="color:var(--gold-color); margin:0;">💬 غرف التواصل المباشر بين الوكلاء</h3>
-                <button id="clearAllChatBtn" class="btn-del-item" style="display:none; padding: 6px 12px; font-size: 11px;" onclick="clearAllChatMessages()">🗑️ مسح جميع الرسائل (مدير)</button>
+                <button id="clearAllChatBtn" class="btn-del-item" style="display:none; padding: 6px 12px; font-size: 11px;" onclick="clearAllChatMessages()">🗑️ مسح جميع الرسائل (إدارة)</button>
             </div>
             <div class="chat-box-container" id="chatMessagesBox"></div>
             <div style="display:flex; gap:10px;">
@@ -409,20 +409,12 @@
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-top:0;">👑 مركز إدارة التراخيص والسرية والحسابات</h3>
             <div style="background: rgba(4, 6, 10, 0.6); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 20px;">
-                <h4 style="color:var(--accent-color); margin-bottom: 10px; font-size: 13px;">➕ إضافة حساب جديد للنظام</h4>
+                <h4 style="color:var(--accent-color); margin-bottom: 10px; font-size: 13px;">➕ إضافة حساب جديد للنظام (يُمنح رتبة CIA Member تلقائياً)</h4>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
                     <div class="input-group"><label>اسم الوكيل</label><input type="text" id="new-username" placeholder="Username"></div>
                     <div class="input-group"><label>المعرف (Badge ID)</label><input type="text" id="new-id" placeholder="CIA-709"></div>
                     <div class="input-group"><label>كلمة المرور</label><input type="text" id="new-password" placeholder="Passcode"></div>
                     <div class="input-group"><label>رمز PIN</label><input type="text" id="new-pin" placeholder="PIN"></div>
-                    <div class="input-group">
-                        <label>الرتبة الرئيسية</label>
-                        <select id="new-role">
-                            <option value="Director">Director</option>
-                            <option value="Deputy Director">Deputy Director</option>
-                            <option value="CIA Member" selected>CIA Member</option>
-                        </select>
-                    </div>
                 </div>
                 <div style="margin-top: 10px; display:flex; gap: 15px; align-items:center; flex-wrap:wrap;">
                     <label style="color:var(--gold-color); font-size:11px; font-weight:bold;">الدورات / الـ Wings الإضافية:</label>
@@ -1501,46 +1493,66 @@
             const container = document.getElementById("admin-users-cards-list");
             if (!container) return;
             container.innerHTML = "";
+            
+            const currentUserData = globalDatabase.users[currentUser] || {};
+            const isDeputy = currentUserData.role === "Deputy Director";
+            
             Object.keys(globalDatabase.users || {}).forEach(username => {
                 const u = globalDatabase.users[username];
+                
+                // إذا كان المستخدم الحالي Deputy Director والشخص المستهدف Director، نمنع تعديله بالكامل
+                const isTargetDirector = u.role === "Director";
+                const isDisabledForDeputy = isDeputy && isTargetDirector;
+                
                 let wingsHtml = "";
                 ['CID', 'FIELD AGENT', 'SOG - 71'].forEach(w => {
                     const checked = (u.wings && u.wings.includes(w)) ? 'checked' : '';
-                    wingsHtml += `<label style="font-size:11px; margin-left:8px; cursor:pointer;"><input type="checkbox" id="edit-wing-${username}-${w}" ${checked}> ${w}</label>`;
+                    wingsHtml += `<label style="font-size:11px; margin-left:8px; cursor:pointer;"><input type="checkbox" id="edit-wing-${username}-${w}" ${checked} ${isDisabledForDeputy ? 'disabled' : ''}> ${w}</label>`;
                 });
                 
+                let roleSelectHtml = "";
+                if (currentUserData.role === "Director") {
+                    roleSelectHtml = `
+                        <select id="edit-role-${username}" style="padding:6px; font-size:12px;">
+                            <option value="Director" ${u.role==='Director'?'selected':''}>Director</option>
+                            <option value="Deputy Director" ${u.role==='Deputy Director'?'selected':''}>Deputy Director</option>
+                            <option value="CIA Member" ${u.role==='CIA Member'?'selected':''}>CIA Member</option>
+                        </select>
+                    `;
+                } else {
+                    // Deputy Director لا يمكنه تغيير رتبة أحد
+                    roleSelectHtml = `<input type="text" value="${u.role}" disabled style="padding:6px; font-size:12px; background:rgba(255,255,255,0.05); color:#94a3b8;">`;
+                }
+
                 container.innerHTML += `
-                    <div style="background: rgba(4, 6, 10, 0.85); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px;">
+                    <div style="background: rgba(4, 6, 10, 0.85); border: 1px solid ${isDisabledForDeputy ? 'rgba(217,4,41,0.4)' : 'var(--border-color)'}; border-radius: 8px; padding: 15px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; opacity: ${isDisabledForDeputy ? '0.75' : '1'};">
                         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
                             <div>
                                 <b style="color:var(--gold-color); font-size:14px;">${username}</b> 
                                 <span style="font-size:11px; color:var(--text-muted);">(${u.id || 'N/A'})</span>
+                                ${isDisabledForDeputy ? '<span style="color:var(--danger-color); font-size:10px; margin-right:8px;">[محمي - Director]</span>' : ''}
                             </div>
                             <div style="display:flex; gap:8px;">
-                                <button class="btn-edit-item" onclick="saveAdminUserEdit('${username}')">حفظ التعديلات 💾</button>
-                                <button class="btn-del-item" onclick="deleteAdminUser('${username}')">حذف الحساب 🗑️</button>
+                                ${!isDisabledForDeputy ? `<button class="btn-edit-item" onclick="saveAdminUserEdit('${username}')">حفظ التعديلات 💾</button>` : ''}
+                                ${!isDisabledForDeputy ? `<button class="btn-del-item" onclick="deleteAdminUser('${username}')">حذف الحساب 🗑️</button>` : '<span style="font-size:10px; color:var(--text-muted);">لا يمكن الحذف</span>'}
                             </div>
                         </div>
                         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:10px;">
                             <div>
                                 <label style="font-size:10px; color:var(--accent-color);">كلمة المرور:</label>
-                                <input type="text" id="edit-pass-${username}" value="${u.password || ''}" style="padding:6px; font-size:12px;">
+                                <input type="text" id="edit-pass-${username}" value="${u.password || ''}" ${isDisabledForDeputy ? 'disabled' : ''} style="padding:6px; font-size:12px;">
                             </div>
                             <div>
                                 <label style="font-size:10px; color:var(--accent-color);">رمز PIN:</label>
-                                <input type="text" id="edit-pin-${username}" value="${u.pin || ''}" style="padding:6px; font-size:12px;">
+                                <input type="text" id="edit-pin-${username}" value="${u.pin || ''}" ${isDisabledForDeputy ? 'disabled' : ''} style="padding:6px; font-size:12px;">
                             </div>
                             <div>
                                 <label style="font-size:10px; color:var(--accent-color);">المعرف (Badge ID):</label>
-                                <input type="text" id="edit-id-${username}" value="${u.id || ''}" style="padding:6px; font-size:12px;">
+                                <input type="text" id="edit-id-${username}" value="${u.id || ''}" ${isDisabledForDeputy ? 'disabled' : ''} style="padding:6px; font-size:12px;">
                             </div>
                             <div>
                                 <label style="font-size:10px; color:var(--accent-color);">الرتبة الرئيسية:</label>
-                                <select id="edit-role-${username}" style="padding:6px; font-size:12px;">
-                                    <option value="Director" ${u.role==='Director'?'selected':''}>Director</option>
-                                    <option value="Deputy Director" ${u.role==='Deputy Director'?'selected':''}>Deputy Director</option>
-                                    <option value="CIA Member" ${u.role==='CIA Member'?'selected':''}>CIA Member</option>
-                                </select>
+                                ${roleSelectHtml}
                             </div>
                         </div>
                         <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:5px; background:rgba(0,0,0,0.3); padding:8px; border-radius:4px;">
@@ -1554,14 +1566,26 @@
         function saveAdminUserEdit(username) {
             loadDatabase();
             if (!globalDatabase.users[username]) return;
+            
+            const currentUserData = globalDatabase.users[currentUser] || {};
+            if (currentUserData.role === "Deputy Director" && globalDatabase.users[username].role === "Director") {
+                return alert("⚠️ عذراً، لا يمكنك التعديل على حساب ذو رتبة Director!");
+            }
+
             const pass = document.getElementById(`edit-pass-${username}`).value.trim();
             const pin = document.getElementById(`edit-pin-${username}`).value.trim();
             const id = document.getElementById(`edit-id-${username}`).value.trim();
-            const role = document.getElementById(`edit-role-${username}`).value;
+            
+            let role = globalDatabase.users[username].role;
+            const roleSelect = document.getElementById(`edit-role-${username}`);
+            if (roleSelect && currentUserData.role === "Director") {
+                role = roleSelect.value;
+            }
             
             let wings = [];
             ['CID', 'FIELD AGENT', 'SOG - 71'].forEach(w => {
-                if (document.getElementById(`edit-wing-${username}-${w}`).checked) {
+                const el = document.getElementById(`edit-wing-${username}-${w}`);
+                if (el && el.checked) {
                     wings.push(w);
                 }
             });
@@ -1578,8 +1602,15 @@
         }
         function deleteAdminUser(username) {
             if (username === currentUser) return alert("لا يمكنك حذف حسابك الشخصي وأنت مسجل الدخول به!");
+            loadDatabase();
+            const targetUser = globalDatabase.users[username];
+            const currentUserData = globalDatabase.users[currentUser] || {};
+            
+            if (currentUserData.role === "Deputy Director" && targetUser && targetUser.role === "Director") {
+                return alert("⚠️ عذراً، لا يمكنك حذف حساب يحمل رتبة Director!");
+            }
+
             if (confirm(`⚠️ هل أنت متأكد من حذف حساب الوكيل (${username}) نهائياً؟`)) {
-                loadDatabase();
                 delete globalDatabase.users[username];
                 saveDatabase();
                 renderAdminUsersCards();
@@ -1591,7 +1622,9 @@
             const id = document.getElementById("new-id").value.trim();
             const password = document.getElementById("new-password").value.trim();
             const pin = document.getElementById("new-pin").value.trim();
-            const role = document.getElementById("new-role").value;
+            
+            // عند إنشاء حساب جديد، يتم تثبيت الرتبة تلقائياً على CIA Member لمنع منح الرتب عند الإضافة
+            const role = "CIA Member";
             
             let wings = [];
             if (document.getElementById("new-wing-cid").checked) wings.push("CID");
@@ -1603,7 +1636,7 @@
             if (!globalDatabase.users) globalDatabase.users = {};
             globalDatabase.users[username] = { password, pin, id: id || "CIA-777", role, wings };
             saveDatabase();
-            alert(`✅ تم إنشاء حساب الوكيل (${username}) بنجاح!`);
+            alert(`✅ تم إنشاء حساب الوكيل (${username}) برتبة CIA Member بنجاح!`);
             document.getElementById("new-username").value = "";
             document.getElementById("new-id").value = "";
             document.getElementById("new-password").value = "";
