@@ -540,7 +540,7 @@
                 <div style="font-size: 9px; color: var(--text-muted); line-height: 1.3; margin-top: 2px;">
                     💡 <b>الرسم:</b> اضغط زر الرسم واسحب بالماوس.<br>
                     🖱️ <b>التحريك:</b> بالزر الأيمن واسحب.<br>
-                    🗑️ <b>الحذف:</b> انقر على العنصر ثم اضغط <b>Delete</b> من الكيبورد.<br>
+                    🗑️ <b>الحذف:</b> انقر على العنصر ثم اضغط <b>Delete</b> من لوحة المفاتيح.<br>
                     🔘 <b>إلغاء التحديد:</b> اضغط على أي مساحة فارغة في الخلفية.
                 </div>
                 
@@ -644,7 +644,6 @@
 
         if (canvasArea) {
             canvasArea.addEventListener('mousedown', (e) => {
-                // إلغاء التحديد عند النقر على المساحة الفارغة في الخلفية
                 if (e.target === canvasArea || e.target === canvasInnerWorld || e.target.id === 'svgCanvas') {
                     document.querySelectorAll('.selected-element').forEach(n => n.classList.remove('selected-element'));
                     selectedElementForDeletion = null;
@@ -1658,16 +1657,20 @@
             }
         }
         
-        // --- تفعيل الحذف بزر Delete من لوحة المفاتيح عند تحديد العنصر في شجرة العصابات ---
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Delete' && selectedElementForDeletion && isModalOpen === false && currentEditingGangId !== null) {
-                // منع الحذف إذا كان المستخدم يكتب نصاً داخل حقل أو داخل مربع التعديل
-                if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA' || document.activeElement.classList.contains('node-content-editable')) {
+        // --- تعديل شامل للاستماع لزر Delete وحذف العنصر المحدد بسلاسة ---
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Delete' && currentEditingGangId !== null && isModalOpen === false) {
+                // إذا كان المستخدم يكتب نصاً داخل حقل أو خانة تعديل نص، لا تحذف العنصر
+                if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA' || document.activeElement.classList.contains('node-content-editable'))) {
                     return;
                 }
-                selectedElementForDeletion.remove();
-                selectedElementForDeletion = null;
-                updateConnectedSvgLines();
+                
+                if (selectedElementForDeletion && document.body.contains(selectedElementForDeletion)) {
+                    selectedElementForDeletion.remove();
+                    selectedElementForDeletion = null;
+                    updateConnectedSvgLines();
+                    e.preventDefault();
+                }
             }
         });
 
