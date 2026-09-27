@@ -62,13 +62,16 @@
         .sync-status { font-size: 11px; color: var(--success-color); margin-top: 10px; font-weight: bold; }
         
         #main-system { display: none; width: 100%; max-width: 1150px; position: relative; z-index: 10; }
-        .header-system { display: flex; justify-content: space-between; align-items: center; background: rgba(11, 16, 23, 0.85); padding: 18px 25px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 20px; }
-        .header-actions { display: flex; gap: 10px; align-items: center; }
+        .header-system { display: flex; justify-content: space-between; align-items: center; background: rgba(11, 16, 23, 0.85); padding: 18px 25px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+        .header-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
         .btn-chat-nav { background: rgba(0, 132, 255, 0.2); color: var(--accent-color); border: 1px solid var(--accent-color); padding: 8px 14px; border-radius: 5px; cursor: pointer; font-weight: 700; font-size: 12px; }
         .btn-leader-nav { background: rgba(23, 16, 4, 0.8); color: var(--gold-color); border: 1px solid var(--gold-color); padding: 8px 14px; border-radius: 5px; cursor: pointer; font-weight: 700; font-size: 12px; display: none; }
         .btn-logout { background: var(--danger-color); color: #fff; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; font-weight: 700; font-size: 12px; }
-        .badge { padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; background: var(--accent-color); color: #fff; }
-        .badge-leader { background: var(--gold-color); color: #000; }
+        
+        .badge { padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; background: var(--accent-color); color: #fff; display: inline-block; margin-left: 3px; }
+        .badge-director { background: var(--gold-color); color: #000; }
+        .badge-deputy { background: #d97706; color: #fff; }
+        .badge-wing { background: rgba(16, 185, 129, 0.2); border: 1px solid var(--success-color); color: #34d399; font-size: 9px; padding: 2px 6px; border-radius: 3px; }
         
         .folder-grid-panel { background: rgba(8, 13, 20, 0.8); border: 1px solid rgba(197, 160, 89, 0.3); padding: 30px; border-radius: 12px; margin-bottom: 20px; }
         .dashboard-header { display: flex; align-items: center; gap: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); margin-bottom: 25px; }
@@ -360,7 +363,8 @@
                 <h3 style="margin:0; color:var(--gold-color); font-size:18px;">🛡️ CIA SYSTEM | نظام التحكم والاستخبارات</h3>
                 <small style="color:#94a3b8;">
                     العضو: <span id="current-user-display" style="color:var(--accent-color); font-weight:bold;">Mutleq</span> 
-                    | الرتبة: <span id="current-role-display" class="badge">CID Member</span>
+                    | الرتبة: <span id="current-role-display" class="badge">CIA Member</span>
+                    <span id="current-wings-display"></span>
                 </small>
             </div>
             <div class="header-actions">
@@ -403,24 +407,34 @@
         </div>
         <div class="workspace-panel leader-panel" id="leaderSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            <h3 style="color:var(--gold-color); margin-top:0;">👑 مركز إدارة التراخيص والسرية</h3>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
-                <div class="input-group"><label>اسم الوكيل</label><input type="text" id="new-username" placeholder="Username"></div>
-                <div class="input-group"><label>المعرف (Badge ID)</label><input type="text" id="new-id" placeholder="CIA-709"></div>
-                <div class="input-group"><label>كلمة المرور</label><input type="text" id="new-password" placeholder="Passcode"></div>
-                <div class="input-group"><label>رمز PIN</label><input type="text" id="new-pin" placeholder="PIN"></div>
-                <div class="input-group">
-                    <label>الرتبة التشغيلية</label>
-                    <select id="new-role">
-                        <option value="SPECIAL AGENT">SPECIAL AGENT</option>
-                        <option value="CID Member">CID Member</option>
-                        <option value="FIELD AGENT">FIELD AGENT</option>
-                        <option value="DIRECTOR">DIRECTOR</option>
-                    </select>
+            <h3 style="color:var(--gold-color); margin-top:0;">👑 مركز إدارة التراخيص والسرية والحسابات</h3>
+            <div style="background: rgba(4, 6, 10, 0.6); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 20px;">
+                <h4 style="color:var(--accent-color); margin-bottom: 10px; font-size: 13px;">➕ إضافة حساب جديد للنظام</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
+                    <div class="input-group"><label>اسم الوكيل</label><input type="text" id="new-username" placeholder="Username"></div>
+                    <div class="input-group"><label>المعرف (Badge ID)</label><input type="text" id="new-id" placeholder="CIA-709"></div>
+                    <div class="input-group"><label>كلمة المرور</label><input type="text" id="new-password" placeholder="Passcode"></div>
+                    <div class="input-group"><label>رمز PIN</label><input type="text" id="new-pin" placeholder="PIN"></div>
+                    <div class="input-group">
+                        <label>الرتبة الرئيسية</label>
+                        <select id="new-role">
+                            <option value="Director">Director</option>
+                            <option value="Deputy Director">Deputy Director</option>
+                            <option value="CIA Member" selected>CIA Member</option>
+                        </select>
+                    </div>
                 </div>
+                <div style="margin-top: 10px; display:flex; gap: 15px; align-items:center; flex-wrap:wrap;">
+                    <label style="color:var(--gold-color); font-size:11px; font-weight:bold;">الدورات / الـ Wings الإضافية:</label>
+                    <label style="font-size:12px; cursor:pointer;"><input type="checkbox" id="new-wing-cid"> CID</label>
+                    <label style="font-size:12px; cursor:pointer;"><input type="checkbox" id="new-wing-field"> FIELD AGENT</label>
+                    <label style="font-size:12px; cursor:pointer;"><input type="checkbox" id="new-wing-sog"> SOG - 71</label>
+                </div>
+                <button class="btn-login" style="background:var(--success-color); margin-top:15px;" onclick="createAccount()">➕ إضافة الحساب فوراً</button>
             </div>
-            <button class="btn-login" style="background:var(--success-color);" onclick="createAccount()">➕ إضافة الحساب فوراً</button>
-            <div id="users-management-list" style="margin-top:20px;"></div>
+            
+            <h4 style="color:var(--gold-color); margin-bottom: 10px; font-size: 14px;">👥 إدارة حسابات الوكلاء المسجلين (تعديل / حذف / عرض كلمات المرور)</h4>
+            <div id="admin-users-cards-list"></div>
         </div>
         <div class="workspace-panel" id="reportsSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
@@ -491,10 +505,10 @@
         </div>
         <div class="workspace-panel" id="usersSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            <h3 style="color:var(--gold-color);">👥 قائمة الأعضاء المسجلين</h3>
+            <h3 style="color:var(--gold-color);">👥 قائمة الأعضاء المسجلين والـ Wings</h3>
             <div class="input-group"><input type="text" id="usersSearch" class="search-box" placeholder="🔍 بحث شامل في الأعضاء..." oninput="renderUsers()"></div>
             <table>
-                <thead><tr><th>اسم الوكيل</th><th>المعرف</th><th>الرتبة</th></tr></thead>
+                <thead><tr><th>اسم الوكيل</th><th>المعرف</th><th>الرتبة الرئيسية</th><th>الدورات والـ Wings</th></tr></thead>
                 <tbody id="users-table-body"></tbody>
             </table>
         </div>
@@ -582,8 +596,8 @@
     <script>
         let globalDatabase = {
             users: {
-                "Majed": { password: "1967", pin: "0000", id: "CIA-001", role: "DIRECTOR" },
-                "Mutleq": { password: "123", pin: "1234", id: "CIA-102", role: "CID Member" }
+                "Majed": { password: "1967", pin: "0000", id: "CIA-001", role: "Director", wings: ["CID", "FIELD AGENT", "SOG - 71"] },
+                "Mutleq": { password: "123", pin: "1234", id: "CIA-102", role: "CIA Member", wings: ["CID"] }
             },
             reports: [], wanted: [], records: [], gangs: [], chat: [], broadcast: "", logs: ["[SYSTEM READY]"]
         };
@@ -820,14 +834,26 @@
             document.getElementById("login-screen").style.display = "none";
             document.getElementById("main-system").style.display = "block";
             document.getElementById("current-user-display").innerText = user;
-            const isDirector = globalDatabase.users[user] && globalDatabase.users[user].role === "DIRECTOR";
-            document.getElementById("current-role-display").innerText = globalDatabase.users[user] ? globalDatabase.users[user].role : "Agent";
-            document.getElementById("current-role-display").className = isDirector ? "badge badge-leader" : "badge";
-            document.getElementById("btn-leader-toggle").style.display = isDirector ? "inline-block" : "none";
-            document.getElementById("btnEditBroadcast").style.display = isDirector ? "inline-block" : "none";
+            
+            const userData = globalDatabase.users[user] || { role: "CIA Member", wings: [] };
+            const isDirectorOrDeputy = userData.role === "Director" || userData.role === "Deputy Director";
+            
+            document.getElementById("current-role-display").innerText = userData.role;
+            document.getElementById("current-role-display").className = userData.role === "Director" ? "badge badge-director" : (userData.role === "Deputy Director" ? "badge badge-deputy" : "badge");
+            
+            let wingsHtml = "";
+            if (userData.wings && Array.isArray(userData.wings)) {
+                userData.wings.forEach(w => {
+                    wingsHtml += ` <span class="badge-wing">${w}</span>`;
+                });
+            }
+            document.getElementById("current-wings-display").innerHTML = wingsHtml;
+            
+            document.getElementById("btn-leader-toggle").style.display = isDirectorOrDeputy ? "inline-block" : "none";
+            document.getElementById("btnEditBroadcast").style.display = isDirectorOrDeputy ? "inline-block" : "none";
             
             const clearChatBtn = document.getElementById("clearAllChatBtn");
-            if (clearChatBtn) clearChatBtn.style.display = isDirector ? "inline-block" : "none";
+            if (clearChatBtn) clearChatBtn.style.display = isDirectorOrDeputy ? "inline-block" : "none";
 
             renderAllData();
             showHome();
@@ -845,6 +871,9 @@
             
             const target = document.getElementById(sectionId);
             if (target) target.style.display = "block";
+            if (sectionId === 'leaderSection') {
+                renderAdminUsersCards();
+            }
         }
         function showHome() {
             loadDatabase();
@@ -879,10 +908,11 @@
             const box = document.getElementById("chatMessagesBox");
             if (!box) return;
             box.innerHTML = "";
-            const isDirector = globalDatabase.users[currentUser] && globalDatabase.users[currentUser].role === "DIRECTOR";
+            const userData = globalDatabase.users[currentUser] || {};
+            const isDirectorOrDeputy = userData.role === "Director" || userData.role === "Deputy Director";
             
             (globalDatabase.chat || []).forEach(m => {
-                const canModify = (m.user === currentUser) || isDirector;
+                const canModify = (m.user === currentUser) || isDirectorOrDeputy;
                 let actionsHtml = '';
                 if (canModify) {
                     actionsHtml = `
@@ -930,8 +960,9 @@
             }
         }
         function clearAllChatMessages() {
-            const isDirector = globalDatabase.users[currentUser] && globalDatabase.users[currentUser].role === "DIRECTOR";
-            if (!isDirector) return alert("هذا الإجراء مخصص لمدير النظام فقط!");
+            const userData = globalDatabase.users[currentUser] || {};
+            const isDirectorOrDeputy = userData.role === "Director" || userData.role === "Deputy Director";
+            if (!isDirectorOrDeputy) return alert("هذا الإجراء مخصص للإدارة فقط!");
             if (confirm("⚠️ تحذير: هل تريد مسح جميع رسائل الدردشة الحالية نهائياً؟")) {
                 loadDatabase();
                 globalDatabase.chat = [];
@@ -1457,10 +1488,104 @@
             Object.keys(globalDatabase.users || {}).forEach(username => {
                 const u = globalDatabase.users[username];
                 if (username.toLowerCase().includes(query) || (u.id && u.id.toLowerCase().includes(query)) || (u.role && u.role.toLowerCase().includes(query))) {
-                    tbody.innerHTML += `<tr><td><b>${username}</b></td><td>${u.id || 'N/A'}</td><td><span class="${u.role === 'DIRECTOR' ? 'badge badge-leader' : 'badge'}">${u.role}</span></td></tr>`;
+                    let wingsStr = "";
+                    if (u.wings && Array.isArray(u.wings)) {
+                        u.wings.forEach(w => { wingsStr += `<span class="badge-wing">${w}</span> `; });
+                    }
+                    tbody.innerHTML += `<tr><td><b>${username}</b></td><td>${u.id || 'N/A'}</td><td><span class="${u.role === 'Director' ? 'badge badge-director' : (u.role === 'Deputy Director' ? 'badge badge-deputy' : 'badge')}">${u.role}</span></td><td>${wingsStr || '-'}</td></tr>`;
                 }
             });
         }
+        
+        function renderAdminUsersCards() {
+            const container = document.getElementById("admin-users-cards-list");
+            if (!container) return;
+            container.innerHTML = "";
+            Object.keys(globalDatabase.users || {}).forEach(username => {
+                const u = globalDatabase.users[username];
+                let wingsHtml = "";
+                ['CID', 'FIELD AGENT', 'SOG - 71'].forEach(w => {
+                    const checked = (u.wings && u.wings.includes(w)) ? 'checked' : '';
+                    wingsHtml += `<label style="font-size:11px; margin-left:8px; cursor:pointer;"><input type="checkbox" id="edit-wing-${username}-${w}" ${checked}> ${w}</label>`;
+                });
+                
+                container.innerHTML += `
+                    <div style="background: rgba(4, 6, 10, 0.85); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                            <div>
+                                <b style="color:var(--gold-color); font-size:14px;">${username}</b> 
+                                <span style="font-size:11px; color:var(--text-muted);">(${u.id || 'N/A'})</span>
+                            </div>
+                            <div style="display:flex; gap:8px;">
+                                <button class="btn-edit-item" onclick="saveAdminUserEdit('${username}')">حفظ التعديلات 💾</button>
+                                <button class="btn-del-item" onclick="deleteAdminUser('${username}')">حذف الحساب 🗑️</button>
+                            </div>
+                        </div>
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:10px;">
+                            <div>
+                                <label style="font-size:10px; color:var(--accent-color);">كلمة المرور:</label>
+                                <input type="text" id="edit-pass-${username}" value="${u.password || ''}" style="padding:6px; font-size:12px;">
+                            </div>
+                            <div>
+                                <label style="font-size:10px; color:var(--accent-color);">رمز PIN:</label>
+                                <input type="text" id="edit-pin-${username}" value="${u.pin || ''}" style="padding:6px; font-size:12px;">
+                            </div>
+                            <div>
+                                <label style="font-size:10px; color:var(--accent-color);">المعرف (Badge ID):</label>
+                                <input type="text" id="edit-id-${username}" value="${u.id || ''}" style="padding:6px; font-size:12px;">
+                            </div>
+                            <div>
+                                <label style="font-size:10px; color:var(--accent-color);">الرتبة الرئيسية:</label>
+                                <select id="edit-role-${username}" style="padding:6px; font-size:12px;">
+                                    <option value="Director" ${u.role==='Director'?'selected':''}>Director</option>
+                                    <option value="Deputy Director" ${u.role==='Deputy Director'?'selected':''}>Deputy Director</option>
+                                    <option value="CIA Member" ${u.role==='CIA Member'?'selected':''}>CIA Member</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:5px; background:rgba(0,0,0,0.3); padding:8px; border-radius:4px;">
+                            <span style="font-size:11px; color:var(--gold-color); font-weight:bold;">الدورات والـ Wings:</span>
+                            ${wingsHtml}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        function saveAdminUserEdit(username) {
+            loadDatabase();
+            if (!globalDatabase.users[username]) return;
+            const pass = document.getElementById(`edit-pass-${username}`).value.trim();
+            const pin = document.getElementById(`edit-pin-${username}`).value.trim();
+            const id = document.getElementById(`edit-id-${username}`).value.trim();
+            const role = document.getElementById(`edit-role-${username}`).value;
+            
+            let wings = [];
+            ['CID', 'FIELD AGENT', 'SOG - 71'].forEach(w => {
+                if (document.getElementById(`edit-wing-${username}-${w}`).checked) {
+                    wings.push(w);
+                }
+            });
+            
+            globalDatabase.users[username].password = pass;
+            globalDatabase.users[username].pin = pin;
+            globalDatabase.users[username].id = id;
+            globalDatabase.users[username].role = role;
+            globalDatabase.users[username].wings = wings;
+            
+            saveDatabase();
+            showToast();
+            renderAdminUsersCards();
+        }
+        function deleteAdminUser(username) {
+            if (username === currentUser) return alert("لا يمكنك حذف حسابك الشخصي وأنت مسجل الدخول به!");
+            if (confirm(`⚠️ هل أنت متأكد من حذف حساب الوكيل (${username}) نهائياً؟`)) {
+                loadDatabase();
+                delete globalDatabase.users[username];
+                saveDatabase();
+                renderAdminUsersCards();
+            }
+        }
+
         function createAccount() {
             const username = document.getElementById("new-username").value.trim();
             const id = document.getElementById("new-id").value.trim();
@@ -1468,16 +1593,25 @@
             const pin = document.getElementById("new-pin").value.trim();
             const role = document.getElementById("new-role").value;
             
+            let wings = [];
+            if (document.getElementById("new-wing-cid").checked) wings.push("CID");
+            if (document.getElementById("new-wing-field").checked) wings.push("FIELD AGENT");
+            if (document.getElementById("new-wing-sog").checked) wings.push("SOG - 71");
+            
             if (!username || !password || !pin) return alert("الرجاء تعبئة بيانات الحساب الكاملة!");
             loadDatabase();
             if (!globalDatabase.users) globalDatabase.users = {};
-            globalDatabase.users[username] = { password, pin, id: id || "CIA-777", role };
+            globalDatabase.users[username] = { password, pin, id: id || "CIA-777", role, wings };
             saveDatabase();
             alert(`✅ تم إنشاء حساب الوكيل (${username}) بنجاح!`);
             document.getElementById("new-username").value = "";
             document.getElementById("new-id").value = "";
             document.getElementById("new-password").value = "";
             document.getElementById("new-pin").value = "";
+            document.getElementById("new-wing-cid").checked = false;
+            document.getElementById("new-wing-field").checked = false;
+            document.getElementById("new-wing-sog").checked = false;
+            renderAdminUsersCards();
         }
         function decryptMsg() {
             const val = document.getElementById("cipherText").value.trim();
