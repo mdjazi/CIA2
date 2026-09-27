@@ -86,7 +86,6 @@
         .workspace-panel { display: none; background: rgba(11, 16, 23, 0.85); border: 1px solid var(--border-color); border-radius: 10px; padding: 25px; margin-bottom: 20px; }
         .btn-back { background: rgba(4, 6, 10, 0.8); color: var(--text-color); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-bottom: 20px; font-weight: bold; font-size: 12px; position: relative; z-index: 5; }
         
-        /* 🖼️ خلفية قسم التشفير بصورة المقصورة */
         .tactical-cockpit-wrapper {
             position: relative;
             background: url('Gemini_Generated_Image_v6rzjev6rzjev6rz.jpg') no-repeat center center;
@@ -103,11 +102,7 @@
             align-items: center;
         }
         .tactical-cockpit-wrapper::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(3, 6, 10, 0.4);
-            z-index: 1;
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(3, 6, 10, 0.4); z-index: 1;
         }
         
         .data-injection-header { text-align: center; margin-bottom: 15px; position: relative; z-index: 2; }
@@ -139,28 +134,14 @@
         .btn-silver-hw { background: #64748b; }
         .btn-blue-hw { background: #0284c7; box-shadow: 0 0 8px rgba(2, 132, 199, 0.5); }
 
-        /* 🎛️ تصميم جديد ومرتب لإدخال بيانات العصابة */
         .gang-entry-container {
-            background: rgba(6, 11, 18, 0.95);
-            border: 1px solid var(--gold-color);
-            border-radius: 12px;
-            padding: 22px;
-            box-shadow: 0 0 30px rgba(197, 160, 89, 0.15);
+            background: rgba(6, 11, 18, 0.95); border: 1px solid var(--gold-color); border-radius: 12px; padding: 22px; box-shadow: 0 0 30px rgba(197, 160, 89, 0.15);
         }
-        .gang-entry-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border-bottom: 1px dashed rgba(197, 160, 89, 0.4);
-            padding-bottom: 12px;
-            margin-bottom: 18px;
-        }
+        .gang-entry-header { display: flex; align-items: center; gap: 12px; border-bottom: 1px dashed rgba(197, 160, 89, 0.4); padding-bottom: 12px; margin-bottom: 18px; }
         .gang-entry-header span { font-size: 26px; }
         .gang-entry-title { color: var(--gold-color); font-size: 16px; font-weight: 800; }
         .gang-entry-field { margin-bottom: 15px; }
-        .gang-entry-field label {
-            display: block; font-size: 11px; color: var(--gold-color); font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;
-        }
+        .gang-entry-field label { display: block; font-size: 11px; color: var(--gold-color); font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px; }
         .gang-entry-field input, .gang-entry-field textarea {
             width: 100%; background: rgba(3, 6, 10, 0.9); border: 1px solid rgba(197, 160, 89, 0.5); border-radius: 6px; color: #fff; padding: 10px 12px; font-size: 13px; outline: none; transition: border 0.2s;
         }
@@ -205,6 +186,8 @@
         
         .drawio-tool-btn { background: rgba(197, 160, 89, 0.15); color: var(--gold-color); border: 1px solid var(--gold-color); padding: 8px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: bold; text-align: right; }
         .drawio-tool-btn:hover { background: rgba(197, 160, 89, 0.3); }
+        .drawio-tool-btn.active-linking { background: var(--accent-color) !important; color: #fff !important; animation: blinkLink 1s infinite alternate; }
+        @keyframes blinkLink { 0% { box-shadow: 0 0 5px #0084ff; } 100% { box-shadow: 0 0 20px #0084ff; } }
         
         .draggable-node { 
             position: absolute; min-width: 150px; min-height: 50px; padding: 12px; border-radius: 6px; cursor: move; user-select: none; 
@@ -225,6 +208,13 @@
         
         .node-content-editable { outline: none; width: 100%; height: auto; word-break: break-word; overflow-wrap: break-word; overflow: visible; white-space: pre-wrap; }
         .node-line { position: absolute; background: var(--gold-color); cursor: move; user-select: none; z-index: 20; min-width: 30px; min-height: 4px; border-radius: 2px; transform-origin: left center; }
+        
+        /* 🔗 تصميم خطوط الربط الحية الذكية بين المربعات */
+        .connected-svg-line { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
+        .connected-svg-line line { stroke: var(--gold-color); stroke-width: 3; stroke-dasharray: 4 2; pointer-events: visibleStroke; cursor: pointer; transition: stroke 0.2s; }
+        .connected-svg-line line:hover { stroke: #00d2ff; stroke-width: 5; }
+        .connected-svg-line line.selected-line { stroke: var(--success-color); stroke-width: 5; stroke-dasharray: none; filter: drop-shadow(0 0 8px var(--success-color)); }
+
         .selected-element { outline: 2px dashed var(--success-color) !important; box-shadow: 0 0 15px var(--success-color) !important; z-index: 100 !important; }
         
         .node-resize-handle-right { position: absolute; right: -6px; top: 50%; transform: translateY(-50%); width: 12px; height: 24px; background: var(--success-color); border-radius: 4px; cursor: ew-resize; z-index: 50; display: none; border: 1px solid #fff; }
@@ -382,7 +372,6 @@
             <div id="gangs-list" class="folder-grid" style="grid-template-columns: repeat(3, 1fr);"></div>
         </div>
 
-        <!-- 🔓 قسم التشفير وفك التشفير -->
         <div class="workspace-panel" id="casesSection" style="background: transparent; border: none; padding: 0;">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             
@@ -455,7 +444,7 @@
         </div>
     </div>
     
-    <!-- 🏴‍☠️ الشاشة الكاملة لتعديل شجرة العصابة ومجهزة بزر الحذف -->
+    <!-- 🏴‍☠️ شاشة العصابات الشاملة مع نظام شبكة الربط الذكية -->
     <div class="gang-fullscreen-overlay" id="gangFullscreenModal">
         <div class="gang-fullscreen-header">
             <div style="display:flex; align-items:center; gap:8px;">
@@ -473,11 +462,14 @@
                 <button class="drawio-tool-btn" onclick="spawnNode('rect')">▭ مستطيل جديد</button>
                 <button class="drawio-tool-btn" onclick="spawnNode('circle')">⭕ دائرة جديدة</button>
                 <button class="drawio-tool-btn" onclick="spawnNode('text')">💬 نص كتابي حر</button>
-                <button class="drawio-tool-btn" style="background:rgba(197,160,89,0.3); border-color:var(--gold-color);" onclick="spawnLine()">➖ خط مستقيم جديد</button>
+                <button class="drawio-tool-btn" style="background:rgba(197,160,89,0.3); border-color:var(--gold-color);" onclick="spawnLine()">➖ خط منفصل حر</button>
+                
+                <!-- 🔗 زر الربط التفاعلي المباشر -->
+                <button class="drawio-tool-btn" id="btnLinkNodes" style="background:rgba(0, 132, 255, 0.25); border-color:#0084ff; color:#38bdf8;" onclick="toggleLinkingMode()">🔗 ربط عنصرين ببعض (شبكة)</button>
                 
                 <div style="font-size: 10px; color: var(--text-muted); line-height: 1.4; margin-top: 5px;">
-                    💡 <b>التحكم بالحجم:</b> انقر على المربع/الدائرة لتظهر مقابض التحجيم واسحبها لتغيير الطول والعرض!<br>
-                    🗑️ <b>الحذف:</b> انقر على العنصر واضغط <b>Delete</b>.
+                    💡 <b>كيفية الربط:</b> اضغط زر (🔗 ربط عنصرين)، ثم انقر على العنصر الأول (مثلاً الرئيس)، ثم انقر على العنصر الثاني (العضو) ليتم شبك الخط بينهما تلقائياً!<br>
+                    🗑️ <b>الحذف:</b> انقر على المربع أو خط الربط واضغط <b>Delete</b>.
                 </div>
                 
                 <h5 style="color: var(--gold-color); font-size: 12px; margin-top: 15px; margin-bottom: 5px;">📋 نبذة العصابة</h5>
@@ -487,10 +479,11 @@
                 
                 <hr style="border: 0; border-top: 1px dashed rgba(217, 4, 41, 0.4); margin: 15px 0 5px 0;">
                 
-                <!-- 🗑️ زر الحذف المضاف للوحة الشاملة -->
                 <button class="btn-login" style="background: var(--danger-color); padding: 9px; font-size: 11px; margin-top: 5px;" onclick="deleteGangFromEditor()">🗑️ حذف العصابة نهائياً</button>
             </div>
             <div class="gang-canvas-area" id="gangCanvasArea">
+                <!-- SVG Canvas لرسم الخطوط الحية -->
+                <svg class="connected-svg-line" id="svgCanvas"></svg>
             </div>
         </div>
     </div>
@@ -522,6 +515,12 @@
         let isModalOpen = false;
         let currentEditingGangId = null;
         let selectedElementForDeletion = null;
+        
+        /* متغيرات الربط الشبكي التفاعلي */
+        let isLinkingMode = false;
+        let linkSourceNodeId = null;
+        let connectedLinks = []; 
+
         async function fetchCloudData() {
             if (isSaving || isModalOpen) return;
             try {
@@ -1010,7 +1009,8 @@
                     id: Date.now(), 
                     name, 
                     details: document.getElementById("popGangDetails").value.trim(),
-                    nodes: [] 
+                    nodes: [],
+                    links: [] 
                 });
                 await saveCloudData(); closeModal();
             });
@@ -1021,6 +1021,10 @@
             if (!g) return;
             currentEditingGangId = g.id;
             selectedElementForDeletion = null;
+            isLinkingMode = false;
+            linkSourceNodeId = null;
+            document.getElementById("btnLinkNodes").classList.remove("active-linking");
+            document.getElementById("btnLinkNodes").innerText = "🔗 ربط عنصرين ببعض (شبكة)";
             
             document.getElementById("fullscreenGangTitleInput").value = g.name;
             document.getElementById("fullscreenGangDetails").value = g.details || '';
@@ -1029,23 +1033,29 @@
             const existingNodes = area.querySelectorAll('.draggable-node, .node-line');
             existingNodes.forEach(node => node.remove());
             
+            connectedLinks = g.links || [];
+            
             if (g.nodes && Array.isArray(g.nodes) && g.nodes.length > 0) {
                 g.nodes.forEach(nodeData => renderNodeElement(nodeData));
             } else {
-                renderNodeElement({ id: 'node_' + Date.now() + 1, type: 'circle', text: '👑 القائد', x: 250, y: 60, width: 130, height: 130, angle: 0 });
-                renderNodeElement({ id: 'node_' + Date.now() + 2, type: 'rect', text: 'مسؤول العمليات', x: 120, y: 220, width: 160, height: 60, angle: 0 });
-                renderNodeElement({ id: 'node_' + Date.now() + 3, type: 'line', text: '', x: 200, y: 180, width: 150, height: 4, angle: 0 });
+                const n1 = 'node_' + Date.now() + 1;
+                const n2 = 'node_' + Date.now() + 2;
+                renderNodeElement({ id: n1, type: 'circle', text: '👑 القائد', x: 250, y: 60, width: 130, height: 130, angle: 0 });
+                renderNodeElement({ id: n2, type: 'rect', text: 'مسؤول العمليات', x: 235, y: 230, width: 160, height: 60, angle: 0 });
+                connectedLinks = [{ id: 'link_' + Date.now(), from: n1, to: n2 }];
             }
             
+            updateConnectedSvgLines();
             document.getElementById("gangFullscreenModal").style.display = "flex";
         }
         function closeGangFullscreen() {
             document.getElementById("gangFullscreenModal").style.display = "none";
             currentEditingGangId = null;
             selectedElementForDeletion = null;
+            isLinkingMode = false;
+            linkSourceNodeId = null;
         }
 
-        /* 🗑️ وظيفة حذف العصابة نهائياً من داخل محرر العصابة */
         async function deleteGangFromEditor() {
             if (!currentEditingGangId) return;
             const g = globalDatabase.gangs.find(item => item.id === currentEditingGangId);
@@ -1056,6 +1066,20 @@
                 await saveCloudData();
                 closeGangFullscreen();
                 alert("✅ تم حذف ملف العصابة بنجاح!");
+            }
+        }
+
+        /* 🔗 نظام إدارة وضع الربط الشبكي التفاعلي */
+        function toggleLinkingMode() {
+            isLinkingMode = !isLinkingMode;
+            linkSourceNodeId = null;
+            const btn = document.getElementById("btnLinkNodes");
+            if (isLinkingMode) {
+                btn.classList.add("active-linking");
+                btn.innerText = "🎯 انقر على العنصر الأول (المرسل)...";
+            } else {
+                btn.classList.remove("active-linking");
+                btn.innerText = "🔗 ربط عنصرين ببعض (شبكة)";
             }
         }
 
@@ -1085,6 +1109,7 @@
             };
             renderNodeElement(lineData);
         }
+
         function renderNodeElement(data) {
             const area = document.getElementById("gangCanvasArea");
             const div = document.createElement("div");
@@ -1110,10 +1135,7 @@
                 const handle = div.querySelector('.line-resize-handle');
                 let isResizing = false, startX, startWidth;
                 handle.addEventListener('mousedown', (e) => {
-                    isResizing = true;
-                    startX = e.clientX;
-                    startWidth = div.offsetWidth;
-                    e.stopPropagation();
+                    isResizing = true; startX = e.clientX; startWidth = div.offsetWidth; e.stopPropagation();
                 });
                 window.addEventListener('mousemove', (e) => {
                     if (!isResizing) return;
@@ -1124,8 +1146,7 @@
                 const rotHandle = div.querySelector('.line-rotate-handle');
                 let isRotating = false;
                 rotHandle.addEventListener('mousedown', (e) => {
-                    isRotating = true;
-                    e.stopPropagation();
+                    isRotating = true; e.stopPropagation();
                 });
                 window.addEventListener('mousemove', (e) => {
                     if (!isRotating) return;
@@ -1171,12 +1192,38 @@
                         div.style.height = newH + 'px';
                         if (div.classList.contains('node-circle')) div.style.width = newH + 'px';
                     }
+                    updateConnectedSvgLines();
                 });
                 window.addEventListener('mouseup', () => { resizingMode = null; });
             }
             
             div.addEventListener('click', (e) => {
+                const btn = document.getElementById("btnLinkNodes");
+                if (isLinkingMode && !isLine) {
+                    const thisId = div.getAttribute('data-id');
+                    if (!linkSourceNodeId) {
+                        linkSourceNodeId = thisId;
+                        btn.innerText = "🎯 اختر العنصر الثاني المستهدف لربطه...";
+                        div.classList.add('selected-element');
+                    } else if (linkSourceNodeId !== thisId) {
+                        connectedLinks.push({
+                            id: 'link_' + Date.now() + Math.floor(Math.random()*1000),
+                            from: linkSourceNodeId,
+                            to: thisId
+                        });
+                        updateConnectedSvgLines();
+                        linkSourceNodeId = null;
+                        isLinkingMode = false;
+                        btn.classList.remove("active-linking");
+                        btn.innerText = "🔗 ربط عنصرين ببعض (شبكة)";
+                        document.querySelectorAll('.draggable-node, .node-line').forEach(el => el.classList.remove('selected-element'));
+                    }
+                    e.stopPropagation();
+                    return;
+                }
+
                 document.querySelectorAll('.draggable-node, .node-line').forEach(el => el.classList.remove('selected-element'));
+                document.querySelectorAll('.connected-svg-line line').forEach(el => el.classList.remove('selected-line'));
                 div.classList.add('selected-element');
                 selectedElementForDeletion = div;
                 e.stopPropagation();
@@ -1195,6 +1242,7 @@
                 if (!isDragging) return;
                 div.style.left = Math.max(0, e.clientX - startX) + 'px';
                 div.style.top = Math.max(0, e.clientY - startY) + 'px';
+                updateConnectedSvgLines();
             });
             
             window.addEventListener('mouseup', () => { 
@@ -1205,16 +1253,65 @@
             });
             
             area.appendChild(div);
+            updateConnectedSvgLines();
         }
+
+        /* 🔗 تحديث ورسم خطوط الاتصال التفاعلية على لوحة SVG */
+        function updateConnectedSvgLines() {
+            const svg = document.getElementById("svgCanvas");
+            if (!svg) return;
+            svg.innerHTML = '';
+            
+            connectedLinks.forEach(link => {
+                const elFrom = document.querySelector(`[data-id="${link.from}"]`);
+                const elTo = document.querySelector(`[data-id="${link.to}"]`);
+                if (elFrom && elTo) {
+                    const x1 = elFrom.offsetLeft + elFrom.offsetWidth / 2;
+                    const y1 = elFrom.offsetTop + elFrom.offsetHeight / 2;
+                    const x2 = elTo.offsetLeft + elTo.offsetWidth / 2;
+                    const y2 = elTo.offsetTop + elTo.offsetHeight / 2;
+                    
+                    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                    line.setAttribute("x1", x1);
+                    line.setAttribute("y1", y1);
+                    line.setAttribute("x2", x2);
+                    line.setAttribute("y2", y2);
+                    line.setAttribute("data-link-id", link.id);
+                    
+                    line.addEventListener('click', (e) => {
+                        document.querySelectorAll('.draggable-node, .node-line').forEach(el => el.classList.remove('selected-element'));
+                        document.querySelectorAll('.connected-svg-line line').forEach(el => el.classList.remove('selected-line'));
+                        line.classList.add('selected-line');
+                        selectedElementForDeletion = { isSvgLink: true, linkId: link.id };
+                        e.stopPropagation();
+                    });
+                    
+                    svg.appendChild(line);
+                }
+            });
+        }
+
         window.addEventListener('keydown', (e) => {
             if ((e.key === 'Delete' || e.key === 'Backspace') && selectedElementForDeletion) {
                 if (document.activeElement.getAttribute('contenteditable') === 'true' || document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
-                selectedElementForDeletion.remove();
-                selectedElementForDeletion = null;
+                
+                if (selectedElementForDeletion.isSvgLink) {
+                    connectedLinks = connectedLinks.filter(l => l.id !== selectedElementForDeletion.linkId);
+                    updateConnectedSvgLines();
+                    selectedElementForDeletion = null;
+                } else if (selectedElementForDeletion.remove) {
+                    const deletedId = selectedElementForDeletion.getAttribute('data-id');
+                    connectedLinks = connectedLinks.filter(l => l.from !== deletedId && l.to !== deletedId);
+                    selectedElementForDeletion.remove();
+                    updateConnectedSvgLines();
+                    selectedElementForDeletion = null;
+                }
             }
         });
+
         document.getElementById("gangCanvasArea").addEventListener('click', () => {
             document.querySelectorAll('.draggable-node, .node-line').forEach(el => el.classList.remove('selected-element'));
+            document.querySelectorAll('.connected-svg-line line').forEach(el => el.classList.remove('selected-line'));
             selectedElementForDeletion = null;
         });
         
@@ -1255,8 +1352,9 @@
                 });
             });
             g.nodes = nodes;
+            g.links = connectedLinks; 
             await saveCloudData();
-            alert("✅ تم حفظ التعديلات واسم العصابة بنجاح في السحابة!");
+            alert("✅ تم حفظ الهيكل التنظيمي وشبكة الخطوط المربوطة أونلاين في السحابة بنجاح!");
         }
         
         function renderGangs() {
