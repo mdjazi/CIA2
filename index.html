@@ -181,8 +181,11 @@
         .gang-fullscreen-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(3, 5, 8, 0.95); z-index: 3000; flex-direction: column; padding: 20px; }
         .gang-fullscreen-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold-color); padding-bottom: 12px; margin-bottom: 15px; }
         .gang-editor-layout { display: flex; flex-grow: 1; gap: 15px; overflow: hidden; }
-        .gang-sidebar { width: 280px; background: rgba(8, 13, 20, 0.9); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; z-index: 10; }
-        .gang-canvas-area { flex-grow: 1; background: #06090f; border: 1px solid var(--gold-color); border-radius: 8px; position: relative; overflow: hidden; background-image: linear-gradient(to right, #101926 1px, transparent 1px), linear-gradient(to bottom, #101926 1px, transparent 1px); background-size: 30px 30px; }
+        .gang-sidebar { width: 300px; background: rgba(8, 13, 20, 0.9); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; z-index: 10; }
+        
+        /* 🗺️ مساحة الشجرة الكبيرة القابلة للتمرير (Scrollable Canvas) */
+        .gang-canvas-area { flex-grow: 1; background: #06090f; border: 1px solid var(--gold-color); border-radius: 8px; position: relative; overflow: auto; background-image: linear-gradient(to right, #101926 1px, transparent 1px), linear-gradient(to bottom, #101926 1px, transparent 1px); background-size: 30px 30px; }
+        .gang-canvas-inner-world { position: relative; width: 3000px; height: 3000px; }
         
         .drawio-tool-btn { background: rgba(197, 160, 89, 0.15); color: var(--gold-color); border: 1px solid var(--gold-color); padding: 8px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: bold; text-align: right; }
         .drawio-tool-btn:hover { background: rgba(197, 160, 89, 0.3); }
@@ -190,26 +193,25 @@
         @keyframes blinkLink { 0% { box-shadow: 0 0 5px #0084ff; } 100% { box-shadow: 0 0 20px #0084ff; } }
         
         .draggable-node { 
-            position: absolute; min-width: 150px; min-height: 50px; padding: 12px; border-radius: 6px; cursor: move; user-select: none; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 4px; z-index: 20; 
+            position: absolute; min-width: 150px; min-height: 50px; height: auto; padding: 12px; border-radius: 6px; cursor: move; user-select: none; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 6px; z-index: 20; 
             background: #162235; border: 1.5px solid var(--accent-color); color: #fff; 
             overflow: visible; word-break: break-word; overflow-wrap: break-word; 
         }
         .node-circle { 
-            border-radius: 50% !important; min-width: 130px !important; min-height: 130px !important; 
-            align-items: center; justify-content: center; text-align: center; padding: 20px; 
+            border-radius: 50% !important; min-width: 130px !important; min-height: 130px !important; height: auto !important;
+            align-items: center; justify-content: center; text-align: center; padding: 15px; 
             background: #162235; border: 1.5px solid var(--accent-color); 
             overflow: visible !important; display: flex !important;
         }
         .node-text { 
             background: rgba(0,0,0,0.6); border: 1px dashed var(--gold-color); color: var(--gold-color); 
-            font-size: 13px; padding: 10px; overflow: visible; word-break: break-word; overflow-wrap: break-word;
+            font-size: 13px; padding: 10px; overflow: visible; word-break: break-word; overflow-wrap: break-word; height: auto !important;
         }
         
         .node-content-editable { outline: none; width: 100%; height: auto; word-break: break-word; overflow-wrap: break-word; overflow: visible; white-space: pre-wrap; }
         .node-line { position: absolute; background: var(--gold-color); cursor: move; user-select: none; z-index: 20; min-width: 30px; min-height: 4px; border-radius: 2px; transform-origin: left center; }
         
-        /* 🔗 تصميم خطوط الربط الحية الذكية بين المربعات */
         .connected-svg-line { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
         .connected-svg-line line { stroke: var(--gold-color); stroke-width: 3; stroke-dasharray: 4 2; pointer-events: visibleStroke; cursor: pointer; transition: stroke 0.2s; }
         .connected-svg-line line:hover { stroke: #00d2ff; stroke-width: 5; }
@@ -444,7 +446,7 @@
         </div>
     </div>
     
-    <!-- 🏴‍☠️ شاشة العصابات الشاملة مع نظام شبكة الربط الذكية -->
+    <!-- 🏴‍☠️ شاشة العصابات الموسعة مع دعم إرفاق الصور والخطوط المحفوظة سحابياً -->
     <div class="gang-fullscreen-overlay" id="gangFullscreenModal">
         <div class="gang-fullscreen-header">
             <div style="display:flex; align-items:center; gap:8px;">
@@ -452,28 +454,33 @@
                 <input type="text" id="fullscreenGangTitleInput" style="background: rgba(4, 6, 10, 0.9); border: 1px solid var(--gold-color); color: var(--gold-color); font-size: 16px; font-weight: bold; padding: 4px 10px; border-radius: 6px; width: 260px; outline:none;" placeholder="اسم العصابة...">
             </div>
             <div style="display: flex; gap: 10px;">
-                <button class="btn-login" style="background: var(--success-color); margin:0; padding: 6px 15px; font-size: 11px;" onclick="saveGangFullscreenCanvas()">💾 حفظ اللوحة والتغيرات سحابياً</button>
+                <button class="btn-login" style="background: var(--success-color); margin:0; padding: 6px 15px; font-size: 11px;" onclick="saveGangFullscreenCanvas()">💾 حفظ اللوحة والخطوط سحابياً</button>
                 <button class="btn-login" style="background: var(--danger-color); margin:0; padding: 6px 15px; font-size: 11px;" onclick="closeGangFullscreen()">✕ إغلاق الشاشة</button>
             </div>
         </div>
         <div class="gang-editor-layout">
             <div class="gang-sidebar">
-                <h5 style="color: var(--gold-color); font-size: 12px; margin-bottom: 5px;">📦 أدوات الشجرة واللوحة</h5>
-                <button class="drawio-tool-btn" onclick="spawnNode('rect')">▭ مستطيل جديد</button>
+                <h5 style="color: var(--gold-color); font-size: 12px; margin-bottom: 5px;">📦 أدوات الشجرة الكبيرة</h5>
+                <button class="drawio-tool-btn" onclick="spawnNode('rect')">▭ مستطيل جديد (تكبر تلقائياً)</button>
                 <button class="drawio-tool-btn" onclick="spawnNode('circle')">⭕ دائرة جديدة</button>
                 <button class="drawio-tool-btn" onclick="spawnNode('text')">💬 نص كتابي حر</button>
                 <button class="drawio-tool-btn" style="background:rgba(197,160,89,0.3); border-color:var(--gold-color);" onclick="spawnLine()">➖ خط منفصل حر</button>
                 
-                <!-- 🔗 زر الربط التفاعلي المباشر -->
                 <button class="drawio-tool-btn" id="btnLinkNodes" style="background:rgba(0, 132, 255, 0.25); border-color:#0084ff; color:#38bdf8;" onclick="toggleLinkingMode()">🔗 ربط عنصرين ببعض (شبكة)</button>
                 
+                <hr style="border: 0; border-top: 1px dashed rgba(197, 160, 89, 0.4); margin: 5px 0;">
+                
+                <h5 style="color: var(--gold-color); font-size: 12px; margin-bottom: 5px;">🖼️ إرفاق صورة بالعنصر المحدد</h5>
+                <input type="text" id="nodeImageLinkInput" style="width:100%; padding:6px; background:#04060a; border:1px solid var(--border-color); color:#fff; font-size:11px; border-radius:5px; margin-bottom:5px;" placeholder="ضع رابط الصورة هنا...">
+                <button class="drawio-tool-btn" style="background:rgba(16, 185, 129, 0.2); border-color:var(--success-color); color:#34d399;" onclick="attachImageToSelectedNode()">➕ إضافة/تحديث الصورة للعنصر</button>
+                
                 <div style="font-size: 10px; color: var(--text-muted); line-height: 1.4; margin-top: 5px;">
-                    💡 <b>كيفية الربط:</b> اضغط زر (🔗 ربط عنصرين)، ثم انقر على العنصر الأول (مثلاً الرئيس)، ثم انقر على العنصر الثاني (العضو) ليتم شبك الخط بينهما تلقائياً!<br>
-                    🗑️ <b>الحذف:</b> انقر على المربع أو خط الربط واضغط <b>Delete</b>.
+                    💡 <b>ملاحظة:</b> الشجرة الآن تدعم التمرير للأعلى والأسفل بكامل الحرية. النص يكبر تلقائياً عند زيادته داخل المربع.<br>
+                    🗑️ <b>الحذف:</b> انقر على المربع، الخط، أو الصورة واضغط <b>Delete</b>.
                 </div>
                 
-                <h5 style="color: var(--gold-color); font-size: 12px; margin-top: 15px; margin-bottom: 5px;">📋 نبذة العصابة</h5>
-                <textarea id="fullscreenGangDetails" rows="4" style="width:100%; padding:8px; background:#04060a; border:1px solid var(--border-color); color:#fff; font-size:12px; border-radius:5px;" placeholder="ملاحظات وتفاصيل العصابة..."></textarea>
+                <h5 style="color: var(--gold-color); font-size: 12px; margin-top: 10px; margin-bottom: 5px;">📋 نبذة العصابة</h5>
+                <textarea id="fullscreenGangDetails" rows="3" style="width:100%; padding:8px; background:#04060a; border:1px solid var(--border-color); color:#fff; font-size:12px; border-radius:5px;" placeholder="ملاحظات وتفاصيل العصابة..."></textarea>
                 
                 <button class="btn-login" style="background:var(--gold-color); color:#000; margin-top: 10px; padding:8px; font-size:11px;" onclick="updateGangDetailsOnly()">تحديث النبذة فقط</button>
                 
@@ -482,8 +489,9 @@
                 <button class="btn-login" style="background: var(--danger-color); padding: 9px; font-size: 11px; margin-top: 5px;" onclick="deleteGangFromEditor()">🗑️ حذف العصابة نهائياً</button>
             </div>
             <div class="gang-canvas-area" id="gangCanvasArea">
-                <!-- SVG Canvas لرسم الخطوط الحية -->
-                <svg class="connected-svg-line" id="svgCanvas"></svg>
+                <div class="gang-canvas-inner-world" id="gangCanvasInnerWorld">
+                    <svg class="connected-svg-line" id="svgCanvas"></svg>
+                </div>
             </div>
         </div>
     </div>
@@ -516,7 +524,6 @@
         let currentEditingGangId = null;
         let selectedElementForDeletion = null;
         
-        /* متغيرات الربط الشبكي التفاعلي */
         let isLinkingMode = false;
         let linkSourceNodeId = null;
         let connectedLinks = []; 
@@ -1029,8 +1036,8 @@
             document.getElementById("fullscreenGangTitleInput").value = g.name;
             document.getElementById("fullscreenGangDetails").value = g.details || '';
             
-            const area = document.getElementById("gangCanvasArea");
-            const existingNodes = area.querySelectorAll('.draggable-node, .node-line');
+            const world = document.getElementById("gangCanvasInnerWorld");
+            const existingNodes = world.querySelectorAll('.draggable-node, .node-line');
             existingNodes.forEach(node => node.remove());
             
             connectedLinks = g.links || [];
@@ -1040,8 +1047,8 @@
             } else {
                 const n1 = 'node_' + Date.now() + 1;
                 const n2 = 'node_' + Date.now() + 2;
-                renderNodeElement({ id: n1, type: 'circle', text: '👑 القائد', x: 250, y: 60, width: 130, height: 130, angle: 0 });
-                renderNodeElement({ id: n2, type: 'rect', text: 'مسؤول العمليات', x: 235, y: 230, width: 160, height: 60, angle: 0 });
+                renderNodeElement({ id: n1, type: 'circle', text: '👑 القائد', x: 300, y: 150, width: 130, height: 130, angle: 0, imageUrl: '' });
+                renderNodeElement({ id: n2, type: 'rect', text: 'مسؤول العمليات والأعضاء', x: 285, y: 350, width: 160, height: 60, angle: 0, imageUrl: '' });
                 connectedLinks = [{ id: 'link_' + Date.now(), from: n1, to: n2 }];
             }
             
@@ -1069,7 +1076,6 @@
             }
         }
 
-        /* 🔗 نظام إدارة وضع الربط الشبكي التفاعلي */
         function toggleLinkingMode() {
             isLinkingMode = !isLinkingMode;
             linkSourceNodeId = null;
@@ -1088,11 +1094,12 @@
                 id: 'node_' + Date.now() + Math.floor(Math.random()*10000),
                 type: type,
                 text: type === 'circle' ? 'عضو جديد' : (type === 'rect' ? 'مسؤول جديد' : 'ملاحظة نصية...'),
-                x: 180 + Math.random() * 150,
-                y: 150 + Math.random() * 100,
+                x: 300 + Math.random() * 200,
+                y: 250 + Math.random() * 200,
                 width: type === 'circle' ? 130 : 160,
                 height: type === 'circle' ? 130 : 60,
-                angle: 0
+                angle: 0,
+                imageUrl: ''
             };
             renderNodeElement(nodeData);
         }
@@ -1101,8 +1108,8 @@
                 id: 'node_' + Date.now() + Math.floor(Math.random()*10000),
                 type: 'line',
                 text: '',
-                x: 200 + Math.random() * 100,
-                y: 200 + Math.random() * 100,
+                x: 350 + Math.random() * 150,
+                y: 300 + Math.random() * 150,
                 width: 150,
                 height: 4,
                 angle: 0
@@ -1110,8 +1117,31 @@
             renderNodeElement(lineData);
         }
 
+        function attachImageToSelectedNode() {
+            if (!selectedElementForDeletion || selectedElementForDeletion.isSvgLink || selectedElementForDeletion.classList.contains('node-line')) {
+                return alert("⚠️ الرجاء اختيار مربع أو دائرة أولاً لإرفاق الصورة!");
+            }
+            const imgUrl = document.getElementById("nodeImageLinkInput").value.trim();
+            selectedElementForDeletion.setAttribute('data-image-url', imgUrl);
+            
+            let imgTag = selectedElementForDeletion.querySelector('.node-attached-image');
+            if (imgUrl) {
+                if (!imgTag) {
+                    imgTag = document.createElement("img");
+                    imgTag.className = 'node-attached-image';
+                    imgTag.style.cssText = "width:100%; max-height:100px; object-fit:cover; border-radius:4px; margin-top:4px;";
+                    selectedElementForDeletion.appendChild(imgTag);
+                }
+                imgTag.src = imgUrl;
+            } else if (imgTag) {
+                imgTag.remove();
+            }
+            document.getElementById("nodeImageLinkInput").value = "";
+            alert("✅ تم إرفاق/تحديث الصورة بنجاح!");
+        }
+
         function renderNodeElement(data) {
-            const area = document.getElementById("gangCanvasArea");
+            const world = document.getElementById("gangCanvasInnerWorld");
             const div = document.createElement("div");
             
             const isLine = data.type === 'line';
@@ -1120,11 +1150,12 @@
             div.style.left = data.x + 'px';
             div.style.top = data.y + 'px';
             if (data.width) div.style.width = data.width + 'px';
-            if (data.height) div.style.height = data.height + 'px';
+            if (data.height && !isLine && data.type !== 'rect' && data.type !== 'text') div.style.height = data.height + 'px';
             if (data.angle !== undefined) div.style.transform = `rotate(${data.angle}deg)`;
             
             div.setAttribute('data-id', data.id);
             div.setAttribute('data-angle', data.angle || 0);
+            if (data.imageUrl) div.setAttribute('data-image-url', data.imageUrl);
             
             if (isLine) {
                 div.innerHTML = `
@@ -1160,8 +1191,10 @@
                 });
                 window.addEventListener('mouseup', () => { isRotating = false; });
             } else {
+                let imgHtml = data.imageUrl ? `<img src="${data.imageUrl}" class="node-attached-image" style="width:100%; max-height:100px; object-fit:cover; border-radius:4px; margin-top:4px;">` : '';
                 div.innerHTML = `
                     <div class="node-content-editable" contenteditable="true">${data.text}</div>
+                    ${imgHtml}
                     <div class="node-resize-handle-right" title="تغيير العرض"></div>
                     <div class="node-resize-handle-bottom" title="تغيير الطول"></div>
                     <div class="node-resize-handle-corner" title="تغيير الحجم بالكامل"></div>
@@ -1183,12 +1216,12 @@
                 window.addEventListener('mousemove', (e) => {
                     if (!resizingMode) return;
                     if (resizingMode === 'w' || resizingMode === 'both') {
-                        let newW = Math.max(80, startW + (e.clientX - startX));
+                        let newW = Math.max(90, startW + (e.clientX - startX));
                         div.style.width = newW + 'px';
                         if (div.classList.contains('node-circle')) div.style.height = newW + 'px';
                     }
                     if (resizingMode === 'h' || resizingMode === 'both') {
-                        let newH = Math.max(40, startH + (e.clientY - startY));
+                        let newH = Math.max(50, startH + (e.clientY - startY));
                         div.style.height = newH + 'px';
                         if (div.classList.contains('node-circle')) div.style.width = newH + 'px';
                     }
@@ -1226,6 +1259,8 @@
                 document.querySelectorAll('.connected-svg-line line').forEach(el => el.classList.remove('selected-line'));
                 div.classList.add('selected-element');
                 selectedElementForDeletion = div;
+                const imgInput = document.getElementById("nodeImageLinkInput");
+                if(imgInput) imgInput.value = div.getAttribute('data-image-url') || '';
                 e.stopPropagation();
             });
             let isDragging = false, startX, startY;
@@ -1252,11 +1287,10 @@
                 }
             });
             
-            area.appendChild(div);
+            world.appendChild(div);
             updateConnectedSvgLines();
         }
 
-        /* 🔗 تحديث ورسم خطوط الاتصال التفاعلية على لوحة SVG */
         function updateConnectedSvgLines() {
             const svg = document.getElementById("svgCanvas");
             if (!svg) return;
@@ -1333,7 +1367,7 @@
             g.details = document.getElementById("fullscreenGangDetails").value.trim();
             
             const nodes = [];
-            const nodeElements = document.querySelectorAll("#gangCanvasArea .draggable-node, #gangCanvasArea .node-line");
+            const nodeElements = document.querySelectorAll("#gangCanvasInnerWorld .draggable-node, #gangCanvasInnerWorld .node-line");
             nodeElements.forEach(el => {
                 let type = 'rect';
                 if (el.classList.contains('node-circle')) type = 'circle';
@@ -1348,13 +1382,14 @@
                     y: parseInt(el.style.top) || 0,
                     width: el.offsetWidth,
                     height: el.offsetHeight,
-                    angle: parseFloat(el.getAttribute('data-angle')) || 0
+                    angle: parseFloat(el.getAttribute('data-angle')) || 0,
+                    imageUrl: el.getAttribute('data-image-url') || ''
                 });
             });
             g.nodes = nodes;
             g.links = connectedLinks; 
             await saveCloudData();
-            alert("✅ تم حفظ الهيكل التنظيمي وشبكة الخطوط المربوطة أونلاين في السحابة بنجاح!");
+            alert("✅ تم حفظ الهيكل التنظيمي وجميع خطوط الربط والصور بدقة تامة في السحابة!");
         }
         
         function renderGangs() {
