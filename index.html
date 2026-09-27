@@ -338,7 +338,7 @@
         </div>
     </div>
 
-    <!-- نافذة ملف العصابة بملء الشاشة مع الشجرة والخطوط اليدوية الحرة المتعددة -->
+    <!-- نافذة ملف العصابة بملء الشاشة مع الشجرة والخطوط الشبكية اليدوية الحرة (متعددة الاتصالات) -->
     <div class="gang-fullscreen-overlay" id="gangFullscreenModal">
         <div class="gang-fullscreen-header">
             <div style="color: var(--gold-color); font-size: 18px; font-weight: bold;" id="fullscreenGangTitle">🏴‍☠️ ملف العصابة</div>
@@ -355,11 +355,10 @@
                 <button class="drawio-tool-btn" onclick="spawnNode('text')">💬 نص كتابي حر</button>
                 
                 <hr style="border-color: var(--border-color); margin: 5px 0;">
-                <h5 style="color: var(--gold-color); font-size: 12px; margin-bottom: 5px;">🔗 ربط غير محدود بين المربعات</h5>
+                <h5 style="color: var(--gold-color); font-size: 12px; margin-bottom: 5px;">🔗 ربط شبكي حر (متعدد)</h5>
                 <div style="font-size: 10px; color: var(--text-muted); line-height: 1.4;">
-                    1. اضغط زر <b>"ربط 🔗"</b> في المربع الأول.<br>
-                    2. اضغط زر <b>"ربط 🔗"</b> في المربع الثاني (أو أي عدد تريد من المربعات والدوائر والنصوص).<br>
-                    3. يمكنك ربط 100 عنصر ببعضهم بحرية تامة!
+                    1. اضغط زر <b>"ربط 🔗"</b> في المربع الأساسي.<br>
+                    2. اضغط زر <b>"ربط 🔗"</b> في أي عدد من المربعات الأخرى (يمكن ربط 5 أو أكثر بعنصر واحد بكل سهولة!).<br>
                 </div>
                 <button class="drawio-tool-btn" style="background:var(--danger-color); border-color:var(--danger-color); color:#fff; margin-top:5px;" onclick="clearAllLines()">🗑️ مسح جميع الخطوط</button>
                 
@@ -369,7 +368,7 @@
                 <button class="btn-login" style="background:var(--gold-color); color:#000; margin-top: 10px; padding:8px; font-size:11px;" onclick="updateGangDetailsOnly()">تحديث النبذة فقط</button>
             </div>
             <div class="gang-canvas-area" id="gangCanvasArea">
-                <!-- SVG للخطوط اليدوية المخصصة والمتعددة -->
+                <!-- SVG للخطوط الشبكية اليدوية الحرة المتعددة -->
                 <svg id="gangSvgLines" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1;"></svg>
             </div>
         </div>
@@ -899,7 +898,7 @@
         }
 
         // ==========================================
-        // 🏴‍☠️ نظام العصابات واللوحة والشجرة الحرة (تحرك الكل + خطوط غير محدودة)
+        // 🏴‍☠️ نظام العصابات واللوحة والشجرة الحرة (تحرك الكل + خطوط شبكية متعددة)
         // ==========================================
         function openCreateGangModal() {
             openCustomModal("🏴‍☠️ إنشاء عصابة جديدة", `
@@ -982,7 +981,7 @@
                 <div contenteditable="true" style="outline:none; width:100%; min-height:25px; word-break:break-all;">${data.text}</div>
             `;
             
-            // تفعيل السحب والإفلات لكل عنصر على حدة بشكل مستقل ومضمون بنسبة 100%
+            // سحب وإفلات حر ومستقل لجميع العناصر القديمة والجديدة دون تجمد
             let isDragging = false, startX, startY;
             
             div.addEventListener('mousedown', (e) => {
@@ -1012,7 +1011,7 @@
             area.appendChild(div);
         }
 
-        // نظام ربط يدوي لا نهائي بين أي عدد من العناصر
+        // نظام ربط يدوي شبكي (مربع واحد يتصل بعدد غير محدود من العناصر)
         function handleNodeLinkClick(btn, nodeId) {
             const nodeEl = btn.closest('.draggable-node');
             if (!selectedNodeForLinking) {
@@ -1029,6 +1028,7 @@
                 const g = globalDatabase.gangs.find(item => item.id === currentEditingGangId);
                 if (g) {
                     if (!g.lines) g.lines = [];
+                    // منع تكرار نفس الخط تماماً
                     const exists = g.lines.some(l => (l.from === selectedNodeForLinking && l.to === nodeId) || (l.from === nodeId && l.to === selectedNodeForLinking));
                     if (!exists) {
                         g.lines.push({ from: selectedNodeForLinking, to: nodeId });
@@ -1059,7 +1059,7 @@
             redrawManualLines();
         }
 
-        // إعادة رسم الخطوط يدوياً فور تحريك أو تعديل أي عنصر
+        // رسم جميع الخطوط والاتصالات المتعددة ديناميكياً أثناء التحريك أو التعديل
         function redrawManualLines() {
             const svg = document.getElementById("gangSvgLines");
             if (!svg) return;
@@ -1126,7 +1126,6 @@
             });
             g.nodes = nodes;
             
-            // حفظ الخطوط اليدوية الحالية
             const activeLines = [];
             if (g.lines) {
                 g.lines.forEach(l => {
@@ -1138,7 +1137,7 @@
             g.lines = activeLines;
 
             await saveCloudData();
-            alert("✅ تم حفظ الشجرة التنظيمية والخطوط اليدوية بالكامل بنجاح في السحابة!");
+            alert("✅ تم حفظ الشجرة التنظيمية وشبكة الخطوط بالكامل بنجاح في السحابة!");
         }
 
         function renderGangs() {
@@ -1147,7 +1146,7 @@
             const query = (document.getElementById("gangsSearch")?.value || "").toLowerCase();
             list.innerHTML = "";
             globalDatabase.gangs.filter(g => g.name.toLowerCase().includes(query) || (g.details && g.details.toLowerCase().includes(query))).forEach(g => {
-                list.innerHTML += `<div class="item-folder-card" onclick="viewGangFolder(${g.id})"><div><span class="item-folder-icon">🕵️‍♂️</span><span class="item-folder-title">${g.name}</span><span class="item-folder-sub">شجرة تنظيمية بخطوط يدوية</span></div><span class="item-folder-btn">فتح اللوحة ←</span></div>`;
+                list.innerHTML += `<div class="item-folder-card" onclick="viewGangFolder(${g.id})"><div><span class="item-folder-icon">🕵️‍♂️</span><span class="item-folder-title">${g.name}</span><span class="item-folder-sub">شجرة تنظيمية بربط شبكي متعدد</span></div><span class="item-folder-btn">فتح اللوحة ←</span></div>`;
             });
         }
 
