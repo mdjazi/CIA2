@@ -34,7 +34,7 @@
         .input-group { text-align: right; margin-bottom: 14px; }
         .input-group label { display: block; font-size: 11px; color: var(--accent-color); margin-bottom: 5px; font-weight: 600; }
         .input-group input, .input-group select, .input-group textarea {
-            width: 100%; padding: 12px; background: rgba(4, 6, 10, 0.85); border: 1px solid var(--border-color); border-radius: 6px; color: #fff; font-size: 13px; text-align: right; outline: none; resize: vertical;
+            width: 100%; padding: 12px; background: rgba(4, 6, 10, 0.85); border: 1px solid var(--border-color); border-radius: 6px; color: #fff; font-size: 13px; text-align: right; outline: none;
         }
         .search-box { margin-bottom: 15px; border-color: var(--gold-color) !important; background: rgba(9, 16, 26, 0.8) !important; }
         .btn-create-action { width: 100%; padding: 12px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #fff; border: none; border-radius: 6px; font-weight: 800; font-size: 14px; cursor: pointer; margin-bottom: 20px; }
@@ -143,7 +143,7 @@
         .gang-entry-field { margin-bottom: 15px; }
         .gang-entry-field label { display: block; font-size: 11px; color: var(--gold-color); font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px; }
         .gang-entry-field input, .gang-entry-field textarea {
-            width: 100%; background: rgba(3, 6, 10, 0.9); border: 1px solid rgba(197, 160, 89, 0.5); border-radius: 6px; color: #fff; padding: 10px 12px; font-size: 13px; outline: none; transition: border 0.2s; resize: vertical;
+            width: 100%; background: rgba(3, 6, 10, 0.9); border: 1px solid rgba(197, 160, 89, 0.5); border-radius: 6px; color: #fff; padding: 10px 12px; font-size: 13px; outline: none; transition: border 0.2s;
         }
         .gang-entry-field input:focus, .gang-entry-field textarea:focus { border-color: var(--gold-color); box-shadow: 0 0 8px rgba(197, 160, 89, 0.3); }
 
@@ -181,21 +181,7 @@
         .gang-fullscreen-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(3, 5, 8, 0.95); z-index: 3000; flex-direction: column; padding: 20px; }
         .gang-fullscreen-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold-color); padding-bottom: 12px; margin-bottom: 10px; flex-wrap: wrap; gap: 10px; }
         .gang-editor-layout { display: flex; flex-grow: 1; gap: 15px; overflow: hidden; position: relative; }
-        
-        /* تعديل القائمة الجانبية لتكون مرتبة بالكامل وبدون سكرول */
-        .gang-sidebar { 
-            width: 240px; 
-            min-width: 240px; 
-            background: rgba(8, 13, 20, 0.95); 
-            border: 1px solid var(--border-color); 
-            border-radius: 8px; 
-            padding: 10px; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 6px; 
-            overflow: visible; 
-            z-index: 10; 
-        }
+        .gang-sidebar { width: 300px; background: rgba(8, 13, 20, 0.9); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; z-index: 10; }
         
         .zoom-lens-bar-external {
             display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-bottom: 8px; padding: 0 5px;
@@ -218,14 +204,14 @@
             position: relative; width: 10000px; height: 10000px; transform-origin: 0 0; transition: transform 0.05s ease; 
         }
         
-        .drawio-tool-btn { background: rgba(197, 160, 89, 0.15); color: var(--gold-color); border: 1px solid var(--gold-color); padding: 6px 8px; border-radius: 5px; cursor: pointer; font-size: 11px; font-weight: bold; text-align: right; }
+        .drawio-tool-btn { background: rgba(197, 160, 89, 0.15); color: var(--gold-color); border: 1px solid var(--gold-color); padding: 8px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: bold; text-align: right; }
         .drawio-tool-btn:hover { background: rgba(197, 160, 89, 0.3); }
         .drawio-tool-btn.active-drawing { background: var(--success-color) !important; color: #fff !important; animation: blinkLink 1s infinite alternate; }
         .drawio-tool-btn.active-linking { background: var(--accent-color) !important; color: #fff !important; animation: blinkLink 1s infinite alternate; }
         @keyframes blinkLink { 0% { box-shadow: 0 0 5px #10b981; } 100% { box-shadow: 0 0 20px #10b981; } }
         
         .draggable-node { 
-            position: absolute; min-width: 60px; min-height: 40px; width: auto; height: auto; padding: 12px; border-radius: 6px; cursor: move; user-select: none; 
+            position: absolute; min-width: 50px; min-height: 30px; width: auto; height: auto; padding: 12px; border-radius: 6px; cursor: move; user-select: none; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 6px; z-index: 20; 
             background: #162235; border: 1.5px solid var(--accent-color); color: #fff; 
             overflow: visible; word-break: break-word; overflow-wrap: break-word; 
@@ -245,13 +231,7 @@
             background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important;
         }
         
-        /* تفعيل الالتفاف التلقائي للنصوص وتمدد الحاوية مع الكتابة */
-        .node-content-editable { 
-            outline: none; width: 100%; height: auto; min-width: 40px; min-height: 20px;
-            word-break: break-word; overflow-wrap: break-word; white-space: pre-wrap; 
-            z-index: 25; position: relative; 
-        }
-        
+        .node-content-editable { outline: none; width: 100%; height: auto; word-break: break-word; overflow-wrap: break-word; overflow: visible; white-space: pre-wrap; z-index: 25; position: relative; }
         .node-line { position: absolute; background: var(--gold-color); cursor: move; user-select: none; z-index: 20; min-width: 30px; min-height: 4px; border-radius: 2px; transform-origin: left center; }
         
         .connected-svg-line { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
@@ -509,30 +489,30 @@
         </div>
         <div class="gang-editor-layout">
             <div class="gang-sidebar">
-                <h5 style="color: var(--gold-color); font-size: 11px; margin-bottom: 2px;">📦 أدوات الرسم (Word Style)</h5>
-                <button class="drawio-tool-btn" id="btnSpawnRect" onclick="activateDrawingMode('rect', 'مستطيل جديد')">▭ إنشاء مستطيل (سحب)</button>
-                <button class="drawio-tool-btn" id="btnSpawnCircle" onclick="activateDrawingMode('circle', 'دائرة جديدة')">⭕ إنشاء دائرة (سحب)</button>
+                <h5 style="color: var(--gold-color); font-size: 12px; margin-bottom: 5px;">📦 أدوات الرسم والسحب (Word Style)</h5>
+                <button class="drawio-tool-btn" id="btnSpawnRect" onclick="activateDrawingMode('rect', '▭ مستطيل جديد')">▭ إنشاء مستطيل (سحب)</button>
+                <button class="drawio-tool-btn" id="btnSpawnCircle" onclick="activateDrawingMode('circle', 'عضو جديد')">⭕ إنشاء دائرة (سحب)</button>
                 <button class="drawio-tool-btn" id="btnSpawnText" onclick="activateDrawingMode('text', 'ملاحظة نصية...')">💬 إنشاء نص حر (سحب)</button>
-                <button class="drawio-tool-btn" id="btnSpawnLine" onclick="activateDrawingMode('line', '')">➖ خط منفصل (سحب)</button>
-                <button class="drawio-tool-btn" id="btnSpawnImg" onclick="activateDrawingMode('imgNode', '')" style="border-color:var(--success-color); color:#34d399;">🖼️ مربع صورة مستقل (سحب)</button>
+                <button class="drawio-tool-btn" id="btnSpawnLine" onclick="activateDrawingMode('line', '')" style="background:rgba(197,160,89,0.3); border-color:var(--gold-color);">➖ خط منفصل (سحب)</button>
+                <button class="drawio-tool-btn" id="btnSpawnImg" onclick="activateDrawingMode('imgNode', '')" style="background:rgba(16, 185, 129, 0.2); border-color:var(--success-color); color:#34d399;">🖼️ مربع صورة مستقل (سحب)</button>
                 
                 <button class="drawio-tool-btn" id="btnLinkNodes" style="background:rgba(0, 132, 255, 0.25); border-color:#0084ff; color:#38bdf8;" onclick="toggleLinkingMode()">🔗 ربط عنصرين ببعض</button>
                 
-                <hr style="border: 0; border-top: 1px dashed rgba(197, 160, 89, 0.4); margin: 2px 0;">
+                <hr style="border: 0; border-top: 1px dashed rgba(197, 160, 89, 0.4); margin: 5px 0;">
                 
-                <h5 style="color: var(--gold-color); font-size: 11px; margin-bottom: 2px;">🖼️ صورة المربع المحدد</h5>
-                <input type="text" id="nodeImageLinkInput" style="width:100%; padding:5px; background:#04060a; border:1px solid var(--border-color); color:#fff; font-size:10px; border-radius:4px; margin-bottom:3px;" placeholder="رابط الصورة...">
-                <button class="drawio-tool-btn" style="border-color:var(--success-color); color:#34d399;" onclick="attachImageToSelectedNode()">➕ تعيين الصورة</button>
+                <h5 style="color: var(--gold-color); font-size: 12px; margin-bottom: 5px;">🖼️ تحديث صورة المربع المحدد</h5>
+                <input type="text" id="nodeImageLinkInput" style="width:100%; padding:6px; background:#04060a; border:1px solid var(--border-color); color:#fff; font-size:11px; border-radius:5px; margin-bottom:5px;" placeholder="رابط الصورة الجديد...">
+                <button class="drawio-tool-btn" style="background:rgba(16, 185, 129, 0.2); border-color:var(--success-color); color:#34d399;" onclick="attachImageToSelectedNode()">➕ تعيين الصورة للعنصر</button>
                 
-                <div style="font-size: 9px; color: var(--text-muted); line-height: 1.3; margin-top: 2px;">
-                    💡 <b>الرسم:</b> اضغط زر الرسم واسحب بالماوس لتحدد الحجم.<br>
-                    🖱️ <b>التحريك:</b> بالزر الأيمن واسحب.<br>
-                    🗑️ <b>الحذف:</b> انقر واضغط Delete.
+                <div style="font-size: 10px; color: var(--text-muted); line-height: 1.4; margin-top: 5px;">
+                    💡 <b>طريقة الإنشاء:</b> اضغط زر الإنشاء، ثم اضغط واسحب بالماوس داخل الشجرة وارسم المربع بيدك كما في الوورد.<br>
+                    🖱️ <b>التحريك:</b> اضغط بالزر الأيمن للماوس واسحب لتحريك الشجرة يميناً ويساراً.<br>
+                    🗑️ <b>الحذف:</b> انقر على العنصر واضغط <b>Delete</b>.
                 </div>
                 
-                <hr style="border: 0; border-top: 1px dashed rgba(217, 4, 41, 0.4); margin: 4px 0;">
+                <hr style="border: 0; border-top: 1px dashed rgba(217, 4, 41, 0.4); margin: 15px 0 5px 0;">
                 
-                <button class="btn-login" style="background: var(--danger-color); padding: 7px; font-size: 11px; margin-top: 0;" onclick="deleteGangFromEditor()">🗑️ حذف العصابة</button>
+                <button class="btn-login" style="background: var(--danger-color); padding: 9px; font-size: 11px; margin-top: 5px;" onclick="deleteGangFromEditor()">🗑️ حذف العصابة نهائياً</button>
             </div>
             <div style="flex-grow: 1; display: flex; flex-direction: column; overflow: hidden;">
                 <div class="zoom-lens-bar-external">
@@ -684,6 +664,7 @@
 
             canvasArea.addEventListener('contextmenu', (e) => e.preventDefault());
 
+            // تخصيص عجلة الماوس للزووم فقط دون تحريك الشجرة يميناً ويساراً
             canvasArea.addEventListener('wheel', (e) => {
                 e.preventDefault();
                 if (e.deltaY < 0) {
@@ -1246,13 +1227,17 @@
             if (g.nodes && Array.isArray(g.nodes) && g.nodes.length > 0) {
                 g.nodes.forEach(nodeData => renderNodeElement(nodeData));
             } else {
-                // إفراغ اللوحة تماماً ليبدأ المستخدم بالرسم اليدوي الصرف تماماً من الصفر حسب رغبته
-                connectedLinks = [];
+                const n1 = 'node_' + Date.now() + 1;
+                const n2 = 'node_' + Date.now() + 2;
+                renderNodeElement({ id: n1, type: 'circle', text: '👑 القائد', x: 4950, y: 4900, width: 130, height: 130, angle: 0, imageUrl: '' });
+                renderNodeElement({ id: n2, type: 'rect', text: 'مسؤول العمليات والأعضاء', x: 4935, y: 5100, width: 160, height: 60, angle: 0, imageUrl: '' });
+                connectedLinks = [{ id: 'link_' + Date.now(), from: n1, to: n2 }];
             }
             
             updateConnectedSvgLines();
             document.getElementById("gangFullscreenModal").style.display = "flex";
 
+            // استعادة موضع السكرول المحفوظ (الوصول لنفس النقطة فوراً)
             setTimeout(() => {
                 if (canvasArea) {
                     canvasArea.scrollLeft = g.viewX !== undefined ? g.viewX : 4800;
@@ -1506,7 +1491,7 @@
                 if (resizingMode === 'h' || resizingMode === 'both') {
                     let newH = Math.max(30, startH + ((e.clientY - startY) / currentZoomScale));
                     div.style.height = newH + 'px';
-                    if (div.classList.contains('node-circle')) div.style.width = newW + 'px';
+                    if (div.classList.contains('node-circle')) div.style.width = newH + 'px';
                 }
                 updateConnectedSvgLines();
             });
@@ -1612,6 +1597,7 @@
             g.nodes = nodes;
             g.links = connectedLinks; 
 
+            // حفظ إحداثيات موضع الكاميرا ومستوى الزووم الحاليين بدقة
             g.viewX = canvasArea.scrollLeft;
             g.viewY = canvasArea.scrollTop;
             g.zoom = currentZoomScale;
