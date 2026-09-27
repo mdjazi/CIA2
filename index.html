@@ -179,10 +179,18 @@
         .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
         
         .gang-fullscreen-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(3, 5, 8, 0.95); z-index: 3000; flex-direction: column; padding: 20px; }
-        .gang-fullscreen-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold-color); padding-bottom: 12px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        .gang-fullscreen-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold-color); padding-bottom: 12px; margin-bottom: 10px; flex-wrap: wrap; gap: 10px; }
         .gang-editor-layout { display: flex; flex-grow: 1; gap: 15px; overflow: hidden; position: relative; }
         .gang-sidebar { width: 300px; background: rgba(8, 13, 20, 0.9); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; z-index: 10; }
         
+        /* 🔍 عدسة التحكم بالتكبير والتصغير في الأعلى خارج لوحة الشجرة */
+        .zoom-lens-bar-external {
+            display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-bottom: 8px; padding: 0 5px;
+        }
+        .zoom-lens-btn { background: rgba(197, 160, 89, 0.2); border: 1px solid var(--gold-color); color: var(--gold-color); width: 28px; height: 28px; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+        .zoom-lens-btn:hover { background: rgba(197, 160, 89, 0.4); }
+        .zoom-level-lbl { color: #fff; font-size: 11px; font-family: monospace; min-width: 45px; text-align: center; }
+
         .gang-canvas-area {
             flex-grow: 1; background: #06090f; border: 1px solid var(--gold-color); border-radius: 8px; position: relative; overflow: auto;
             background-image: linear-gradient(to right, #101926 1px, transparent 1px), linear-gradient(to bottom, #101926 1px, transparent 1px); background-size: 30px 30px;
@@ -193,17 +201,8 @@
         .gang-canvas-area::-webkit-scrollbar-thumb { background: rgba(197, 160, 89, 0.3); border-radius: 4px; transition: background 0.3s; }
         .gang-canvas-area::-webkit-scrollbar-thumb:hover { background: rgba(197, 160, 89, 0.7); }
 
-        .gang-canvas-inner-world { position: relative; width: 4000px; height: 4000px; transform-origin: top right; transition: transform 0.15s ease; }
+        .gang-canvas-inner-world { position: relative; width: 4000px; height: 4000px; transform-origin: top right; transition: transform 0.1s ease; }
         
-        /* 🔍 عدسة التحكم بالتكبير والتصغير في الطرف العلوي الأيسر للوحة */
-        .zoom-lens-bar {
-            position: absolute; top: 15px; left: 15px; background: rgba(8, 13, 20, 0.92); border: 1px solid var(--gold-color);
-            border-radius: 8px; padding: 6px 12px; display: flex; gap: 8px; align-items: center; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.8);
-        }
-        .zoom-lens-btn { background: rgba(197, 160, 89, 0.2); border: 1px solid var(--gold-color); color: var(--gold-color); width: 28px; height: 28px; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; }
-        .zoom-lens-btn:hover { background: rgba(197, 160, 89, 0.4); }
-        .zoom-level-lbl { color: #fff; font-size: 11px; font-family: monospace; min-width: 40px; text-align: center; }
-
         .drawio-tool-btn { background: rgba(197, 160, 89, 0.15); color: var(--gold-color); border: 1px solid var(--gold-color); padding: 8px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: bold; text-align: right; }
         .drawio-tool-btn:hover { background: rgba(197, 160, 89, 0.3); }
         .drawio-tool-btn.active-linking { background: var(--accent-color) !important; color: #fff !important; animation: blinkLink 1s infinite alternate; }
@@ -226,7 +225,6 @@
             font-size: 13px; padding: 10px; overflow: visible; word-break: break-word; overflow-wrap: break-word; width: auto !important; height: auto !important;
         }
 
-        /* 🖼️ ستايل مربع الصورة الشفاف المستقل */
         .node-image-only {
             background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important;
         }
@@ -489,13 +487,11 @@
         </div>
         <div class="gang-editor-layout">
             <div class="gang-sidebar">
-                <h5 style="color: var(--gold-color); font-size: 12px; margin-bottom: 5px;">📦 أزرار الإضافة في المنتصف</h5>
+                <h5 style="color: var(--gold-color); font-size: 12px; margin-bottom: 5px;">📦 أزرار الإنشاء السريع</h5>
                 <button class="drawio-tool-btn" onclick="spawnNode('rect')">▭ مستطيل جديد</button>
                 <button class="drawio-tool-btn" onclick="spawnNode('circle')">⭕ دائرة جديدة</button>
                 <button class="drawio-tool-btn" onclick="spawnNode('text')">💬 نص كتابي حر</button>
                 <button class="drawio-tool-btn" style="background:rgba(197,160,89,0.3); border-color:var(--gold-color);" onclick="spawnLine()">➖ خط منفصل حر</button>
-                
-                <!-- 🖼️ أداة إنشاء مربع صورة شفاف ومستقل -->
                 <button class="drawio-tool-btn" style="background:rgba(16, 185, 129, 0.2); border-color:var(--success-color); color:#34d399;" onclick="spawnImageNode()">🖼️ مربع صورة مستقل (شفاف)</button>
                 
                 <button class="drawio-tool-btn" id="btnLinkNodes" style="background:rgba(0, 132, 255, 0.25); border-color:#0084ff; color:#38bdf8;" onclick="toggleLinkingMode()">🔗 ربط عنصرين ببعض</button>
@@ -507,7 +503,8 @@
                 <button class="drawio-tool-btn" style="background:rgba(16, 185, 129, 0.2); border-color:var(--success-color); color:#34d399;" onclick="attachImageToSelectedNode()">➕ تعيين الصورة للعنصر</button>
                 
                 <div style="font-size: 10px; color: var(--text-muted); line-height: 1.4; margin-top: 5px;">
-                    💡 <b>ملاحظة:</b> زر التكبير والتصغير أصبح في الطرف العلوي الأيسر للوحة الرسم.<br>
+                    💡 <b>إرشادات التحريك:</b> انقر مع الاستمرار بالزر الأيمن للماوس واسحب لتحريك الشجرة يميناً ويساراً.<br>
+                    🔍 <b>الزوم:</b> استخدم عجلة الماوس لتكبير وتصغير الشجرة.<br>
                     🗑️ <b>الحذف:</b> انقر على العنصر واضغط <b>Delete</b>.
                 </div>
                 
@@ -515,16 +512,19 @@
                 
                 <button class="btn-login" style="background: var(--danger-color); padding: 9px; font-size: 11px; margin-top: 5px;" onclick="deleteGangFromEditor()">🗑️ حذف العصابة نهائياً</button>
             </div>
-            <div class="gang-canvas-area" id="gangCanvasArea">
-                <div class="gang-canvas-inner-world" id="gangCanvasInnerWorld">
-                    <svg class="connected-svg-line" id="svgCanvas"></svg>
-                </div>
-                <!-- 🔍 عدسة تكبير وتصغير الشجرة في الطرف العلوي الأيسر -->
-                <div class="zoom-lens-bar">
+            <div style="flex-grow: 1; display: flex; flex-direction: column; overflow: hidden;">
+                <!-- 🔍 عدسة تكبير وتصغير الشجرة في الخارج فوق المخطط مباشرة -->
+                <div class="zoom-lens-bar-external">
+                    <span style="color:var(--gold-color); font-size:11px; font-weight:bold; margin-left:auto;">مستوى العرض:</span>
                     <button class="zoom-lens-btn" onclick="zoomCanvas(-0.1)" title="تصغير">➖</button>
                     <span class="zoom-level-lbl" id="zoomLevelLbl">100%</span>
                     <button class="zoom-lens-btn" onclick="zoomCanvas(0.1)" title="تكبير">➕</button>
                     <button class="zoom-lens-btn" onclick="resetZoom()" title="إعادة ضبط">🔍</button>
+                </div>
+                <div class="gang-canvas-area" id="gangCanvasArea">
+                    <div class="gang-canvas-inner-world" id="gangCanvasInnerWorld">
+                        <svg class="connected-svg-line" id="svgCanvas"></svg>
+                    </div>
                 </div>
             </div>
         </div>
@@ -562,6 +562,44 @@
         let linkSourceNodeId = null;
         let connectedLinks = []; 
         let currentZoomScale = 1.0;
+
+        // إعداد حركة الماوس بالزر الأيمن (Pan) وزوم العجلة
+        const canvasArea = document.getElementById("gangCanvasArea");
+        let isRightMouseDown = false;
+        let rightMouseStartX = 0, rightMouseStartY = 0;
+
+        if (canvasArea) {
+            canvasArea.addEventListener('mousedown', (e) => {
+                if (e.button === 2) { // الزر الأيمن
+                    isRightMouseDown = true;
+                    rightMouseStartX = e.clientX + canvasArea.scrollLeft;
+                    rightMouseStartY = e.clientY + canvasArea.scrollTop;
+                    e.preventDefault();
+                }
+            });
+            window.addEventListener('mousemove', (e) => {
+                if (isRightMouseDown) {
+                    canvasArea.scrollLeft = rightMouseStartX - e.clientX;
+                    canvasArea.scrollTop = rightMouseStartY - e.clientY;
+                }
+            });
+            window.addEventListener('mouseup', (e) => {
+                if (e.button === 2) {
+                    isRightMouseDown = false;
+                }
+            });
+            canvasArea.addEventListener('contextmenu', (e) => e.preventDefault()); // منع القائمة المعتادة
+
+            // زوم بعجلة الماوس
+            canvasArea.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                if (e.deltaY < 0) {
+                    zoomCanvas(0.1);
+                } else {
+                    zoomCanvas(-0.1);
+                }
+            }, { passive: false });
+        }
 
         async function fetchCloudData() {
             if (isSaving || isModalOpen) return;
@@ -1213,7 +1251,7 @@
                 if (!imgTag) {
                     imgTag = document.createElement("img");
                     imgTag.className = 'node-attached-image';
-                    imgTag.style.cssText = "width:100%; max-height:120px; object-fit:cover; border-radius:4px; margin-top:4px;";
+                    imgTag.style.cssText = "width:100%; max-height:120px; object-fit:contain; border-radius:4px; margin-top:4px;";
                     selectedElementForDeletion.appendChild(imgTag);
                 }
                 imgTag.src = imgUrl;
@@ -1345,6 +1383,7 @@
 
             let isDragging = false, startX, startY;
             div.addEventListener('mousedown', (e) => {
+                if (e.button !== 0) return; // فقط الزر الأيسر للتحريك
                 if (e.target.classList.contains('node-resize-handle-right') || e.target.classList.contains('node-resize-handle-bottom') || e.target.classList.contains('node-resize-handle-corner') || e.target.classList.contains('node-content-editable') || e.target.getAttribute('contenteditable') === 'true') return;
                 isDragging = true;
                 startX = (e.clientX / currentZoomScale) - div.offsetLeft;
