@@ -1500,7 +1500,6 @@
             Object.keys(globalDatabase.users || {}).forEach(username => {
                 const u = globalDatabase.users[username];
                 
-                // إذا كان المستخدم الحالي Deputy Director والشخص المستهدف Director، نمنع تعديله بالكامل
                 const isTargetDirector = u.role === "Director";
                 const isDisabledForDeputy = isDeputy && isTargetDirector;
                 
@@ -1520,17 +1519,28 @@
                         </select>
                     `;
                 } else {
-                    // Deputy Director لا يمكنه تغيير رتبة أحد
                     roleSelectHtml = `<input type="text" value="${u.role}" disabled style="padding:6px; font-size:12px; background:rgba(255,255,255,0.05); color:#94a3b8;">`;
                 }
 
+                // إذا كان المستخدم Deputy Director والمستهدف Director، نخفي كلمة المرور والرمز تماماً ونضع نجوم سرية
+                let passwordFieldHtml = '';
+                let pinFieldHtml = '';
+                
+                if (isDeputy && isTargetDirector) {
+                    passwordFieldHtml = `<input type="text" value="••••••••" disabled style="padding:6px; font-size:12px; background:rgba(255,255,255,0.05); color:#ef4444; text-align:center;">`;
+                    pinFieldHtml = `<input type="text" value="••••" disabled style="padding:6px; font-size:12px; background:rgba(255,255,255,0.05); color:#ef4444; text-align:center;">`;
+                } else {
+                    passwordFieldHtml = `<input type="text" id="edit-pass-${username}" value="${u.password || ''}" ${isDisabledForDeputy ? 'disabled' : ''} style="padding:6px; font-size:12px;">`;
+                    pinFieldHtml = `<input type="text" id="edit-pin-${username}" value="${u.pin || ''}" ${isDisabledForDeputy ? 'disabled' : ''} style="padding:6px; font-size:12px;">`;
+                }
+
                 container.innerHTML += `
-                    <div style="background: rgba(4, 6, 10, 0.85); border: 1px solid ${isDisabledForDeputy ? 'rgba(217,4,41,0.4)' : 'var(--border-color)'}; border-radius: 8px; padding: 15px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; opacity: ${isDisabledForDeputy ? '0.75' : '1'};">
+                    <div style="background: rgba(4, 6, 10, 0.85); border: 1px solid ${isDisabledForDeputy ? 'rgba(217,4,41,0.4)' : 'var(--border-color)'}; border-radius: 8px; padding: 15px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px;">
                         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
                             <div>
                                 <b style="color:var(--gold-color); font-size:14px;">${username}</b> 
                                 <span style="font-size:11px; color:var(--text-muted);">(${u.id || 'N/A'})</span>
-                                ${isDisabledForDeputy ? '<span style="color:var(--danger-color); font-size:10px; margin-right:8px;">[محمي - Director]</span>' : ''}
+                                ${isDisabledForDeputy ? '<span style="color:var(--danger-color); font-size:10px; margin-right:8px;">[محمي - Director: كلمة المرور ورمز PIN مخفيان]</span>' : ''}
                             </div>
                             <div style="display:flex; gap:8px;">
                                 ${!isDisabledForDeputy ? `<button class="btn-edit-item" onclick="saveAdminUserEdit('${username}')">حفظ التعديلات 💾</button>` : ''}
@@ -1540,11 +1550,11 @@
                         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:10px;">
                             <div>
                                 <label style="font-size:10px; color:var(--accent-color);">كلمة المرور:</label>
-                                <input type="text" id="edit-pass-${username}" value="${u.password || ''}" ${isDisabledForDeputy ? 'disabled' : ''} style="padding:6px; font-size:12px;">
+                                ${passwordFieldHtml}
                             </div>
                             <div>
                                 <label style="font-size:10px; color:var(--accent-color);">رمز PIN:</label>
-                                <input type="text" id="edit-pin-${username}" value="${u.pin || ''}" ${isDisabledForDeputy ? 'disabled' : ''} style="padding:6px; font-size:12px;">
+                                ${pinFieldHtml}
                             </div>
                             <div>
                                 <label style="font-size:10px; color:var(--accent-color);">المعرف (Badge ID):</label>
@@ -1572,9 +1582,13 @@
                 return alert("⚠️ عذراً، لا يمكنك التعديل على حساب ذو رتبة Director!");
             }
 
-            const pass = document.getElementById(`edit-pass-${username}`).value.trim();
-            const pin = document.getElementById(`edit-pin-${username}`).value.trim();
-            const id = document.getElementById(`edit-id-${username}`).value.trim();
+            const passInput = document.getElementById(`edit-pass-${username}`);
+            const pinInput = document.getElementById(`edit-pin-${username}`);
+            const idInput = document.getElementById(`edit-id-${username}`);
+            
+            if (passInput) globalDatabase.users[username].password = passInput.value.trim();
+            if (pinInput) globalDatabase.users[username].pin = pinInput.value.trim();
+            if (idInput) globalDatabase.users[username].id = idInput.value.trim();
             
             let role = globalDatabase.users[username].role;
             const roleSelect = document.getElementById(`edit-role-${username}`);
@@ -1590,9 +1604,6 @@
                 }
             });
             
-            globalDatabase.users[username].password = pass;
-            globalDatabase.users[username].pin = pin;
-            globalDatabase.users[username].id = id;
             globalDatabase.users[username].role = role;
             globalDatabase.users[username].wings = wings;
             
@@ -1623,7 +1634,6 @@
             const password = document.getElementById("new-password").value.trim();
             const pin = document.getElementById("new-pin").value.trim();
             
-            // عند إنشاء حساب جديد، يتم تثبيت الرتبة تلقائياً على CIA Member لمنع منح الرتب عند الإضافة
             const role = "CIA Member";
             
             let wings = [];
