@@ -275,6 +275,13 @@
         .connected-svg-line line.selected-line { stroke: var(--success-color); stroke-width: 5; stroke-dasharray: none; filter: drop-shadow(0 0 8px var(--success-color)); }
         .selected-element { outline: 2px dashed var(--success-color) !important; box-shadow: 0 0 15px var(--success-color) !important; z-index: 100 !important; }
         
+        .node-delete-btn {
+            position: absolute; top: -12px; left: -12px; background: var(--danger-color); color: #fff; border: 2px solid #fff;
+            border-radius: 50%; width: 24px; height: 24px; font-size: 11px; font-weight: bold; cursor: pointer;
+            display: none; justify-content: center; align-items: center; z-index: 100; box-shadow: 0 0 10px rgba(217,4,41,0.8);
+        }
+        .selected-element .node-delete-btn { display: flex; }
+        
         .node-resize-handle-right { position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 8px; height: 100%; cursor: ew-resize; z-index: 50; display: none; }
         .node-resize-handle-bottom { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; height: 8px; cursor: ns-resize; z-index: 50; display: none; }
         .node-resize-handle-corner { position: absolute; right: 0; bottom: 0; width: 14px; height: 14px; background: var(--gold-color); cursor: nwse-resize; z-index: 50; display: none; border: 1px solid #fff; }
@@ -547,10 +554,8 @@
                 <hr style="border: 0; border-top: 1px dashed rgba(197, 160, 89, 0.4); margin: 2px 0;">
                 
                 <div style="font-size: 9px; color: var(--text-muted); line-height: 1.3; margin-top: 2px;">
-                    💡 <b>الرسم:</b> اضغط زر الرسم واسحب بالماوس.<br>
-                    🖱️ <b>التحريك:</b> بالزر الأيمن واسحب.<br>
-                    🗑️ <b>الحذف:</b> انقر على أي عنصر (مربع، خط، صورة، فيديو) ثم اضغط <b>Delete</b>.<br>
-                    🔘 <b>إلغاء التحديد:</b> اضغط على أي مساحة فارغة في الخلفية.
+                    💡 <b>الحذف:</b> انقر على أي عنصر لتظهر لك أيقونة الحذف الحمراء <b>(🗑️)</b> عليه مباشرة، أو اضغط زر <b>Delete</b> من الكيبورد.<br>
+                    🔗 <b>الخطوط:</b> تظهر فوراً عند الدخول ولا تختفي أبداً.
                 </div>
                 
                 <hr style="border: 0; border-top: 1px dashed rgba(217, 4, 41, 0.4); margin: 4px 0;">
@@ -1521,14 +1526,17 @@
             if (nodeData.width) el.style.width = nodeData.width + 'px';
             if (nodeData.height) el.style.height = nodeData.height + 'px';
             
+            const deleteBtnHtml = `<div class="node-delete-btn" title="حذف العنصر" onclick="deleteNodeElement('${nodeData.id}', event)">✕</div>`;
+            
             if (nodeData.type === 'imgNode' && nodeData.imageUrl) {
-                el.innerHTML = `<img src="${nodeData.imageUrl}" style="width:100%; height:100%; object-fit:contain; border-radius:6px; pointer-events:none;"><div class="node-resize-handle-right"></div><div class="node-resize-handle-bottom"></div><div class="node-resize-handle-corner"></div>`;
+                el.innerHTML = `${deleteBtnHtml}<img src="${nodeData.imageUrl}" style="width:100%; height:100%; object-fit:contain; border-radius:6px; pointer-events:none;"><div class="node-resize-handle-right"></div><div class="node-resize-handle-bottom"></div><div class="node-resize-handle-corner"></div>`;
             } else if (nodeData.type === 'vidNode' && nodeData.videoUrl) {
-                el.innerHTML = `<video controls src="${nodeData.videoUrl}" style="width:100%; height:100%; object-fit:contain; border-radius:6px; pointer-events:auto;"></video><div class="node-resize-handle-right"></div><div class="node-resize-handle-bottom"></div><div class="node-resize-handle-corner"></div>`;
+                el.innerHTML = `${deleteBtnHtml}<video controls src="${nodeData.videoUrl}" style="width:100%; height:100%; object-fit:contain; border-radius:6px; pointer-events:auto;"></video><div class="node-resize-handle-right"></div><div class="node-resize-handle-bottom"></div><div class="node-resize-handle-corner"></div>`;
             } else if (nodeData.type === 'line') {
-                el.innerHTML = `<div class="line-resize-handle"></div><div class="line-rotate-handle"></div>`;
+                el.innerHTML = `${deleteBtnHtml}<div class="line-resize-handle"></div><div class="line-rotate-handle"></div>`;
             } else {
                 el.innerHTML = `
+                    ${deleteBtnHtml}
                     <div class="node-content-editable" contenteditable="true">${nodeData.text || ''}</div>
                     <div class="node-resize-handle-right"></div>
                     <div class="node-resize-handle-bottom"></div>
@@ -1539,6 +1547,17 @@
             setupNodeInteractions(el);
             world.appendChild(el);
             updateConnectedSvgLines();
+        }
+
+        function deleteNodeElement(nodeId, event) {
+            const el = document.querySelector(`[data-id="${nodeId}"]`);
+            if (el) {
+                connectedLinks = connectedLinks.filter(l => l.from !== nodeId && l.to !== nodeId);
+                el.remove();
+                selectedElementForDeletion = null;
+                updateConnectedSvgLines();
+            }
+            if (event) event.stopPropagation();
         }
 
         function setupNodeInteractions(el) {
@@ -1670,7 +1689,6 @@
             }
         }
         
-        // --- تفعيل الحذف الفوري عبر زر Delete من الكيبورد لأي عنصر محدد ---
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Delete' && currentEditingGangId !== null && isModalOpen === false) {
                 if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA' || document.activeElement.classList.contains('node-content-editable'))) {
@@ -1679,11 +1697,7 @@
                 
                 if (selectedElementForDeletion && document.body.contains(selectedElementForDeletion)) {
                     const deletedId = selectedElementForDeletion.getAttribute('data-id');
-                    connectedLinks = connectedLinks.filter(l => l.from !== deletedId && l.to !== deletedId);
-                    
-                    selectedElementForDeletion.remove();
-                    selectedElementForDeletion = null;
-                    updateConnectedSvgLines();
+                    deleteNodeElement(deletedId, null);
                     e.preventDefault();
                 }
             }
