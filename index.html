@@ -132,20 +132,19 @@
         .drawio-tool-btn { background: rgba(197, 160, 89, 0.15); color: var(--gold-color); border: 1px solid var(--gold-color); padding: 8px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: bold; text-align: right; }
         .drawio-tool-btn:hover { background: rgba(197, 160, 89, 0.3); }
         
-        .draggable-node { position: absolute; min-width: 140px; padding: 12px; border-radius: 6px; cursor: move; user-select: none; box-shadow: 0 4px 15px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 5px; z-index: 20; }
-        .node-rect { background: #162235; border: 1.5px solid var(--accent-color); color: #fff; }
-        .node-circle { background: #c5a059; border: 1.5px solid #fff; color: #000; border-radius: 50%; width: 110px; height: 110px; align-items: center; justify-content: center; text-align: center; }
+        .draggable-node { position: absolute; min-width: 140px; padding: 10px 12px; border-radius: 6px; cursor: move; user-select: none; box-shadow: 0 4px 15px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 4px; z-index: 20; background: #162235; border: 1.5px solid var(--accent-color); color: #fff; }
+        .node-circle { border-radius: 50%; width: 110px; height: 110px; align-items: center; justify-content: center; text-align: center; padding: 15px; }
         .node-text { background: rgba(0,0,0,0.6); border: 1px dashed var(--gold-color); color: var(--gold-color); font-size: 13px; padding: 8px; }
         
-        /* تصميم شكل الخط المستقيم المستقل القابل للتحكم بالحجم والحركة */
+        /* الخط المستقيم المستقل القابل للتحجيم والسحب المباشر */
         .node-line { position: absolute; background: var(--gold-color); cursor: move; user-select: none; z-index: 20; min-width: 30px; min-height: 4px; border-radius: 2px; }
         
-        .node-header-row { display: flex; justify-content: flex-end; align-items: center; margin-bottom: 2px; }
-        .node-delete-btn { background: var(--danger-color); color: #fff; border: none; font-size: 9px; padding: 2px 6px; border-radius: 3px; cursor: pointer; }
-        
-        .line-controls { display: flex; align-items: center; gap: 5px; background: rgba(0,0,0,0.8); padding: 4px; border-radius: 4px; border: 1px solid var(--gold-color); }
-        .line-controls button { background: #162235; color: #fff; border: 1px solid var(--border-color); width: 22px; height: 22px; font-size: 12px; font-weight: bold; cursor: pointer; border-radius: 3px; display: flex; align-items: center; justify-content: center; }
-        .line-controls button:hover { background: var(--accent-color); }
+        /* زر (X) أحمر صغير ونظيف على الطرف */
+        .node-delete-x { position: absolute; top: -6px; right: -6px; width: 18px; height: 18px; background: var(--danger-color); color: #fff; border: 1px solid #fff; border-radius: 50%; font-size: 10px; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 40; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        .node-delete-x:hover { transform: scale(1.15); background: #ff1a3c; }
+
+        /* مقبض لتغيير الحجم عند سحب أطراف الخط المستقيم */
+        .line-resize-handle { position: absolute; right: 0; top: 0; width: 12px; height: 100%; cursor: ew-resize; background: rgba(255,255,255,0.4); border-radius: 0 2px 2px 0; }
         
         /* وثيقة التقرير الاستخباراتي */
         .cia-classified-doc { background: #f4f4f0; color: #111; padding: 30px; border-radius: 6px; border: 2px solid #333; font-family: 'Courier New', Courier, monospace; position: relative; direction: rtl; text-align: right; overflow: hidden; font-weight: bold; }
@@ -344,7 +343,7 @@
         </div>
     </div>
 
-    <!-- نافذة ملف العصابة بملء الشاشة مع أداة الخط المستقيم الحر القابل للتحكم بالحجم والحركة -->
+    <!-- نافذة ملف العصابة بملء الشاشة -->
     <div class="gang-fullscreen-overlay" id="gangFullscreenModal">
         <div class="gang-fullscreen-header">
             <div style="color: var(--gold-color); font-size: 18px; font-weight: bold;" id="fullscreenGangTitle">🏴‍☠️ ملف العصابة</div>
@@ -356,13 +355,13 @@
         <div class="gang-editor-layout">
             <div class="gang-sidebar">
                 <h5 style="color: var(--gold-color); font-size: 12px; margin-bottom: 5px;">📦 أدوات الشجرة واللوحة</h5>
-                <button class="drawio-tool-btn" onclick="spawnNode('rect')">▭ مستطيل قيادي جديد</button>
-                <button class="drawio-tool-btn" onclick="spawnNode('circle')">⭕ دائرة عضو جديد</button>
+                <button class="drawio-tool-btn" onclick="spawnNode('rect')">▭ مستطيل جديد</button>
+                <button class="drawio-tool-btn" onclick="spawnNode('circle')">⭕ دائرة جديدة</button>
                 <button class="drawio-tool-btn" onclick="spawnNode('text')">💬 نص كتابي حر</button>
                 <button class="drawio-tool-btn" style="background:rgba(197,160,89,0.3); border-color:var(--gold-color);" onclick="spawnLine()">➖ خط مستقيم جديد</button>
                 
                 <div style="font-size: 10px; color: var(--text-muted); line-height: 1.4; margin-top: 5px;">
-                    💡 <b>الخط المستقيم:</b> يُنشأ مثل المربع، يمكنك سحبه لأي مكان، وتكبير/تصغير عرضه وطوله بالأزرار الخاصة به!
+                    💡 <b>التحكم بالخط:</b> اسحب حافة الخط الأيمن لتغيير طوله بحرية تامة دون أي قوائم!
                 </div>
                 
                 <h5 style="color: var(--gold-color); font-size: 12px; margin-top: 15px; margin-bottom: 5px;">📋 نبذة العصابة</h5>
@@ -371,7 +370,7 @@
                 <button class="btn-login" style="background:var(--gold-color); color:#000; margin-top: 10px; padding:8px; font-size:11px;" onclick="updateGangDetailsOnly()">تحديث النبذة فقط</button>
             </div>
             <div class="gang-canvas-area" id="gangCanvasArea">
-                <!-- عناصر المخطط والشجرة والخطوط الحرّة ستظهر هنا -->
+                <!-- العناصر تظهر هنا -->
             </div>
         </div>
     </div>
@@ -899,7 +898,7 @@
         }
 
         // ==========================================
-        // 🏴‍☠️ نظام العصابات واللوحة (مربعات، دوائر، نصوص، وخطوط مستقيمة قابلة للتحكم الحر)
+        // 🏴‍☠️ نظام العصابات واللوحة
         // ==========================================
         function openCreateGangModal() {
             openCustomModal("🏴‍☠️ إنشاء عصابة جديدة", `
@@ -936,8 +935,8 @@
                 g.nodes.forEach(nodeData => renderNodeElement(nodeData));
             } else {
                 renderNodeElement({ id: 'node_' + Date.now() + 1, type: 'circle', text: '👑 القائد', x: 250, y: 60, width: 110, height: 110 });
-                renderNodeElement({ id: 'node_' + Date.now() + 2, type: 'rect', text: 'مسؤول العمليات', x: 120, y: 220, width: 140, height: 60 });
-                renderNodeElement({ id: 'node_' + Date.now() + 3, type: 'line', text: '', x: 200, y: 180, width: 120, height: 4 });
+                renderNodeElement({ id: 'node_' + Date.now() + 2, type: 'rect', text: 'مسؤول العمليات', x: 120, y: 220, width: 150, height: 50 });
+                renderNodeElement({ id: 'node_' + Date.now() + 3, type: 'line', text: '', x: 200, y: 180, width: 150, height: 4 });
             }
             
             document.getElementById("gangFullscreenModal").style.display = "flex";
@@ -979,42 +978,49 @@
             const div = document.createElement("div");
             
             const isLine = data.type === 'line';
-            div.className = isLine ? 'node-line' : `draggable-node ${data.type === 'circle' ? 'node-circle' : (data.type === 'text' ? 'node-text' : 'node-rect')}`;
+            div.className = isLine ? 'node-line' : `draggable-node ${data.type === 'circle' ? 'node-circle' : (data.type === 'text' ? 'node-text' : '')}`;
             
             div.style.left = data.x + 'px';
             div.style.top = data.y + 'px';
             if (data.width) div.style.width = data.width + 'px';
-            if (data.height && !isLine) div.style.height = data.height + 'px';
-            if (isLine && data.height) div.style.height = data.height + 'px';
+            if (data.height) div.style.height = data.height + 'px';
             
             div.setAttribute('data-id', data.id);
             
             if (isLine) {
                 div.innerHTML = `
-                    <div style="position: absolute; top: -24px; left: 0; display:flex; gap:2px; z-index:30;">
-                        <button class="node-delete-btn" onclick="this.closest('.node-line').remove()">✕ حذف</button>
-                        <div class="line-controls">
-                            <button onclick="resizeLine(this, 20, 0)" title="توسيع الطول">➕</button>
-                            <button onclick="resizeLine(this, -20, 0)" title="تقصير الطول">➖</button>
-                            <button onclick="resizeLine(this, 0, 3)" title="زيادة السُمك">🡡</button>
-                            <button onclick="resizeLine(this, 0, -3)" title="تقليل السُمك">🡣</button>
-                        </div>
-                    </div>
+                    <div class="node-delete-x" onclick="this.closest('.node-line').remove()" title="حذف الخط">✕</div>
+                    <div class="line-resize-handle" title="اسحب لتغيير الطول"></div>
                 `;
+                
+                // تفعيل تغيير حجم الخط عند سحب المقبض الأيمن
+                const handle = div.querySelector('.line-resize-handle');
+                let isResizing = false, startX, startWidth;
+                handle.addEventListener('mousedown', (e) => {
+                    isResizing = true;
+                    startX = e.clientX;
+                    startWidth = div.offsetWidth;
+                    e.stopPropagation();
+                });
+                window.addEventListener('mousemove', (e) => {
+                    if (!isResizing) return;
+                    let newWidth = Math.max(30, startWidth + (e.clientX - startX));
+                    div.style.width = newWidth + 'px';
+                });
+                window.addEventListener('mouseup', () => { isResizing = false; });
+
             } else {
                 div.innerHTML = `
-                    <div class="node-header-row">
-                        <button class="node-delete-btn" onclick="this.closest('.draggable-node').remove()">✕ حذف</button>
-                    </div>
+                    <div class="node-delete-x" onclick="this.closest('.draggable-node').remove()" title="حذف العنصر">✕</div>
                     <div contenteditable="true" style="outline:none; width:100%; min-height:25px; word-break:break-all;">${data.text}</div>
                 `;
             }
             
-            // تفعيل السحب والإفلات الكامل والمستقل لجميع العناصر (مربعات، دوائر، نصوص، خطوط) دون أي تجمد
+            // سحب وإفلات حر لجميع العناصر
             let isDragging = false, startX, startY;
             
             div.addEventListener('mousedown', (e) => {
-                if (e.target.tagName === 'BUTTON' || e.target.closest('.line-controls') || e.target.getAttribute('contenteditable') === 'true') return;
+                if (e.target.tagName === 'BUTTON' || e.target.classList.contains('node-delete-x') || e.target.classList.contains('line-resize-handle') || e.target.getAttribute('contenteditable') === 'true') return;
                 isDragging = true;
                 startX = e.clientX - div.offsetLeft;
                 startY = e.clientY - div.offsetTop;
@@ -1038,20 +1044,6 @@
             area.appendChild(div);
         }
 
-        // دالة التحكم بحجم وطول وسُمك الخط المستقيم المستقل
-        function resizeLine(btn, dWidth, dHeight) {
-            const lineEl = btn.closest('.node-line');
-            if (!lineEl) return;
-            let currentWidth = parseInt(lineEl.style.width) || 120;
-            let currentHeight = parseInt(lineEl.style.height) || 4;
-            
-            let newWidth = Math.max(20, currentWidth + dWidth);
-            let newHeight = Math.max(2, Math.min(25, currentHeight + dHeight));
-            
-            lineEl.style.width = newWidth + 'px';
-            lineEl.style.height = newHeight + 'px';
-        }
-
         async function updateGangDetailsOnly() {
             if (!currentEditingGangId) return;
             const g = globalDatabase.gangs.find(item => item.id === currentEditingGangId);
@@ -1068,30 +1060,17 @@
             g.details = document.getElementById("fullscreenGangDetails").value.trim();
             
             const nodes = [];
-            // حفظ المربعات والدوائر والنصوص
-            const nodeElements = document.querySelectorAll("#gangCanvasArea .draggable-node");
+            const nodeElements = document.querySelectorAll("#gangCanvasArea .draggable-node, #gangCanvasArea .node-line");
             nodeElements.forEach(el => {
                 let type = 'rect';
                 if (el.classList.contains('node-circle')) type = 'circle';
                 if (el.classList.contains('node-text')) type = 'text';
+                if (el.classList.contains('node-line')) type = 'line';
+                
                 nodes.push({
                     id: el.getAttribute('data-id'),
                     type: type,
-                    text: el.querySelector('[contenteditable]').innerText,
-                    x: parseInt(el.style.left) || 0,
-                    y: parseInt(el.style.top) || 0,
-                    width: el.offsetWidth,
-                    height: el.offsetHeight
-                });
-            });
-
-            // حفظ الخطوط المستقيمة الحرة كأشكال مستقلة تماماً
-            const lineElements = document.querySelectorAll("#gangCanvasArea .node-line");
-            lineElements.forEach(el => {
-                nodes.push({
-                    id: el.getAttribute('data-id'),
-                    type: 'line',
-                    text: '',
+                    text: type === 'line' ? '' : el.querySelector('[contenteditable]').innerText,
                     x: parseInt(el.style.left) || 0,
                     y: parseInt(el.style.top) || 0,
                     width: el.offsetWidth,
@@ -1101,7 +1080,7 @@
 
             g.nodes = nodes;
             await saveCloudData();
-            alert("✅ تم حفظ الشجرة والخطوط المستقيمة بكامل أحجامها ومواقعها بنجاح في السحابة!");
+            alert("✅ تم حفظ الشجرة والخطوط المستقيمة بكامل مواقعها وأحجامها بنجاح في السحابة!");
         }
 
         function renderGangs() {
