@@ -312,7 +312,6 @@
         .chat-actions-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 10px; margin-left: 5px; }
         .chat-actions-btn:hover { color: #fff; }
         
-        /* إشعار الحفظ الأخضر */
         #toast-notification {
             position: fixed; top: 30px; left: 50%; transform: translateX(-50%) translateY(-100px);
             background: #10b981; color: #fff; padding: 12px 25px; border-radius: 8px; font-weight: bold; font-size: 14px;
@@ -550,7 +549,7 @@
                 <div style="font-size: 9px; color: var(--text-muted); line-height: 1.3; margin-top: 2px;">
                     💡 <b>الرسم:</b> اضغط زر الرسم واسحب بالماوس.<br>
                     🖱️ <b>التحريك:</b> بالزر الأيمن واسحب.<br>
-                    🗑️ <b>الحذف:</b> انقر على العنصر ثم اضغط <b>Delete</b> من الكيبورد.<br>
+                    🗑️ <b>الحذف:</b> انقر على أي عنصر (مربع، خط، صورة، فيديو) ثم اضغط <b>Delete</b>.<br>
                     🔘 <b>إلغاء التحديد:</b> اضغط على أي مساحة فارغة في الخلفية.
                 </div>
                 
@@ -1354,14 +1353,12 @@
             const existingNodes = world.querySelectorAll('.draggable-node, .node-line');
             existingNodes.forEach(node => node.remove());
             
-            connectedLinks = g.links || [];
+            connectedLinks = Array.isArray(g.links) ? [...g.links] : [];
             currentZoomScale = g.zoom !== undefined ? g.zoom : 1.0;
             updateZoomDisplay();
             
             if (g.nodes && Array.isArray(g.nodes) && g.nodes.length > 0) {
                 g.nodes.forEach(nodeData => renderNodeElement(nodeData));
-            } else {
-                connectedLinks = [];
             }
             
             updateConnectedSvgLines();
@@ -1428,7 +1425,7 @@
             });
             
             g.nodes = nodesArr;
-            g.links = connectedLinks;
+            g.links = [...connectedLinks];
             g.viewX = canvasArea ? canvasArea.scrollLeft : 0;
             g.viewY = canvasArea ? canvasArea.scrollTop : 0;
             g.zoom = currentZoomScale;
@@ -1674,7 +1671,7 @@
         }
         
         // --- تفعيل الحذف الفوري عبر زر Delete من الكيبورد لأي عنصر محدد ---
-        document.addEventListener('keydown', (e) => {
+        window.addEventListener('keydown', (e) => {
             if (e.key === 'Delete' && currentEditingGangId !== null && isModalOpen === false) {
                 if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA' || document.activeElement.classList.contains('node-content-editable'))) {
                     return;
@@ -1682,7 +1679,6 @@
                 
                 if (selectedElementForDeletion && document.body.contains(selectedElementForDeletion)) {
                     const deletedId = selectedElementForDeletion.getAttribute('data-id');
-                    // تنظيف الروابط المتعلقة بالعنصر المحذوف لمنع تضارب الخطوط
                     connectedLinks = connectedLinks.filter(l => l.from !== deletedId && l.to !== deletedId);
                     
                     selectedElementForDeletion.remove();
