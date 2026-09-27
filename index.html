@@ -200,9 +200,8 @@
         .gang-canvas-area::-webkit-scrollbar-thumb { background: rgba(197, 160, 89, 0.3); border-radius: 4px; transition: background 0.3s; }
         .gang-canvas-area::-webkit-scrollbar-thumb:hover { background: rgba(197, 160, 89, 0.7); }
 
-        /* تعديل العالم الداخلي للشجرة ليكون مرناً وبدون حدود وهمية */
         .gang-canvas-inner-world { 
-            position: relative; width: 10000px; height: 10000px; transform-origin: 0 0; transition: transform 0.1s ease; 
+            position: relative; width: 10000px; height: 10000px; transform-origin: 0 0; transition: transform 0.05s ease; 
         }
         
         .drawio-tool-btn { background: rgba(197, 160, 89, 0.15); color: var(--gold-color); border: 1px solid var(--gold-color); padding: 8px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: bold; text-align: right; }
@@ -565,7 +564,6 @@
         let connectedLinks = []; 
         let currentZoomScale = 1.0;
 
-        // متغيرات وضع الرسم والسحب (Word Style Drag to Create)
         let activeDrawingType = null;
         let defaultDrawingText = '';
         let isDrawingBox = false;
@@ -580,13 +578,12 @@
 
         if (canvasArea) {
             canvasArea.addEventListener('mousedown', (e) => {
-                if (e.button === 2) { // الزر الأيمن للتحريك (Pan)
+                if (e.button === 2) { 
                     isRightMouseDown = true;
                     rightMouseStartX = e.clientX + canvasArea.scrollLeft;
                     rightMouseStartY = e.clientY + canvasArea.scrollTop;
                     e.preventDefault();
                 } else if (e.button === 0 && activeDrawingType) {
-                    // بدء الرسم عند النقر والسحب بالزر الأيسر
                     isDrawingBox = true;
                     const rect = canvasInnerWorld.getBoundingClientRect();
                     drawStartX = (e.clientX - rect.left) / currentZoomScale;
@@ -667,6 +664,7 @@
 
             canvasArea.addEventListener('contextmenu', (e) => e.preventDefault());
 
+            // تخصيص عجلة الماوس للزووم فقط دون تحريك الشجرة يميناً ويساراً
             canvasArea.addEventListener('wheel', (e) => {
                 e.preventDefault();
                 if (e.deltaY < 0) {
@@ -1195,7 +1193,10 @@
                     name, 
                     details: document.getElementById("popGangDetails").value.trim(),
                     nodes: [],
-                    links: [] 
+                    links: [],
+                    viewX: 4000,
+                    viewY: 4000,
+                    zoom: 1.0
                 });
                 await saveCloudData(); closeModal();
             });
@@ -1220,7 +1221,7 @@
             existingNodes.forEach(node => node.remove());
             
             connectedLinks = g.links || [];
-            currentZoomScale = 1.0;
+            currentZoomScale = g.zoom !== undefined ? g.zoom : 1.0;
             updateZoomDisplay();
             
             if (g.nodes && Array.isArray(g.nodes) && g.nodes.length > 0) {
@@ -1228,14 +1229,23 @@
             } else {
                 const n1 = 'node_' + Date.now() + 1;
                 const n2 = 'node_' + Date.now() + 2;
-                renderNodeElement({ id: n1, type: 'circle', text: '👑 القائد', x: 300, y: 150, width: 130, height: 130, angle: 0, imageUrl: '' });
-                renderNodeElement({ id: n2, type: 'rect', text: 'مسؤول العمليات والأعضاء', x: 285, y: 350, width: 160, height: 60, angle: 0, imageUrl: '' });
+                renderNodeElement({ id: n1, type: 'circle', text: '👑 القائد', x: 4950, y: 4900, width: 130, height: 130, angle: 0, imageUrl: '' });
+                renderNodeElement({ id: n2, type: 'rect', text: 'مسؤول العمليات والأعضاء', x: 4935, y: 5100, width: 160, height: 60, angle: 0, imageUrl: '' });
                 connectedLinks = [{ id: 'link_' + Date.now(), from: n1, to: n2 }];
             }
             
             updateConnectedSvgLines();
             document.getElementById("gangFullscreenModal").style.display = "flex";
+
+            // استعادة موضع السكرول المحفوظ (الوصول لنفس النقطة فوراً)
+            setTimeout(() => {
+                if (canvasArea) {
+                    canvasArea.scrollLeft = g.viewX !== undefined ? g.viewX : 4800;
+                    canvasArea.scrollTop = g.viewY !== undefined ? g.viewY : 4800;
+                }
+            }, 50);
         }
+
         function closeGangFullscreen() {
             document.getElementById("gangFullscreenModal").style.display = "none";
             currentEditingGangId = null;
@@ -1586,8 +1596,14 @@
             });
             g.nodes = nodes;
             g.links = connectedLinks; 
+
+            // حفظ إحداثيات موضع الكاميرا ومستوى الزووم الحاليين بدقة
+            g.viewX = canvasArea.scrollLeft;
+            g.viewY = canvasArea.scrollTop;
+            g.zoom = currentZoomScale;
+
             await saveCloudData();
-            alert("✅ تم حفظ الهيكل التنظيمي وصور اللوحة سحابياً بدقة تامة!");
+            alert("✅ تم حفظ الهيكل التنظيمي وموضع الشاشة الحالي سحابياً بدقة تامة!");
         }
         
         function renderGangs() {
