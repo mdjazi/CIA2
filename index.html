@@ -34,13 +34,13 @@
         .input-group { text-align: right; margin-bottom: 14px; }
         .input-group label { display: block; font-size: 11px; color: var(--accent-color); margin-bottom: 5px; font-weight: 600; }
         .input-group input, .input-group select, .input-group textarea {
-            width: 100%; padding: 12px; background: rgba(4, 6, 10, 0.85); border: 1px solid var(--border-color); border-radius: 6px; color: #fff; font-size: 13px; text-align: right; outline: none; resize: vertical;
+            width: 100%; padding: 12px; background: rgba(4, 6, 10, 0.85); border: 1px solid var(--border-color); border-radius: 6px; color: #fff; font-size: 13px; text-align: right; outline: none;
         }
         .search-box { margin-bottom: 15px; border-color: var(--gold-color) !important; background: rgba(9, 16, 26, 0.8) !important; }
         .btn-create-action { width: 100%; padding: 12px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #fff; border: none; border-radius: 6px; font-weight: 800; font-size: 14px; cursor: pointer; margin-bottom: 20px; }
         .btn-login { width: 100%; padding: 13px; background: linear-gradient(135deg, var(--accent-color) 0%, #0052a3 100%); color: #fff; border: none; border-radius: 6px; font-weight: 700; font-size: 13px; cursor: pointer; margin-top: 10px; }
         .error-msg { color: var(--danger-color); font-size: 12px; margin-top: 12px; display: none; font-weight: 600; }
-        .sync-status { font-size: 11px; color: var(--gold-color); margin-top: 10px; font-weight: bold; }
+        .sync-status { font-size: 11px; color: var(--gold-color); margin-top: 10px; }
         
         #main-system { display: none; width: 100%; max-width: 1150px; position: relative; z-index: 10; }
         .header-system { display: flex; justify-content: space-between; align-items: center; background: rgba(11, 16, 23, 0.85); padding: 18px 25px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 20px; }
@@ -143,7 +143,7 @@
         .gang-entry-field { margin-bottom: 15px; }
         .gang-entry-field label { display: block; font-size: 11px; color: var(--gold-color); font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px; }
         .gang-entry-field input, .gang-entry-field textarea {
-            width: 100%; background: rgba(3, 6, 10, 0.9); border: 1px solid rgba(197, 160, 89, 0.5); border-radius: 6px; color: #fff; padding: 10px 12px; font-size: 13px; outline: none; transition: border 0.2s; resize: vertical;
+            width: 100%; background: rgba(3, 6, 10, 0.9); border: 1px solid rgba(197, 160, 89, 0.5); border-radius: 6px; color: #fff; padding: 10px 12px; font-size: 13px; outline: none; transition: border 0.2s;
         }
         .gang-entry-field input:focus, .gang-entry-field textarea:focus { border-color: var(--gold-color); box-shadow: 0 0 8px rgba(197, 160, 89, 0.3); }
 
@@ -179,79 +179,37 @@
         .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
         
         .gang-fullscreen-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(3, 5, 8, 0.95); z-index: 3000; flex-direction: column; padding: 20px; }
-        .gang-fullscreen-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold-color); padding-bottom: 12px; margin-bottom: 10px; flex-wrap: wrap; gap: 10px; }
-        .gang-editor-layout { display: flex; flex-grow: 1; gap: 15px; overflow: hidden; position: relative; }
+        .gang-fullscreen-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold-color); padding-bottom: 12px; margin-bottom: 15px; }
+        .gang-editor-layout { display: flex; flex-grow: 1; gap: 15px; overflow: hidden; }
+        .gang-sidebar { width: 280px; background: rgba(8, 13, 20, 0.9); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; z-index: 10; }
+        .gang-canvas-area { flex-grow: 1; background: #06090f; border: 1px solid var(--gold-color); border-radius: 8px; position: relative; overflow: hidden; background-image: linear-gradient(to right, #101926 1px, transparent 1px), linear-gradient(to bottom, #101926 1px, transparent 1px); background-size: 30px 30px; }
         
-        .gang-sidebar { 
-            width: 240px; 
-            min-width: 240px; 
-            background: rgba(8, 13, 20, 0.95); 
-            border: 1px solid var(--border-color); 
-            border-radius: 8px; 
-            padding: 10px; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 6px; 
-            overflow: visible; 
-            z-index: 10; 
-        }
-        
-        .zoom-lens-bar-external {
-            display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-bottom: 8px; padding: 0 5px;
-        }
-        .zoom-lens-btn { background: rgba(197, 160, 89, 0.2); border: 1px solid var(--gold-color); color: var(--gold-color); width: 28px; height: 28px; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; }
-        .zoom-lens-btn:hover { background: rgba(197, 160, 89, 0.4); }
-        .zoom-level-lbl { color: #fff; font-size: 11px; font-family: monospace; min-width: 45px; text-align: center; }
-
-        .gang-canvas-area {
-            flex-grow: 1; background: #06090f; border: 1px solid var(--gold-color); border-radius: 8px; position: relative; overflow: auto;
-            background-image: linear-gradient(to right, #101926 1px, transparent 1px), linear-gradient(to bottom, #101926 1px, transparent 1px); background-size: 30px 30px;
-            scrollbar-width: thin; scrollbar-color: rgba(197, 160, 89, 0.3) transparent;
-        }
-        .gang-canvas-area::-webkit-scrollbar { width: 6px; height: 6px; }
-        .gang-canvas-area::-webkit-scrollbar-track { background: transparent; }
-        .gang-canvas-area::-webkit-scrollbar-thumb { background: rgba(197, 160, 89, 0.3); border-radius: 4px; transition: background 0.3s; }
-        .gang-canvas-area::-webkit-scrollbar-thumb:hover { background: rgba(197, 160, 89, 0.7); }
-
-        .gang-canvas-inner-world { 
-            position: relative; width: 10000px; height: 10000px; transform-origin: 0 0; transition: transform 0.05s ease; 
-        }
-        
-        .drawio-tool-btn { background: rgba(197, 160, 89, 0.15); color: var(--gold-color); border: 1px solid var(--gold-color); padding: 6px 8px; border-radius: 5px; cursor: pointer; font-size: 11px; font-weight: bold; text-align: right; }
+        .drawio-tool-btn { background: rgba(197, 160, 89, 0.15); color: var(--gold-color); border: 1px solid var(--gold-color); padding: 8px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: bold; text-align: right; }
         .drawio-tool-btn:hover { background: rgba(197, 160, 89, 0.3); }
-        .drawio-tool-btn.active-drawing { background: var(--success-color) !important; color: #fff !important; animation: blinkLink 1s infinite alternate; }
         .drawio-tool-btn.active-linking { background: var(--accent-color) !important; color: #fff !important; animation: blinkLink 1s infinite alternate; }
-        @keyframes blinkLink { 0% { box-shadow: 0 0 5px #10b981; } 100% { box-shadow: 0 0 20px #10b981; } }
+        @keyframes blinkLink { 0% { box-shadow: 0 0 5px #0084ff; } 100% { box-shadow: 0 0 20px #0084ff; } }
         
         .draggable-node { 
-            position: absolute; min-width: 60px; min-height: 40px; width: auto; height: auto; padding: 12px; border-radius: 6px; cursor: move; user-select: none; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 6px; z-index: 20; 
+            position: absolute; min-width: 150px; min-height: 50px; padding: 12px; border-radius: 6px; cursor: move; user-select: none; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 4px; z-index: 20; 
             background: #162235; border: 1.5px solid var(--accent-color); color: #fff; 
             overflow: visible; word-break: break-word; overflow-wrap: break-word; 
         }
         .node-circle { 
-            border-radius: 50% !important; min-width: 60px !important; min-height: 60px !important; width: auto !important; height: auto !important;
-            align-items: center; justify-content: center; text-align: center; padding: 15px; 
+            border-radius: 50% !important; min-width: 130px !important; min-height: 130px !important; 
+            align-items: center; justify-content: center; text-align: center; padding: 20px; 
             background: #162235; border: 1.5px solid var(--accent-color); 
             overflow: visible !important; display: flex !important;
         }
         .node-text { 
             background: rgba(0,0,0,0.6); border: 1px dashed var(--gold-color); color: var(--gold-color); 
-            font-size: 13px; padding: 10px; overflow: visible; word-break: break-word; overflow-wrap: break-word; width: auto !important; height: auto !important;
-        }
-
-        .node-image-only {
-            background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important;
+            font-size: 13px; padding: 10px; overflow: visible; word-break: break-word; overflow-wrap: break-word;
         }
         
-        .node-content-editable { 
-            outline: none; width: 100%; height: auto; min-width: 40px; min-height: 20px;
-            word-break: break-word; overflow-wrap: break-word; white-space: pre-wrap; 
-            z-index: 25; position: relative; 
-        }
-        
+        .node-content-editable { outline: none; width: 100%; height: auto; word-break: break-word; overflow-wrap: break-word; overflow: visible; white-space: pre-wrap; }
         .node-line { position: absolute; background: var(--gold-color); cursor: move; user-select: none; z-index: 20; min-width: 30px; min-height: 4px; border-radius: 2px; transform-origin: left center; }
         
+        /* 🔗 تصميم خطوط الربط الحية الذكية بين المربعات */
         .connected-svg-line { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
         .connected-svg-line line { stroke: var(--gold-color); stroke-width: 3; stroke-dasharray: 4 2; pointer-events: visibleStroke; cursor: pointer; transition: stroke 0.2s; }
         .connected-svg-line line:hover { stroke: #00d2ff; stroke-width: 5; }
@@ -317,7 +275,7 @@
             <input type="password" id="login-pin" placeholder="••••" autocomplete="off">
         </div>
         <button class="btn-login" onclick="login()">تسجيل الدخول للمنظومة الفدرالية</button>
-        <div class="sync-status" id="loading-status">🔄 جاري الاتصال بالسحابة العامة...</div>
+        <div class="sync-status" id="loading-status">🔄 جاري الاتصال بالسحابة...</div>
         <div class="error-msg" id="error-msg">⚠️ خطأ في بيانات الدخول!</div>
     </div>
     <div id="main-system">
@@ -342,8 +300,8 @@
                     <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Emblem">
                 </div>
                 <div>
-                    <div class="grid-title">سطح مكتب نظام CIA الفدرالي (سحابي عام)</div>
-                    <small style="color:var(--text-muted)">اختر المجلد الاستخباراتي للوصول إلى قاعدة البيانات المشتركة</small>
+                    <div class="grid-title">سطح مكتب نظام CIA الفدرالي</div>
+                    <small style="color:var(--text-muted)">اختر المجلد الاستخباراتي للوصول إلى قاعدة البيانات</small>
                 </div>
             </div>
             <div class="folder-grid" style="grid-template-columns: repeat(3, 1fr);">
@@ -486,64 +444,46 @@
         </div>
     </div>
     
+    <!-- 🏴‍☠️ شاشة العصابات الشاملة مع نظام شبكة الربط الذكية -->
     <div class="gang-fullscreen-overlay" id="gangFullscreenModal">
         <div class="gang-fullscreen-header">
-            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-                <div style="display:flex; align-items:center; gap:6px;">
-                    <span style="font-size:20px;">🏴‍☠️</span>
-                    <input type="text" id="fullscreenGangTitleInput" style="background: rgba(4, 6, 10, 0.9); border: 1px solid var(--gold-color); color: var(--gold-color); font-size: 15px; font-weight: bold; padding: 4px 10px; border-radius: 6px; width: 200px; outline:none;" placeholder="اسم العصابة...">
-                </div>
-                <div style="display:flex; align-items:center; gap:6px;">
-                    <span style="font-size:11px; color:var(--gold-color); font-weight:bold;">النبذة:</span>
-                    <input type="text" id="fullscreenGangDetails" style="background: rgba(4, 6, 10, 0.9); border: 1px solid var(--border-color); color: #fff; font-size: 13px; padding: 4px 10px; border-radius: 6px; width: 260px; outline:none;" placeholder="نبذة تعريفية سريعة...">
-                </div>
-                <button class="btn-login" style="background:var(--gold-color); color:#000; margin:0; padding:4px 12px; font-size:11px; width:auto;" onclick="updateGangDetailsOnly()">حفظ النبذة والاسم</button>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:20px;">🏴‍☠️</span>
+                <input type="text" id="fullscreenGangTitleInput" style="background: rgba(4, 6, 10, 0.9); border: 1px solid var(--gold-color); color: var(--gold-color); font-size: 16px; font-weight: bold; padding: 4px 10px; border-radius: 6px; width: 260px; outline:none;" placeholder="اسم العصابة...">
             </div>
-            <div style="display: flex; gap: 8px;">
-                <button class="btn-login" style="background: var(--success-color); margin:0; padding: 6px 12px; font-size: 11px;" onclick="saveGangFullscreenCanvas()">💾 حفظ اللوحة سحابياً</button>
-                <button class="btn-login" style="background: var(--danger-color); margin:0; padding: 6px 12px; font-size: 11px;" onclick="closeGangFullscreen()">✕ إغلاق</button>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-login" style="background: var(--success-color); margin:0; padding: 6px 15px; font-size: 11px;" onclick="saveGangFullscreenCanvas()">💾 حفظ اللوحة والتغيرات سحابياً</button>
+                <button class="btn-login" style="background: var(--danger-color); margin:0; padding: 6px 15px; font-size: 11px;" onclick="closeGangFullscreen()">✕ إغلاق الشاشة</button>
             </div>
         </div>
         <div class="gang-editor-layout">
             <div class="gang-sidebar">
-                <h5 style="color: var(--gold-color); font-size: 11px; margin-bottom: 2px;">📦 أدوات الرسم (Word Style)</h5>
-                <button class="drawio-tool-btn" id="btnSpawnRect" onclick="activateDrawingMode('rect', 'مستطيل جديد')">▭ إنشاء مستطيل (سحب)</button>
-                <button class="drawio-tool-btn" id="btnSpawnCircle" onclick="activateDrawingMode('circle', 'دائرة جديدة')">⭕ إنشاء دائرة (سحب)</button>
-                <button class="drawio-tool-btn" id="btnSpawnText" onclick="activateDrawingMode('text', 'ملاحظة نصية...')">💬 إنشاء نص حر (سحب)</button>
-                <button class="drawio-tool-btn" id="btnSpawnLine" onclick="activateDrawingMode('line', '')">➖ خط منفصل (سحب)</button>
-                <button class="drawio-tool-btn" id="btnSpawnImg" onclick="activateDrawingMode('imgNode', '')" style="border-color:var(--success-color); color:#34d399;">🖼️ مربع صورة مستقل (سحب)</button>
+                <h5 style="color: var(--gold-color); font-size: 12px; margin-bottom: 5px;">📦 أدوات الشجرة واللوحة</h5>
+                <button class="drawio-tool-btn" onclick="spawnNode('rect')">▭ مستطيل جديد</button>
+                <button class="drawio-tool-btn" onclick="spawnNode('circle')">⭕ دائرة جديدة</button>
+                <button class="drawio-tool-btn" onclick="spawnNode('text')">💬 نص كتابي حر</button>
+                <button class="drawio-tool-btn" style="background:rgba(197,160,89,0.3); border-color:var(--gold-color);" onclick="spawnLine()">➖ خط منفصل حر</button>
                 
-                <button class="drawio-tool-btn" id="btnLinkNodes" style="background:rgba(0, 132, 255, 0.25); border-color:#0084ff; color:#38bdf8;" onclick="toggleLinkingMode()">🔗 ربط عنصرين ببعض</button>
+                <!-- 🔗 زر الربط التفاعلي المباشر -->
+                <button class="drawio-tool-btn" id="btnLinkNodes" style="background:rgba(0, 132, 255, 0.25); border-color:#0084ff; color:#38bdf8;" onclick="toggleLinkingMode()">🔗 ربط عنصرين ببعض (شبكة)</button>
                 
-                <hr style="border: 0; border-top: 1px dashed rgba(197, 160, 89, 0.4); margin: 2px 0;">
-                
-                <h5 style="color: var(--gold-color); font-size: 11px; margin-bottom: 2px;">🖼️ صورة المربع المحدد</h5>
-                <input type="text" id="nodeImageLinkInput" style="width:100%; padding:5px; background:#04060a; border:1px solid var(--border-color); color:#fff; font-size:10px; border-radius:4px; margin-bottom:3px;" placeholder="رابط الصورة...">
-                <button class="drawio-tool-btn" style="border-color:var(--success-color); color:#34d399;" onclick="attachImageToSelectedNode()">➕ تعيين الصورة</button>
-                
-                <div style="font-size: 9px; color: var(--text-muted); line-height: 1.3; margin-top: 2px;">
-                    💡 <b>الرسم:</b> اضغط زر الرسم واسحب بالماوس لتحدد الحجم.<br>
-                    🖱️ <b>التحريك:</b> بالزر الأيمن واسحب.<br>
-                    🗑️ <b>الحذف:</b> انقر واضغط Delete.
+                <div style="font-size: 10px; color: var(--text-muted); line-height: 1.4; margin-top: 5px;">
+                    💡 <b>كيفية الربط:</b> اضغط زر (🔗 ربط عنصرين)، ثم انقر على العنصر الأول (مثلاً الرئيس)، ثم انقر على العنصر الثاني (العضو) ليتم شبك الخط بينهما تلقائياً!<br>
+                    🗑️ <b>الحذف:</b> انقر على المربع أو خط الربط واضغط <b>Delete</b>.
                 </div>
                 
-                <hr style="border: 0; border-top: 1px dashed rgba(217, 4, 41, 0.4); margin: 4px 0;">
+                <h5 style="color: var(--gold-color); font-size: 12px; margin-top: 15px; margin-bottom: 5px;">📋 نبذة العصابة</h5>
+                <textarea id="fullscreenGangDetails" rows="4" style="width:100%; padding:8px; background:#04060a; border:1px solid var(--border-color); color:#fff; font-size:12px; border-radius:5px;" placeholder="ملاحظات وتفاصيل العصابة..."></textarea>
                 
-                <button class="btn-login" style="background: var(--danger-color); padding: 7px; font-size: 11px; margin-top: 0;" onclick="deleteGangFromEditor()">🗑️ حذف العصابة</button>
+                <button class="btn-login" style="background:var(--gold-color); color:#000; margin-top: 10px; padding:8px; font-size:11px;" onclick="updateGangDetailsOnly()">تحديث النبذة فقط</button>
+                
+                <hr style="border: 0; border-top: 1px dashed rgba(217, 4, 41, 0.4); margin: 15px 0 5px 0;">
+                
+                <button class="btn-login" style="background: var(--danger-color); padding: 9px; font-size: 11px; margin-top: 5px;" onclick="deleteGangFromEditor()">🗑️ حذف العصابة نهائياً</button>
             </div>
-            <div style="flex-grow: 1; display: flex; flex-direction: column; overflow: hidden;">
-                <div class="zoom-lens-bar-external">
-                    <span style="color:var(--gold-color); font-size:11px; font-weight:bold; margin-left:auto;">مستوى العرض:</span>
-                    <button class="zoom-lens-btn" onclick="zoomCanvas(-0.1)" title="تصغير">➖</button>
-                    <span class="zoom-level-lbl" id="zoomLevelLbl">100%</span>
-                    <button class="zoom-lens-btn" onclick="zoomCanvas(0.1)" title="تكبير">➕</button>
-                    <button class="zoom-lens-btn" onclick="resetZoom()" title="إعادة ضبط">🔍</button>
-                </div>
-                <div class="gang-canvas-area" id="gangCanvasArea">
-                    <div class="gang-canvas-inner-world" id="gangCanvasInnerWorld">
-                        <svg class="connected-svg-line" id="svgCanvas"></svg>
-                    </div>
-                </div>
+            <div class="gang-canvas-area" id="gangCanvasArea">
+                <!-- SVG Canvas لرسم الخطوط الحية -->
+                <svg class="connected-svg-line" id="svgCanvas"></svg>
             </div>
         </div>
     </div>
@@ -561,10 +501,8 @@
                 ctx.fillText(chars.charAt(Math.floor(Math.random() * chars.length)), i * 13, Math.random() * canvas.height);
             }
         }, 50);
-
         const BIN_ID = "6ab719faffd5d160532fe4cd"; 
         const API_KEY = "$2a$10$AlBdQgKayB/o7aIaPD42L.khi.iGvmNkXo5WPklHsUpYNmCMMxe0q"; 
-
         let globalDatabase = {
             users: {
                 "Majed": { password: "1967", pin: "0000", id: "CIA-001", role: "DIRECTOR" },
@@ -578,151 +516,11 @@
         let currentEditingGangId = null;
         let selectedElementForDeletion = null;
         
+        /* متغيرات الربط الشبكي التفاعلي */
         let isLinkingMode = false;
         let linkSourceNodeId = null;
         let connectedLinks = []; 
-        let currentZoomScale = 1.0;
 
-        let activeDrawingType = null;
-        let defaultDrawingText = '';
-        let isDrawingBox = false;
-        let drawStartX = 0, drawStartY = 0;
-        let previewBoxElement = null;
-
-        const canvasArea = document.getElementById("gangCanvasArea");
-        const canvasInnerWorld = document.getElementById("gangCanvasInnerWorld");
-
-        let isRightMouseDown = false;
-        let rightMouseStartX = 0, rightMouseStartY = 0;
-
-        if (canvasArea) {
-            canvasArea.addEventListener('mousedown', (e) => {
-                if (e.button === 2) { 
-                    isRightMouseDown = true;
-                    rightMouseStartX = e.clientX + canvasArea.scrollLeft;
-                    rightMouseStartY = e.clientY + canvasArea.scrollTop;
-                    e.preventDefault();
-                } else if (e.button === 0 && activeDrawingType) {
-                    isDrawingBox = true;
-                    const rect = canvasInnerWorld.getBoundingClientRect();
-                    drawStartX = (e.clientX - rect.left) / currentZoomScale;
-                    drawStartY = (e.clientY - rect.top) / currentZoomScale;
-
-                    previewBoxElement = document.createElement('div');
-                    previewBoxElement.style.position = 'absolute';
-                    previewBoxElement.style.left = drawStartX + 'px';
-                    previewBoxElement.style.top = drawStartY + 'px';
-                    previewBoxElement.style.width = '0px';
-                    previewBoxElement.style.height = '0px';
-                    previewBoxElement.style.border = '2px dashed #10b981';
-                    previewBoxElement.style.background = 'rgba(16, 185, 129, 0.15)';
-                    previewBoxElement.style.borderRadius = activeDrawingType === 'circle' ? '50%' : '6px';
-                    previewBoxElement.style.zIndex = '5000';
-                    canvasInnerWorld.appendChild(previewBoxElement);
-                    e.preventDefault();
-                }
-            });
-
-            window.addEventListener('mousemove', (e) => {
-                if (isRightMouseDown) {
-                    canvasArea.scrollLeft = rightMouseStartX - e.clientX;
-                    canvasArea.scrollTop = rightMouseStartY - e.clientY;
-                } else if (isDrawingBox && previewBoxElement) {
-                    const rect = canvasInnerWorld.getBoundingClientRect();
-                    const currentX = (e.clientX - rect.left) / currentZoomScale;
-                    const currentY = (e.clientY - rect.top) / currentZoomScale;
-
-                    const width = Math.abs(currentX - drawStartX);
-                    const height = Math.abs(currentY - drawStartY);
-                    const left = Math.min(currentX, drawStartX);
-                    const top = Math.min(currentY, drawStartY);
-
-                    previewBoxElement.style.left = left + 'px';
-                    previewBoxElement.style.top = top + 'px';
-                    previewBoxElement.style.width = Math.max(40, width) + 'px';
-                    previewBoxElement.style.height = activeDrawingType === 'circle' ? Math.max(40, width) + 'px' : Math.max(30, height) + 'px';
-                }
-            });
-
-            window.addEventListener('mouseup', async (e) => {
-                if (e.button === 2) {
-                    isRightMouseDown = false;
-                } else if (isDrawingBox && previewBoxElement) {
-                    isDrawingBox = false;
-                    const finalLeft = parseInt(previewBoxElement.style.left);
-                    const finalTop = parseInt(previewBoxElement.style.top);
-                    const finalWidth = parseInt(previewBoxElement.style.width);
-                    const finalHeight = parseInt(previewBoxElement.style.height);
-                    previewBoxElement.remove();
-                    previewBoxElement = null;
-
-                    let imgUrlPrompt = '';
-                    if (activeDrawingType === 'imgNode') {
-                        imgUrlPrompt = prompt("أدخل رابط الصورة (URL):", "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=300&h=350");
-                        if (!imgUrlPrompt) {
-                            resetDrawingMode();
-                            return;
-                        }
-                    }
-
-                    const nodeData = {
-                        id: 'node_' + Date.now() + Math.floor(Math.random()*10000),
-                        type: activeDrawingType,
-                        text: activeDrawingType === 'imgNode' || activeDrawingType === 'line' ? '' : defaultDrawingText,
-                        x: finalLeft,
-                        y: finalTop,
-                        width: finalWidth,
-                        height: finalHeight,
-                        angle: 0,
-                        imageUrl: imgUrlPrompt || ''
-                    };
-                    renderNodeElement(nodeData);
-                    resetDrawingMode();
-                }
-            });
-
-            canvasArea.addEventListener('contextmenu', (e) => e.preventDefault());
-
-            canvasArea.addEventListener('wheel', (e) => {
-                e.preventDefault();
-                if (e.deltaY < 0) {
-                    zoomCanvas(0.1);
-                } else {
-                    zoomCanvas(-0.1);
-                }
-            }, { passive: false });
-        }
-
-        function activateDrawingMode(type, defaultText) {
-            activeDrawingType = type;
-            defaultDrawingText = defaultText;
-            isLinkingMode = false;
-            document.querySelectorAll('.drawio-tool-btn').forEach(b => b.classList.remove('active-drawing', 'active-linking'));
-            
-            let btnId = 'btnSpawnRect';
-            if (type === 'circle') btnId = 'btnSpawnCircle';
-            else if (type === 'text') btnId = 'btnSpawnText';
-            else if (type === 'line') btnId = 'btnSpawnLine';
-            else if (type === 'imgNode') btnId = 'btnSpawnImg';
-
-            const btn = document.getElementById(btnId);
-            if (btn) {
-                btn.classList.add('active-drawing');
-                btn.innerText = "🎯 ارسم المربع بالماوس الآن...";
-            }
-        }
-
-        function resetDrawingMode() {
-            document.querySelectorAll('.drawio-tool-btn').forEach(b => b.classList.remove('active-drawing'));
-            document.getElementById('btnSpawnRect').innerText = "▭ إنشاء مستطيل (سحب)";
-            document.getElementById('btnSpawnCircle').innerText = "⭕ إنشاء دائرة (سحب)";
-            document.getElementById('btnSpawnText').innerText = "💬 إنشاء نص حر (سحب)";
-            document.getElementById('btnSpawnLine').innerText = "➖ خط منفصل (سحب)";
-            document.getElementById('btnSpawnImg').innerText = "🖼️ مربع صورة مستقل (سحب)";
-            activeDrawingType = null;
-        }
-
-        // جلب البيانات من السحابة العامة
         async function fetchCloudData() {
             if (isSaving || isModalOpen) return;
             try {
@@ -737,48 +535,37 @@
                         if (globalDatabase.broadcast === undefined) globalDatabase.broadcast = "";
                         renderAllData();
                         const statusElem = document.getElementById("loading-status");
-                        if(statusElem) statusElem.innerText = "✅ متصل بالسحابة العامة للجميع";
+                        if(statusElem) statusElem.innerText = "✅ متصل بالسحابة الفدرالية";
                     }
                 }
-            } catch (e) { 
-                console.error(e); 
-                const statusElem = document.getElementById("loading-status");
-                if(statusElem) statusElem.innerText = "⚠️ تعذر الاتصال بالسحابة (تحقق من الإنترنت)";
-            }
+            } catch (e) { console.error(e); }
         }
-
-        // حفظ البيانات إلى السحابة العامة ليراها كل مستخدم
         async function saveCloudData() {
             isSaving = true;
             const statusElem = document.getElementById("loading-status");
-            if (statusElem) statusElem.innerText = "⏳ جاري حفظ التعديل في السحابة العامة...";
+            if (statusElem) statusElem.innerText = "⏳ جاري حفظ التعديل في السحابة 100%...";
             try {
                 const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
                     method: "PUT",
-                    headers: { 
-                        "Content-Type": "application/json", 
-                        "X-Master-Key": API_KEY 
-                    },
+                    headers: { "Content-Type": "application/json", "X-Master-Key": API_KEY },
                     body: JSON.stringify(globalDatabase)
                 });
                 if(res.ok) {
                     renderAllData();
-                    if (statusElem) statusElem.innerText = "✅ تم الحفظ السحابي العام بنجاح";
+                    if (statusElem) statusElem.innerText = "✅ تم الحفظ والتحديث بنجاح تام";
                 } else {
                     alert("⚠️ فشل الحفظ بالسحابة!");
                 }
             } catch (e) { 
-                alert("⚠️ خطأ بالاتصال أثناء الحفظ بالسحابة!"); 
+                alert("⚠️ خطأ بالاتصال أثناء الحفظ!"); 
             } finally {
                 isSaving = false;
             }
         }
-
         function checkAutoLogin() {
             const savedUser = localStorage.getItem("active_cia_user");
             if (savedUser && globalDatabase.users[savedUser]) openMainSystem(savedUser);
         }
-
         function login() {
             const user = document.getElementById("login-username").value.trim();
             const pass = document.getElementById("login-password").value.trim();
@@ -791,7 +578,6 @@
                 document.getElementById("error-msg").style.display = "block";
             }
         }
-
         function openMainSystem(user) {
             currentUser = user;
             document.getElementById("login-screen").style.display = "none";
@@ -805,18 +591,15 @@
             renderAllData();
             showHome();
         }
-
         function renderAllData() {
             renderReports(); renderWanted(); renderRecords(); renderGangs(); renderUsers(); renderLogs(); renderChatMessages(); renderBroadcast();
         }
-
         function renderBroadcast() {
             const card = document.getElementById("broadcastCard");
             const text = (globalDatabase.broadcast || "").trim();
             if (text === "" || text.includes("لا يوجد")) { card.style.display = "none"; }
             else { document.getElementById("broadcastTextDisplay").innerText = text; card.style.display = "block"; }
         }
-
         function updateBroadcast() {
             openCustomModal("📢 تعديل التعميم", `<div class="input-group"><label>نص التعميم</label><textarea id="editBroadcastInput" rows="4">${globalDatabase.broadcast || ''}</textarea></div>`, async () => {
                 globalDatabase.broadcast = document.getElementById("editBroadcastInput").value.trim();
@@ -824,7 +607,6 @@
                 closeModal();
             });
         }
-
         function renderChatMessages() {
             const box = document.getElementById("chatMessagesBox");
             if (!box) return;
@@ -834,7 +616,6 @@
             });
             box.scrollTop = box.scrollHeight;
         }
-
         async function sendChatMessage() {
             const input = document.getElementById("chatInputText");
             if (!input.value.trim()) return;
@@ -843,7 +624,6 @@
             input.value = "";
             await saveCloudData();
         }
-
         function openCustomModal(title, html, onSave) {
             isModalOpen = true;
             document.getElementById("modalTitle").innerText = title;
@@ -854,7 +634,7 @@
                 saveBtn.style.display = "block";
                 saveBtn.onclick = async () => {
                     saveBtn.disabled = true;
-                    saveBtn.innerText = "جاري الحفظ بالسحابة...";
+                    saveBtn.innerText = "جاري الحفظ الفوري...";
                     await onSave();
                     saveBtn.disabled = false;
                     saveBtn.innerText = "تأكيد وحفظ";
@@ -863,12 +643,10 @@
                 saveBtn.style.display = "none";
             }
         }
-
         function closeModal() {
             isModalOpen = false;
             document.getElementById("customModal").style.display = "none";
         }
-
         function readFileAsBase64(fileInputId) {
             return new Promise((resolve) => {
                 const fileInput = document.getElementById(fileInputId);
@@ -883,7 +661,6 @@
                 reader.readAsDataURL(file);
             });
         }
-
         function toggleEvidenceContent() {
             const wrapper = document.getElementById("evidenceContentWrapper");
             const btn = document.getElementById("evidenceToggleBtn");
@@ -895,7 +672,6 @@
                 btn.innerHTML = "👁️ عرض الأدلة المرفقة";
             }
         }
-
         function getReportDocHtml(titleVal = "", detailsVal = "", imageUrlVal = "", videoUrlVal = "", authorVal = currentUser, dateVal = new Date().toLocaleDateString(), dayVal = new Date().toLocaleDateString('ar-EG', { weekday: 'long' }), isEdit = false) {
             return `
                 <div class="cia-classified-doc">
@@ -939,7 +715,6 @@
                 </div>
             `;
         }
-
         function openCreateReportModal() {
             openCustomModal("➕ إنشاء تقرير استخباراتي جديد", getReportDocHtml(), async () => {
                 const title = document.getElementById("popReportTitle").value.trim();
@@ -959,7 +734,6 @@
                 await saveCloudData(); closeModal();
             });
         }
-
         function viewReportFolder(id) {
             const r = globalDatabase.reports.find(item => item.id === id);
             if (!r) return;
@@ -1022,7 +796,6 @@
             `;
             openCustomModal(`📋 وثيقة رسمية - ${r.title}`, contentHtml, null);
         }
-
         function editReport(id) {
             const r = globalDatabase.reports.find(item => item.id === id);
             if (!r) return;
@@ -1036,7 +809,6 @@
                 viewReportFolder(r.id);
             });
         }
-
         function renderReports() {
             const list = document.getElementById("reports-list");
             if (!list) return;
@@ -1054,15 +826,13 @@
                     </div>`;
             });
         }
-
         async function deleteReport(id) {
-            if (confirm("هل أنت متأكد من حذف هذا التقرير نهائياً من السحابة؟")) { 
+            if (confirm("هل أنت متأكد من حذف هذا التقرير نهائياً؟")) { 
                 globalDatabase.reports = globalDatabase.reports.filter(r => r.id !== id); 
                 await saveCloudData(); 
                 closeModal(); 
             }
         }
-
         function openCreateWantedModal() {
             openCustomModal("➕ مطلوب جديد", `
                 <div class="input-group"><label>اسم المطلوب</label><input type="text" id="popWantedName"></div>
@@ -1078,7 +848,6 @@
                 await saveCloudData(); closeModal();
             });
         }
-
         function viewWantedFolder(id) {
             const w = globalDatabase.wanted.find(item => item.id === id);
             if (!w) return;
@@ -1091,7 +860,6 @@
                 <div style="background:rgba(4,6,10,0.8); padding:12px; border-radius:6px; margin-top:10px;"><b>التهم:</b><br>${w.crime}</div>
             `, null);
         }
-
         function editWanted(id) {
             const w = globalDatabase.wanted.find(item => item.id === id);
             if (!w) return;
@@ -1106,7 +874,6 @@
                 await saveCloudData(); closeModal();
             });
         }
-
         function renderWanted() {
             const list = document.getElementById("wanted-list");
             if (!list) return;
@@ -1127,11 +894,9 @@
                     </div>`;
             });
         }
-
         async function deleteWanted(id) {
             if (confirm("حذف؟")) { globalDatabase.wanted = globalDatabase.wanted.filter(w => w.id !== id); await saveCloudData(); closeModal(); }
         }
-
         function openCreateRecordModal() {
             openCustomModal("🪪 هوية جديدة", `
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
@@ -1160,7 +925,6 @@
                 await saveCloudData(); closeModal();
             });
         }
-
         function viewRecordFolder(id) {
             const r = globalDatabase.records.find(item => item.id === id);
             if (!r) return;
@@ -1183,7 +947,6 @@
                 </div>
             `, null);
         }
-
         function editRecord(id) {
             const r = globalDatabase.records.find(item => item.id === id);
             if (!r) return;
@@ -1209,7 +972,6 @@
                 await saveCloudData(); closeModal();
             });
         }
-
         function renderRecords() {
             const list = document.getElementById("records-list");
             if (!list) return;
@@ -1219,7 +981,6 @@
                 list.innerHTML += `<div class="item-folder-card" onclick="viewRecordFolder(${r.id})"><div><span class="item-folder-icon">📁</span><span class="item-folder-title">${r.firstName} ${r.lastName}</span><span class="item-folder-sub">ID: ${r.cid}</span></div><span class="item-folder-btn">فتح الهوية ←</span></div>`;
             });
         }
-
         async function deleteRecord(id) {
             if (confirm("حذف؟")) { globalDatabase.records = globalDatabase.records.filter(r => r.id !== id); await saveCloudData(); closeModal(); }
         }
@@ -1249,10 +1010,7 @@
                     name, 
                     details: document.getElementById("popGangDetails").value.trim(),
                     nodes: [],
-                    links: [],
-                    viewX: 4000,
-                    viewY: 4000,
-                    zoom: 1.0
+                    links: [] 
                 });
                 await saveCloudData(); closeModal();
             });
@@ -1265,45 +1023,37 @@
             selectedElementForDeletion = null;
             isLinkingMode = false;
             linkSourceNodeId = null;
-            resetDrawingMode();
             document.getElementById("btnLinkNodes").classList.remove("active-linking");
-            document.getElementById("btnLinkNodes").innerText = "🔗 ربط عنصرين ببعض";
+            document.getElementById("btnLinkNodes").innerText = "🔗 ربط عنصرين ببعض (شبكة)";
             
             document.getElementById("fullscreenGangTitleInput").value = g.name;
             document.getElementById("fullscreenGangDetails").value = g.details || '';
             
-            const world = document.getElementById("gangCanvasInnerWorld");
-            const existingNodes = world.querySelectorAll('.draggable-node, .node-line');
+            const area = document.getElementById("gangCanvasArea");
+            const existingNodes = area.querySelectorAll('.draggable-node, .node-line');
             existingNodes.forEach(node => node.remove());
             
             connectedLinks = g.links || [];
-            currentZoomScale = g.zoom !== undefined ? g.zoom : 1.0;
-            updateZoomDisplay();
             
             if (g.nodes && Array.isArray(g.nodes) && g.nodes.length > 0) {
                 g.nodes.forEach(nodeData => renderNodeElement(nodeData));
             } else {
-                connectedLinks = [];
+                const n1 = 'node_' + Date.now() + 1;
+                const n2 = 'node_' + Date.now() + 2;
+                renderNodeElement({ id: n1, type: 'circle', text: '👑 القائد', x: 250, y: 60, width: 130, height: 130, angle: 0 });
+                renderNodeElement({ id: n2, type: 'rect', text: 'مسؤول العمليات', x: 235, y: 230, width: 160, height: 60, angle: 0 });
+                connectedLinks = [{ id: 'link_' + Date.now(), from: n1, to: n2 }];
             }
             
             updateConnectedSvgLines();
             document.getElementById("gangFullscreenModal").style.display = "flex";
-
-            setTimeout(() => {
-                if (canvasArea) {
-                    canvasArea.scrollLeft = g.viewX !== undefined ? g.viewX : 4800;
-                    canvasArea.scrollTop = g.viewY !== undefined ? g.viewY : 4800;
-                }
-            }, 50);
         }
-
         function closeGangFullscreen() {
             document.getElementById("gangFullscreenModal").style.display = "none";
             currentEditingGangId = null;
             selectedElementForDeletion = null;
             isLinkingMode = false;
             linkSourceNodeId = null;
-            resetDrawingMode();
         }
 
         async function deleteGangFromEditor() {
@@ -1311,7 +1061,7 @@
             const g = globalDatabase.gangs.find(item => item.id === currentEditingGangId);
             const gangName = g ? g.name : "هذه العصابة";
             
-            if (confirm(`⚠️ هل أنت متأكد من حذف ملف (${gangName}) نهائياً من السحابة؟`)) {
+            if (confirm(`⚠️ هل أنت متأكد من حذف ملف (${gangName}) نهائياً من المنظومة؟`)) {
                 globalDatabase.gangs = globalDatabase.gangs.filter(item => item.id !== currentEditingGangId);
                 await saveCloudData();
                 closeGangFullscreen();
@@ -1319,8 +1069,8 @@
             }
         }
 
+        /* 🔗 نظام إدارة وضع الربط الشبكي التفاعلي */
         function toggleLinkingMode() {
-            resetDrawingMode();
             isLinkingMode = !isLinkingMode;
             linkSourceNodeId = null;
             const btn = document.getElementById("btnLinkNodes");
@@ -1329,74 +1079,52 @@
                 btn.innerText = "🎯 انقر على العنصر الأول (المرسل)...";
             } else {
                 btn.classList.remove("active-linking");
-                btn.innerText = "🔗 ربط عنصرين ببعض";
+                btn.innerText = "🔗 ربط عنصرين ببعض (شبكة)";
             }
         }
 
-        function zoomCanvas(amount) {
-            currentZoomScale = Math.max(0.4, Math.min(2.0, currentZoomScale + amount));
-            updateZoomDisplay();
+        function spawnNode(type) {
+            const nodeData = {
+                id: 'node_' + Date.now() + Math.floor(Math.random()*10000),
+                type: type,
+                text: type === 'circle' ? 'عضو جديد' : (type === 'rect' ? 'مسؤول جديد' : 'ملاحظة نصية...'),
+                x: 180 + Math.random() * 150,
+                y: 150 + Math.random() * 100,
+                width: type === 'circle' ? 130 : 160,
+                height: type === 'circle' ? 130 : 60,
+                angle: 0
+            };
+            renderNodeElement(nodeData);
         }
-        function resetZoom() {
-            currentZoomScale = 1.0;
-            updateZoomDisplay();
-        }
-        function updateZoomDisplay() {
-            const world = document.getElementById("gangCanvasInnerWorld");
-            if (world) world.style.transform = `scale(${currentZoomScale})`;
-            const lbl = document.getElementById("zoomLevelLbl");
-            if (lbl) lbl.innerText = Math.round(currentZoomScale * 100) + '%';
-            updateConnectedSvgLines();
-        }
-
-        function attachImageToSelectedNode() {
-            if (!selectedElementForDeletion || selectedElementForDeletion.isSvgLink || selectedElementForDeletion.classList.contains('node-line')) {
-                return alert("⚠️ الرجاء اختيار مربع أو دائرة أولاً لتحديث صورتها!");
-            }
-            const imgUrl = document.getElementById("nodeImageLinkInput").value.trim();
-            selectedElementForDeletion.setAttribute('data-image-url', imgUrl);
-            
-            let imgTag = selectedElementForDeletion.querySelector('.node-attached-image');
-            if (imgUrl) {
-                if (!imgTag) {
-                    imgTag = document.createElement("img");
-                    imgTag.className = 'node-attached-image';
-                    imgTag.style.cssText = "width:100%; max-height:120px; object-fit:contain; border-radius:4px; margin-top:4px;";
-                    selectedElementForDeletion.appendChild(imgTag);
-                }
-                imgTag.src = imgUrl;
-            } else if (imgTag) {
-                imgTag.remove();
-            }
-            document.getElementById("nodeImageLinkInput").value = "";
-            alert("✅ تم تعيين الصورة بنجاح!");
+        function spawnLine() {
+            const lineData = {
+                id: 'node_' + Date.now() + Math.floor(Math.random()*10000),
+                type: 'line',
+                text: '',
+                x: 200 + Math.random() * 100,
+                y: 200 + Math.random() * 100,
+                width: 150,
+                height: 4,
+                angle: 0
+            };
+            renderNodeElement(lineData);
         }
 
         function renderNodeElement(data) {
-            const world = document.getElementById("gangCanvasInnerWorld");
+            const area = document.getElementById("gangCanvasArea");
             const div = document.createElement("div");
             
             const isLine = data.type === 'line';
-            const isImgNode = data.type === 'imgNode';
-            
-            if (isLine) {
-                div.className = 'node-line';
-            } else if (isImgNode) {
-                div.className = 'draggable-node node-image-only';
-            } else {
-                div.className = `draggable-node ${data.type === 'circle' ? 'node-circle' : (data.type === 'text' ? 'node-text' : '')}`;
-            }
+            div.className = isLine ? 'node-line' : `draggable-node ${data.type === 'circle' ? 'node-circle' : (data.type === 'text' ? 'node-text' : '')}`;
             
             div.style.left = data.x + 'px';
             div.style.top = data.y + 'px';
             if (data.width) div.style.width = data.width + 'px';
-            if (data.height && !isLine) div.style.height = data.height + 'px';
-            
+            if (data.height) div.style.height = data.height + 'px';
             if (data.angle !== undefined) div.style.transform = `rotate(${data.angle}deg)`;
             
             div.setAttribute('data-id', data.id);
             div.setAttribute('data-angle', data.angle || 0);
-            if (data.imageUrl) div.setAttribute('data-image-url', data.imageUrl);
             
             if (isLine) {
                 div.innerHTML = `
@@ -1431,29 +1159,42 @@
                     div.setAttribute('data-angle', degree);
                 });
                 window.addEventListener('mouseup', () => { isRotating = false; });
-            } else if (isImgNode) {
-                div.innerHTML = `
-                    <img src="${data.imageUrl}" class="node-attached-image" style="width:100%; height:100%; object-fit:contain; border-radius:4px; pointer-events:none; display:block;">
-                    <div class="node-resize-handle-right" title="تغيير العرض"></div>
-                    <div class="node-resize-handle-bottom" title="تغيير الطول"></div>
-                    <div class="node-resize-handle-corner" title="تغيير الحجم بالكامل"></div>
-                `;
-                setupResizing(div);
             } else {
-                let imgHtml = data.imageUrl ? `<img src="${data.imageUrl}" class="node-attached-image" style="width:100%; max-height:120px; object-fit:contain; border-radius:4px; margin-top:4px;">` : '';
                 div.innerHTML = `
                     <div class="node-content-editable" contenteditable="true">${data.text}</div>
-                    ${imgHtml}
                     <div class="node-resize-handle-right" title="تغيير العرض"></div>
                     <div class="node-resize-handle-bottom" title="تغيير الطول"></div>
                     <div class="node-resize-handle-corner" title="تغيير الحجم بالكامل"></div>
                 `;
                 
-                const editable = div.querySelector('.node-content-editable');
-                editable.addEventListener('input', () => {
+                const rightH = div.querySelector('.node-resize-handle-right');
+                const bottomH = div.querySelector('.node-resize-handle-bottom');
+                const cornerH = div.querySelector('.node-resize-handle-corner');
+                let resizingMode = null, startX, startY, startW, startH;
+                rightH.addEventListener('mousedown', (e) => {
+                    resizingMode = 'w'; startX = e.clientX; startW = div.offsetWidth; e.stopPropagation();
+                });
+                bottomH.addEventListener('mousedown', (e) => {
+                    resizingMode = 'h'; startY = e.clientY; startH = div.offsetHeight; e.stopPropagation();
+                });
+                cornerH.addEventListener('mousedown', (e) => {
+                    resizingMode = 'both'; startX = e.clientX; startY = e.clientY; startW = div.offsetWidth; startH = div.offsetHeight; e.stopPropagation();
+                });
+                window.addEventListener('mousemove', (e) => {
+                    if (!resizingMode) return;
+                    if (resizingMode === 'w' || resizingMode === 'both') {
+                        let newW = Math.max(80, startW + (e.clientX - startX));
+                        div.style.width = newW + 'px';
+                        if (div.classList.contains('node-circle')) div.style.height = newW + 'px';
+                    }
+                    if (resizingMode === 'h' || resizingMode === 'both') {
+                        let newH = Math.max(40, startH + (e.clientY - startY));
+                        div.style.height = newH + 'px';
+                        if (div.classList.contains('node-circle')) div.style.width = newH + 'px';
+                    }
                     updateConnectedSvgLines();
                 });
-                setupResizing(div);
+                window.addEventListener('mouseup', () => { resizingMode = null; });
             }
             
             div.addEventListener('click', (e) => {
@@ -1474,7 +1215,7 @@
                         linkSourceNodeId = null;
                         isLinkingMode = false;
                         btn.classList.remove("active-linking");
-                        btn.innerText = "🔗 ربط عنصرين ببعض";
+                        btn.innerText = "🔗 ربط عنصرين ببعض (شبكة)";
                         document.querySelectorAll('.draggable-node, .node-line').forEach(el => el.classList.remove('selected-element'));
                     }
                     e.stopPropagation();
@@ -1485,25 +1226,22 @@
                 document.querySelectorAll('.connected-svg-line line').forEach(el => el.classList.remove('selected-line'));
                 div.classList.add('selected-element');
                 selectedElementForDeletion = div;
-                const imgInput = document.getElementById("nodeImageLinkInput");
-                if(imgInput) imgInput.value = div.getAttribute('data-image-url') || '';
                 e.stopPropagation();
             });
-
             let isDragging = false, startX, startY;
+            
             div.addEventListener('mousedown', (e) => {
-                if (e.button !== 0 || activeDrawingType) return;
                 if (e.target.classList.contains('node-resize-handle-right') || e.target.classList.contains('node-resize-handle-bottom') || e.target.classList.contains('node-resize-handle-corner') || e.target.classList.contains('node-content-editable') || e.target.getAttribute('contenteditable') === 'true') return;
                 isDragging = true;
-                startX = (e.clientX / currentZoomScale) - div.offsetLeft;
-                startY = (e.clientY / currentZoomScale) - div.offsetTop;
+                startX = e.clientX - div.offsetLeft;
+                startY = e.clientY - div.offsetTop;
                 div.style.zIndex = 1000;
             });
             
             window.addEventListener('mousemove', (e) => {
                 if (!isDragging) return;
-                div.style.left = Math.max(0, (e.clientX / currentZoomScale) - startX) + 'px';
-                div.style.top = Math.max(0, (e.clientY / currentZoomScale) - startY) + 'px';
+                div.style.left = Math.max(0, e.clientX - startX) + 'px';
+                div.style.top = Math.max(0, e.clientY - startY) + 'px';
                 updateConnectedSvgLines();
             });
             
@@ -1514,41 +1252,11 @@
                 }
             });
             
-            world.appendChild(div);
+            area.appendChild(div);
             updateConnectedSvgLines();
         }
 
-        function setupResizing(div) {
-            const rightH = div.querySelector('.node-resize-handle-right');
-            const bottomH = div.querySelector('.node-resize-handle-bottom');
-            const cornerH = div.querySelector('.node-resize-handle-corner');
-            let resizingMode = null, startX, startY, startW, startH;
-            rightH.addEventListener('mousedown', (e) => {
-                resizingMode = 'w'; startX = e.clientX; startW = div.offsetWidth; e.stopPropagation();
-            });
-            bottomH.addEventListener('mousedown', (e) => {
-                resizingMode = 'h'; startY = e.clientY; startH = div.offsetHeight; e.stopPropagation();
-            });
-            cornerH.addEventListener('mousedown', (e) => {
-                resizingMode = 'both'; startX = e.clientX; startY = e.clientY; startW = div.offsetWidth; startH = div.offsetHeight; e.stopPropagation();
-            });
-            window.addEventListener('mousemove', (e) => {
-                if (!resizingMode) return;
-                if (resizingMode === 'w' || resizingMode === 'both') {
-                    let newW = Math.max(40, startW + ((e.clientX - startX) / currentZoomScale));
-                    div.style.width = newW + 'px';
-                    if (div.classList.contains('node-circle')) div.style.height = newW + 'px';
-                }
-                if (resizingMode === 'h' || resizingMode === 'both') {
-                    let newH = Math.max(30, startH + ((e.clientY - startY) / currentZoomScale));
-                    div.style.height = newH + 'px';
-                    if (div.classList.contains('node-circle')) div.style.width = newW + 'px';
-                }
-                updateConnectedSvgLines();
-            });
-            window.addEventListener('mouseup', () => { resizingMode = null; });
-        }
-
+        /* 🔗 تحديث ورسم خطوط الاتصال التفاعلية على لوحة SVG */
         function updateConnectedSvgLines() {
             const svg = document.getElementById("svgCanvas");
             if (!svg) return;
@@ -1614,7 +1322,7 @@
             g.name = document.getElementById("fullscreenGangTitleInput").value.trim() || g.name;
             g.details = document.getElementById("fullscreenGangDetails").value.trim();
             await saveCloudData();
-            alert("✅ تم تحديث اسم العصابة والنبذة سحابياً!");
+            alert("✅ تم تحديث اسم العصابة والنبذة بنجاح!");
         }
         
         async function saveGangFullscreenCanvas() {
@@ -1625,35 +1333,28 @@
             g.details = document.getElementById("fullscreenGangDetails").value.trim();
             
             const nodes = [];
-            const nodeElements = document.querySelectorAll("#gangCanvasInnerWorld .draggable-node, #gangCanvasInnerWorld .node-line");
+            const nodeElements = document.querySelectorAll("#gangCanvasArea .draggable-node, #gangCanvasArea .node-line");
             nodeElements.forEach(el => {
                 let type = 'rect';
                 if (el.classList.contains('node-circle')) type = 'circle';
                 if (el.classList.contains('node-text')) type = 'text';
                 if (el.classList.contains('node-line')) type = 'line';
-                if (el.classList.contains('node-image-only')) type = 'imgNode';
                 
                 nodes.push({
                     id: el.getAttribute('data-id'),
                     type: type,
-                    text: type === 'line' || type === 'imgNode' ? '' : el.querySelector('.node-content-editable').innerText,
+                    text: type === 'line' ? '' : el.querySelector('.node-content-editable').innerText,
                     x: parseInt(el.style.left) || 0,
                     y: parseInt(el.style.top) || 0,
                     width: el.offsetWidth,
                     height: el.offsetHeight,
-                    angle: parseFloat(el.getAttribute('data-angle')) || 0,
-                    imageUrl: el.getAttribute('data-image-url') || ''
+                    angle: parseFloat(el.getAttribute('data-angle')) || 0
                 });
             });
             g.nodes = nodes;
             g.links = connectedLinks; 
-
-            g.viewX = canvasArea.scrollLeft;
-            g.viewY = canvasArea.scrollTop;
-            g.zoom = currentZoomScale;
-
             await saveCloudData();
-            alert("✅ تم حفظ الهيكل التنظيمي سحابياً ليراه جميع الوكلاء!");
+            alert("✅ تم حفظ الهيكل التنظيمي وشبكة الخطوط المربوطة أونلاين في السحابة بنجاح!");
         }
         
         function renderGangs() {
@@ -1662,10 +1363,9 @@
             const query = (document.getElementById("gangsSearch")?.value || "").toLowerCase();
             list.innerHTML = "";
             globalDatabase.gangs.filter(g => g.name.toLowerCase().includes(query) || (g.details && g.details.toLowerCase().includes(query))).forEach(g => {
-                list.innerHTML += `<div class="item-folder-card" onclick="viewGangFolder(${g.id})"><div><span class="item-folder-icon">🕵️‍♂️</span><span class="item-folder-title">${g.name}</span><span class="item-folder-sub">${g.details || 'شجرة تنظيمية'}</span></div><span class="item-folder-btn">فتح اللوحة ←</span></div>`;
+                list.innerHTML += `<div class="item-folder-card" onclick="viewGangFolder(${g.id})"><div><span class="item-folder-icon">🕵️‍♂️</span><span class="item-folder-title">${g.name}</span><span class="item-folder-sub">شجرة تنظيمية وخطوط حرة</span></div><span class="item-folder-btn">فتح اللوحة ←</span></div>`;
             });
         }
-
         async function createAccount() {
             const user = document.getElementById("new-username").value.trim();
             if (!user) return alert("أدخل اسم الوكيل!");
@@ -1676,9 +1376,8 @@
                 role: document.getElementById("new-role").value 
             };
             await saveCloudData(); 
-            alert("تم إضافة الحساب سحابياً بنجاح!");
+            alert("تم إضافة الحساب بنجاح!");
         }
-
         function editUser(username) {
             const u = globalDatabase.users[username];
             if (!u) return;
@@ -1698,15 +1397,13 @@
                 closeModal();
             });
         }
-
         async function deleteAccount(username) {
             if (username === "Majed") return alert("لا يمكن حذف المدير الرئيسي!");
-            if (confirm(`حذف الحساب (${username}) من السحابة؟`)) {
+            if (confirm(`حذف الحساب (${username})؟`)) {
                 delete globalDatabase.users[username];
                 await saveCloudData();
             }
         }
-
         function renderUsers() {
             const tbody = document.getElementById("users-table-body");
             const managementList = document.getElementById("users-management-list");
@@ -1770,10 +1467,8 @@
                 }
             }
         }
-
-        // الاتصال الأولي بالسحابة وتحديث البيانات كل 3 ثواني ليتم مزامنة كل شيء للجميع تلقائياً
         fetchCloudData().then(() => checkAutoLogin());
-        setInterval(fetchCloudData, 3000);
+        setInterval(fetchCloudData, 4000);
     </script>
 </body>
 </html>
