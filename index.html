@@ -71,7 +71,7 @@
         .badge { padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; background: var(--accent-color); color: #fff; display: inline-block; margin-left: 3px; }
         .badge-admin { background: var(--gold-color); color: #000; }
         .badge-director { background: #d97706; color: #fff; }
-        .badge-deputy { background: #0284c7; color: #fff; }
+        .badge-deputy { background: #b45309; color: #fff; }
         .badge-wing { background: rgba(16, 185, 129, 0.2); border: 1px solid var(--success-color); color: #34d399; font-size: 9px; padding: 2px 6px; border-radius: 3px; }
         
         .folder-grid-panel { background: rgba(8, 13, 20, 0.8); border: 1px solid rgba(197, 160, 89, 0.3); padding: 30px; border-radius: 12px; margin-bottom: 20px; }
@@ -419,7 +419,9 @@
                     <div class="input-group" id="new-account-role-group" style="display:none;">
                         <label>الرتبة الابتدائية</label>
                         <select id="new-account-role">
+                            <option value="ADMIN">ADMIN</option>
                             <option value="Director">Director</option>
+                            <option value="Deputy Director">Deputy Director</option>
                             <option value="CIA Member" selected>CIA Member</option>
                         </select>
                     </div>
@@ -843,10 +845,10 @@
             document.getElementById("current-user-display").innerText = user;
             
             const userData = globalDatabase.users[user] || { role: "CIA Member", wings: [] };
-            const isAdminOrDirector = userData.role === "ADMIN" || userData.role === "Director";
+            const isManagerRole = userData.role === "ADMIN" || userData.role === "Director" || userData.role === "Deputy Director";
             
             document.getElementById("current-role-display").innerText = userData.role;
-            document.getElementById("current-role-display").className = userData.role === "ADMIN" ? "badge badge-admin" : (userData.role === "Director" ? "badge badge-director" : "badge");
+            document.getElementById("current-role-display").className = userData.role === "ADMIN" ? "badge badge-admin" : (userData.role === "Director" ? "badge badge-director" : (userData.role === "Deputy Director" ? "badge badge-deputy" : "badge"));
             
             let wingsHtml = "";
             if (userData.wings && Array.isArray(userData.wings)) {
@@ -856,16 +858,15 @@
             }
             document.getElementById("current-wings-display").innerHTML = wingsHtml;
             
-            document.getElementById("btn-leader-toggle").style.display = isAdminOrDirector ? "inline-block" : "none";
-            document.getElementById("btnEditBroadcast").style.display = isAdminOrDirector ? "inline-block" : "none";
+            document.getElementById("btn-leader-toggle").style.display = isManagerRole ? "inline-block" : "none";
+            document.getElementById("btnEditBroadcast").style.display = isManagerRole ? "inline-block" : "none";
             
             const clearChatBtn = document.getElementById("clearAllChatBtn");
-            if (clearChatBtn) clearChatBtn.style.display = isAdminOrDirector ? "inline-block" : "none";
+            if (clearChatBtn) clearChatBtn.style.display = isManagerRole ? "inline-block" : "none";
 
-            // إظهار اختيار الرتبة عند إضافة حساب جديد فقط إذا كان الحساب الحالي هو ADMIN
             const roleGroup = document.getElementById("new-account-role-group");
             if (roleGroup) {
-                roleGroup.style.display = userData.role === "ADMIN" ? "block" : "none";
+                roleGroup.style.display = isManagerRole ? "block" : "none";
             }
 
             renderAllData();
@@ -922,10 +923,10 @@
             if (!box) return;
             box.innerHTML = "";
             const userData = globalDatabase.users[currentUser] || {};
-            const isAdminOrDirector = userData.role === "ADMIN" || userData.role === "Director";
+            const isManagerRole = userData.role === "ADMIN" || userData.role === "Director" || userData.role === "Deputy Director";
             
             (globalDatabase.chat || []).forEach(m => {
-                const canModify = (m.user === currentUser) || isAdminOrDirector;
+                const canModify = (m.user === currentUser) || isManagerRole;
                 let actionsHtml = '';
                 if (canModify) {
                     actionsHtml = `
@@ -974,8 +975,8 @@
         }
         function clearAllChatMessages() {
             const userData = globalDatabase.users[currentUser] || {};
-            const isAdminOrDirector = userData.role === "ADMIN" || userData.role === "Director";
-            if (!isAdminOrDirector) return alert("هذا الإجراء مخصص للإدارة فقط!");
+            const isManagerRole = userData.role === "ADMIN" || userData.role === "Director" || userData.role === "Deputy Director";
+            if (!isManagerRole) return alert("هذا الإجراء مخصص للإدارة فقط!");
             if (confirm("⚠️ تحذير: هل تريد مسح جميع رسائل الدردشة الحالية نهائياً؟")) {
                 loadDatabase();
                 globalDatabase.chat = [];
@@ -1500,7 +1501,6 @@
             tbody.innerHTML = "";
             Object.keys(globalDatabase.users || {}).forEach(username => {
                 const u = globalDatabase.users[username];
-                // إخفاء أي شخص يحمل رتبة ADMIN تماماً من سجل الوكلاء
                 if (u.role === "ADMIN") return;
 
                 if (username.toLowerCase().includes(query) || (u.id && u.id.toLowerCase().includes(query)) || (u.role && u.role.toLowerCase().includes(query))) {
@@ -1508,7 +1508,11 @@
                     if (u.wings && Array.isArray(u.wings)) {
                         u.wings.forEach(w => { wingsStr += `<span class="badge-wing">${w}</span> `; });
                     }
-                    tbody.innerHTML += `<tr><td><b>${username}</b></td><td>${u.id || 'N/A'}</td><td><span class="${u.role === 'Director' ? 'badge badge-director' : 'badge'}">${u.role}</span></td><td>${wingsStr || '-'}</td></tr>`;
+                    let badgeClass = "badge";
+                    if (u.role === 'Director') badgeClass = "badge badge-director";
+                    else if (u.role === 'Deputy Director') badgeClass = "badge badge-deputy";
+                    
+                    tbody.innerHTML += `<tr><td><b>${username}</b></td><td>${u.id || 'N/A'}</td><td><span class="${badgeClass}">${u.role}</span></td><td>${wingsStr || '-'}</td></tr>`;
                 }
             });
         }
@@ -1521,36 +1525,49 @@
             const currentUserData = globalDatabase.users[currentUser] || {};
             const isAdmin = currentUserData.role === "ADMIN";
             const isDirector = currentUserData.role === "Director";
+            const isDeputy = currentUserData.role === "Deputy Director";
             
             Object.keys(globalDatabase.users || {}).forEach(username => {
                 const u = globalDatabase.users[username];
                 
                 const isTargetAdmin = u.role === "ADMIN";
+                const isTargetDirector = u.role === "Director";
                 
-                // إذا كان المستخدم الحالي Director، لا يمكنه تعديل حسابات ADMIN ويراها محمية مخفية كلمة المرور
+                // الحماية الأساسية: Director و Deputy لا يمكنهما تعديل حساب ADMIN. Deputy لا يمكنه تعديل Director أيضاً.
                 const isDisabledForDirector = isDirector && isTargetAdmin;
+                const isDisabledForDeputy = isDeputy && (isTargetAdmin || isTargetDirector);
+                const isDisabledForCurrent = isDisabledForDirector || isDisabledForDeputy;
                 
                 let wingsHtml = "";
                 ['CID', 'FIELD AGENT', 'SOG - 71'].forEach(w => {
                     const checked = (u.wings && u.wings.includes(w)) ? 'checked' : '';
-                    wingsHtml += `<label style="font-size:11px; margin-left:8px; cursor:pointer;"><input type="checkbox" id="edit-wing-${username}-${w}" ${checked} ${isDisabledForDirector ? 'disabled' : ''}> ${w}</label>`;
+                    wingsHtml += `<label style="font-size:11px; margin-left:8px; cursor:pointer;"><input type="checkbox" id="edit-wing-${username}-${w}" ${checked} ${isDisabledForCurrent ? 'disabled' : ''}> ${w}</label>`;
                 });
                 
                 let roleSelectHtml = "";
                 if (isAdmin) {
-                    // ADMIN يمكنه تغيير أي رتبة لأي شخص
                     roleSelectHtml = `
                         <select id="edit-role-${username}" style="padding:6px; font-size:12px;">
                             <option value="ADMIN" ${u.role==='ADMIN'?'selected':''}>ADMIN</option>
                             <option value="Director" ${u.role==='Director'?'selected':''}>Director</option>
+                            <option value="Deputy Director" ${u.role==='Deputy Director'?'selected':''}>Deputy Director</option>
                             <option value="CIA Member" ${u.role==='CIA Member'?'selected':''}>CIA Member</option>
                         </select>
                     `;
                 } else if (isDirector) {
-                    // Director يمكنه إعطاء رتب ما عدا ADMIN
+                    // Director يمكنه إعطاء رتبة Director أو Deputy Director أو CIA Member فقط (ولا يمكنه إعطاء ADMIN)
                     roleSelectHtml = `
                         <select id="edit-role-${username}" ${isTargetAdmin ? 'disabled' : ''} style="padding:6px; font-size:12px;">
                             <option value="Director" ${u.role==='Director'?'selected':''}>Director</option>
+                            <option value="Deputy Director" ${u.role==='Deputy Director'?'selected':''}>Deputy Director</option>
+                            <option value="CIA Member" ${u.role==='CIA Member'?'selected':''}>CIA Member</option>
+                        </select>
+                    `;
+                } else if (isDeputy) {
+                    // Deputy Director يمكنه إعطاء Deputy Director أو CIA Member فقط (ولا يمكنه إعطاء ADMIN أو Director)
+                    roleSelectHtml = `
+                        <select id="edit-role-${username}" ${isTargetAdmin || isTargetDirector ? 'disabled' : ''} style="padding:6px; font-size:12px;">
+                            <option value="Deputy Director" ${u.role==='Deputy Director'?'selected':''}>Deputy Director</option>
                             <option value="CIA Member" ${u.role==='CIA Member'?'selected':''}>CIA Member</option>
                         </select>
                     `;
@@ -1561,7 +1578,7 @@
                 let passwordFieldHtml = '';
                 let pinFieldHtml = '';
                 
-                if (isDisabledForDirector) {
+                if (isDisabledForCurrent) {
                     passwordFieldHtml = `<input type="text" value="••••••••" disabled style="padding:6px; font-size:12px; background:rgba(255,255,255,0.05); color:#ef4444; text-align:center;">`;
                     pinFieldHtml = `<input type="text" value="••••" disabled style="padding:6px; font-size:12px; background:rgba(255,255,255,0.05); color:#ef4444; text-align:center;">`;
                 } else {
@@ -1570,16 +1587,16 @@
                 }
 
                 container.innerHTML += `
-                    <div style="background: rgba(4, 6, 10, 0.85); border: 1px solid ${isDisabledForDirector ? 'rgba(217,4,41,0.4)' : 'var(--border-color)'}; border-radius: 8px; padding: 15px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px;">
+                    <div style="background: rgba(4, 6, 10, 0.85); border: 1px solid ${isDisabledForCurrent ? 'rgba(217,4,41,0.4)' : 'var(--border-color)'}; border-radius: 8px; padding: 15px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px;">
                         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
                             <div>
                                 <b style="color:var(--gold-color); font-size:14px;">${username}</b> 
                                 <span style="font-size:11px; color:var(--text-muted);">(${u.id || 'N/A'})</span>
-                                ${isDisabledForDirector ? '<span style="color:var(--danger-color); font-size:10px; margin-right:8px;">[محمي - ADMIN]</span>' : ''}
+                                ${isDisabledForCurrent ? '<span style="color:var(--danger-color); font-size:10px; margin-right:8px;">[محمي]</span>' : ''}
                             </div>
                             <div style="display:flex; gap:8px;">
-                                ${!isDisabledForDirector ? `<button class="btn-edit-item" onclick="saveAdminUserEdit('${username}')">حفظ التعديلات 💾</button>` : ''}
-                                ${!isDisabledForDirector ? `<button class="btn-del-item" onclick="deleteAdminUser('${username}')">حذف الحساب 🗑️</button>` : '<span style="font-size:10px; color:var(--text-muted);">لا يمكن الحذف</span>'}
+                                ${!isDisabledForCurrent ? `<button class="btn-edit-item" onclick="saveAdminUserEdit('${username}')">حفظ التعديلات 💾</button>` : ''}
+                                ${!isDisabledForCurrent ? `<button class="btn-del-item" onclick="deleteAdminUser('${username}')">حذف الحساب 🗑️</button>` : '<span style="font-size:10px; color:var(--text-muted);">لا يمكن الحذف</span>'}
                             </div>
                         </div>
                         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:10px;">
@@ -1593,7 +1610,7 @@
                             </div>
                             <div>
                                 <label style="font-size:10px; color:var(--accent-color);">المعرف (Badge ID):</label>
-                                <input type="text" id="edit-id-${username}" value="${u.id || ''}" ${isDisabledForDirector ? 'disabled' : ''} style="padding:6px; font-size:12px;">
+                                <input type="text" id="edit-id-${username}" value="${u.id || ''}" ${isDisabledForCurrent ? 'disabled' : ''} style="padding:6px; font-size:12px;">
                             </div>
                             <div>
                                 <label style="font-size:10px; color:var(--accent-color);">الرتبة الرئيسية:</label>
@@ -1613,8 +1630,14 @@
             if (!globalDatabase.users[username]) return;
             
             const currentUserData = globalDatabase.users[currentUser] || {};
-            if (currentUserData.role === "Director" && globalDatabase.users[username].role === "ADMIN") {
+            const isDirector = currentUserData.role === "Director";
+            const isDeputy = currentUserData.role === "Deputy Director";
+            
+            if (isDirector && globalDatabase.users[username].role === "ADMIN") {
                 return alert("⚠️ عذراً، لا يمكنك التعديل على حساب ذو رتبة ADMIN!");
+            }
+            if (isDeputy && (globalDatabase.users[username].role === "ADMIN" || globalDatabase.users[username].role === "Director")) {
+                return alert("⚠️ عذراً، لا يمكنك التعديل على حساب ذو رتبة ADMIN أو Director!");
             }
 
             const passInput = document.getElementById(`edit-pass-${username}`);
@@ -1629,9 +1652,11 @@
             const roleSelect = document.getElementById(`edit-role-${username}`);
             if (roleSelect && !roleSelect.disabled) {
                 const selectedRole = roleSelect.value;
-                // منع Director من منح رتبة ADMIN لأي شخص
-                if (currentUserData.role === "Director" && selectedRole === "ADMIN") {
+                if (isDirector && selectedRole === "ADMIN") {
                     return alert("⚠️ لا يمكنك منح رتبة ADMIN!");
+                }
+                if (isDeputy && (selectedRole === "ADMIN" || selectedRole === "Director")) {
+                    return alert("⚠️ لا يمكنك منح رتبة ADMIN أو Director!");
                 }
                 role = selectedRole;
             }
@@ -1656,9 +1681,14 @@
             loadDatabase();
             const targetUser = globalDatabase.users[username];
             const currentUserData = globalDatabase.users[currentUser] || {};
+            const isDirector = currentUserData.role === "Director";
+            const isDeputy = currentUserData.role === "Deputy Director";
             
-            if (currentUserData.role === "Director" && targetUser && targetUser.role === "ADMIN") {
+            if (isDirector && targetUser && targetUser.role === "ADMIN") {
                 return alert("⚠️ عذراً، لا يمكنك حذف حساب يحمل رتبة ADMIN!");
+            }
+            if (isDeputy && targetUser && (targetUser.role === "ADMIN" || targetUser.role === "Director")) {
+                return alert("⚠️ عذراً، لا يمكنك حذف حساب يحمل رتبة ADMIN أو Director!");
             }
 
             if (confirm(`⚠️ هل أنت متأكد من حذف حساب الوكيل (${username}) نهائياً؟`)) {
@@ -1681,9 +1711,13 @@
             if (currentUserData.role === "ADMIN" && roleSelect) {
                 role = roleSelect.value;
             } else if (currentUserData.role === "Director") {
-                // Director يمكنه اختيار بين Director أو CIA Member عند إضافة حساب جديد (وليس ADMIN)
                 const selectedRole = roleSelect ? roleSelect.value : "CIA Member";
-                role = selectedRole === "ADMIN" ? "CIA Member" : selectedRole;
+                // Director يمكنه إنشاء Director أو Deputy Director أو CIA Member (ولا يمكنه إنشاء ADMIN)
+                role = (selectedRole === "ADMIN") ? "CIA Member" : selectedRole;
+            } else if (currentUserData.role === "Deputy Director") {
+                const selectedRole = roleSelect ? roleSelect.value : "CIA Member";
+                // Deputy Director يمكنه إنشاء Deputy Director أو CIA Member فقط
+                role = (selectedRole === "ADMIN" || selectedRole === "Director") ? "CIA Member" : selectedRole;
             }
             
             let wings = [];
