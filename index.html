@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CIA SYSTEM | نظام التحكم والاستخبارات الفدرالي</title>
-    <!-- مكتبة الرسم التفاعلي المتقدمة Fabric.js لضمان سهولة التحريك، التكبير، والتصغير وتعديل الأشكال والأسهم -->
+    <!-- مكتبة الرسم التفاعلي المتقدمة Fabric.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/531/fabric.min.js"></script>
     <style>
         :root {
@@ -124,13 +124,13 @@
         .modal-close { cursor: pointer; color: var(--text-muted); font-size: 18px; font-weight: bold; }
         .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
 
-        /* نافذة ملف العصابة بملء الشاشة مع لوحة رسم Fabric.js الاحترافية للتحكم الفائق (تكبير، تصغير، سحب، وتعديل حتى بعد الحفظ) */
-        .gang-fullscreen-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(3, 5, 8, 0.96); z-index: 3000; flex-direction: column; padding: 20px; }
-        .gang-fullscreen-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold-color); padding-bottom: 12px; margin-bottom: 15px; }
+        /* نافذة ملف العصابة بملء الشاشة مع لوحة رسم Fabric.js */
+        .gang-fullscreen-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(3, 5, 8, 0.97); z-index: 3000; flex-direction: column; padding: 15px; }
+        .gang-fullscreen-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold-color); padding-bottom: 10px; margin-bottom: 12px; }
         .gang-editor-layout { display: flex; flex-grow: 1; gap: 15px; overflow: hidden; }
-        .gang-sidebar { width: 260px; background: rgba(8, 13, 20, 0.9); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
-        .gang-canvas-area { flex-grow: 1; background: #06090f; border: 1px solid var(--gold-color); border-radius: 8px; position: relative; overflow: hidden; background-image: linear-gradient(to right, #101926 1px, transparent 1px), linear-gradient(to bottom, #101926 1px, transparent 1px); background-size: 30px 30px; }
-        .drawio-tool-btn { background: #162235; color: #fff; border: 1px solid #334155; padding: 9px 12px; border-radius: 5px; font-size: 12px; cursor: pointer; text-align: right; transition: 0.2s; font-weight: bold; }
+        .gang-sidebar { width: 270px; background: rgba(8, 13, 20, 0.95); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+        .gang-canvas-area { flex-grow: 1; background: #06090f; border: 1px solid var(--gold-color); border-radius: 8px; position: relative; overflow: hidden; background-image: linear-gradient(to right, #101926 1px, transparent 1px), linear-gradient(to bottom, #101926 1px, transparent 1px); background-size: 30px 30px; display: flex; justify-content: center; align-items: center; }
+        .drawio-tool-btn { background: #162235; color: #fff; border: 1px solid #334155; padding: 10px 12px; border-radius: 5px; font-size: 12px; cursor: pointer; text-align: right; transition: 0.2s; font-weight: bold; width: 100%; }
         .drawio-tool-btn:hover { background: var(--accent-color); border-color: var(--accent-color); }
 
         /* وثيقة التقرير الاستخباراتي */
@@ -330,7 +330,7 @@
         </div>
     </div>
 
-    <!-- نافذة ملف العصابة بملء الشاشة مع لوحة رسم تفاعلية (Fabric.js) -->
+    <!-- نافذة ملف العصابة بملء الشاشة مع لوحة رسم Fabric.js المتطورة -->
     <div class="gang-fullscreen-overlay" id="gangFullscreenModal">
         <div class="gang-fullscreen-header">
             <div style="color: var(--gold-color); font-size: 18px; font-weight: bold;" id="fullscreenGangTitle">🏴‍☠️ ملف العصابة</div>
@@ -356,7 +356,7 @@
                 <button class="btn-login" style="background:var(--gold-color); color:#000; margin-top: 5px; padding:7px; font-size:11px;" onclick="updateGangDetailsOnly()">تحديث النبذة</button>
             </div>
             <div class="gang-canvas-area" id="canvasWrapper">
-                <canvas id="drawioCanvas" width="900" height="600"></canvas>
+                <canvas id="drawioCanvas"></canvas>
             </div>
         </div>
     </div>
@@ -855,7 +855,7 @@
         }
 
         // ==========================================
-        // 🏴‍☠️ لوحة الرسم المتطورة (Fabric.js) مع دعم الأسهم والخطوط وتغيير الحجم والسحب والتحريك بحرية تامة حتى بعد الحفظ
+        // 🏴‍☠️ لوحة الرسم المتطورة (Fabric.js) لإضافة الأشكال والأسهم والخطوط وتحريكها وتكبيرها بحرية
         // ==========================================
         function openCreateGangModal() {
             openCustomModal("🏴‍☠️ إنشاء عصابة جديدة", `
@@ -891,9 +891,10 @@
                     activeDiagramCanvas.dispose();
                 }
 
+                // ضبط مساحة العرض للوحة بدقة داخل الحاوية الكبيرة
                 activeDiagramCanvas = new fabric.Canvas('drawioCanvas', {
                     width: wrapper.clientWidth,
-                    height: 600,
+                    height: wrapper.clientHeight || 580,
                     backgroundColor: 'transparent'
                 });
 
@@ -902,13 +903,14 @@
                         activeDiagramCanvas.renderAll();
                     });
                 } else {
-                    // عنصر رئيسي افتراضي عند البداية
-                    const rect = new fabric.Rect({ left: 350, top: 50, width: 160, height: 55, fill: '#c5a059', rx: 6, ry: 6, stroke: '#fff', strokeWidth: 1.5 });
-                    const text = new fabric.IText('👑 الرئيس: القائد', { left: 365, top: 68, fontSize: 13, fill: '#000', fontWeight: 'bold' });
-                    const group = new fabric.Group([rect, text], { left: 350, top: 50 });
+                    // هيكل افتراضي أولي
+                    const rect = new fabric.Rect({ left: 0, top: 0, width: 160, height: 55, fill: '#c5a059', rx: 6, ry: 6, stroke: '#fff', strokeWidth: 1.5 });
+                    const text = new fabric.IText('👑 الرئيس: القائد', { left: 15, top: 16, fontSize: 13, fill: '#000', fontWeight: 'bold' });
+                    const group = new fabric.Group([rect, text], { left: 350, top: 200 });
                     activeDiagramCanvas.add(group);
+                    activeDiagramCanvas.renderAll();
                 }
-            }, 100);
+            }, 150);
         }
 
         function closeGangFullscreen() {
@@ -922,34 +924,36 @@
 
         function addShapeToCanvas(type) {
             if (!activeDiagramCanvas) return;
+            
             if (type === 'rect') {
-                const rect = new fabric.Rect({ left: 120, top: 120, width: 140, height: 50, fill: '#162235', stroke: '#0084ff', strokeWidth: 2, rx: 5, ry: 5 });
-                const text = new fabric.IText('مستطيل قيادي', { left: 130, top: 135, fontSize: 12, fill: '#fff', fontWeight: 'bold' });
+                const rect = new fabric.Rect({ left: 0, top: 0, width: 150, height: 50, fill: '#162235', stroke: '#0084ff', strokeWidth: 2, rx: 5, ry: 5 });
+                const text = new fabric.IText('مستطيل قيادي', { left: 25, top: 14, fontSize: 13, fill: '#fff', fontWeight: 'bold' });
                 const group = new fabric.Group([rect, text], { left: 150, top: 150 });
                 activeDiagramCanvas.add(group);
                 activeDiagramCanvas.setActiveObject(group);
             } else if (type === 'circle') {
-                const circle = new fabric.Circle({ radius: 40, fill: '#0084ff', stroke: '#fff', strokeWidth: 1.5 });
-                const text = new fabric.IText('عضو', { left: -14, top: -9, fontSize: 13, fill: '#fff', fontWeight: 'bold' });
-                const group = new fabric.Group([circle, text], { left: 200, top: 200 });
+                const circle = new fabric.Circle({ radius: 45, fill: '#0084ff', stroke: '#fff', strokeWidth: 1.5, originX: 'center', originY: 'center' });
+                const text = new fabric.IText('عضو', { fontSize: 13, fill: '#fff', fontWeight: 'bold', originX: 'center', originY: 'center' });
+                const group = new fabric.Group([circle, text], { left: 220, top: 220 });
                 activeDiagramCanvas.add(group);
                 activeDiagramCanvas.setActiveObject(group);
             } else if (type === 'text') {
-                const text = new fabric.IText('اكتب نصاً هنا...', { left: 150, top: 150, fontSize: 15, fill: '#c5a059', fontWeight: 'bold' });
+                const text = new fabric.IText('اكتب نصاً هنا...', { left: 200, top: 200, fontSize: 16, fill: '#c5a059', fontWeight: 'bold' });
                 activeDiagramCanvas.add(text);
                 activeDiagramCanvas.setActiveObject(text);
             } else if (type === 'line') {
                 // خط مستقيم بدون سهم
-                const line = new fabric.Line([50, 50, 200, 50], { stroke: '#c5a059', strokeWidth: 3, selectable: true });
+                const line = new fabric.Line([0, 0, 150, 0], { stroke: '#c5a059', strokeWidth: 3, selectable: true });
                 activeDiagramCanvas.add(line);
+                line.set({ left: 180, top: 180 });
                 activeDiagramCanvas.setActiveObject(line);
             } else if (type === 'arrow') {
                 // سهم توجيهي متطور
-                const line = new fabric.Line([50, 50, 180, 50], { stroke: '#0084ff', strokeWidth: 3, selectable: true });
+                const line = new fabric.Line([0, 0, 120, 0], { stroke: '#0084ff', strokeWidth: 3 });
                 const triangle = new fabric.Triangle({
-                    width: 14, height: 14, fill: '#0084ff', left: 180, top: 43, angle: 90, selectable: true
+                    width: 14, height: 14, fill: '#0084ff', left: 120, top: -5, angle: 90
                 });
-                const group = new fabric.Group([line, triangle], { left: 150, top: 150, subTargetCheck: true });
+                const group = new fabric.Group([line, triangle], { left: 250, top: 250 });
                 activeDiagramCanvas.add(group);
                 activeDiagramCanvas.setActiveObject(group);
             }
@@ -984,7 +988,7 @@
             g.diagramJson = JSON.stringify(activeDiagramCanvas.toJSON());
             
             await saveCloudData();
-            alert("✅ تم حفظ لوحة العصابة والمخطط بالكامل في السحابة بنجاح تام!");
+            alert("✅ تم حفظ لوحة العصابة ومخططها بالكامل في السحابة بنجاح تام!");
         }
 
         function renderGangs() {
@@ -1098,7 +1102,7 @@
             if (val) {
                 try {
                     const decoded = decodeURIComponent(Array.prototype.map.call(atob(val), function(c) {
-                        return '%' + ('00' + c.charCodeAt(0).toString(16)).serialize(-2);
+                        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
                     }).join(''));
                     document.getElementById("cryptoResult").innerText = decoded;
                 } catch(e) { 
