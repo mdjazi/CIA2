@@ -86,9 +86,7 @@
         .workspace-panel { display: none; background: rgba(11, 16, 23, 0.85); border: 1px solid var(--border-color); border-radius: 10px; padding: 25px; margin-bottom: 20px; }
         .btn-back { background: rgba(4, 6, 10, 0.8); color: var(--text-color); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-bottom: 20px; font-weight: bold; font-size: 12px; position: relative; z-index: 5; }
         
-        /* ==================================================== */
-        /* 🖼️ تعديل خلفية قسم التشفير بصورة المقصورة والآيباد */
-        /* ==================================================== */
+        /* 🖼️ خلفية قسم التشفير بصورة المقصورة */
         .tactical-cockpit-wrapper {
             position: relative;
             background: url('Gemini_Generated_Image_v6rzjev6rzjev6rz.jpg') no-repeat center center;
@@ -104,7 +102,6 @@
             justify-content: center;
             align-items: center;
         }
-        /* طبقة حماية شفافة لتوضيح عناصر الإدخال */
         .tactical-cockpit-wrapper::before {
             content: '';
             position: absolute;
@@ -113,118 +110,61 @@
             z-index: 1;
         }
         
-        .data-injection-header {
-            text-align: center;
-            margin-bottom: 15px;
-            position: relative;
-            z-index: 2;
-        }
+        .data-injection-header { text-align: center; margin-bottom: 15px; position: relative; z-index: 2; }
         .data-injection-box {
-            display: inline-block;
-            border: 1px solid #0084ff;
-            background: rgba(4, 10, 18, 0.85);
-            padding: 8px 25px;
-            border-radius: 6px;
-            color: #38bdf8;
-            font-family: monospace;
-            font-size: 13px;
-            letter-spacing: 1px;
-            box-shadow: 0 0 15px rgba(0, 132, 255, 0.3);
+            display: inline-block; border: 1px solid #0084ff; background: rgba(4, 10, 18, 0.85); padding: 8px 25px; border-radius: 6px; color: #38bdf8; font-family: monospace; font-size: 13px; letter-spacing: 1px; box-shadow: 0 0 15px rgba(0, 132, 255, 0.3);
         }
-        .data-injection-arrow {
-            color: #0084ff;
-            margin-top: 4px;
-            font-size: 12px;
-        }
+        .data-injection-arrow { color: #0084ff; margin-top: 4px; font-size: 12px; }
         
-        /* تصميم الآيباد التكتيكي المعلق وسط المقصورة */
         .ipad-frame {
-            max-width: 520px;
-            width: 100%;
-            margin: 0 auto;
-            background: rgba(30, 37, 48, 0.85);
-            backdrop-filter: blur(10px);
-            border: 3px solid #333d4d;
-            border-radius: 24px;
-            padding: 18px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 30px rgba(0, 132, 255, 0.2);
-            position: relative;
-            z-index: 2;
+            max-width: 520px; width: 100%; margin: 0 auto; background: rgba(30, 37, 48, 0.85); backdrop-filter: blur(10px); border: 3px solid #333d4d; border-radius: 24px; padding: 18px; box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 30px rgba(0, 132, 255, 0.2); position: relative; z-index: 2;
         }
         .ipad-screen {
-            background: rgba(6, 14, 23, 0.92);
-            border: 2px solid #00d2ff;
-            border-radius: 14px;
-            padding: 20px;
-            box-shadow: inset 0 0 25px rgba(0,0,0,0.9);
-            position: relative;
-            background-image: 
-                linear-gradient(rgba(0, 210, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 210, 255, 0.05) 1px, transparent 1px);
-            background-size: 18px 18px;
+            background: rgba(6, 14, 23, 0.92); border: 2px solid #00d2ff; border-radius: 14px; padding: 20px; box-shadow: inset 0 0 25px rgba(0,0,0,0.9); position: relative;
+            background-image: linear-gradient(rgba(0, 210, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 210, 255, 0.05) 1px, transparent 1px); background-size: 18px 18px;
         }
         
-        .ipad-cyber-box {
-            border: 1px solid rgba(0, 210, 255, 0.6);
-            background: rgba(2, 12, 22, 0.85);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 12px;
-        }
-        .ipad-label {
-            color: #7dd3fc;
-            font-size: 11px;
-            font-weight: bold;
-            margin-bottom: 6px;
-            display: block;
-            text-align: center;
-        }
+        .ipad-cyber-box { border: 1px solid rgba(0, 210, 255, 0.6); background: rgba(2, 12, 22, 0.85); border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+        .ipad-label { color: #7dd3fc; font-size: 11px; font-weight: bold; margin-bottom: 6px; display: block; text-align: center; }
         .ipad-input {
-            width: 100%;
-            background: rgba(6, 24, 44, 0.95) !important;
-            border: 1px solid #0084ff !important;
-            border-radius: 6px !important;
-            color: #38bdf8 !important;
-            padding: 8px !important;
-            font-family: monospace !important;
-            text-align: center !important;
-            font-size: 13px !important;
-            box-shadow: inset 0 0 10px rgba(0, 132, 255, 0.3);
+            width: 100%; background: rgba(6, 24, 44, 0.95) !important; border: 1px solid #0084ff !important; border-radius: 6px !important; color: #38bdf8 !important; padding: 8px !important; font-family: monospace !important; text-align: center !important; font-size: 13px !important; box-shadow: inset 0 0 10px rgba(0, 132, 255, 0.3);
         }
         .ipad-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-            color: #fff;
-            border: 1px solid #38bdf8;
-            padding: 8px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 12px;
-            margin-top: 6px;
-            transition: all 0.2s ease;
-            box-shadow: 0 0 10px rgba(2, 132, 199, 0.4);
+            width: 100%; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: #fff; border: 1px solid #38bdf8; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; margin-top: 6px; transition: all 0.2s ease; box-shadow: 0 0 10px rgba(2, 132, 199, 0.4);
         }
-        .ipad-btn:hover {
-            background: #0284c7;
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.7);
-        }
-        
-        .ipad-controls {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 12px;
-        }
-        .ipad-hardware-btn {
-            width: 45px;
-            height: 14px;
-            border-radius: 4px;
-            border: 1px solid #475569;
-        }
+        .ipad-btn:hover { background: #0284c7; box-shadow: 0 0 15px rgba(56, 189, 248, 0.7); }
+        .ipad-controls { display: flex; justify-content: center; gap: 15px; margin-top: 12px; }
+        .ipad-hardware-btn { width: 45px; height: 14px; border-radius: 4px; border: 1px solid #475569; }
         .btn-gold-hw { background: #ca8a04; box-shadow: 0 0 8px rgba(202, 138, 4, 0.5); }
         .btn-silver-hw { background: #64748b; }
         .btn-blue-hw { background: #0284c7; box-shadow: 0 0 8px rgba(2, 132, 199, 0.5); }
+
+        /* 🎛️ تصميم جديد ومرتب لإدخال بيانات العصابة */
+        .gang-entry-container {
+            background: rgba(6, 11, 18, 0.95);
+            border: 1px solid var(--gold-color);
+            border-radius: 12px;
+            padding: 22px;
+            box-shadow: 0 0 30px rgba(197, 160, 89, 0.15);
+        }
+        .gang-entry-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px dashed rgba(197, 160, 89, 0.4);
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+        }
+        .gang-entry-header span { font-size: 26px; }
+        .gang-entry-title { color: var(--gold-color); font-size: 16px; font-weight: 800; }
+        .gang-entry-field { margin-bottom: 15px; }
+        .gang-entry-field label {
+            display: block; font-size: 11px; color: var(--gold-color); font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px;
+        }
+        .gang-entry-field input, .gang-entry-field textarea {
+            width: 100%; background: rgba(3, 6, 10, 0.9); border: 1px solid rgba(197, 160, 89, 0.5); border-radius: 6px; color: #fff; padding: 10px 12px; font-size: 13px; outline: none; transition: border 0.2s;
+        }
+        .gang-entry-field input:focus, .gang-entry-field textarea:focus { border-color: var(--gold-color); box-shadow: 0 0 8px rgba(197, 160, 89, 0.3); }
 
         .id-card-tactical { background: #cdcece; border-radius: 12px; padding: 0; color: #111827; max-width: 580px; width: 100%; margin: 15px auto; position: relative; border: 1px solid #9ca3af; direction: ltr; text-align: left; }
         .id-card-header { background: #2b3142; color: #ffffff; padding: 10px 20px; font-weight: 800; font-size: 15px; letter-spacing: 2px; }
@@ -283,12 +223,8 @@
             font-size: 13px; padding: 10px; overflow: visible; word-break: break-word; overflow-wrap: break-word;
         }
         
-        .node-content-editable {
-            outline: none; width: 100%; height: auto; word-break: break-word; overflow-wrap: break-word;
-            overflow: visible; white-space: pre-wrap;
-        }
+        .node-content-editable { outline: none; width: 100%; height: auto; word-break: break-word; overflow-wrap: break-word; overflow: visible; white-space: pre-wrap; }
         .node-line { position: absolute; background: var(--gold-color); cursor: move; user-select: none; z-index: 20; min-width: 30px; min-height: 4px; border-radius: 2px; transform-origin: left center; }
-        
         .selected-element { outline: 2px dashed var(--success-color) !important; box-shadow: 0 0 15px var(--success-color) !important; z-index: 100 !important; }
         
         .node-resize-handle-right { position: absolute; right: -6px; top: 50%; transform: translateY(-50%); width: 12px; height: 24px; background: var(--success-color); border-radius: 4px; cursor: ew-resize; z-index: 50; display: none; border: 1px solid #fff; }
@@ -441,14 +377,12 @@
         <div class="workspace-panel" id="intelligenceSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">GANG INTELLIGENCE & HIERARCHY 🕵️‍♂️</h3>
-            <button class="btn-create-action" style="background: var(--gold-color); color:#000;" onclick="openCreateGangModal()">🏴‍☠️ إنشاء عصابة جديدة</button>
+            <button class="btn-create-action" style="background: var(--gold-color); color:#000;" onclick="openCreateGangModal()">🏴‍☠️ إضافة عصابة جديدة للنظام</button>
             <div class="input-group"><input type="text" id="gangsSearch" class="search-box" placeholder="🔍 بحث شامل في العصابات..." oninput="renderGangs()"></div>
             <div id="gangs-list" class="folder-grid" style="grid-template-columns: repeat(3, 1fr);"></div>
         </div>
 
-        <!-- ==================================================== -->
-        <!-- 🔓 قسم التشفير بداخل خلفية الصورة المطلوبة كاملة -->
-        <!-- ==================================================== -->
+        <!-- 🔓 قسم التشفير وفك التشفير -->
         <div class="workspace-panel" id="casesSection" style="background: transparent; border: none; padding: 0;">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             
@@ -460,7 +394,6 @@
                 
                 <div class="ipad-frame">
                     <div class="ipad-screen">
-                        <!-- فك التشفير -->
                         <div class="ipad-cyber-box">
                             <label class="ipad-label">أدخل الكود المشفر هنا...</label>
                             <input type="text" id="cipherText" class="ipad-input" placeholder="Xy7z!@#$...">
@@ -469,14 +402,12 @@
                             <button class="ipad-btn" onclick="decryptMsg()">أدخل</button>
                         </div>
                         
-                        <!-- تشفير البيانات -->
                         <div class="ipad-cyber-box">
                             <label class="ipad-label">🔒 تشفير نص جديد</label>
                             <input type="text" id="plainText" class="ipad-input" placeholder="اكتب النص هنا للتشفير...">
                             <button class="ipad-btn" style="background: linear-gradient(135deg, #059669 0%, #047857 100%); border-color:#10b981;" onclick="encryptMsg()">تشفير وإخراج الكود</button>
                         </div>
                         
-                        <!-- عرض النتيجة -->
                         <div class="ipad-cyber-box" style="margin-bottom:0; border-color:#ca8a04;">
                             <label class="ipad-label" style="color:#fde047;">📋 النتيجة المستخرجة</label>
                             <div class="crypto-result-value" id="cryptoResult" style="color:#38bdf8; font-size:12px; font-family:monospace; text-align:center;">- في انتظار الإدخال -</div>
@@ -524,11 +455,15 @@
         </div>
     </div>
     
+    <!-- 🏴‍☠️ الشاشة الكاملة لتعديل شجرة العصابة مع تعديل الاسم أونلاين -->
     <div class="gang-fullscreen-overlay" id="gangFullscreenModal">
         <div class="gang-fullscreen-header">
-            <div style="color: var(--gold-color); font-size: 18px; font-weight: bold;" id="fullscreenGangTitle">🏴‍☠️ ملف العصابة</div>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:20px;">🏴‍☠️</span>
+                <input type="text" id="fullscreenGangTitleInput" style="background: rgba(4, 6, 10, 0.9); border: 1px solid var(--gold-color); color: var(--gold-color); font-size: 16px; font-weight: bold; padding: 4px 10px; border-radius: 6px; width: 260px; outline:none;" placeholder="اسم العصابة...">
+            </div>
             <div style="display: flex; gap: 10px;">
-                <button class="btn-login" style="background: var(--success-color); margin:0; padding: 6px 15px; font-size: 11px;" onclick="saveGangFullscreenCanvas()">💾 حفظ اللوحة بالكامل سحابياً</button>
+                <button class="btn-login" style="background: var(--success-color); margin:0; padding: 6px 15px; font-size: 11px;" onclick="saveGangFullscreenCanvas()">💾 حفظ اللوحة والتغيرات سحابياً</button>
                 <button class="btn-login" style="background: var(--danger-color); margin:0; padding: 6px 15px; font-size: 11px;" onclick="closeGangFullscreen()">✕ إغلاق الشاشة</button>
             </div>
         </div>
@@ -1046,13 +981,25 @@
             if (confirm("حذف؟")) { globalDatabase.records = globalDatabase.records.filter(r => r.id !== id); await saveCloudData(); closeModal(); }
         }
         
+        /* 🏴‍☠️ قائمة خاصة وعصرية لإدخال العصابات */
         function openCreateGangModal() {
-            openCustomModal("🏴‍☠️ إنشاء عصابة جديدة", `
-                <div style="max-height: 70vh; overflow-y: auto; padding-left: 5px;">
-                    <div class="input-group"><label>اسم العصابة</label><input type="text" id="popGangName" placeholder="أدخل اسم العصابة"></div>
-                    <div class="input-group"><label>التفاصيل والمعلومات العامة</label><textarea id="popGangDetails" rows="3" placeholder="ملاحظات عن نشاط العصابة..."></textarea></div>
+            const gangFormHtml = `
+                <div class="gang-entry-container">
+                    <div class="gang-entry-header">
+                        <span>🏴‍☠️</span>
+                        <div class="gang-entry-title">تسجيل عصابة جديدة في المنظومة</div>
+                    </div>
+                    <div class="gang-entry-field">
+                        <label>🏷️ اسم العصابة / التشكيل العصابي</label>
+                        <input type="text" id="popGangName" placeholder="أدخل اسم العصابة هنا...">
+                    </div>
+                    <div class="gang-entry-field">
+                        <label>📋 معلومات ونشاط العصابة الأولية</label>
+                        <textarea id="popGangDetails" rows="4" placeholder="اكتب النبذة أو التفاصيل الخاصة بالعصابة..."></textarea>
+                    </div>
                 </div>
-            `, async () => {
+            `;
+            openCustomModal("🏴‍☠️ إضافة عصابة جديدة", gangFormHtml, async () => {
                 const name = document.getElementById("popGangName").value.trim();
                 if (!name) return alert("أدخل اسم العصابة!");
                 globalDatabase.gangs.push({ 
@@ -1071,7 +1018,8 @@
             currentEditingGangId = g.id;
             selectedElementForDeletion = null;
             
-            document.getElementById("fullscreenGangTitle").innerText = `🏴‍☠️ ملف عصابة: ${g.name}`;
+            // تمكين التعديل المباشر على اسم العصابة أعلى اللوحة
+            document.getElementById("fullscreenGangTitleInput").value = g.name;
             document.getElementById("fullscreenGangDetails").value = g.details || '';
             
             const area = document.getElementById("gangCanvasArea");
@@ -1251,18 +1199,23 @@
             document.querySelectorAll('.draggable-node, .node-line').forEach(el => el.classList.remove('selected-element'));
             selectedElementForDeletion = null;
         });
+        
         async function updateGangDetailsOnly() {
             if (!currentEditingGangId) return;
             const g = globalDatabase.gangs.find(item => item.id === currentEditingGangId);
             if (!g) return;
+            g.name = document.getElementById("fullscreenGangTitleInput").value.trim() || g.name;
             g.details = document.getElementById("fullscreenGangDetails").value.trim();
             await saveCloudData();
-            alert("✅ تم تحديث نبذة العصابة بنجاح!");
+            alert("✅ تم تحديث اسم العصابة والنبذة بنجاح!");
         }
+        
         async function saveGangFullscreenCanvas() {
             if (!currentEditingGangId) return;
             const g = globalDatabase.gangs.find(item => item.id === currentEditingGangId);
             if (!g) return;
+            // حفظ الاسم المحين من الحقل العلوي
+            g.name = document.getElementById("fullscreenGangTitleInput").value.trim() || g.name;
             g.details = document.getElementById("fullscreenGangDetails").value.trim();
             
             const nodes = [];
@@ -1286,8 +1239,9 @@
             });
             g.nodes = nodes;
             await saveCloudData();
-            alert("✅ تم حفظ أحجام المربعات والدوائر ومواقعها وزواياها بنجاح في السحابة!");
+            alert("✅ تم حفظ التعديلات واسم العصابة بنجاح في السحابة!");
         }
+        
         function renderGangs() {
             const list = document.getElementById("gangs-list");
             if (!list) return;
