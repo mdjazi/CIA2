@@ -179,7 +179,7 @@
         .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
         
         .gang-fullscreen-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(3, 5, 8, 0.95); z-index: 3000; flex-direction: column; padding: 20px; }
-        .gang-fullscreen-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold-color); padding-bottom: 12px; margin-bottom: 15px; }
+        .gang-fullscreen-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold-color); padding-bottom: 12px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
         .gang-editor-layout { display: flex; flex-grow: 1; gap: 15px; overflow: hidden; position: relative; }
         .gang-sidebar { width: 300px; background: rgba(8, 13, 20, 0.9); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; z-index: 10; }
         
@@ -195,9 +195,9 @@
 
         .gang-canvas-inner-world { position: relative; width: 4000px; height: 4000px; transform-origin: top right; transition: transform 0.15s ease; }
         
-        /* 🔍 عدسة التحكم بالتكبير والتصغير السفلية */
+        /* 🔍 عدسة التحكم بالتكبير والتصغير في الطرف العلوي الأيسر للوحة */
         .zoom-lens-bar {
-            position: absolute; bottom: 20px; left: 20px; background: rgba(8, 13, 20, 0.9); border: 1px solid var(--gold-color);
+            position: absolute; top: 15px; left: 15px; background: rgba(8, 13, 20, 0.92); border: 1px solid var(--gold-color);
             border-radius: 8px; padding: 6px 12px; display: flex; gap: 8px; align-items: center; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.8);
         }
         .zoom-lens-btn { background: rgba(197, 160, 89, 0.2); border: 1px solid var(--gold-color); color: var(--gold-color); width: 28px; height: 28px; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; }
@@ -224,6 +224,11 @@
         .node-text { 
             background: rgba(0,0,0,0.6); border: 1px dashed var(--gold-color); color: var(--gold-color); 
             font-size: 13px; padding: 10px; overflow: visible; word-break: break-word; overflow-wrap: break-word; width: auto !important; height: auto !important;
+        }
+
+        /* 🖼️ ستايل مربع الصورة الشفاف المستقل */
+        .node-image-only {
+            background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important;
         }
         
         .node-content-editable { outline: none; width: 100%; height: auto; word-break: break-word; overflow-wrap: break-word; overflow: visible; white-space: pre-wrap; z-index: 25; position: relative; }
@@ -463,46 +468,48 @@
         </div>
     </div>
     
-    <!-- 🏴‍☠️ شاشة العصابات الموسعة مع دعم عناصر الصور المستقلة وزر العدسة -->
+    <!-- 🏴‍☠️ شاشة العصابات الموسعة -->
     <div class="gang-fullscreen-overlay" id="gangFullscreenModal">
         <div class="gang-fullscreen-header">
-            <div style="display:flex; align-items:center; gap:8px;">
-                <span style="font-size:20px;">🏴‍☠️</span>
-                <input type="text" id="fullscreenGangTitleInput" style="background: rgba(4, 6, 10, 0.9); border: 1px solid var(--gold-color); color: var(--gold-color); font-size: 16px; font-weight: bold; padding: 4px 10px; border-radius: 6px; width: 260px; outline:none;" placeholder="اسم العصابة...">
+            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                <div style="display:flex; align-items:center; gap:6px;">
+                    <span style="font-size:20px;">🏴‍☠️</span>
+                    <input type="text" id="fullscreenGangTitleInput" style="background: rgba(4, 6, 10, 0.9); border: 1px solid var(--gold-color); color: var(--gold-color); font-size: 15px; font-weight: bold; padding: 4px 10px; border-radius: 6px; width: 200px; outline:none;" placeholder="اسم العصابة...">
+                </div>
+                <div style="display:flex; align-items:center; gap:6px;">
+                    <span style="font-size:11px; color:var(--gold-color); font-weight:bold;">النبذة:</span>
+                    <input type="text" id="fullscreenGangDetails" style="background: rgba(4, 6, 10, 0.9); border: 1px solid var(--border-color); color: #fff; font-size: 13px; padding: 4px 10px; border-radius: 6px; width: 260px; outline:none;" placeholder="نبذة تعريفية سريعة...">
+                </div>
+                <button class="btn-login" style="background:var(--gold-color); color:#000; margin:0; padding:4px 12px; font-size:11px; width:auto;" onclick="updateGangDetailsOnly()">حفظ النبذة والاسم</button>
             </div>
-            <div style="display: flex; gap: 10px;">
-                <button class="btn-login" style="background: var(--success-color); margin:0; padding: 6px 15px; font-size: 11px;" onclick="saveGangFullscreenCanvas()">💾 حفظ اللوحة والخطوط سحابياً</button>
-                <button class="btn-login" style="background: var(--danger-color); margin:0; padding: 6px 15px; font-size: 11px;" onclick="closeGangFullscreen()">✕ إغلاق الشاشة</button>
+            <div style="display: flex; gap: 8px;">
+                <button class="btn-login" style="background: var(--success-color); margin:0; padding: 6px 12px; font-size: 11px;" onclick="saveGangFullscreenCanvas()">💾 حفظ اللوحة سحابياً</button>
+                <button class="btn-login" style="background: var(--danger-color); margin:0; padding: 6px 12px; font-size: 11px;" onclick="closeGangFullscreen()">✕ إغلاق</button>
             </div>
         </div>
         <div class="gang-editor-layout">
             <div class="gang-sidebar">
-                <h5 style="color: var(--gold-color); font-size: 12px; margin-bottom: 5px;">📦 أدوات الشجرة الكبيرة</h5>
-                <button class="drawio-tool-btn" onclick="spawnNode('rect')">▭ مستطيل جديد (توسّع تلقائي)</button>
+                <h5 style="color: var(--gold-color); font-size: 12px; margin-bottom: 5px;">📦 أزرار الإضافة في المنتصف</h5>
+                <button class="drawio-tool-btn" onclick="spawnNode('rect')">▭ مستطيل جديد</button>
                 <button class="drawio-tool-btn" onclick="spawnNode('circle')">⭕ دائرة جديدة</button>
                 <button class="drawio-tool-btn" onclick="spawnNode('text')">💬 نص كتابي حر</button>
                 <button class="drawio-tool-btn" style="background:rgba(197,160,89,0.3); border-color:var(--gold-color);" onclick="spawnLine()">➖ خط منفصل حر</button>
                 
-                <!-- 🖼️ أداة إنشاء مربع صورة مستقل -->
-                <button class="drawio-tool-btn" style="background:rgba(16, 185, 129, 0.2); border-color:var(--success-color); color:#34d399;" onclick="spawnImageNode()">🖼️ مربع صورة مستقل (بدون نص)</button>
+                <!-- 🖼️ أداة إنشاء مربع صورة شفاف ومستقل -->
+                <button class="drawio-tool-btn" style="background:rgba(16, 185, 129, 0.2); border-color:var(--success-color); color:#34d399;" onclick="spawnImageNode()">🖼️ مربع صورة مستقل (شفاف)</button>
                 
-                <button class="drawio-tool-btn" id="btnLinkNodes" style="background:rgba(0, 132, 255, 0.25); border-color:#0084ff; color:#38bdf8;" onclick="toggleLinkingMode()">🔗 ربط عنصرين ببعض (شبكة)</button>
+                <button class="drawio-tool-btn" id="btnLinkNodes" style="background:rgba(0, 132, 255, 0.25); border-color:#0084ff; color:#38bdf8;" onclick="toggleLinkingMode()">🔗 ربط عنصرين ببعض</button>
                 
                 <hr style="border: 0; border-top: 1px dashed rgba(197, 160, 89, 0.4); margin: 5px 0;">
                 
-                <h5 style="color: var(--gold-color); font-size: 12px; margin-bottom: 5px;">🖼️ تعديل رابط صورة العنصر المحدد</h5>
-                <input type="text" id="nodeImageLinkInput" style="width:100%; padding:6px; background:#04060a; border:1px solid var(--border-color); color:#fff; font-size:11px; border-radius:5px; margin-bottom:5px;" placeholder="ضع رابط الصورة هنا...">
-                <button class="drawio-tool-btn" style="background:rgba(16, 185, 129, 0.2); border-color:var(--success-color); color:#34d399;" onclick="attachImageToSelectedNode()">➕ تحديث رابط الصورة</button>
+                <h5 style="color: var(--gold-color); font-size: 12px; margin-bottom: 5px;">🖼️ تحديث صورة المربع المحدد</h5>
+                <input type="text" id="nodeImageLinkInput" style="width:100%; padding:6px; background:#04060a; border:1px solid var(--border-color); color:#fff; font-size:11px; border-radius:5px; margin-bottom:5px;" placeholder="رابط الصورة الجديد...">
+                <button class="drawio-tool-btn" style="background:rgba(16, 185, 129, 0.2); border-color:var(--success-color); color:#34d399;" onclick="attachImageToSelectedNode()">➕ تعيين الصورة للعنصر</button>
                 
                 <div style="font-size: 10px; color: var(--text-muted); line-height: 1.4; margin-top: 5px;">
-                    💡 <b>ملاحظة:</b> المربعات تتوسع تلقائياً طولاً وعرضاً عند الكتابة والضغط على Enter. استخدم عدسة التكبير والتصغير أسفل اليمين.<br>
-                    🗑️ <b>الحذف:</b> انقر على العنصر أو الخط واضغط <b>Delete</b>.
+                    💡 <b>ملاحظة:</b> زر التكبير والتصغير أصبح في الطرف العلوي الأيسر للوحة الرسم.<br>
+                    🗑️ <b>الحذف:</b> انقر على العنصر واضغط <b>Delete</b>.
                 </div>
-                
-                <h5 style="color: var(--gold-color); font-size: 12px; margin-top: 10px; margin-bottom: 5px;">📋 نبذة العصابة</h5>
-                <textarea id="fullscreenGangDetails" rows="3" style="width:100%; padding:8px; background:#04060a; border:1px solid var(--border-color); color:#fff; font-size:12px; border-radius:5px;" placeholder="ملاحظات وتفاصيل العصابة..."></textarea>
-                
-                <button class="btn-login" style="background:var(--gold-color); color:#000; margin-top: 10px; padding:8px; font-size:11px;" onclick="updateGangDetailsOnly()">تحديث النبذة فقط</button>
                 
                 <hr style="border: 0; border-top: 1px dashed rgba(217, 4, 41, 0.4); margin: 15px 0 5px 0;">
                 
@@ -512,7 +519,7 @@
                 <div class="gang-canvas-inner-world" id="gangCanvasInnerWorld">
                     <svg class="connected-svg-line" id="svgCanvas"></svg>
                 </div>
-                <!-- 🔍 عدسة تكبير وتصغير الشجرة (Zoom Lens) -->
+                <!-- 🔍 عدسة تكبير وتصغير الشجرة في الطرف العلوي الأيسر -->
                 <div class="zoom-lens-bar">
                     <button class="zoom-lens-btn" onclick="zoomCanvas(-0.1)" title="تصغير">➖</button>
                     <span class="zoom-level-lbl" id="zoomLevelLbl">100%</span>
@@ -1059,7 +1066,7 @@
             isLinkingMode = false;
             linkSourceNodeId = null;
             document.getElementById("btnLinkNodes").classList.remove("active-linking");
-            document.getElementById("btnLinkNodes").innerText = "🔗 ربط عنصرين ببعض (شبكة)";
+            document.getElementById("btnLinkNodes").innerText = "🔗 ربط عنصرين ببعض";
             
             document.getElementById("fullscreenGangTitleInput").value = g.name;
             document.getElementById("fullscreenGangDetails").value = g.details || '';
@@ -1115,14 +1122,14 @@
                 btn.innerText = "🎯 انقر على العنصر الأول (المرسل)...";
             } else {
                 btn.classList.remove("active-linking");
-                btn.innerText = "🔗 ربط عنصرين ببعض (شبكة)";
+                btn.innerText = "🔗 ربط عنصرين ببعض";
             }
         }
 
         function spawnNode(type) {
             const area = document.getElementById("gangCanvasArea");
-            const startX = area.scrollLeft + 200;
-            const startY = area.scrollTop + 150;
+            const startX = area.scrollLeft + (area.clientWidth / 2) - 80;
+            const startY = area.scrollTop + (area.clientHeight / 2) - 40;
             
             const nodeData = {
                 id: 'node_' + Date.now() + Math.floor(Math.random()*10000),
@@ -1140,8 +1147,8 @@
 
         function spawnImageNode() {
             const area = document.getElementById("gangCanvasArea");
-            const startX = area.scrollLeft + 200;
-            const startY = area.scrollTop + 150;
+            const startX = area.scrollLeft + (area.clientWidth / 2) - 75;
+            const startY = area.scrollTop + (area.clientHeight / 2) - 75;
             
             const imageUrlPrompt = prompt("أدخل رابط الصورة (URL):", "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=300&h=350");
             if (!imageUrlPrompt) return;
@@ -1162,8 +1169,8 @@
 
         function spawnLine() {
             const area = document.getElementById("gangCanvasArea");
-            const startX = area.scrollLeft + 220;
-            const startY = area.scrollTop + 180;
+            const startX = area.scrollLeft + (area.clientWidth / 2) - 75;
+            const startY = area.scrollTop + (area.clientHeight / 2) - 2;
 
             const lineData = {
                 id: 'node_' + Date.now() + Math.floor(Math.random()*10000),
@@ -1214,7 +1221,7 @@
                 imgTag.remove();
             }
             document.getElementById("nodeImageLinkInput").value = "";
-            alert("✅ تم تحديث الصورة بنجاح!");
+            alert("✅ تم تعيين الصورة بنجاح!");
         }
 
         function renderNodeElement(data) {
@@ -1223,12 +1230,21 @@
             
             const isLine = data.type === 'line';
             const isImgNode = data.type === 'imgNode';
-            div.className = isLine ? 'node-line' : `draggable-node ${data.type === 'circle' ? 'node-circle' : (data.type === 'text' ? 'node-text' : '')}`;
+            
+            if (isLine) {
+                div.className = 'node-line';
+            } else if (isImgNode) {
+                div.className = 'draggable-node node-image-only';
+            } else {
+                div.className = `draggable-node ${data.type === 'circle' ? 'node-circle' : (data.type === 'text' ? 'node-text' : '')}`;
+            }
             
             div.style.left = data.x + 'px';
             div.style.top = data.y + 'px';
             if (data.width) div.style.width = data.width + 'px';
-            if (data.height && !isLine && data.type !== 'rect' && data.type !== 'text') div.style.height = data.height + 'px';
+            if (data.height && !isLine && data.type !== 'rect' && data.type !== 'text' && !isImgNode) div.style.height = data.height + 'px';
+            else if (data.height && isImgNode) div.style.height = data.height + 'px';
+            
             if (data.angle !== undefined) div.style.transform = `rotate(${data.angle}deg)`;
             
             div.setAttribute('data-id', data.id);
@@ -1270,14 +1286,14 @@
                 window.addEventListener('mouseup', () => { isRotating = false; });
             } else if (isImgNode) {
                 div.innerHTML = `
-                    <img src="${data.imageUrl}" class="node-attached-image" style="width:100%; height:100%; object-fit:cover; border-radius:4px; pointer-events:none;">
+                    <img src="${data.imageUrl}" class="node-attached-image" style="width:100%; height:100%; object-fit:contain; border-radius:4px; pointer-events:none; display:block;">
                     <div class="node-resize-handle-right" title="تغيير العرض"></div>
                     <div class="node-resize-handle-bottom" title="تغيير الطول"></div>
                     <div class="node-resize-handle-corner" title="تغيير الحجم بالكامل"></div>
                 `;
                 setupResizing(div);
             } else {
-                let imgHtml = data.imageUrl ? `<img src="${data.imageUrl}" class="node-attached-image" style="width:100%; max-height:120px; object-fit:cover; border-radius:4px; margin-top:4px;">` : '';
+                let imgHtml = data.imageUrl ? `<img src="${data.imageUrl}" class="node-attached-image" style="width:100%; max-height:120px; object-fit:contain; border-radius:4px; margin-top:4px;">` : '';
                 div.innerHTML = `
                     <div class="node-content-editable" contenteditable="true">${data.text}</div>
                     ${imgHtml}
@@ -1311,7 +1327,7 @@
                         linkSourceNodeId = null;
                         isLinkingMode = false;
                         btn.classList.remove("active-linking");
-                        btn.innerText = "🔗 ربط عنصرين ببعض (شبكة)";
+                        btn.innerText = "🔗 ربط عنصرين ببعض";
                         document.querySelectorAll('.draggable-node, .node-line').forEach(el => el.classList.remove('selected-element'));
                     }
                     e.stopPropagation();
@@ -1371,12 +1387,12 @@
             window.addEventListener('mousemove', (e) => {
                 if (!resizingMode) return;
                 if (resizingMode === 'w' || resizingMode === 'both') {
-                    let newW = Math.max(90, startW + ((e.clientX - startX) / currentZoomScale));
+                    let newW = Math.max(60, startW + ((e.clientX - startX) / currentZoomScale));
                     div.style.width = newW + 'px';
                     if (div.classList.contains('node-circle')) div.style.height = newW + 'px';
                 }
                 if (resizingMode === 'h' || resizingMode === 'both') {
-                    let newH = Math.max(50, startH + ((e.clientY - startY) / currentZoomScale));
+                    let newH = Math.max(60, startH + ((e.clientY - startY) / currentZoomScale));
                     div.style.height = newH + 'px';
                     if (div.classList.contains('node-circle')) div.style.width = newH + 'px';
                 }
@@ -1467,7 +1483,7 @@
                 if (el.classList.contains('node-circle')) type = 'circle';
                 if (el.classList.contains('node-text')) type = 'text';
                 if (el.classList.contains('node-line')) type = 'line';
-                if (el.querySelector('.node-attached-image') && !el.querySelector('.node-content-editable')) type = 'imgNode';
+                if (el.classList.contains('node-image-only')) type = 'imgNode';
                 
                 nodes.push({
                     id: el.getAttribute('data-id'),
@@ -1484,7 +1500,7 @@
             g.nodes = nodes;
             g.links = connectedLinks; 
             await saveCloudData();
-            alert("✅ تم حفظ الهيكل التنظيمي وجميع خطوط الربط والصور بدقة تامة في السحابة!");
+            alert("✅ تم حفظ الهيكل التنظيمي وصور اللوحة سحابياً بدقة تامة!");
         }
         
         function renderGangs() {
@@ -1493,7 +1509,7 @@
             const query = (document.getElementById("gangsSearch")?.value || "").toLowerCase();
             list.innerHTML = "";
             globalDatabase.gangs.filter(g => g.name.toLowerCase().includes(query) || (g.details && g.details.toLowerCase().includes(query))).forEach(g => {
-                list.innerHTML += `<div class="item-folder-card" onclick="viewGangFolder(${g.id})"><div><span class="item-folder-icon">🕵️‍♂️</span><span class="item-folder-title">${g.name}</span><span class="item-folder-sub">شجرة تنظيمية وخطوط حرة</span></div><span class="item-folder-btn">فتح اللوحة ←</span></div>`;
+                list.innerHTML += `<div class="item-folder-card" onclick="viewGangFolder(${g.id})"><div><span class="item-folder-icon">🕵️‍♂️</span><span class="item-folder-title">${g.name}</span><span class="item-folder-sub">${g.details || 'شجرة تنظيمية'}</span></div><span class="item-folder-btn">فتح اللوحة ←</span></div>`;
             });
         }
         async function createAccount() {
