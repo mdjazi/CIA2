@@ -9,7 +9,6 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import { getDatabase, ref, set, get, onValue, push, remove, update } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
-
         const firebaseConfig = {
             apiKey: "AIzaSyBcJneL1XXYscdKaqDc1wQqKI0qPqxXS2Y",
             authDomain: "cia2-d411e.firebaseapp.com",
@@ -20,12 +19,10 @@
             appId: "1:682710337982:web:15aee10531c2af7ede51ef",
             measurementId: "G-00N88W7VQD"
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         window.firebaseDB = { db, ref, set, get, onValue, push, remove, update };
     </script>
-
     <style>
         :root {
             --bg-color: #030508;
@@ -245,20 +242,20 @@
             position: absolute; min-width: 60px; min-height: 40px; width: auto; height: auto; padding: 12px; border-radius: 6px; cursor: move; user-select: none; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 6px; z-index: 20; 
             background: #162235; border: 1.5px solid var(--accent-color); color: #fff; 
-            overflow: visible; word-break: break-word; overflow-wrap: break-word; 
+            overflow: hidden; word-break: break-word; overflow-wrap: break-word; 
         }
         .node-circle { 
             border-radius: 50% !important; min-width: 60px !important; min-height: 60px !important; width: auto !important; height: auto !important;
             align-items: center; justify-content: center; text-align: center; padding: 15px; 
             background: #162235; border: 1.5px solid var(--accent-color); 
-            overflow: visible !important; display: flex !important;
+            overflow: hidden !important; display: flex !important;
         }
         .node-text { 
             background: rgba(0,0,0,0.6); border: 1px dashed var(--gold-color); color: var(--gold-color); 
-            font-size: 13px; padding: 10px; overflow: visible; word-break: break-word; overflow-wrap: break-word; width: auto !important; height: auto !important;
+            font-size: 13px; padding: 10px; overflow: hidden; word-break: break-word; overflow-wrap: break-word; width: auto !important; height: auto !important;
         }
         .node-image-only {
-            background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important;
+            background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; overflow: hidden !important;
         }
         
         .node-content-editable { 
@@ -275,9 +272,9 @@
         .connected-svg-line line.selected-line { stroke: var(--success-color); stroke-width: 5; stroke-dasharray: none; filter: drop-shadow(0 0 8px var(--success-color)); }
         .selected-element { outline: 2px dashed var(--success-color) !important; box-shadow: 0 0 15px var(--success-color) !important; z-index: 100 !important; }
         
-        .node-resize-handle-right { position: absolute; right: -6px; top: 50%; transform: translateY(-50%); width: 12px; height: 24px; background: var(--success-color); border-radius: 4px; cursor: ew-resize; z-index: 50; display: none; border: 1px solid #fff; }
-        .node-resize-handle-bottom { position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); width: 24px; height: 12px; background: var(--success-color); border-radius: 4px; cursor: ns-resize; z-index: 50; display: none; border: 1px solid #fff; }
-        .node-resize-handle-corner { position: absolute; right: -6px; bottom: -6px; width: 14px; height: 14px; background: var(--gold-color); border-radius: 50%; cursor: nwse-resize; z-index: 50; display: none; border: 2px solid #fff; }
+        .node-resize-handle-right { position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 8px; height: 100%; cursor: ew-resize; z-index: 50; display: none; }
+        .node-resize-handle-bottom { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; height: 8px; cursor: ns-resize; z-index: 50; display: none; }
+        .node-resize-handle-corner { position: absolute; right: 0; bottom: 0; width: 14px; height: 14px; background: var(--gold-color); cursor: nwse-resize; z-index: 50; display: none; border: 1px solid #fff; }
         
         .selected-element .node-resize-handle-right,
         .selected-element .node-resize-handle-bottom,
@@ -305,10 +302,12 @@
         .evidence-item-card { background: #fff; border: 1px solid #ccc; border-radius: 6px; padding: 8px; margin-bottom: 10px; }
         .broadcast-card-floating { display: none; position: fixed; bottom: 25px; left: 25px; width: 320px; background: rgba(11, 16, 23, 0.95); border: 1px solid var(--danger-color); border-radius: 10px; padding: 16px; z-index: 900; }
         .chat-box-container { height: 380px; overflow-y: auto; background: rgba(4, 6, 10, 0.8); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 12px; }
-        .chat-msg { max-width: 80%; padding: 10px 14px; border-radius: 8px; font-size: 12px; line-height: 1.5; }
+        .chat-msg { max-width: 80%; padding: 10px 14px; border-radius: 8px; font-size: 12px; line-height: 1.5; position: relative; }
         .chat-msg-me { align-self: flex-start; background: rgba(0, 132, 255, 0.2); border: 1px solid var(--accent-color); color: #fff; }
         .chat-msg-other { align-self: flex-end; background: rgba(22, 34, 53, 0.9); border: 1px solid var(--border-color); color: #d1d9e6; }
-        .chat-meta { font-size: 9px; color: var(--gold-color); margin-bottom: 4px; display: flex; justify-content: space-between; }
+        .chat-meta { font-size: 9px; color: var(--gold-color); margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
+        .chat-actions-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 10px; margin-left: 5px; }
+        .chat-actions-btn:hover { color: #fff; }
     </style>
 </head>
 <body>
@@ -366,14 +365,17 @@
                 <div class="folder-card" onclick="openSection('reportsSection')"><span class="folder-card-icon">📂</span><b>REPORTS</b><small>التقارير الرسمية</small><span class="open-lbl">فتح المجلد ←</span></div>
                 <div class="folder-card" onclick="openSection('wantedSection')"><span class="folder-card-icon">🚨</span><b>WANTED</b><small>المطلوبون للعدالة</small><span class="open-lbl">فتح المجلد ←</span></div>
                 <div class="folder-card" onclick="openSection('recordsSection')"><span class="folder-card-icon">📁</span><b>RECORDS</b><small>السجلات الجنائية</small><span class="open-lbl">فتح المجلد ←</span></div>
-                <div class="folder-card" onclick="openSection('intelligenceSection')"><span class="folder-card-icon">🕵️♂️</span><b>INTELLIGENCE</b><small>ملفات العصابات</small><span class="open-lbl">فتح المجلد ←</span></div>
+                <div class="folder-card" onclick="openSection('intelligenceSection')"><span class="folder-card-icon">🕵️‍♂️</span><b>INTELLIGENCE</b><small>ملفات العصابات</small><span class="open-lbl">فتح المجلد ←</span></div>
                 <div class="folder-card" onclick="openSection('casesSection')"><span class="folder-card-icon">🔓</span><b>DECRYPTION</b><small>التشفير والأمان</small><span class="open-lbl">فتح المجلد ←</span></div>
                 <div class="folder-card" onclick="openSection('usersSection')"><span class="folder-card-icon">👥</span><b>USERS</b><small>سجل الوكلاء</small><span class="open-lbl">فتح المجلد ←</span></div>
             </div>
         </div>
         <div class="workspace-panel" id="chatSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            <h3 style="color:var(--gold-color); margin-bottom: 15px;">💬 غرف التواصل المباشر بين الوكلاء</h3>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
+                <h3 style="color:var(--gold-color); margin:0;">💬 غرف التواصل المباشر بين الوكلاء</h3>
+                <button id="clearAllChatBtn" class="btn-del-item" style="display:none; padding: 6px 12px; font-size: 11px;" onclick="clearAllChatMessages()">🗑️ مسح جميع الرسائل (مدير)</button>
+            </div>
             <div class="chat-box-container" id="chatMessagesBox"></div>
             <div style="display:flex; gap:10px;">
                 <input type="text" id="chatInputText" placeholder="اكتب رسالتك..." style="flex-grow:1; margin:0;" onkeypress="if(event.key === 'Enter') sendChatMessage()">
@@ -424,7 +426,7 @@
         </div>
         <div class="workspace-panel" id="intelligenceSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            <h3 style="color:var(--gold-color); margin-bottom: 15px;">GANG INTELLIGENCE & HIERARCHY 🕵️♂️</h3>
+            <h3 style="color:var(--gold-color); margin-bottom: 15px;">GANG INTELLIGENCE & HIERARCHY 🕵️‍♂️</h3>
             <button class="btn-create-action" style="background: var(--gold-color); color:#000;" onclick="openCreateGangModal()">🏴‍☠️ إضافة عصابة جديدة للنظام</button>
             <div class="input-group"><input type="text" id="gangsSearch" class="search-box" placeholder="🔍 بحث شامل في العصابات..." oninput="renderGangs()"></div>
             <div id="gangs-list" class="folder-grid" style="grid-template-columns: repeat(3, 1fr);"></div>
@@ -504,7 +506,7 @@
         <div class="gang-fullscreen-header">
             <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
                 <div style="display:flex; align-items:center; gap:6px;">
-                    <span style="font-size:20px;">🏴☠️</span>
+                    <span style="font-size:20px;">🏴‍☠️</span>
                     <input type="text" id="fullscreenGangTitleInput" style="background: rgba(4, 6, 10, 0.9); border: 1px solid var(--gold-color); color: var(--gold-color); font-size: 15px; font-weight: bold; padding: 4px 10px; border-radius: 6px; width: 200px; outline:none;" placeholder="اسم العصابة...">
                 </div>
                 <div style="display:flex; align-items:center; gap:6px;">
@@ -538,7 +540,7 @@
                 <div style="font-size: 9px; color: var(--text-muted); line-height: 1.3; margin-top: 2px;">
                     💡 <b>الرسم:</b> اضغط زر الرسم واسحب بالماوس لتحدد الحجم.<br>
                     🖱️ <b>التحريك:</b> بالزر الأيمن واسحب.<br>
-                    🗑️ <b>الحذف:</b> انقر واضغط Delete.
+                    🗑️ <b>الحذف:</b> انقر على العنصر واضغط زر <b>Delete</b> في لوحة المفاتيح.
                 </div>
                 
                 <hr style="border: 0; border-top: 1px dashed rgba(217, 4, 41, 0.4); margin: 4px 0;">
@@ -602,7 +604,6 @@
             }
         }, 50);
 
-        // ربط قواعد البيانات السحابية الحقيقية عبر Firebase Realtime Database
         function loadDatabase() {
             const dbRef = window.firebaseDB.ref(window.firebaseDB.db, 'cia_system_data');
             window.firebaseDB.onValue(dbRef, (snapshot) => {
@@ -613,11 +614,10 @@
                         renderAllData();
                     }
                 } else {
-                    saveDatabase(); // التهيئة الأولى إذا القاعدة فارغة
+                    saveDatabase();
                 }
             }, { onlyOnce: true });
         }
-
         function saveDatabase() {
             const dbRef = window.firebaseDB.ref(window.firebaseDB.db, 'cia_system_data');
             window.firebaseDB.set(dbRef, globalDatabase).then(() => {
@@ -626,8 +626,6 @@
                 console.error("Firebase save error:", error);
             });
         }
-
-        // الاستماع للتحديثات اللحظية لجميع المستخدمين سحابياً
         window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 const dbRef = window.firebaseDB.ref(window.firebaseDB.db, 'cia_system_data');
@@ -731,6 +729,7 @@
                 }
             }, { passive: false });
         }
+
         function activateDrawingMode(type, defaultText) {
             activeDrawingType = type;
             defaultDrawingText = defaultText;
@@ -792,6 +791,10 @@
             document.getElementById("current-role-display").className = isDirector ? "badge badge-leader" : "badge";
             document.getElementById("btn-leader-toggle").style.display = isDirector ? "inline-block" : "none";
             document.getElementById("btnEditBroadcast").style.display = isDirector ? "inline-block" : "none";
+            
+            const clearChatBtn = document.getElementById("clearAllChatBtn");
+            if (clearChatBtn) clearChatBtn.style.display = isDirector ? "inline-block" : "none";
+
             renderAllData();
             showHome();
         }
@@ -837,12 +840,34 @@
                 closeModal();
             });
         }
+
+        // --- نظام رسائل الأعضاء المُحدث (تعديل، حذف لكل مستخدم وصلاحيات المدير) ---
         function renderChatMessages() {
             const box = document.getElementById("chatMessagesBox");
             if (!box) return;
             box.innerHTML = "";
+            const isDirector = globalDatabase.users[currentUser] && globalDatabase.users[currentUser].role === "DIRECTOR";
+            
             (globalDatabase.chat || []).forEach(m => {
-                box.innerHTML += `<div class="chat-msg ${m.user === currentUser ? 'chat-msg-me' : 'chat-msg-other'}"><div class="chat-meta"><span><b>${m.user}</b></span><span>${m.time}</span></div><div>${m.text}</div></div>`;
+                const canModify = (m.user === currentUser) || isDirector;
+                let actionsHtml = '';
+                if (canModify) {
+                    actionsHtml = `
+                        <div>
+                            <button class="chat-actions-btn" onclick="editChatMessage(${m.id})">✏️ تعديل</button>
+                            <button class="chat-actions-btn" style="color:var(--danger-color);" onclick="deleteChatMessage(${m.id})">🗑️ حذف</button>
+                        </div>
+                    `;
+                }
+
+                box.innerHTML += `
+                    <div class="chat-msg ${m.user === currentUser ? 'chat-msg-me' : 'chat-msg-other'}">
+                        <div class="chat-meta">
+                            <span><b>${m.user}</b> <span style="font-size:8px; opacity:0.7;">(${m.time})</span></span>
+                            ${actionsHtml}
+                        </div>
+                        <div id="chat-text-${m.id}" style="word-break: break-word;">${m.text}</div>
+                    </div>`;
             });
             box.scrollTop = box.scrollHeight;
         }
@@ -855,6 +880,32 @@
             input.value = "";
             saveDatabase();
         }
+        function deleteChatMessage(msgId) {
+            if (!confirm("هل أنت متأكد من حذف هذه الرسالة؟")) return;
+            loadDatabase();
+            globalDatabase.chat = (globalDatabase.chat || []).filter(m => m.id !== msgId);
+            saveDatabase();
+        }
+        function editChatMessage(msgId) {
+            loadDatabase();
+            const msg = (globalDatabase.chat || []).find(m => m.id === msgId);
+            if (!msg) return;
+            const newText = prompt("تعديل محتوى الرسالة:", msg.text);
+            if (newText !== null && newText.trim() !== "") {
+                msg.text = newText.trim();
+                saveDatabase();
+            }
+        }
+        function clearAllChatMessages() {
+            const isDirector = globalDatabase.users[currentUser] && globalDatabase.users[currentUser].role === "DIRECTOR";
+            if (!isDirector) return alert("هذا الإجراء مخصص لمدير النظام فقط!");
+            if (confirm("⚠️ تحذير: هل تريد مسح جميع رسائل الدردشة الحالية نهائياً؟")) {
+                loadDatabase();
+                globalDatabase.chat = [];
+                saveDatabase();
+            }
+        }
+
         function openCustomModal(title, html, onSave) {
             isModalOpen = true;
             document.getElementById("modalTitle").innerText = title;
@@ -1223,7 +1274,7 @@
             const gangFormHtml = `
                 <div class="gang-entry-container">
                     <div class="gang-entry-header">
-                        <span>🏴☠️</span>
+                        <span>🏴‍☠️</span>
                         <div class="gang-entry-title">تسجيل عصابة جديدة في المنظومة</div>
                     </div>
                     <div class="gang-entry-field">
@@ -1311,7 +1362,6 @@
                 globalDatabase.gangs = globalDatabase.gangs.filter(item => item.id !== currentEditingGangId);
                 saveDatabase();
                 closeGangFullscreen();
-                alert("✅ تم حذف ملف العصابة بنجاح!");
             }
         }
         function updateGangDetailsOnly() {
@@ -1322,7 +1372,6 @@
             g.name = document.getElementById("fullscreenGangTitleInput").value.trim();
             g.details = document.getElementById("fullscreenGangDetails").value.trim();
             saveDatabase();
-            alert("✅ تم تحديث اسم العصابة والنبذة بنجاح!");
         }
         function saveGangFullscreenCanvas() {
             if (!currentEditingGangId) return;
@@ -1356,7 +1405,6 @@
             g.details = document.getElementById("fullscreenGangDetails").value.trim();
             
             saveDatabase();
-            alert("💾 تم حفظ مخطط العصابة والمربعات بنجاح تام!");
         }
         function renderGangs() {
             const list = document.getElementById("gangs-list");
@@ -1364,7 +1412,7 @@
             const query = (document.getElementById("gangsSearch")?.value || "").toLowerCase();
             list.innerHTML = "";
             (globalDatabase.gangs || []).filter(g => g.name.toLowerCase().includes(query) || (g.details && g.details.toLowerCase().includes(query))).forEach(g => {
-                list.innerHTML += `<div class="item-folder-card" onclick="viewGangFolder(${g.id})"><div><span class="item-folder-icon">🏴☠️</span><span class="item-folder-title">${g.name}</span><span class="item-folder-sub">${g.details || 'ملف عصابة فدرالي'}</span></div><span class="item-folder-btn">فتح مخطط العصابة ←</span></div>`;
+                list.innerHTML += `<div class="item-folder-card" onclick="viewGangFolder(${g.id})"><div><span class="item-folder-icon">🏴‍☠️</span><span class="item-folder-title">${g.name}</span><span class="item-folder-sub">${g.details || 'ملف عصابة فدرالي'}</span></div><span class="item-folder-btn">فتح مخطط العصابة ←</span></div>`;
             });
         }
         function renderUsers() {
@@ -1416,6 +1464,7 @@
             out.innerText = "🔒 الكود المشفر الناتج: " + encoded;
         }
 
+        // --- تعديل وتطوير شجرة العصابات (الأبعاد، الصور، الحذف، الربط الصامت) ---
         function renderNodeElement(nodeData) {
             const world = document.getElementById("gangCanvasInnerWorld");
             if (!world) return;
@@ -1442,7 +1491,7 @@
             if (nodeData.height) el.style.height = nodeData.height + 'px';
             
             if (nodeData.type === 'imgNode' && nodeData.imageUrl) {
-                el.innerHTML = `<img src="${nodeData.imageUrl}" style="width:100%; height:100%; object-fit:cover; border-radius:6px; pointer-events:none;">`;
+                el.innerHTML = `<img src="${nodeData.imageUrl}" style="width:100%; height:100%; object-fit:contain; border-radius:6px; pointer-events:none;"><div class="node-resize-handle-right"></div><div class="node-resize-handle-bottom"></div><div class="node-resize-handle-corner"></div>`;
             } else if (nodeData.type === 'line') {
                 el.innerHTML = `<div class="line-resize-handle"></div><div class="line-rotate-handle"></div>`;
             } else {
@@ -1458,15 +1507,17 @@
             world.appendChild(el);
             updateConnectedSvgLines();
         }
+
         function setupNodeInteractions(el) {
             el.addEventListener('mousedown', (e) => {
                 if (e.button === 2) return;
+                
+                // عملية الربط الصامت بدون رسائل تنبيه
                 if (isLinkingMode) {
                     const nodeId = el.getAttribute('data-id');
                     if (!linkSourceNodeId) {
                         linkSourceNodeId = nodeId;
                         el.classList.add('selected-element');
-                        alert("تم تحديد العنصر الأول. الآن اضغط على العنصر الثاني لإتمام الربط.");
                     } else if (linkSourceNodeId !== nodeId) {
                         connectedLinks.push({ from: linkSourceNodeId, to: nodeId });
                         linkSourceNodeId = null;
@@ -1475,7 +1526,6 @@
                         document.getElementById("btnLinkNodes").innerText = "🔗 ربط عنصرين ببعض";
                         document.querySelectorAll('.selected-element').forEach(n => n.classList.remove('selected-element'));
                         updateConnectedSvgLines();
-                        alert("✅ تم ربط العنصرين بنجاح!");
                     }
                     e.stopPropagation();
                     return;
@@ -1490,25 +1540,35 @@
                     document.getElementById("nodeImageLinkInput").value = imgUrl;
                 }
                 
-                if (e.target.classList.contains('node-resize-handle-right') || 
-                    e.target.classList.contains('node-resize-handle-bottom') || 
-                    e.target.classList.contains('node-resize-handle-corner') ||
-                    e.target.classList.contains('line-resize-handle') ||
-                    e.target.classList.contains('line-rotate-handle') ||
-                    e.target.classList.contains('node-content-editable')) {
-                    return;
-                }
+                const isResizeRight = e.target.classList.contains('node-resize-handle-right');
+                const isResizeBottom = e.target.classList.contains('node-resize-handle-bottom');
+                const isResizeCorner = e.target.classList.contains('node-resize-handle-corner');
+                const isLineResize = e.target.classList.contains('line-resize-handle');
                 
                 const startX = e.clientX;
                 const startY = e.clientY;
                 const origLeft = el.offsetLeft;
                 const origTop = el.offsetTop;
+                const origWidth = el.offsetWidth;
+                const origHeight = el.offsetHeight;
                 
                 function onMouseMove(moveEvent) {
                     const dx = (moveEvent.clientX - startX) / currentZoomScale;
                     const dy = (moveEvent.clientY - startY) / currentZoomScale;
-                    el.style.left = (origLeft + dx) + 'px';
-                    el.style.top = (origTop + dy) + 'px';
+                    
+                    if (isResizeRight) {
+                        el.style.width = Math.max(40, origWidth + dx) + 'px';
+                    } else if (isResizeBottom) {
+                        el.style.height = Math.max(30, origHeight + dy) + 'px';
+                    } else if (isResizeCorner) {
+                        el.style.width = Math.max(40, origWidth + dx) + 'px';
+                        el.style.height = Math.max(30, origHeight + dy) + 'px';
+                    } else if (isLineResize) {
+                        el.style.width = Math.max(30, origWidth + dx) + 'px';
+                    } else {
+                        el.style.left = (origLeft + dx) + 'px';
+                        el.style.top = (origTop + dy) + 'px';
+                    }
                     updateConnectedSvgLines();
                 }
                 function onMouseUp() {
@@ -1519,6 +1579,7 @@
                 window.addEventListener('mouseup', onMouseUp);
             });
         }
+
         function toggleLinkingMode() {
             isLinkingMode = !isLinkingMode;
             linkSourceNodeId = null;
@@ -1570,11 +1631,8 @@
             if (!url) return alert("أدخل رابط صورة صحيح!");
             selectedElementForDeletion.setAttribute('data-image-url', url);
             selectedElementForDeletion.className = 'draggable-node node-image-only';
-            selectedElementForDeletion.style.width = '160px';
-            selectedElementForDeletion.style.height = '180px';
-            selectedElementForDeletion.innerHTML = `<img src="${url}" style="width:100%; height:100%; object-fit:cover; border-radius:6px; pointer-events:none;"><div class="node-resize-handle-right"></div><div class="node-resize-handle-bottom"></div><div class="node-resize-handle-corner"></div>`;
+            selectedElementForDeletion.innerHTML = `<img src="${url}" style="width:100%; height:100%; object-fit:contain; border-radius:6px; pointer-events:none;"><div class="node-resize-handle-right"></div><div class="node-resize-handle-bottom"></div><div class="node-resize-handle-corner"></div>`;
             setupNodeInteractions(selectedElementForDeletion);
-            alert("✅ تم تعيين الصورة للعنصر بنجاح!");
         }
         function zoomCanvas(delta) {
             currentZoomScale = Math.min(2.0, Math.max(0.3, currentZoomScale + delta));
@@ -1593,13 +1651,16 @@
                 lbl.innerText = Math.round(currentZoomScale * 100) + '%';
             }
         }
+        
+        // --- تفعيل زر Delete لحذف العناصر المحددة حصراً داخل محرر الشجرة ---
         window.addEventListener('keydown', (e) => {
-            if (e.key === 'Delete' && selectedElementForDeletion && isModalOpen === false) {
+            if (e.key === 'Delete' && selectedElementForDeletion && isModalOpen === false && currentEditingGangId !== null) {
                 selectedElementForDeletion.remove();
                 selectedElementForDeletion = null;
                 updateConnectedSvgLines();
             }
         });
+
         window.onload = function() {
             checkAutoLogin();
         };
