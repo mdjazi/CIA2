@@ -257,6 +257,9 @@
         .node-image-only {
             background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; overflow: hidden !important;
         }
+        .node-video-only {
+            background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; overflow: hidden !important;
+        }
         
         .node-content-editable { 
             outline: none; width: 100%; height: auto; min-width: 40px; min-height: 20px;
@@ -308,9 +311,19 @@
         .chat-meta { font-size: 9px; color: var(--gold-color); margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
         .chat-actions-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 10px; margin-left: 5px; }
         .chat-actions-btn:hover { color: #fff; }
+        
+        /* إشعار الحفظ الأخضر */
+        #toast-notification {
+            position: fixed; top: 30px; left: 50%; transform: translateX(-50%) translateY(-100px);
+            background: #10b981; color: #fff; padding: 12px 25px; border-radius: 8px; font-weight: bold; font-size: 14px;
+            box-shadow: 0 5px 20px rgba(16, 185, 129, 0.4); z-index: 9999; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; align-items: center; gap: 8px;
+        }
+        #toast-notification.show { transform: translateX(-50%) translateY(0); }
     </style>
 </head>
 <body>
+    <div id="toast-notification">✅ تم حفظ التغييرات بنجاح</div>
     <canvas id="cyber-canvas"></canvas>
     <div class="login-card" id="login-screen">
         <div class="subtitle-top">CIA • FEDERAL DATA TERMINAL</div>
@@ -528,19 +541,16 @@
                 <button class="drawio-tool-btn" id="btnSpawnText" onclick="activateDrawingMode('text', 'ملاحظة نصية...')">💬 إنشاء نص حر (سحب)</button>
                 <button class="drawio-tool-btn" id="btnSpawnLine" onclick="activateDrawingMode('line', '')">➖ خط منفصل (سحب)</button>
                 <button class="drawio-tool-btn" id="btnSpawnImg" onclick="activateDrawingMode('imgNode', '')" style="border-color:var(--success-color); color:#34d399;">🖼️ مربع صورة مستقل (سحب)</button>
+                <button class="drawio-tool-btn" id="btnSpawnVid" onclick="activateDrawingMode('vidNode', '')" style="border-color:#38bdf8; color:#38bdf8;">🎥 مربع فيديو مستقل (سحب)</button>
                 
                 <button class="drawio-tool-btn" id="btnLinkNodes" style="background:rgba(0, 132, 255, 0.25); border-color:#0084ff; color:#38bdf8;" onclick="toggleLinkingMode()">🔗 ربط عنصرين ببعض</button>
                 
                 <hr style="border: 0; border-top: 1px dashed rgba(197, 160, 89, 0.4); margin: 2px 0;">
                 
-                <h5 style="color: var(--gold-color); font-size: 11px; margin-bottom: 2px;">🖼️ صورة المربع المحدد</h5>
-                <input type="text" id="nodeImageLinkInput" style="width:100%; padding:5px; background:#04060a; border:1px solid var(--border-color); color:#fff; font-size:10px; border-radius:4px; margin-bottom:3px;" placeholder="رابط الصورة...">
-                <button class="drawio-tool-btn" style="border-color:var(--success-color); color:#34d399;" onclick="attachImageToSelectedNode()">➕ تعيين الصورة</button>
-                
                 <div style="font-size: 9px; color: var(--text-muted); line-height: 1.3; margin-top: 2px;">
                     💡 <b>الرسم:</b> اضغط زر الرسم واسحب بالماوس.<br>
                     🖱️ <b>التحريك:</b> بالزر الأيمن واسحب.<br>
-                    🗑️ <b>الحذف:</b> انقر على العنصر ثم اضغط <b>Delete</b> من لوحة المفاتيح.<br>
+                    🗑️ <b>الحذف:</b> انقر على العنصر ثم اضغط <b>Delete</b> من الكيبورد.<br>
                     🔘 <b>إلغاء التحديد:</b> اضغط على أي مساحة فارغة في الخلفية.
                 </div>
                 
@@ -604,6 +614,14 @@
                 ctx.fillText(chars.charAt(Math.floor(Math.random() * chars.length)), i * 13, Math.random() * canvas.height);
             }
         }, 50);
+
+        function showToast() {
+            const toast = document.getElementById("toast-notification");
+            if (toast) {
+                toast.classList.add("show");
+                setTimeout(() => { toast.classList.remove("show"); }, 3000);
+            }
+        }
 
         function loadDatabase() {
             const dbRef = window.firebaseDB.ref(window.firebaseDB.db, 'cia_system_data');
@@ -702,24 +720,27 @@
                     const finalHeight = parseInt(previewBoxElement.style.height);
                     previewBoxElement.remove();
                     previewBoxElement = null;
-                    let imgUrlPrompt = '';
+                    
+                    let mediaUrl = '';
                     if (activeDrawingType === 'imgNode') {
-                        imgUrlPrompt = prompt("أدخل رابط الصورة (URL):", "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=300&h=350");
-                        if (!imgUrlPrompt) {
-                            resetDrawingMode();
-                            return;
-                        }
+                        mediaUrl = prompt("أدخل رابط الصورة (URL):", "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=300&h=350");
+                        if (!mediaUrl) { resetDrawingMode(); return; }
+                    } else if (activeDrawingType === 'vidNode') {
+                        mediaUrl = prompt("أدخل رابط الفيديو (URL):", "https://www.w3schools.com/html/mov_bbb.mp4");
+                        if (!mediaUrl) { resetDrawingMode(); return; }
                     }
+
                     const nodeData = {
                         id: 'node_' + Date.now() + Math.floor(Math.random()*10000),
                         type: activeDrawingType,
-                        text: activeDrawingType === 'imgNode' || activeDrawingType === 'line' ? '' : defaultDrawingText,
+                        text: (activeDrawingType === 'imgNode' || activeDrawingType === 'vidNode' || activeDrawingType === 'line') ? '' : defaultDrawingText,
                         x: finalLeft,
                         y: finalTop,
                         width: finalWidth,
                         height: finalHeight,
                         angle: 0,
-                        imageUrl: imgUrlPrompt || ''
+                        imageUrl: activeDrawingType === 'imgNode' ? mediaUrl : '',
+                        videoUrl: activeDrawingType === 'vidNode' ? mediaUrl : ''
                     };
                     renderNodeElement(nodeData);
                     resetDrawingMode();
@@ -747,10 +768,12 @@
             else if (type === 'text') btnId = 'btnSpawnText';
             else if (type === 'line') btnId = 'btnSpawnLine';
             else if (type === 'imgNode') btnId = 'btnSpawnImg';
+            else if (type === 'vidNode') btnId = 'btnSpawnVid';
+            
             const btn = document.getElementById(btnId);
             if (btn) {
                 btn.classList.add('active-drawing');
-                btn.innerText = "🎯 ارسم المربع بالماوس الآن...";
+                btn.innerText = "🎯 ارسم بالماوس الآن...";
             }
         }
         function resetDrawingMode() {
@@ -760,6 +783,7 @@
             document.getElementById('btnSpawnText').innerText = "💬 إنشاء نص حر (سحب)";
             document.getElementById('btnSpawnLine').innerText = "➖ خط منفصل (سحب)";
             document.getElementById('btnSpawnImg').innerText = "🖼️ مربع صورة مستقل (سحب)";
+            document.getElementById('btnSpawnVid').innerText = "🎥 مربع فيديو مستقل (سحب)";
             activeDrawingType = null;
         }
 
@@ -1377,6 +1401,7 @@
             g.name = document.getElementById("fullscreenGangTitleInput").value.trim();
             g.details = document.getElementById("fullscreenGangDetails").value.trim();
             saveDatabase();
+            showToast();
         }
         function saveGangFullscreenCanvas() {
             if (!currentEditingGangId) return;
@@ -1390,14 +1415,15 @@
                 const editable = el.querySelector('.node-content-editable');
                 nodesArr.push({
                     id: el.getAttribute('data-id'),
-                    type: el.classList.contains('node-circle') ? 'circle' : (el.classList.contains('node-text') ? 'text' : (el.classList.contains('node-line') ? 'line' : (el.classList.contains('node-image-only') ? 'imgNode' : 'rect'))),
+                    type: el.classList.contains('node-circle') ? 'circle' : (el.classList.contains('node-text') ? 'text' : (el.classList.contains('node-line') ? 'line' : (el.classList.contains('node-image-only') ? 'imgNode' : (el.classList.contains('node-video-only') ? 'vidNode' : 'rect')))),
                     text: editable ? editable.innerText : '',
                     x: el.offsetLeft,
                     y: el.offsetTop,
                     width: el.offsetWidth,
                     height: el.offsetHeight,
                     angle: parseFloat(el.getAttribute('data-angle') || 0),
-                    imageUrl: el.getAttribute('data-image-url') || ''
+                    imageUrl: el.getAttribute('data-image-url') || '',
+                    videoUrl: el.getAttribute('data-video-url') || ''
                 });
             });
             
@@ -1410,6 +1436,7 @@
             g.details = document.getElementById("fullscreenGangDetails").value.trim();
             
             saveDatabase();
+            showToast();
         }
         function renderGangs() {
             const list = document.getElementById("gangs-list");
@@ -1476,6 +1503,7 @@
             el.setAttribute('data-id', nodeData.id);
             el.setAttribute('data-angle', nodeData.angle || 0);
             el.setAttribute('data-image-url', nodeData.imageUrl || '');
+            el.setAttribute('data-video-url', nodeData.videoUrl || '');
             
             if (nodeData.type === 'circle') {
                 el.className = 'draggable-node node-circle';
@@ -1485,6 +1513,8 @@
                 el.className = 'node-line';
             } else if (nodeData.type === 'imgNode') {
                 el.className = 'draggable-node node-image-only';
+            } else if (nodeData.type === 'vidNode') {
+                el.className = 'draggable-node node-video-only';
             } else {
                 el.className = 'draggable-node';
             }
@@ -1496,6 +1526,8 @@
             
             if (nodeData.type === 'imgNode' && nodeData.imageUrl) {
                 el.innerHTML = `<img src="${nodeData.imageUrl}" style="width:100%; height:100%; object-fit:contain; border-radius:6px; pointer-events:none;"><div class="node-resize-handle-right"></div><div class="node-resize-handle-bottom"></div><div class="node-resize-handle-corner"></div>`;
+            } else if (nodeData.type === 'vidNode' && nodeData.videoUrl) {
+                el.innerHTML = `<video controls src="${nodeData.videoUrl}" style="width:100%; height:100%; object-fit:contain; border-radius:6px; pointer-events:auto;"></video><div class="node-resize-handle-right"></div><div class="node-resize-handle-bottom"></div><div class="node-resize-handle-corner"></div>`;
             } else if (nodeData.type === 'line') {
                 el.innerHTML = `<div class="line-resize-handle"></div><div class="line-rotate-handle"></div>`;
             } else {
@@ -1537,11 +1569,6 @@
                 document.querySelectorAll('.draggable-node, .node-line').forEach(n => n.classList.remove('selected-element'));
                 el.classList.add('selected-element');
                 selectedElementForDeletion = el;
-                
-                const imgUrl = el.getAttribute('data-image-url');
-                if (imgUrl) {
-                    document.getElementById("nodeImageLinkInput").value = imgUrl;
-                }
                 
                 const isResizeRight = e.target.classList.contains('node-resize-handle-right');
                 const isResizeBottom = e.target.classList.contains('node-resize-handle-bottom');
@@ -1628,17 +1655,6 @@
                 }
             });
         }
-        function attachImageToSelectedNode() {
-            if (!selectedElementForDeletion) {
-                return alert("الرجاء تحديد مربع أو عنصر أولاً!");
-            }
-            const url = document.getElementById("nodeImageLinkInput").value.trim();
-            if (!url) return alert("أدخل رابط صورة صحيح!");
-            selectedElementForDeletion.setAttribute('data-image-url', url);
-            selectedElementForDeletion.className = 'draggable-node node-image-only';
-            selectedElementForDeletion.innerHTML = `<img src="${url}" style="width:100%; height:100%; object-fit:contain; border-radius:6px; pointer-events:none;"><div class="node-resize-handle-right"></div><div class="node-resize-handle-bottom"></div><div class="node-resize-handle-corner"></div>`;
-            setupNodeInteractions(selectedElementForDeletion);
-        }
         function zoomCanvas(delta) {
             currentZoomScale = Math.min(2.0, Math.max(0.3, currentZoomScale + delta));
             updateZoomDisplay();
@@ -1657,15 +1673,18 @@
             }
         }
         
-        // --- تعديل شامل للاستماع لزر Delete وحذف العنصر المحدد بسلاسة ---
+        // --- تفعيل الحذف الفوري عبر زر Delete من الكيبورد لأي عنصر محدد ---
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Delete' && currentEditingGangId !== null && isModalOpen === false) {
-                // إذا كان المستخدم يكتب نصاً داخل حقل أو خانة تعديل نص، لا تحذف العنصر
                 if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA' || document.activeElement.classList.contains('node-content-editable'))) {
                     return;
                 }
                 
                 if (selectedElementForDeletion && document.body.contains(selectedElementForDeletion)) {
+                    const deletedId = selectedElementForDeletion.getAttribute('data-id');
+                    // تنظيف الروابط المتعلقة بالعنصر المحذوف لمنع تضارب الخطوط
+                    connectedLinks = connectedLinks.filter(l => l.from !== deletedId && l.to !== deletedId);
+                    
                     selectedElementForDeletion.remove();
                     selectedElementForDeletion = null;
                     updateConnectedSvgLines();
