@@ -121,21 +121,24 @@
         .modal-title { color: var(--gold-color); font-size: 16px; font-weight: bold; }
         .modal-close { cursor: pointer; color: var(--text-muted); font-size: 18px; font-weight: bold; }
         .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
-
+        
         /* نافذة ملف العصابة بملء الشاشة (Full Screen Gang Modal) */
         .gang-fullscreen-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(3, 5, 8, 0.95); z-index: 3000; flex-direction: column; padding: 20px; }
         .gang-fullscreen-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold-color); padding-bottom: 12px; margin-bottom: 15px; }
         .gang-editor-layout { display: flex; flex-grow: 1; gap: 15px; overflow: hidden; }
-        .gang-sidebar { width: 260px; background: rgba(8, 13, 20, 0.9); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+        .gang-sidebar { width: 260px; background: rgba(8, 13, 20, 0.9); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; z-index: 10; }
         .gang-canvas-area { flex-grow: 1; background: #06090f; border: 1px solid var(--gold-color); border-radius: 8px; position: relative; overflow: hidden; background-image: linear-gradient(to right, #101926 1px, transparent 1px), linear-gradient(to bottom, #101926 1px, transparent 1px); background-size: 30px 30px; }
         
-        /* الأشكال والبطاقات التي يسحبها المستخدم ويتحكم بها بحرية */
-        .draggable-node { position: absolute; min-width: 140px; padding: 12px; border-radius: 6px; cursor: move; user-select: none; box-shadow: 0 4px 15px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 5px; z-index: 10; }
+        .drawio-tool-btn { background: rgba(197, 160, 89, 0.15); color: var(--gold-color); border: 1px solid var(--gold-color); padding: 8px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: bold; text-align: right; }
+        .drawio-tool-btn:hover { background: rgba(197, 160, 89, 0.3); }
+
+        /* الأشكال والبطاقات التي يسحبها المستخدم ويتحكم بها بحرية تامة */
+        .draggable-node { position: absolute; min-width: 140px; padding: 12px; border-radius: 6px; cursor: move; user-select: none; box-shadow: 0 4px 15px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 5px; z-index: 20; }
         .node-rect { background: #162235; border: 1.5px solid var(--accent-color); color: #fff; }
         .node-circle { background: #c5a059; border: 1.5px solid #fff; color: #000; border-radius: 50%; width: 110px; height: 110px; align-items: center; justify-content: center; text-align: center; }
         .node-text { background: rgba(0,0,0,0.6); border: 1px dashed var(--gold-color); color: var(--gold-color); font-size: 13px; padding: 8px; }
         .node-delete-btn { background: var(--danger-color); color: #fff; border: none; font-size: 9px; padding: 2px 6px; border-radius: 3px; cursor: pointer; align-self: flex-end; }
-
+        
         /* وثيقة التقرير الاستخباراتي */
         .cia-classified-doc { background: #f4f4f0; color: #111; padding: 30px; border-radius: 6px; border: 2px solid #333; font-family: 'Courier New', Courier, monospace; position: relative; direction: rtl; text-align: right; overflow: hidden; font-weight: bold; }
         .cia-classified-doc::before {
@@ -217,7 +220,7 @@
                 <div class="folder-card" onclick="openSection('reportsSection')"><span class="folder-card-icon">📂</span><b>REPORTS</b><small>التقارير الرسمية</small><span class="open-lbl">فتح المجلد ←</span></div>
                 <div class="folder-card" onclick="openSection('wantedSection')"><span class="folder-card-icon">🚨</span><b>WANTED</b><small>المطلوبون للعدالة</small><span class="open-lbl">فتح المجلد ←</span></div>
                 <div class="folder-card" onclick="openSection('recordsSection')"><span class="folder-card-icon">📁</span><b>RECORDS</b><small>السجلات الجنائية</small><span class="open-lbl">فتح المجلد ←</span></div>
-                <div class="folder-card" onclick="openSection('intelligenceSection')"><span class="folder-card-icon">🕵️♂️</span><b>INTELLIGENCE</b><small>ملفات العصابات</small><span class="open-lbl">فتح المجلد ←</span></div>
+                <div class="folder-card" onclick="openSection('intelligenceSection')"><span class="folder-card-icon">🕵️‍♂️</span><b>INTELLIGENCE</b><small>ملفات العصابات</small><span class="open-lbl">فتح المجلد ←</span></div>
                 <div class="folder-card" onclick="openSection('casesSection')"><span class="folder-card-icon">🔓</span><b>DECRYPTION</b><small>التشفير والأمان</small><span class="open-lbl">فتح المجلد ←</span></div>
                 <div class="folder-card" onclick="openSection('usersSection')"><span class="folder-card-icon">👥</span><b>USERS</b><small>سجل الوكلاء</small><span class="open-lbl">فتح المجلد ←</span></div>
             </div>
@@ -275,7 +278,7 @@
         </div>
         <div class="workspace-panel" id="intelligenceSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            <h3 style="color:var(--gold-color); margin-bottom: 15px;">GANG INTELLIGENCE & HIERARCHY 🕵️♂️</h3>
+            <h3 style="color:var(--gold-color); margin-bottom: 15px;">GANG INTELLIGENCE & HIERARCHY 🕵️‍♂️</h3>
             <button class="btn-create-action" style="background: var(--gold-color); color:#000;" onclick="openCreateGangModal()">🏴‍☠️ إنشاء عصابة جديدة</button>
             <div class="input-group"><input type="text" id="gangsSearch" class="search-box" placeholder="🔍 بحث شامل في العصابات..." oninput="renderGangs()"></div>
             <div id="gangs-list" class="folder-grid" style="grid-template-columns: repeat(3, 1fr);"></div>
@@ -317,7 +320,7 @@
         </div>
         <div id="broadcastTextDisplay" style="color:#f1f5f9; font-size:13px; line-height:1.5;">-</div>
     </div>
-
+    
     <!-- نافذة عامة عادية -->
     <div class="custom-modal-overlay" id="customModal">
         <div class="custom-modal">
@@ -333,7 +336,7 @@
         </div>
     </div>
 
-    <!-- نافذة ملف العصابة الكبيرة بملء الشاشة (Full Screen) -->
+    <!-- نافذة ملف العصابة الكبيرة بملء الشاشة مع الشجرة والخطوط -->
     <div class="gang-fullscreen-overlay" id="gangFullscreenModal">
         <div class="gang-fullscreen-header">
             <div style="color: var(--gold-color); font-size: 18px; font-weight: bold;" id="fullscreenGangTitle">🏴‍☠️ ملف العصابة</div>
@@ -344,7 +347,7 @@
         </div>
         <div class="gang-editor-layout">
             <div class="gang-sidebar">
-                <h5 style="color: var(--gold-color); font-size: 12px; margin-bottom: 5px;">📦 أشكال المخطط</h5>
+                <h5 style="color: var(--gold-color); font-size: 12px; margin-bottom: 5px;">📦 أشكال الشجرة</h5>
                 <button class="drawio-tool-btn" onclick="spawnNode('rect')">▭ مستطيل قيادي جديد</button>
                 <button class="drawio-tool-btn" onclick="spawnNode('circle')">⭕ دائرة عضو جديد</button>
                 <button class="drawio-tool-btn" onclick="spawnNode('text')">💬 نص كتابي حر</button>
@@ -354,8 +357,10 @@
                 
                 <button class="btn-login" style="background:var(--gold-color); color:#000; margin-top: 10px; padding:8px; font-size:11px;" onclick="updateGangDetailsOnly()">تحديث النبذة فقط</button>
             </div>
-            <div class="gang-canvas-area" id="gangCanvasArea" onclick="deselectAllNodes(event)">
-                <!-- عناصر المخطط ستظهر هنا ويمكن سحبها وتحريكها -->
+            <div class="gang-canvas-area" id="gangCanvasArea">
+                <!-- SVG للخطوط التفاعلية -->
+                <svg id="gangSvgLines" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1;"></svg>
+                <!-- عناصر المخطط والشجرة ستظهر هنا -->
             </div>
         </div>
     </div>
@@ -853,7 +858,7 @@
         }
 
         // ==========================================
-        // 🏴‍☠️ إدارة العصابات ونظام اللوحة التفاعلية بملء الشاشة
+        // 🏴‍☠️ نظام العصابات واللوحة والشجرة الحية بالخطوط
         // ==========================================
         function openCreateGangModal() {
             openCustomModal("🏴‍☠️ إنشاء عصابة جديدة", `
@@ -868,12 +873,12 @@
                     id: Date.now(), 
                     name, 
                     details: document.getElementById("popGangDetails").value.trim(),
-                    nodes: [] // تخزين الأشكال
+                    nodes: [] 
                 });
                 await saveCloudData(); closeModal();
             });
         }
-
+        
         function viewGangFolder(id) {
             const g = globalDatabase.gangs.find(item => item.id === id);
             if (!g) return;
@@ -883,17 +888,19 @@
             document.getElementById("fullscreenGangDetails").value = g.details || '';
             
             const area = document.getElementById("gangCanvasArea");
-            area.innerHTML = ''; // تفريغ المساحة
+            // تنظيف الأشكال السابقة مع الحفاظ على عنصر SVG للخطوط
+            const existingNodes = area.querySelectorAll('.draggable-node');
+            existingNodes.forEach(node => node.remove());
             
-            // استرجاع الأشكال المحفوظة مسبقاً
-            if (g.nodes && Array.isArray(g.nodes)) {
+            if (g.nodes && Array.isArray(g.nodes) && g.nodes.length > 0) {
                 g.nodes.forEach(nodeData => renderNodeElement(nodeData));
             } else {
-                // عنصر افتراضي أول
-                renderNodeElement({ id: Date.now(), type: 'rect', text: '👑 الرئيس: القائد', x: 100, y: 80 });
+                renderNodeElement({ id: 'node_1', type: 'circle', text: '👑 القائد', x: 250, y: 60 });
+                renderNodeElement({ id: 'node_2', type: 'rect', text: 'نائب أول', x: 120, y: 220 });
+                renderNodeElement({ id: 'node_3', type: 'rect', text: 'نائب ثان', x: 380, y: 220 });
             }
-
             document.getElementById("gangFullscreenModal").style.display = "flex";
+            updateTreeLines();
         }
 
         function closeGangFullscreen() {
@@ -902,15 +909,15 @@
         }
 
         function spawnNode(type) {
-            const area = document.getElementById("gangCanvasArea");
             const nodeData = {
                 id: 'node_' + Date.now(),
                 type: type,
-                text: type === 'circle' ? 'نائب القائد' : (type === 'rect' ? 'عضو جديد' : 'ملاحظة نصية حرة...'),
-                x: 150 + Math.random() * 100,
-                y: 100 + Math.random() * 100
+                text: type === 'circle' ? 'عضو جديد' : (type === 'rect' ? 'مسؤول جديد' : 'ملاحظة نصية...'),
+                x: 180 + Math.random() * 150,
+                y: 150 + Math.random() * 100
             };
             renderNodeElement(nodeData);
+            updateTreeLines();
         }
 
         function renderNodeElement(data) {
@@ -920,13 +927,12 @@
             div.style.left = data.x + 'px';
             div.style.top = data.y + 'px';
             div.setAttribute('data-id', data.id);
-
             div.innerHTML = `
-                <button class="node-delete-btn" onclick="this.parentElement.remove()">✕ حذف</button>
+                <button class="node-delete-btn" onclick="this.parentElement.remove(); updateTreeLines();">✕ حذف</button>
                 <div contenteditable="true" style="outline:none; width:100%; min-height:25px; word-break:break-all;">${data.text}</div>
             `;
-
-            // تفعيل السحب والإفلات (Drag & Drop) لكل شكل بحرية تامة داخل اللوحة
+            
+            // تفعيل السحب والإفلات لجميع الأشكال دون استثناء
             let isDragging = false, startX, startY;
             div.onmousedown = (e) => {
                 if (e.target.tagName === 'BUTTON' || e.target.getAttribute('contenteditable') === 'true') return;
@@ -935,18 +941,60 @@
                 startY = e.clientY - div.offsetTop;
                 div.style.zIndex = 1000;
             };
+            
             document.onmousemove = (e) => {
                 if (!isDragging) return;
                 div.style.left = (e.clientX - startX) + 'px';
                 div.style.top = (e.clientY - startY) + 'px';
+                updateTreeLines(); // تحديث الخطوط فورياً أثناء السحب
             };
-            document.onmouseup = () => { isDragging = false; div.style.zIndex = 10; };
-
+            
+            document.onmouseup = () => { 
+                if (isDragging) {
+                    isDragging = false; 
+                    div.style.zIndex = 20; 
+                    updateTreeLines();
+                }
+            };
+            
             area.appendChild(div);
         }
 
-        function deselectAllNodes(e) {
-            // يمكن استخدامه لتنظيم النقرات إذا لزم الأمر
+        // دالة رسم وتحديث خطوط الربط الشججيرية بين الأشكال
+        function updateTreeLines() {
+            const svg = document.getElementById("gangSvgLines");
+            if (!svg) return;
+            svg.innerHTML = '';
+            
+            const nodes = Array.from(document.querySelectorAll("#gangCanvasArea .draggable-node"));
+            if (nodes.length < 2) return;
+
+            // ترتيب العناصر حسب الارتفاع (Y) لتوصيل العناصر العلوية بالسفلية تباعاً
+            nodes.sort((a, b) => a.offsetTop - b.offsetTop);
+
+            for (let i = 0; i < nodes.length - 1; i++) {
+                const parent = nodes[i];
+                const child = nodes[i + 1];
+
+                const pRect = parent.getBoundingClientRect();
+                const cRect = child.getBoundingClientRect();
+                const areaRect = document.getElementById("gangCanvasArea").getBoundingClientRect();
+
+                const x1 = (pRect.left + pRect.width / 2) - areaRect.left;
+                const y1 = (pRect.top + pRect.height) - areaRect.top;
+                const x2 = (cRect.left + cRect.width / 2) - areaRect.left;
+                const y2 = cRect.top - areaRect.top;
+
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", x1);
+                line.setAttribute("y1", y1);
+                line.setAttribute("x2", x2);
+                line.setAttribute("y2", y2);
+                line.setAttribute("stroke", "#c5a059");
+                line.setAttribute("stroke-width", "2");
+                line.setAttribute("stroke-dasharray", "4"); // خط متقطع أنيق
+                svg.appendChild(line);
+            }
         }
 
         async function updateGangDetailsOnly() {
@@ -962,17 +1010,14 @@
             if (!currentEditingGangId) return;
             const g = globalDatabase.gangs.find(item => item.id === currentEditingGangId);
             if (!g) return;
-
             g.details = document.getElementById("fullscreenGangDetails").value.trim();
             
-            // جمع كافة الأشكال ومواقعها الحالية ونصوصها لحفظها في السحابة
             const nodes = [];
             const nodeElements = document.querySelectorAll("#gangCanvasArea .draggable-node");
             nodeElements.forEach(el => {
                 let type = 'rect';
                 if (el.classList.contains('node-circle')) type = 'circle';
                 if (el.classList.contains('node-text')) type = 'text';
-
                 nodes.push({
                     id: el.getAttribute('data-id'),
                     type: type,
@@ -981,10 +1026,9 @@
                     y: parseInt(el.style.top) || 0
                 });
             });
-
             g.nodes = nodes;
             await saveCloudData();
-            alert("✅ تم حفظ لوحة العصابة ومخططها بالكامل بنجاح في السحابة الفدرالية!");
+            alert("✅ تم حفظ الشجرة التنظيمية واللوحة بالكامل بنجاح في السحابة!");
         }
 
         function renderGangs() {
@@ -993,16 +1037,8 @@
             const query = (document.getElementById("gangsSearch")?.value || "").toLowerCase();
             list.innerHTML = "";
             globalDatabase.gangs.filter(g => g.name.toLowerCase().includes(query) || (g.details && g.details.toLowerCase().includes(query))).forEach(g => {
-                list.innerHTML += `<div class="item-folder-card" onclick="viewGangFolder(${g.id})"><div><span class="item-folder-icon">🕵️♂️</span><span class="item-folder-title">${g.name}</span><span class="item-folder-sub">لوحة رسم تفاعلية بملء الشاشة</span></div><span class="item-folder-btn">فتح اللوحة ←</span></div>`;
+                list.innerHTML += `<div class="item-folder-card" onclick="viewGangFolder(${g.id})"><div><span class="item-folder-icon">🕵️‍♂️</span><span class="item-folder-title">${g.name}</span><span class="item-folder-sub">شجرة تنظيمية تفاعلية بخطوط</span></div><span class="item-folder-btn">فتح اللوحة ←</span></div>`;
             });
-        }
-
-        async function deleteGang(id) {
-            if (confirm("هل أنت متأكد من حذف هذه العصابة بالكامل؟")) { 
-                globalDatabase.gangs = globalDatabase.gangs.filter(g => g.id !== id); 
-                await saveCloudData(); 
-                closeGangFullscreen(); 
-            }
         }
 
         async function createAccount() {
