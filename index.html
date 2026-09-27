@@ -180,10 +180,9 @@
         
         .gang-fullscreen-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(3, 5, 8, 0.95); z-index: 3000; flex-direction: column; padding: 20px; }
         .gang-fullscreen-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold-color); padding-bottom: 12px; margin-bottom: 15px; }
-        .gang-editor-layout { display: flex; flex-grow: 1; gap: 15px; overflow: hidden; }
+        .gang-editor-layout { display: flex; flex-grow: 1; gap: 15px; overflow: hidden; position: relative; }
         .gang-sidebar { width: 300px; background: rgba(8, 13, 20, 0.9); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; z-index: 10; }
         
-        /* 🗺️ مساحة الشجرة مع شريط تمرير شفاف وأنيق */
         .gang-canvas-area {
             flex-grow: 1; background: #06090f; border: 1px solid var(--gold-color); border-radius: 8px; position: relative; overflow: auto;
             background-image: linear-gradient(to right, #101926 1px, transparent 1px), linear-gradient(to bottom, #101926 1px, transparent 1px); background-size: 30px 30px;
@@ -194,28 +193,37 @@
         .gang-canvas-area::-webkit-scrollbar-thumb { background: rgba(197, 160, 89, 0.3); border-radius: 4px; transition: background 0.3s; }
         .gang-canvas-area::-webkit-scrollbar-thumb:hover { background: rgba(197, 160, 89, 0.7); }
 
-        .gang-canvas-inner-world { position: relative; width: 3000px; height: 3000px; }
+        .gang-canvas-inner-world { position: relative; width: 4000px; height: 4000px; transform-origin: top right; transition: transform 0.15s ease; }
         
+        /* 🔍 عدسة التحكم بالتكبير والتصغير السفلية */
+        .zoom-lens-bar {
+            position: absolute; bottom: 20px; left: 20px; background: rgba(8, 13, 20, 0.9); border: 1px solid var(--gold-color);
+            border-radius: 8px; padding: 6px 12px; display: flex; gap: 8px; align-items: center; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+        }
+        .zoom-lens-btn { background: rgba(197, 160, 89, 0.2); border: 1px solid var(--gold-color); color: var(--gold-color); width: 28px; height: 28px; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+        .zoom-lens-btn:hover { background: rgba(197, 160, 89, 0.4); }
+        .zoom-level-lbl { color: #fff; font-size: 11px; font-family: monospace; min-width: 40px; text-align: center; }
+
         .drawio-tool-btn { background: rgba(197, 160, 89, 0.15); color: var(--gold-color); border: 1px solid var(--gold-color); padding: 8px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: bold; text-align: right; }
         .drawio-tool-btn:hover { background: rgba(197, 160, 89, 0.3); }
         .drawio-tool-btn.active-linking { background: var(--accent-color) !important; color: #fff !important; animation: blinkLink 1s infinite alternate; }
         @keyframes blinkLink { 0% { box-shadow: 0 0 5px #0084ff; } 100% { box-shadow: 0 0 20px #0084ff; } }
         
         .draggable-node { 
-            position: absolute; min-width: 150px; min-height: 50px; height: auto; padding: 12px; border-radius: 6px; cursor: move; user-select: none; 
+            position: absolute; min-width: 150px; min-height: 50px; width: auto; height: auto; padding: 12px; border-radius: 6px; cursor: move; user-select: none; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 6px; z-index: 20; 
             background: #162235; border: 1.5px solid var(--accent-color); color: #fff; 
             overflow: visible; word-break: break-word; overflow-wrap: break-word; 
         }
         .node-circle { 
-            border-radius: 50% !important; min-width: 130px !important; min-height: 130px !important; height: auto !important;
+            border-radius: 50% !important; min-width: 130px !important; min-height: 130px !important; width: auto !important; height: auto !important;
             align-items: center; justify-content: center; text-align: center; padding: 15px; 
             background: #162235; border: 1.5px solid var(--accent-color); 
             overflow: visible !important; display: flex !important;
         }
         .node-text { 
             background: rgba(0,0,0,0.6); border: 1px dashed var(--gold-color); color: var(--gold-color); 
-            font-size: 13px; padding: 10px; overflow: visible; word-break: break-word; overflow-wrap: break-word; height: auto !important;
+            font-size: 13px; padding: 10px; overflow: visible; word-break: break-word; overflow-wrap: break-word; width: auto !important; height: auto !important;
         }
         
         .node-content-editable { outline: none; width: 100%; height: auto; word-break: break-word; overflow-wrap: break-word; overflow: visible; white-space: pre-wrap; z-index: 25; position: relative; }
@@ -455,7 +463,7 @@
         </div>
     </div>
     
-    <!-- 🏴‍☠️ شاشة العصابات الموسعة مع شريط التمرير الشفاف وإصلاح إضافة العناصر -->
+    <!-- 🏴‍☠️ شاشة العصابات الموسعة مع دعم عناصر الصور المستقلة وزر العدسة -->
     <div class="gang-fullscreen-overlay" id="gangFullscreenModal">
         <div class="gang-fullscreen-header">
             <div style="display:flex; align-items:center; gap:8px;">
@@ -470,22 +478,25 @@
         <div class="gang-editor-layout">
             <div class="gang-sidebar">
                 <h5 style="color: var(--gold-color); font-size: 12px; margin-bottom: 5px;">📦 أدوات الشجرة الكبيرة</h5>
-                <button class="drawio-tool-btn" onclick="spawnNode('rect')">▭ مستطيل جديد (تكبر تلقائياً)</button>
+                <button class="drawio-tool-btn" onclick="spawnNode('rect')">▭ مستطيل جديد (توسّع تلقائي)</button>
                 <button class="drawio-tool-btn" onclick="spawnNode('circle')">⭕ دائرة جديدة</button>
                 <button class="drawio-tool-btn" onclick="spawnNode('text')">💬 نص كتابي حر</button>
                 <button class="drawio-tool-btn" style="background:rgba(197,160,89,0.3); border-color:var(--gold-color);" onclick="spawnLine()">➖ خط منفصل حر</button>
+                
+                <!-- 🖼️ أداة إنشاء مربع صورة مستقل -->
+                <button class="drawio-tool-btn" style="background:rgba(16, 185, 129, 0.2); border-color:var(--success-color); color:#34d399;" onclick="spawnImageNode()">🖼️ مربع صورة مستقل (بدون نص)</button>
                 
                 <button class="drawio-tool-btn" id="btnLinkNodes" style="background:rgba(0, 132, 255, 0.25); border-color:#0084ff; color:#38bdf8;" onclick="toggleLinkingMode()">🔗 ربط عنصرين ببعض (شبكة)</button>
                 
                 <hr style="border: 0; border-top: 1px dashed rgba(197, 160, 89, 0.4); margin: 5px 0;">
                 
-                <h5 style="color: var(--gold-color); font-size: 12px; margin-bottom: 5px;">🖼️ إرفاق صورة بالعنصر المحدد</h5>
+                <h5 style="color: var(--gold-color); font-size: 12px; margin-bottom: 5px;">🖼️ تعديل رابط صورة العنصر المحدد</h5>
                 <input type="text" id="nodeImageLinkInput" style="width:100%; padding:6px; background:#04060a; border:1px solid var(--border-color); color:#fff; font-size:11px; border-radius:5px; margin-bottom:5px;" placeholder="ضع رابط الصورة هنا...">
-                <button class="drawio-tool-btn" style="background:rgba(16, 185, 129, 0.2); border-color:var(--success-color); color:#34d399;" onclick="attachImageToSelectedNode()">➕ إضافة/تحديث الصورة للعنصر</button>
+                <button class="drawio-tool-btn" style="background:rgba(16, 185, 129, 0.2); border-color:var(--success-color); color:#34d399;" onclick="attachImageToSelectedNode()">➕ تحديث رابط الصورة</button>
                 
                 <div style="font-size: 10px; color: var(--text-muted); line-height: 1.4; margin-top: 5px;">
-                    💡 <b>ملاحظة:</b> شريط التمرير الآن شفاف وأنيق، والشجرة تدعم التمرير للأسفل بحرية تامة.<br>
-                    🗑️ <b>الحذف:</b> انقر على المربع، الخط، أو الصورة واضغط <b>Delete</b>.
+                    💡 <b>ملاحظة:</b> المربعات تتوسع تلقائياً طولاً وعرضاً عند الكتابة والضغط على Enter. استخدم عدسة التكبير والتصغير أسفل اليمين.<br>
+                    🗑️ <b>الحذف:</b> انقر على العنصر أو الخط واضغط <b>Delete</b>.
                 </div>
                 
                 <h5 style="color: var(--gold-color); font-size: 12px; margin-top: 10px; margin-bottom: 5px;">📋 نبذة العصابة</h5>
@@ -500,6 +511,13 @@
             <div class="gang-canvas-area" id="gangCanvasArea">
                 <div class="gang-canvas-inner-world" id="gangCanvasInnerWorld">
                     <svg class="connected-svg-line" id="svgCanvas"></svg>
+                </div>
+                <!-- 🔍 عدسة تكبير وتصغير الشجرة (Zoom Lens) -->
+                <div class="zoom-lens-bar">
+                    <button class="zoom-lens-btn" onclick="zoomCanvas(-0.1)" title="تصغير">➖</button>
+                    <span class="zoom-level-lbl" id="zoomLevelLbl">100%</span>
+                    <button class="zoom-lens-btn" onclick="zoomCanvas(0.1)" title="تكبير">➕</button>
+                    <button class="zoom-lens-btn" onclick="resetZoom()" title="إعادة ضبط">🔍</button>
                 </div>
             </div>
         </div>
@@ -536,6 +554,7 @@
         let isLinkingMode = false;
         let linkSourceNodeId = null;
         let connectedLinks = []; 
+        let currentZoomScale = 1.0;
 
         async function fetchCloudData() {
             if (isSaving || isModalOpen) return;
@@ -1050,6 +1069,8 @@
             existingNodes.forEach(node => node.remove());
             
             connectedLinks = g.links || [];
+            currentZoomScale = 1.0;
+            updateZoomDisplay();
             
             if (g.nodes && Array.isArray(g.nodes) && g.nodes.length > 0) {
                 g.nodes.forEach(nodeData => renderNodeElement(nodeData));
@@ -1100,8 +1121,8 @@
 
         function spawnNode(type) {
             const area = document.getElementById("gangCanvasArea");
-            const startX = area.scrollLeft + 150;
-            const startY = area.scrollTop + 100;
+            const startX = area.scrollLeft + 200;
+            const startY = area.scrollTop + 150;
             
             const nodeData = {
                 id: 'node_' + Date.now() + Math.floor(Math.random()*10000),
@@ -1116,10 +1137,33 @@
             };
             renderNodeElement(nodeData);
         }
+
+        function spawnImageNode() {
+            const area = document.getElementById("gangCanvasArea");
+            const startX = area.scrollLeft + 200;
+            const startY = area.scrollTop + 150;
+            
+            const imageUrlPrompt = prompt("أدخل رابط الصورة (URL):", "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=300&h=350");
+            if (!imageUrlPrompt) return;
+
+            const nodeData = {
+                id: 'node_' + Date.now() + Math.floor(Math.random()*10000),
+                type: 'imgNode',
+                text: '',
+                x: startX,
+                y: startY,
+                width: 150,
+                height: 150,
+                angle: 0,
+                imageUrl: imageUrlPrompt
+            };
+            renderNodeElement(nodeData);
+        }
+
         function spawnLine() {
             const area = document.getElementById("gangCanvasArea");
-            const startX = area.scrollLeft + 180;
-            const startY = area.scrollTop + 120;
+            const startX = area.scrollLeft + 220;
+            const startY = area.scrollTop + 180;
 
             const lineData = {
                 id: 'node_' + Date.now() + Math.floor(Math.random()*10000),
@@ -1134,9 +1178,25 @@
             renderNodeElement(lineData);
         }
 
+        function zoomCanvas(amount) {
+            currentZoomScale = Math.max(0.4, Math.min(2.0, currentZoomScale + amount));
+            updateZoomDisplay();
+        }
+        function resetZoom() {
+            currentZoomScale = 1.0;
+            updateZoomDisplay();
+        }
+        function updateZoomDisplay() {
+            const world = document.getElementById("gangCanvasInnerWorld");
+            if (world) world.style.transform = `scale(${currentZoomScale})`;
+            const lbl = document.getElementById("zoomLevelLbl");
+            if (lbl) lbl.innerText = Math.round(currentZoomScale * 100) + '%';
+            updateConnectedSvgLines();
+        }
+
         function attachImageToSelectedNode() {
             if (!selectedElementForDeletion || selectedElementForDeletion.isSvgLink || selectedElementForDeletion.classList.contains('node-line')) {
-                return alert("⚠️ الرجاء اختيار مربع أو دائرة أولاً لإرفاق الصورة!");
+                return alert("⚠️ الرجاء اختيار مربع أو دائرة أولاً لتحديث صورتها!");
             }
             const imgUrl = document.getElementById("nodeImageLinkInput").value.trim();
             selectedElementForDeletion.setAttribute('data-image-url', imgUrl);
@@ -1146,7 +1206,7 @@
                 if (!imgTag) {
                     imgTag = document.createElement("img");
                     imgTag.className = 'node-attached-image';
-                    imgTag.style.cssText = "width:100%; max-height:100px; object-fit:cover; border-radius:4px; margin-top:4px;";
+                    imgTag.style.cssText = "width:100%; max-height:120px; object-fit:cover; border-radius:4px; margin-top:4px;";
                     selectedElementForDeletion.appendChild(imgTag);
                 }
                 imgTag.src = imgUrl;
@@ -1154,7 +1214,7 @@
                 imgTag.remove();
             }
             document.getElementById("nodeImageLinkInput").value = "";
-            alert("✅ تم إرفاق/تحديث الصورة بنجاح!");
+            alert("✅ تم تحديث الصورة بنجاح!");
         }
 
         function renderNodeElement(data) {
@@ -1162,6 +1222,7 @@
             const div = document.createElement("div");
             
             const isLine = data.type === 'line';
+            const isImgNode = data.type === 'imgNode';
             div.className = isLine ? 'node-line' : `draggable-node ${data.type === 'circle' ? 'node-circle' : (data.type === 'text' ? 'node-text' : '')}`;
             
             div.style.left = data.x + 'px';
@@ -1207,8 +1268,16 @@
                     div.setAttribute('data-angle', degree);
                 });
                 window.addEventListener('mouseup', () => { isRotating = false; });
+            } else if (isImgNode) {
+                div.innerHTML = `
+                    <img src="${data.imageUrl}" class="node-attached-image" style="width:100%; height:100%; object-fit:cover; border-radius:4px; pointer-events:none;">
+                    <div class="node-resize-handle-right" title="تغيير العرض"></div>
+                    <div class="node-resize-handle-bottom" title="تغيير الطول"></div>
+                    <div class="node-resize-handle-corner" title="تغيير الحجم بالكامل"></div>
+                `;
+                setupResizing(div);
             } else {
-                let imgHtml = data.imageUrl ? `<img src="${data.imageUrl}" class="node-attached-image" style="width:100%; max-height:100px; object-fit:cover; border-radius:4px; margin-top:4px;">` : '';
+                let imgHtml = data.imageUrl ? `<img src="${data.imageUrl}" class="node-attached-image" style="width:100%; max-height:120px; object-fit:cover; border-radius:4px; margin-top:4px;">` : '';
                 div.innerHTML = `
                     <div class="node-content-editable" contenteditable="true">${data.text}</div>
                     ${imgHtml}
@@ -1217,34 +1286,11 @@
                     <div class="node-resize-handle-corner" title="تغيير الحجم بالكامل"></div>
                 `;
                 
-                const rightH = div.querySelector('.node-resize-handle-right');
-                const bottomH = div.querySelector('.node-resize-handle-bottom');
-                const cornerH = div.querySelector('.node-resize-handle-corner');
-                let resizingMode = null, startX, startY, startW, startH;
-                rightH.addEventListener('mousedown', (e) => {
-                    resizingMode = 'w'; startX = e.clientX; startW = div.offsetWidth; e.stopPropagation();
-                });
-                bottomH.addEventListener('mousedown', (e) => {
-                    resizingMode = 'h'; startY = e.clientY; startH = div.offsetHeight; e.stopPropagation();
-                });
-                cornerH.addEventListener('mousedown', (e) => {
-                    resizingMode = 'both'; startX = e.clientX; startY = e.clientY; startW = div.offsetWidth; startH = div.offsetHeight; e.stopPropagation();
-                });
-                window.addEventListener('mousemove', (e) => {
-                    if (!resizingMode) return;
-                    if (resizingMode === 'w' || resizingMode === 'both') {
-                        let newW = Math.max(90, startW + (e.clientX - startX));
-                        div.style.width = newW + 'px';
-                        if (div.classList.contains('node-circle')) div.style.height = newW + 'px';
-                    }
-                    if (resizingMode === 'h' || resizingMode === 'both') {
-                        let newH = Math.max(50, startH + (e.clientY - startY));
-                        div.style.height = newH + 'px';
-                        if (div.classList.contains('node-circle')) div.style.width = newH + 'px';
-                    }
+                const editable = div.querySelector('.node-content-editable');
+                editable.addEventListener('input', () => {
                     updateConnectedSvgLines();
                 });
-                window.addEventListener('mouseup', () => { resizingMode = null; });
+                setupResizing(div);
             }
             
             div.addEventListener('click', (e) => {
@@ -1280,20 +1326,20 @@
                 if(imgInput) imgInput.value = div.getAttribute('data-image-url') || '';
                 e.stopPropagation();
             });
+
             let isDragging = false, startX, startY;
-            
             div.addEventListener('mousedown', (e) => {
                 if (e.target.classList.contains('node-resize-handle-right') || e.target.classList.contains('node-resize-handle-bottom') || e.target.classList.contains('node-resize-handle-corner') || e.target.classList.contains('node-content-editable') || e.target.getAttribute('contenteditable') === 'true') return;
                 isDragging = true;
-                startX = e.clientX - div.offsetLeft;
-                startY = e.clientY - div.offsetTop;
+                startX = (e.clientX / currentZoomScale) - div.offsetLeft;
+                startY = (e.clientY / currentZoomScale) - div.offsetTop;
                 div.style.zIndex = 1000;
             });
             
             window.addEventListener('mousemove', (e) => {
                 if (!isDragging) return;
-                div.style.left = Math.max(0, e.clientX - startX) + 'px';
-                div.style.top = Math.max(0, e.clientY - startY) + 'px';
+                div.style.left = Math.max(0, (e.clientX / currentZoomScale) - startX) + 'px';
+                div.style.top = Math.max(0, (e.clientY / currentZoomScale) - startY) + 'px';
                 updateConnectedSvgLines();
             });
             
@@ -1306,6 +1352,37 @@
             
             world.appendChild(div);
             updateConnectedSvgLines();
+        }
+
+        function setupResizing(div) {
+            const rightH = div.querySelector('.node-resize-handle-right');
+            const bottomH = div.querySelector('.node-resize-handle-bottom');
+            const cornerH = div.querySelector('.node-resize-handle-corner');
+            let resizingMode = null, startX, startY, startW, startH;
+            rightH.addEventListener('mousedown', (e) => {
+                resizingMode = 'w'; startX = e.clientX; startW = div.offsetWidth; e.stopPropagation();
+            });
+            bottomH.addEventListener('mousedown', (e) => {
+                resizingMode = 'h'; startY = e.clientY; startH = div.offsetHeight; e.stopPropagation();
+            });
+            cornerH.addEventListener('mousedown', (e) => {
+                resizingMode = 'both'; startX = e.clientX; startY = e.clientY; startW = div.offsetWidth; startH = div.offsetHeight; e.stopPropagation();
+            });
+            window.addEventListener('mousemove', (e) => {
+                if (!resizingMode) return;
+                if (resizingMode === 'w' || resizingMode === 'both') {
+                    let newW = Math.max(90, startW + ((e.clientX - startX) / currentZoomScale));
+                    div.style.width = newW + 'px';
+                    if (div.classList.contains('node-circle')) div.style.height = newW + 'px';
+                }
+                if (resizingMode === 'h' || resizingMode === 'both') {
+                    let newH = Math.max(50, startH + ((e.clientY - startY) / currentZoomScale));
+                    div.style.height = newH + 'px';
+                    if (div.classList.contains('node-circle')) div.style.width = newH + 'px';
+                }
+                updateConnectedSvgLines();
+            });
+            window.addEventListener('mouseup', () => { resizingMode = null; });
         }
 
         function updateConnectedSvgLines() {
@@ -1390,11 +1467,12 @@
                 if (el.classList.contains('node-circle')) type = 'circle';
                 if (el.classList.contains('node-text')) type = 'text';
                 if (el.classList.contains('node-line')) type = 'line';
+                if (el.querySelector('.node-attached-image') && !el.querySelector('.node-content-editable')) type = 'imgNode';
                 
                 nodes.push({
                     id: el.getAttribute('data-id'),
                     type: type,
-                    text: type === 'line' ? '' : el.querySelector('.node-content-editable').innerText,
+                    text: type === 'line' || type === 'imgNode' ? '' : el.querySelector('.node-content-editable').innerText,
                     x: parseInt(el.style.left) || 0,
                     y: parseInt(el.style.top) || 0,
                     width: el.offsetWidth,
