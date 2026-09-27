@@ -228,7 +228,7 @@
                 <div class="folder-card" onclick="openSection('reportsSection')"><span class="folder-card-icon">📂</span><b>REPORTS</b><small>التقارير الرسمية</small><span class="open-lbl">فتح المجلد ←</span></div>
                 <div class="folder-card" onclick="openSection('wantedSection')"><span class="folder-card-icon">🚨</span><b>WANTED</b><small>المطلوبون للعدالة</small><span class="open-lbl">فتح المجلد ←</span></div>
                 <div class="folder-card" onclick="openSection('recordsSection')"><span class="folder-card-icon">📁</span><b>RECORDS</b><small>السجلات الجنائية</small><span class="open-lbl">فتح المجلد ←</span></div>
-                <div class="folder-card" onclick="openSection('intelligenceSection')"><span class="folder-card-icon">🕵️♂️</span><b>INTELLIGENCE</b><small>ملفات العصابات</small><span class="open-lbl">فتح المجلد ←</span></div>
+                <div class="folder-card" onclick="openSection('intelligenceSection')"><span class="folder-card-icon">🕵️‍♂️</span><b>INTELLIGENCE</b><small>ملفات العصابات</small><span class="open-lbl">فتح المجلد ←</span></div>
                 <div class="folder-card" onclick="openSection('casesSection')"><span class="folder-card-icon">🔓</span><b>DECRYPTION</b><small>التشفير والأمان</small><span class="open-lbl">فتح المجلد ←</span></div>
                 <div class="folder-card" onclick="openSection('usersSection')"><span class="folder-card-icon">👥</span><b>USERS</b><small>سجل الوكلاء</small><span class="open-lbl">فتح المجلد ←</span></div>
             </div>
@@ -286,7 +286,7 @@
         </div>
         <div class="workspace-panel" id="intelligenceSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            <h3 style="color:var(--gold-color); margin-bottom: 15px;">GANG INTELLIGENCE & HIERARCHY 🕵️♂️</h3>
+            <h3 style="color:var(--gold-color); margin-bottom: 15px;">GANG INTELLIGENCE & HIERARCHY 🕵️‍♂️</h3>
             <button class="btn-create-action" style="background: var(--gold-color); color:#000;" onclick="openCreateGangModal()">🏴‍☠️ إنشاء عصابة جديدة</button>
             <div class="input-group"><input type="text" id="gangsSearch" class="search-box" placeholder="🔍 بحث شامل في العصابات..." oninput="renderGangs()"></div>
             <div id="gangs-list" class="folder-grid" style="grid-template-columns: repeat(3, 1fr);"></div>
@@ -830,15 +830,21 @@
         async function deleteRecord(id) {
             if (confirm("حذف؟")) { globalDatabase.records = globalDatabase.records.filter(r => r.id !== id); await saveCloudData(); closeModal(); }
         }
+
+        // ==========================================
+        // 🏴‍☠️ التعديل هنا: دالة إنشاء عصابة جديدة (بحجم مرتب ومريح)
+        // ==========================================
         function openCreateGangModal() {
-            openCustomModal("🏴‍☠️ عصابة جديدة", `
-                <div class="input-group"><label>اسم العصابة</label><input type="text" id="popGangName"></div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                    <div class="input-group"><label>👑 الرئيس</label><input type="text" id="popGangLeader"></div>
-                    <div class="input-group"><label>🎖️ النائب</label><input type="text" id="popGangDeputy"></div>
+            openCustomModal("🏴‍☠️ إنشاء عصابة جديدة", `
+                <div style="max-height: 70vh; overflow-y: auto; padding-left: 5px;">
+                    <div class="input-group"><label>اسم العصابة</label><input type="text" id="popGangName" placeholder="أدخل اسم العصابة"></div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <div class="input-group"><label>👑 الرئيس</label><input type="text" id="popGangLeader" placeholder="اسم القائد"></div>
+                        <div class="input-group"><label>🎖️ النائب</label><input type="text" id="popGangDeputy" placeholder="اسم النائب"></div>
+                    </div>
+                    <div class="input-group"><label>👥 الأعضاء (افصل بينهم بفاصلة)</label><input type="text" id="popGangMembers" placeholder="عضو 1, عضو 2"></div>
+                    <div class="input-group"><label>التفاصيل والمعلومات</label><textarea id="popGangDetails" rows="3" placeholder="معلومات تفصيلية عن العصابة..."></textarea></div>
                 </div>
-                <div class="input-group"><label>👥 الأعضاء (افصل بينهم بفاصلة)</label><input type="text" id="popGangMembers" placeholder="عضو 1, عضو 2"></div>
-                <div class="input-group"><label>التفاصيل</label><textarea id="popGangDetails" rows="3"></textarea></div>
             `, async () => {
                 const name = document.getElementById("popGangName").value.trim();
                 if (!name) return alert("أدخل اسم العصابة!");
@@ -853,25 +859,44 @@
                 await saveCloudData(); closeModal();
             });
         }
+
+        // ==========================================
+        // 📊 التعديل هنا: عرض ملف العصابة (المعلومات في الأعلى والشجرة تفاعلية كلوحة draw.io في الأسفل)
+        // ==========================================
         function viewGangFolder(id) {
             const g = globalDatabase.gangs.find(item => item.id === id);
             if (!g) return;
             const members = g.members ? g.members.split(',') : [];
-            openCustomModal(`🏴‍☠️ عصابة: ${g.name}`, `
-                <div style="display:flex; justify-content:flex-end; gap:5px; margin-bottom:10px;">
+            
+            openCustomModal(`🏴‍☠️ ملف عصابة: ${g.name}`, `
+                <div style="display:flex; justify-content:flex-end; gap:5px; margin-bottom:15px;">
                     <button class="btn-edit-item" onclick="editGang(${g.id})">تعديل ✏️</button>
                     <button class="btn-del-item" onclick="deleteGang(${g.id})">حذف 🗑️</button>
                 </div>
-                <div style="background:rgba(4,6,10,0.8); padding:10px; border-radius:6px; margin-bottom:10px;">${g.details || ''}</div>
-                <div class="tree-container">
-                    <div class="tree-node tree-leader">👑 الرئيس: ${g.leader || 'غير معروف'}</div>
-                    <div class="tree-line"></div>
-                    <div class="tree-node tree-deputy">🎖️ النائب: ${g.deputy || 'غير معروف'}</div>
-                    <div class="tree-line"></div>
-                    <div>${members.map(m => `<div class="tree-node tree-members">👤 ${m.trim()}</div>`).join('')}</div>
+
+                <!-- معلومات ونبذة العصابة في الأعلى -->
+                <div style="background: rgba(9, 16, 26, 0.9); border: 1px solid var(--gold-color); padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: right;">
+                    <h4 style="color: var(--gold-color); margin-bottom: 8px;">📋 معلومات ونبذة العصابة</h4>
+                    <p style="font-size: 13px; line-height: 1.5; color: var(--text-color);">${g.details || 'لا توجد معلومات إضافية مسجلة.'}</p>
+                </div>
+
+                <!-- لوحة الشجرة التنظيمية (تشبه draw.io) في الأسفل -->
+                <div style="background: #06090f; border: 1px dashed var(--gold-color); border-radius: 10px; padding: 20px; text-align: center; position: relative; overflow-x: auto;">
+                    <div style="color: var(--gold-color); font-size: 12px; font-weight: bold; margin-bottom: 15px; letter-spacing: 1px;">📊 لوحة الهيكل التنظيمي (Diagram Canvas)</div>
+                    
+                    <div class="tree-container" style="display: inline-block; min-width: 280px; background: rgba(11, 16, 23, 0.95); border: 1px solid rgba(197, 160, 89, 0.4); padding: 15px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+                        <div class="tree-node tree-leader" style="padding: 10px 20px; font-size: 13px;">👑 الرئيس: ${g.leader || 'غير محدد'}</div>
+                        <div class="tree-line" style="height: 15px; background: var(--gold-color); width: 2px; margin: 0 auto;"></div>
+                        <div class="tree-node tree-deputy" style="padding: 10px 20px; font-size: 13px;">🎖️ النائب: ${g.deputy || 'غير محدد'}</div>
+                        <div class="tree-line" style="height: 15px; background: var(--gold-color); width: 2px; margin: 0 auto;"></div>
+                        <div style="display: flex; flex-direction: column; gap: 8px; align-items: center; width: 100%;">
+                            ${members.length > 0 ? members.map(m => `<div class="tree-node tree-members" style="width: 80%; padding: 8px; font-size: 12px; background: rgba(22, 34, 53, 0.9); border: 1px solid #334155;">👤 ${m.trim()}</div>`).join('') : '<span style="color:var(--text-muted); font-size:11px;">لا يوجد أعضاء مسجلين</span>'}
+                        </div>
+                    </div>
                 </div>
             `, null);
         }
+
         function editGang(id) {
             const g = globalDatabase.gangs.find(item => item.id === id);
             if (!g) return;
@@ -898,7 +923,7 @@
             const query = (document.getElementById("gangsSearch")?.value || "").toLowerCase();
             list.innerHTML = "";
             globalDatabase.gangs.filter(g => g.name.toLowerCase().includes(query) || (g.leader && g.leader.toLowerCase().includes(query)) || (g.members && g.members.toLowerCase().includes(query))).forEach(g => {
-                list.innerHTML += `<div class="item-folder-card" onclick="viewGangFolder(${g.id})"><div><span class="item-folder-icon">🕵️♂️</span><span class="item-folder-title">${g.name}</span><span class="item-folder-sub">القائد: ${g.leader || 'N/A'}</span></div><span class="item-folder-btn">فتح الملف ←</span></div>`;
+                list.innerHTML += `<div class="item-folder-card" onclick="viewGangFolder(${g.id})"><div><span class="item-folder-icon">🕵️‍♂️</span><span class="item-folder-title">${g.name}</span><span class="item-folder-sub">القائد: ${g.leader || 'N/A'}</span></div><span class="item-folder-btn">فتح الملف ←</span></div>`;
             });
         }
         async function deleteGang(id) {
@@ -978,7 +1003,6 @@
         function openSection(id) { document.getElementById("folderHome").style.display = "none"; document.querySelectorAll('.workspace-panel').forEach(p => p.style.display = 'none'); document.getElementById(id).style.display = "block"; }
         function logout() { localStorage.removeItem("active_cia_user"); location.reload(); }
         
-        // تعديل دوال التشفير وفك التشفير لدعم اللغة العربية والإنجليزية بشكل كامل
         function encryptMsg() {
             const val = document.getElementById("plainText").value;
             if (val) {
@@ -1006,7 +1030,6 @@
                 }
             }
         }
-
         fetchCloudData().then(() => checkAutoLogin());
         setInterval(fetchCloudData, 4000);
     </script>
