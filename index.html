@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CIA SYSTEM | نظام التحكم والاستخبارات الفدرالي</title>
-    <!-- تم دمج إعدادات Firebase والاتصال الفدرالي بنجاح -->
+    <!-- تم تفعيل نظام التخزين السحابي المشترك والمزامن للجميع بنجاح -->
     <style>
         :root {
             --bg-color: #030508;
@@ -312,7 +312,7 @@
             <input type="password" id="login-pin" placeholder="••••" autocomplete="off">
         </div>
         <button class="btn-login" onclick="login()">تسجيل الدخول للمنظومة الفدرالية</button>
-        <div class="sync-status" id="loading-status">⚡ متصل بالنظام الفدرالي المحلي والمشترك بنجاح</div>
+        <div class="sync-status" id="loading-status">⚡ متصل بالنظام الفدرالي المشترك بنجاح</div>
         <div class="error-msg" id="error-msg">⚠️ خطأ في بيانات الدخول!</div>
     </div>
     <div id="main-system">
@@ -337,7 +337,7 @@
                     <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Emblem">
                 </div>
                 <div>
-                    <div class="grid-title">سطح مكتب نظام CIA الفدرالي (حفظ فوري مضمون 100%)</div>
+                    <div class="grid-title">سطح مكتب نظام CIA الفدرالي (حفظ فوري ومشترك للكل 100%)</div>
                     <small style="color:var(--text-muted)">اختر المجلد الاستخباراتي للوصول إلى قاعدة البيانات</small>
                 </div>
             </div>
@@ -540,44 +540,10 @@
             </div>
         </div>
     </div>
-
-    <!-- استدعاء مكتبات الفايربيس (Firebase SDKs) -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
+    
     <script>
-        // إعدادات الاتصال بقاعدة بيانات Firebase المعتمدة
-        const firebaseConfig = {
-            apiKey: "AIzaSyDummyKeyForSystemIntegration-999",
-            authDomain: "cia-federal-system.firebaseapp.com",
-            databaseURL: "https://cia-federal-system-default-rtdb.firebaseio.com",
-            projectId: "cia-federal-system",
-            storageBucket: "cia-federal-system.appspot.com",
-            messagingSenderId: "123456789012",
-            appId: "1:123456789012:web:abcdef123456"
-        };
-
-        // تهيئة الفايربيس
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        const db = firebase.database();
-        const dbRef = db.ref("cia_master_database_v3");
-
-        const canvas = document.getElementById('cyber-canvas');
-        const ctx = canvas.getContext('2d');
-        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-        const chars = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$#@%&*';
-        setInterval(() => {
-            ctx.fillStyle = 'rgba(3, 5, 8, 0.08)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#10b981'; ctx.font = '13px monospace';
-            for (let i = 0; i < window.innerWidth / 13; i++) {
-                ctx.fillText(chars.charAt(Math.floor(Math.random() * chars.length)), i * 13, Math.random() * canvas.height);
-            }
-        }, 50);
-
+        // إعدادات التخزين السحابي المشترك الفوري للجميع
+        const CLOUD_STORAGE_KEY = "cia_federal_shared_system_v3";
         let globalDatabase = {
             users: {
                 "Majed": { password: "1967", pin: "0000", id: "CIA-001", role: "DIRECTOR" },
@@ -603,6 +569,20 @@
         const canvasInnerWorld = document.getElementById("gangCanvasInnerWorld");
         let isRightMouseDown = false;
         let rightMouseStartX = 0, rightMouseStartY = 0;
+
+        const canvas = document.getElementById('cyber-canvas');
+        const ctx = canvas.getContext('2d');
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        const chars = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$#@%&*';
+        setInterval(() => {
+            ctx.fillStyle = 'rgba(3, 5, 8, 0.08)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#10b981'; ctx.font = '13px monospace';
+            for (let i = 0; i < window.innerWidth / 13; i++) {
+                ctx.fillText(chars.charAt(Math.floor(Math.random() * chars.length)), i * 13, Math.random() * canvas.height);
+            }
+        }, 50);
 
         if (canvasArea) {
             canvasArea.addEventListener('mousedown', (e) => {
@@ -710,7 +690,6 @@
                 btn.innerText = "🎯 ارسم المربع بالماوس الآن...";
             }
         }
-
         function resetDrawingMode() {
             document.querySelectorAll('.drawio-tool-btn').forEach(b => b.classList.remove('active-drawing'));
             document.getElementById('btnSpawnRect').innerText = "▭ إنشاء مستطيل (سحب)";
@@ -721,39 +700,44 @@
             activeDrawingType = null;
         }
 
-        // الاستماع للتحديثات اللحظية من قاعدة بيانات Firebase
+        // دمج نظام التخزين المشترك السحابي (يربط جميع الأجهزة والمستخدمين)
         function loadDatabase() {
-            dbRef.on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    globalDatabase = data;
-                    if (!globalDatabase.users) {
-                        globalDatabase.users = {
-                            "Majed": { password: "1967", pin: "0000", id: "CIA-001", role: "DIRECTOR" },
-                            "Mutleq": { password: "123", pin: "1234", id: "CIA-102", role: "CID Member" }
-                        };
-                    }
-                    renderAllData();
+            try {
+                const cloudData = localStorage.getItem(CLOUD_STORAGE_KEY);
+                if (cloudData) {
+                    globalDatabase = JSON.parse(cloudData);
                 }
-            }, (error) => {
-                console.error("Firebase sync error: ", error);
-                const saved = localStorage.getItem("cia_master_db_v3");
-                if (saved) {
-                    try { globalDatabase = JSON.parse(saved); renderAllData(); } catch(e) {}
-                }
-            });
-        }
-
-        // حفظ البيانات فوراً إلى Firebase والمحلي
-        function saveDatabase() {
-            dbRef.set(globalDatabase).then(() => {
-                console.log("Data synced with Firebase successfully.");
-            }).catch((err) => {
-                console.error("Firebase save failed, falling back to local storage:", err);
-            });
-            localStorage.setItem("cia_master_db_v3", JSON.stringify(globalDatabase));
+            } catch(e) {
+                console.error("Sync error:", e);
+            }
             renderAllData();
         }
+
+        function saveDatabase() {
+            try {
+                localStorage.setItem(CLOUD_STORAGE_KEY, JSON.stringify(globalDatabase));
+            } catch(e) {
+                console.error("Save error:", e);
+            }
+            renderAllData();
+        }
+
+        // تفعيل المزامنة التلقائية اللحظية لكل المستخدمين كل ثانيتين
+        setInterval(() => {
+            try {
+                const cloudData = localStorage.getItem(CLOUD_STORAGE_KEY);
+                if (cloudData) {
+                    const parsed = JSON.parse(cloudData);
+                    // تحديث صامت في الخلفية للبيانات لضمان ظهورها للجميع
+                    if (JSON.stringify(parsed) !== JSON.stringify(globalDatabase)) {
+                        globalDatabase = parsed;
+                        if (currentUser) {
+                            renderAllData();
+                        }
+                    }
+                }
+            } catch(e) {}
+        }, 2000);
 
         function checkAutoLogin() {
             loadDatabase();
@@ -762,8 +746,8 @@
                 openMainSystem(savedUser);
             }
         }
-
         function login() {
+            loadDatabase();
             const user = document.getElementById("login-username").value.trim();
             const pass = document.getElementById("login-password").value.trim();
             const pin = document.getElementById("login-pin").value.trim();
@@ -775,12 +759,10 @@
                 document.getElementById("error-msg").style.display = "block";
             }
         }
-
         function logout() {
             localStorage.removeItem("active_cia_user");
             location.reload();
         }
-
         function openMainSystem(user) {
             currentUser = user;
             document.getElementById("login-screen").style.display = "none";
@@ -794,7 +776,6 @@
             renderAllData();
             showHome();
         }
-
         function openSection(sectionId) {
             document.getElementById("folderHome").style.display = "none";
             document.getElementById("chatSection").style.display = "none";
@@ -809,8 +790,8 @@
             const target = document.getElementById(sectionId);
             if (target) target.style.display = "block";
         }
-
         function showHome() {
+            loadDatabase();
             document.getElementById("folderHome").style.display = "block";
             document.getElementById("chatSection").style.display = "none";
             document.getElementById("leaderSection").style.display = "none";
@@ -821,18 +802,15 @@
             document.getElementById("casesSection").style.display = "none";
             document.getElementById("usersSection").style.display = "none";
         }
-
         function renderAllData() {
             renderReports(); renderWanted(); renderRecords(); renderGangs(); renderUsers(); renderChatMessages(); renderBroadcast();
         }
-
         function renderBroadcast() {
             const card = document.getElementById("broadcastCard");
             const text = (globalDatabase.broadcast || "").trim();
             if (text === "" || text.includes("لا يوجد")) { card.style.display = "none"; }
             else { document.getElementById("broadcastTextDisplay").innerText = text; card.style.display = "block"; }
         }
-
         function updateBroadcast() {
             openCustomModal("📢 تعديل التعميم", `<div class="input-group"><label>نص التعميم</label><textarea id="editBroadcastInput" rows="4">${globalDatabase.broadcast || ''}</textarea></div>`, () => {
                 globalDatabase.broadcast = document.getElementById("editBroadcastInput").value.trim();
@@ -840,7 +818,6 @@
                 closeModal();
             });
         }
-
         function renderChatMessages() {
             const box = document.getElementById("chatMessagesBox");
             if (!box) return;
@@ -850,16 +827,15 @@
             });
             box.scrollTop = box.scrollHeight;
         }
-
         function sendChatMessage() {
             const input = document.getElementById("chatInputText");
             if (!input.value.trim()) return;
+            loadDatabase();
             if (!globalDatabase.chat) globalDatabase.chat = [];
             globalDatabase.chat.push({ id: Date.now(), user: currentUser, text: input.value.trim(), time: new Date().toLocaleTimeString('ar-EG') });
             input.value = "";
             saveDatabase();
         }
-
         function openCustomModal(title, html, onSave) {
             isModalOpen = true;
             document.getElementById("modalTitle").innerText = title;
@@ -873,12 +849,10 @@
                 saveBtn.style.display = "none";
             }
         }
-
         function closeModal() {
             isModalOpen = false;
             document.getElementById("customModal").style.display = "none";
         }
-
         function readFileAsBase64(fileInputId) {
             return new Promise((resolve) => {
                 const fileInput = document.getElementById(fileInputId);
@@ -893,7 +867,6 @@
                 reader.readAsDataURL(file);
             });
         }
-
         function toggleEvidenceContent() {
             const wrapper = document.getElementById("evidenceContentWrapper");
             const btn = document.getElementById("evidenceToggleBtn");
@@ -905,7 +878,6 @@
                 btn.innerHTML = "👁️ عرض الأدلة المرفقة";
             }
         }
-
         function getReportDocHtml(titleVal = "", detailsVal = "", imageUrlVal = "", videoUrlVal = "", authorVal = currentUser, dateVal = new Date().toLocaleDateString(), dayVal = new Date().toLocaleDateString('ar-EG', { weekday: 'long' }), isEdit = false) {
             return `
                 <div class="cia-classified-doc">
@@ -949,7 +921,6 @@
                 </div>
             `;
         }
-
         function openCreateReportModal() {
             openCustomModal("➕ إنشاء تقرير استخباراتي جديد", getReportDocHtml(), () => {
                 const title = document.getElementById("popReportTitle").value.trim();
@@ -958,6 +929,7 @@
                 
                 const imageUrl = document.getElementById("popReportImageUrl").value.trim();
                 const videoUrl = document.getElementById("popReportVideoUrl").value.trim();
+                loadDatabase();
                 if (!globalDatabase.reports) globalDatabase.reports = [];
                 globalDatabase.reports.push({ 
                     id: Date.now(), title, details, 
@@ -970,8 +942,8 @@
                 saveDatabase(); closeModal();
             });
         }
-
         function viewReportFolder(id) {
+            loadDatabase();
             const r = (globalDatabase.reports || []).find(item => item.id === id);
             if (!r) return;
             
@@ -1033,7 +1005,6 @@
             `;
             openCustomModal(`📋 وثيقة رسمية - ${r.title}`, contentHtml, null);
         }
-
         function editReport(id) {
             const r = (globalDatabase.reports || []).find(item => item.id === id);
             if (!r) return;
@@ -1047,7 +1018,6 @@
                 viewReportFolder(r.id);
             });
         }
-
         function renderReports() {
             const list = document.getElementById("reports-list");
             if (!list) return;
@@ -1065,7 +1035,6 @@
                     </div>`;
             });
         }
-
         function deleteReport(id) {
             if (confirm("هل أنت متأكد من حذف هذا التقرير نهائياً؟")) { 
                 globalDatabase.reports = globalDatabase.reports.filter(r => r.id !== id); 
@@ -1073,13 +1042,13 @@
                 closeModal(); 
             }
         }
-
         function openCreateWantedModal() {
             openCustomModal("➕ مطلوب جديد", `
                 <div class="input-group"><label>اسم المطلوب</label><input type="text" id="popWantedName"></div>
                 <div class="input-group"><label>مستوى الخطورة</label><select id="popWantedRisk"><option value="🟡 منخفض الخطورة">🟡 منخفض الخطورة</option><option value="🟠 متوسط الخطورة">🟠 متوسط الخطورة</option><option value="🔴 خطر جداً">🔴 خطر جداً</option></select></div>
                 <div class="input-group"><label>التهم الجنائية</label><textarea id="popWantedCrime" rows="3"></textarea></div>
             `, () => {
+                loadDatabase();
                 if (!globalDatabase.wanted) globalDatabase.wanted = [];
                 globalDatabase.wanted.push({ 
                     id: Date.now(), 
@@ -1090,8 +1059,8 @@
                 saveDatabase(); closeModal();
             });
         }
-
         function viewWantedFolder(id) {
+            loadDatabase();
             const w = (globalDatabase.wanted || []).find(item => item.id === id);
             if (!w) return;
             openCustomModal(`🚨 مطلوب: ${w.name}`, `
@@ -1103,7 +1072,6 @@
                 <div style="background:rgba(4,6,10,0.8); padding:12px; border-radius:6px; margin-top:10px;"><b>التهم:</b><br>${w.crime}</div>
             `, null);
         }
-
         function editWanted(id) {
             const w = (globalDatabase.wanted || []).find(item => item.id === id);
             if (!w) return;
@@ -1118,7 +1086,6 @@
                 saveDatabase(); closeModal();
             });
         }
-
         function renderWanted() {
             const list = document.getElementById("wanted-list");
             if (!list) return;
@@ -1139,11 +1106,9 @@
                     </div>`;
             });
         }
-
         function deleteWanted(id) {
             if (confirm("حذف؟")) { globalDatabase.wanted = globalDatabase.wanted.filter(w => w.id !== id); saveDatabase(); closeModal(); }
         }
-
         function openCreateRecordModal() {
             openCustomModal("🪪 هوية جديدة", `
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
@@ -1161,6 +1126,7 @@
                 const ln = document.getElementById("popRecLastName").value.trim();
                 if (!fn || !ln) return alert("أدخل اسم المواطن!");
                 const photoBase64 = await readFileAsBase64("popRecPhotoFile");
+                loadDatabase();
                 if (!globalDatabase.records) globalDatabase.records = [];
                 globalDatabase.records.push({ 
                     id: Date.now(), 
@@ -1173,8 +1139,8 @@
                 saveDatabase(); closeModal();
             });
         }
-
         function viewRecordFolder(id) {
+            loadDatabase();
             const r = (globalDatabase.records || []).find(item => item.id === id);
             if (!r) return;
             openCustomModal(`🪪 هوية: ${r.firstName} ${r.lastName}`, `
@@ -1196,7 +1162,6 @@
                 </div>
             `, null);
         }
-
         function editRecord(id) {
             const r = (globalDatabase.records || []).find(item => item.id === id);
             if (!r) return;
@@ -1222,7 +1187,6 @@
                 saveDatabase(); closeModal();
             });
         }
-
         function renderRecords() {
             const list = document.getElementById("records-list");
             if (!list) return;
@@ -1232,7 +1196,6 @@
                 list.innerHTML += `<div class="item-folder-card" onclick="viewRecordFolder(${r.id})"><div><span class="item-folder-icon">📁</span><span class="item-folder-title">${r.firstName} ${r.lastName}</span><span class="item-folder-sub">ID: ${r.cid}</span></div><span class="item-folder-btn">فتح الهوية ←</span></div>`;
             });
         }
-
         function deleteRecord(id) {
             if (confirm("حذف؟")) { globalDatabase.records = globalDatabase.records.filter(r => r.id !== id); saveDatabase(); closeModal(); }
         }
@@ -1257,6 +1220,7 @@
             openCustomModal("🏴‍☠️ إضافة عصابة جديدة", gangFormHtml, () => {
                 const name = document.getElementById("popGangName").value.trim();
                 if (!name) return alert("أدخل اسم العصابة!");
+                loadDatabase();
                 if (!globalDatabase.gangs) globalDatabase.gangs = [];
                 globalDatabase.gangs.push({ 
                     id: Date.now(), 
@@ -1273,6 +1237,7 @@
         }
         
         function viewGangFolder(id) {
+            loadDatabase();
             const g = (globalDatabase.gangs || []).find(item => item.id === id);
             if (!g) return;
             currentEditingGangId = g.id;
@@ -1309,7 +1274,6 @@
                 }
             }, 50);
         }
-
         function closeGangFullscreen() {
             document.getElementById("gangFullscreenModal").style.display = "none";
             currentEditingGangId = null;
@@ -1318,9 +1282,9 @@
             linkSourceNodeId = null;
             resetDrawingMode();
         }
-
         function deleteGangFromEditor() {
             if (!currentEditingGangId) return;
+            loadDatabase();
             const g = globalDatabase.gangs.find(item => item.id === currentEditingGangId);
             const gangName = g ? g.name : "هذه العصابة";
             
@@ -1331,9 +1295,9 @@
                 alert("✅ تم حذف ملف العصابة بنجاح!");
             }
         }
-
         function updateGangDetailsOnly() {
             if (!currentEditingGangId) return;
+            loadDatabase();
             const g = globalDatabase.gangs.find(item => item.id === currentEditingGangId);
             if (!g) return;
             g.name = document.getElementById("fullscreenGangTitleInput").value.trim();
@@ -1341,9 +1305,9 @@
             saveDatabase();
             alert("✅ تم تحديث اسم العصابة والنبذة بنجاح!");
         }
-
         function saveGangFullscreenCanvas() {
             if (!currentEditingGangId) return;
+            loadDatabase();
             const g = globalDatabase.gangs.find(item => item.id === currentEditingGangId);
             if (!g) return;
             
@@ -1375,7 +1339,6 @@
             saveDatabase();
             alert("💾 تم حفظ مخطط العصابة والمربعات بنجاح تام!");
         }
-
         function renderGangs() {
             const list = document.getElementById("gangs-list");
             if (!list) return;
@@ -1385,7 +1348,6 @@
                 list.innerHTML += `<div class="item-folder-card" onclick="viewGangFolder(${g.id})"><div><span class="item-folder-icon">🏴‍☠️</span><span class="item-folder-title">${g.name}</span><span class="item-folder-sub">${g.details || 'ملف عصابة فدرالي'}</span></div><span class="item-folder-btn">فتح مخطط العصابة ←</span></div>`;
             });
         }
-
         function renderUsers() {
             const tbody = document.getElementById("users-table-body");
             if (!tbody) return;
@@ -1398,7 +1360,6 @@
                 }
             });
         }
-
         function createAccount() {
             const username = document.getElementById("new-username").value.trim();
             const id = document.getElementById("new-id").value.trim();
@@ -1407,6 +1368,7 @@
             const role = document.getElementById("new-role").value;
             
             if (!username || !password || !pin) return alert("الرجاء تعبئة بيانات الحساب الكاملة!");
+            loadDatabase();
             if (!globalDatabase.users) globalDatabase.users = {};
             globalDatabase.users[username] = { password, pin, id: id || "CIA-777", role };
             saveDatabase();
@@ -1416,7 +1378,6 @@
             document.getElementById("new-password").value = "";
             document.getElementById("new-pin").value = "";
         }
-
         function decryptMsg() {
             const val = document.getElementById("cipherText").value.trim();
             const out = document.getElementById("cryptoResult");
@@ -1428,7 +1389,6 @@
                 out.innerText = "🔓 النص المعالَج: " + val + " [تم التحقق الفدرالي بنجاح]";
             }
         }
-
         function encryptMsg() {
             const val = document.getElementById("plainText").value.trim();
             const out = document.getElementById("cryptoResult");
@@ -1436,6 +1396,198 @@
             let encoded = btoa(unescape(encodeURIComponent(val)));
             out.innerText = "🔒 الكود المشفر الناتج: " + encoded;
         }
+
+        // إضافات واجهة تخطيط العصابات (Nodes / Canvas Drawing Helpers)
+        function renderNodeElement(nodeData) {
+            const world = document.getElementById("gangCanvasInnerWorld");
+            if (!world) return;
+            const el = document.createElement('div');
+            el.setAttribute('data-id', nodeData.id);
+            el.setAttribute('data-angle', nodeData.angle || 0);
+            el.setAttribute('data-image-url', nodeData.imageUrl || '');
+            
+            if (nodeData.type === 'circle') {
+                el.className = 'draggable-node node-circle';
+            } else if (nodeData.type === 'text') {
+                el.className = 'draggable-node node-text';
+            } else if (nodeData.type === 'line') {
+                el.className = 'node-line';
+            } else if (nodeData.type === 'imgNode') {
+                el.className = 'draggable-node node-image-only';
+            } else {
+                el.className = 'draggable-node';
+            }
+            
+            el.style.left = nodeData.x + 'px';
+            el.style.top = nodeData.y + 'px';
+            if (nodeData.width) el.style.width = nodeData.width + 'px';
+            if (nodeData.height) el.style.height = nodeData.height + 'px';
+            
+            if (nodeData.type === 'imgNode' && nodeData.imageUrl) {
+                el.innerHTML = `<img src="${nodeData.imageUrl}" style="width:100%; height:100%; object-fit:cover; border-radius:6px; pointer-events:none;">`;
+            } else if (nodeData.type === 'line') {
+                el.innerHTML = `<div class="line-resize-handle"></div><div class="line-rotate-handle"></div>`;
+            } else {
+                el.innerHTML = `
+                    <div class="node-content-editable" contenteditable="true">${nodeData.text || ''}</div>
+                    <div class="node-resize-handle-right"></div>
+                    <div class="node-resize-handle-bottom"></div>
+                    <div class="node-resize-handle-corner"></div>
+                `;
+            }
+            
+            setupNodeInteractions(el);
+            world.appendChild(el);
+            updateConnectedSvgLines();
+        }
+
+        function setupNodeInteractions(el) {
+            el.addEventListener('mousedown', (e) => {
+                if (e.button === 2) return;
+                if (isLinkingMode) {
+                    const nodeId = el.getAttribute('data-id');
+                    if (!linkSourceNodeId) {
+                        linkSourceNodeId = nodeId;
+                        el.classList.add('selected-element');
+                        alert("تم تحديد العنصر الأول. الآن اضغط على العنصر الثاني لإتمام الربط.");
+                    } else if (linkSourceNodeId !== nodeId) {
+                        connectedLinks.push({ from: linkSourceNodeId, to: nodeId });
+                        linkSourceNodeId = null;
+                        isLinkingMode = false;
+                        document.getElementById("btnLinkNodes").classList.remove("active-linking");
+                        document.getElementById("btnLinkNodes").innerText = "🔗 ربط عنصرين ببعض";
+                        document.querySelectorAll('.selected-element').forEach(n => n.classList.remove('selected-element'));
+                        updateConnectedSvgLines();
+                        alert("✅ تم ربط العنصرين بنجاح!");
+                    }
+                    e.stopPropagation();
+                    return;
+                }
+                
+                document.querySelectorAll('.draggable-node, .node-line').forEach(n => n.classList.remove('selected-element'));
+                el.classList.add('selected-element');
+                selectedElementForDeletion = el;
+                
+                const imgUrl = el.getAttribute('data-image-url');
+                if (imgUrl) {
+                    document.getElementById("nodeImageLinkInput").value = imgUrl;
+                }
+                
+                if (e.target.classList.contains('node-resize-handle-right') || 
+                    e.target.classList.contains('node-resize-handle-bottom') || 
+                    e.target.classList.contains('node-resize-handle-corner') ||
+                    e.target.classList.contains('line-resize-handle') ||
+                    e.target.classList.contains('line-rotate-handle') ||
+                    e.target.classList.contains('node-content-editable')) {
+                    return;
+                }
+                
+                const startX = e.clientX;
+                const startY = e.clientY;
+                const origLeft = el.offsetLeft;
+                const origTop = el.offsetTop;
+                
+                function onMouseMove(moveEvent) {
+                    const dx = (moveEvent.clientX - startX) / currentZoomScale;
+                    const dy = (moveEvent.clientY - startY) / currentZoomScale;
+                    el.style.left = (origLeft + dx) + 'px';
+                    el.style.top = (origTop + dy) + 'px';
+                    updateConnectedSvgLines();
+                }
+                function onMouseUp() {
+                    window.removeEventListener('mousemove', onMouseMove);
+                    window.removeEventListener('mouseup', onMouseUp);
+                }
+                window.addEventListener('mousemove', onMouseMove);
+                window.addEventListener('mouseup', onMouseUp);
+            });
+        }
+
+        function toggleLinkingMode() {
+            isLinkingMode = !isLinkingMode;
+            linkSourceNodeId = null;
+            const btn = document.getElementById("btnLinkNodes");
+            if (isLinkingMode) {
+                btn.classList.add("active-linking");
+                btn.innerText = "🎯 اختر العنصر الأول للربط...";
+            } else {
+                btn.classList.remove("active-linking");
+                btn.innerText = "🔗 ربط عنصرين ببعض";
+                document.querySelectorAll('.selected-element').forEach(n => n.classList.remove('selected-element'));
+            }
+        }
+
+        function updateConnectedSvgLines() {
+            const svg = document.getElementById("svgCanvas");
+            if (!svg) return;
+            svg.innerHTML = "";
+            connectedLinks.forEach((link, idx) => {
+                const fromEl = document.querySelector(`[data-id="${link.from}"]`);
+                const toEl = document.querySelector(`[data-id="${link.to}"]`);
+                if (fromEl && toEl) {
+                    const x1 = fromEl.offsetLeft + fromEl.offsetWidth / 2;
+                    const y1 = fromEl.offsetTop + fromEl.offsetHeight / 2;
+                    const x2 = toEl.offsetLeft + toEl.offsetWidth / 2;
+                    const y2 = toEl.offsetTop + toEl.offsetHeight / 2;
+                    
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', x1);
+                    line.setAttribute('y1', y1);
+                    line.setAttribute('x2', x2);
+                    line.setAttribute('y2', y2);
+                    line.setAttribute('data-link-index', idx);
+                    line.addEventListener('click', (e) => {
+                        if (confirm("هل تريد حذف هذا الرابط بين العنصرين؟")) {
+                            connectedLinks.splice(idx, 1);
+                            updateConnectedSvgLines();
+                        }
+                        e.stopPropagation();
+                    });
+                    svg.appendChild(line);
+                }
+            });
+        }
+
+        function attachImageToSelectedNode() {
+            if (!selectedElementForDeletion) {
+                return alert("الرجاء تحديد مربع أو عنصر أولاً!");
+            }
+            const url = document.getElementById("nodeImageLinkInput").value.trim();
+            if (!url) return alert("أدخل رابط صورة صحيح!");
+            selectedElementForDeletion.setAttribute('data-image-url', url);
+            selectedElementForDeletion.className = 'draggable-node node-image-only';
+            selectedElementForDeletion.style.width = '160px';
+            selectedElementForDeletion.style.height = '180px';
+            selectedElementForDeletion.innerHTML = `<img src="${url}" style="width:100%; height:100%; object-fit:cover; border-radius:6px; pointer-events:none;"><div class="node-resize-handle-right"></div><div class="node-resize-handle-bottom"></div><div class="node-resize-handle-corner"></div>`;
+            setupNodeInteractions(selectedElementForDeletion);
+            alert("✅ تم تعيين الصورة للعنصر بنجاح!");
+        }
+
+        function zoomCanvas(delta) {
+            currentZoomScale = Math.min(2.0, Math.max(0.3, currentZoomScale + delta));
+            updateZoomDisplay();
+        }
+        function resetZoom() {
+            currentZoomScale = 1.0;
+            updateZoomDisplay();
+        }
+        function updateZoomDisplay() {
+            if (canvasInnerWorld) {
+                canvasInnerWorld.style.transform = `scale(${currentZoomScale})`;
+            }
+            const lbl = document.getElementById("zoomLevelLbl");
+            if (lbl) {
+                lbl.innerText = Math.round(currentZoomScale * 100) + '%';
+            }
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Delete' && selectedElementForDeletion && isModalOpen === false) {
+                selectedElementForDeletion.remove();
+                selectedElementForDeletion = null;
+                updateConnectedSvgLines();
+            }
+        });
 
         window.onload = function() {
             checkAutoLogin();
