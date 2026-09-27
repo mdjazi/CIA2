@@ -84,35 +84,52 @@
         .folder-card .open-lbl { display: inline-block; margin-top: 15px; font-size: 10px; color: var(--accent-color); font-weight: bold; }
         
         .workspace-panel { display: none; background: rgba(11, 16, 23, 0.85); border: 1px solid var(--border-color); border-radius: 10px; padding: 25px; margin-bottom: 20px; }
-        .btn-back { background: rgba(4, 6, 10, 0.8); color: var(--text-color); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-bottom: 20px; font-weight: bold; font-size: 12px; }
+        .btn-back { background: rgba(4, 6, 10, 0.8); color: var(--text-color); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-bottom: 20px; font-weight: bold; font-size: 12px; position: relative; z-index: 5; }
         
         /* ==================================================== */
-        /* 📱 تصميم واجهة الآيباد والمقصورة لمود التشفير (الصورة الثانية) */
+        /* 🖼️ تعديل خلفية قسم التشفير بصورة المقصورة والآيباد */
         /* ==================================================== */
         .tactical-cockpit-wrapper {
             position: relative;
-            background: radial-gradient(circle at center, #101c29 0%, #03060a 100%);
+            background: url('Gemini_Generated_Image_v6rzjev6rzjev6rz.jpg') no-repeat center center;
+            background-size: cover;
             border: 2px solid #1a3148;
             border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), inset 0 0 30px rgba(0, 132, 255, 0.1);
+            padding: 40px 20px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
             overflow: hidden;
+            min-height: 520px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
+        /* طبقة حماية شفافة لتوضيح عناصر الإدخال */
+        .tactical-cockpit-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(3, 6, 10, 0.4);
+            z-index: 1;
+        }
+        
         .data-injection-header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
         }
         .data-injection-box {
             display: inline-block;
-            border: 1px solid #1a3148;
-            background: rgba(4, 10, 18, 0.8);
+            border: 1px solid #0084ff;
+            background: rgba(4, 10, 18, 0.85);
             padding: 8px 25px;
             border-radius: 6px;
-            color: #64748b;
+            color: #38bdf8;
             font-family: monospace;
             font-size: 13px;
             letter-spacing: 1px;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+            box-shadow: 0 0 15px rgba(0, 132, 255, 0.3);
         }
         .data-injection-arrow {
             color: #0084ff;
@@ -120,57 +137,58 @@
             font-size: 12px;
         }
         
-        /* جسم الآيباد */
+        /* تصميم الآيباد التكتيكي المعلق وسط المقصورة */
         .ipad-frame {
-            max-width: 580px;
+            max-width: 520px;
+            width: 100%;
             margin: 0 auto;
-            background: #1e2530;
-            border: 4px solid #333d4d;
-            border-radius: 28px;
-            padding: 20px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 15px rgba(0,0,0,0.5);
+            background: rgba(30, 37, 48, 0.85);
+            backdrop-filter: blur(10px);
+            border: 3px solid #333d4d;
+            border-radius: 24px;
+            padding: 18px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 30px rgba(0, 132, 255, 0.2);
             position: relative;
+            z-index: 2;
         }
         .ipad-screen {
-            background: #060e17;
+            background: rgba(6, 14, 23, 0.92);
             border: 2px solid #00d2ff;
             border-radius: 14px;
-            padding: 25px 20px;
-            box-shadow: 0 0 20px rgba(0, 210, 255, 0.2), inset 0 0 30px rgba(0,0,0,0.9);
+            padding: 20px;
+            box-shadow: inset 0 0 25px rgba(0,0,0,0.9);
             position: relative;
             background-image: 
                 linear-gradient(rgba(0, 210, 255, 0.05) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0, 210, 255, 0.05) 1px, transparent 1px);
-            background-size: 20px 20px;
+            background-size: 18px 18px;
         }
         
-        /* عناصر الإدخال التكتيكية داخل الآيباد */
         .ipad-cyber-box {
-            border: 1px solid #00d2ff;
+            border: 1px solid rgba(0, 210, 255, 0.6);
             background: rgba(2, 12, 22, 0.85);
             border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            position: relative;
+            padding: 12px;
+            margin-bottom: 12px;
         }
         .ipad-label {
             color: #7dd3fc;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             display: block;
             text-align: center;
         }
         .ipad-input {
             width: 100%;
-            background: rgba(6, 24, 44, 0.9) !important;
+            background: rgba(6, 24, 44, 0.95) !important;
             border: 1px solid #0084ff !important;
             border-radius: 6px !important;
             color: #38bdf8 !important;
-            padding: 10px !important;
+            padding: 8px !important;
             font-family: monospace !important;
             text-align: center !important;
-            font-size: 14px !important;
+            font-size: 13px !important;
             box-shadow: inset 0 0 10px rgba(0, 132, 255, 0.3);
         }
         .ipad-btn {
@@ -178,12 +196,12 @@
             background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
             color: #fff;
             border: 1px solid #38bdf8;
-            padding: 10px;
+            padding: 8px;
             border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
-            font-size: 13px;
-            margin-top: 8px;
+            font-size: 12px;
+            margin-top: 6px;
             transition: all 0.2s ease;
             box-shadow: 0 0 10px rgba(2, 132, 199, 0.4);
         }
@@ -195,12 +213,12 @@
         .ipad-controls {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            margin-top: 15px;
+            gap: 15px;
+            margin-top: 12px;
         }
         .ipad-hardware-btn {
-            width: 50px;
-            height: 16px;
+            width: 45px;
+            height: 14px;
             border-radius: 4px;
             border: 1px solid #475569;
         }
@@ -429,7 +447,7 @@
         </div>
 
         <!-- ==================================================== -->
-        <!-- 🔓 مود قسم التشفير المعدل بالكامل لتصميم المقصورة والآيباد -->
+        <!-- 🔓 قسم التشفير بداخل خلفية الصورة المطلوبة كاملة -->
         <!-- ==================================================== -->
         <div class="workspace-panel" id="casesSection" style="background: transparent; border: none; padding: 0;">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
@@ -442,13 +460,12 @@
                 
                 <div class="ipad-frame">
                     <div class="ipad-screen">
-                        
                         <!-- فك التشفير -->
                         <div class="ipad-cyber-box">
                             <label class="ipad-label">أدخل الكود المشفر هنا...</label>
                             <input type="text" id="cipherText" class="ipad-input" placeholder="Xy7z!@#$...">
                             
-                            <label class="ipad-label" style="margin-top: 10px;">أدخل السطر.</label>
+                            <label class="ipad-label" style="margin-top: 8px;">أدخل السطر.</label>
                             <button class="ipad-btn" onclick="decryptMsg()">أدخل</button>
                         </div>
                         
@@ -462,9 +479,8 @@
                         <!-- عرض النتيجة -->
                         <div class="ipad-cyber-box" style="margin-bottom:0; border-color:#ca8a04;">
                             <label class="ipad-label" style="color:#fde047;">📋 النتيجة المستخرجة</label>
-                            <div class="crypto-result-value" id="cryptoResult" style="color:#38bdf8; font-size:13px;">- في انتظار الإدخال -</div>
+                            <div class="crypto-result-value" id="cryptoResult" style="color:#38bdf8; font-size:12px; font-family:monospace; text-align:center;">- في انتظار الإدخال -</div>
                         </div>
-                        
                     </div>
                     
                     <div class="ipad-controls">
