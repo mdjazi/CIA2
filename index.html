@@ -132,18 +132,18 @@
         .drawio-tool-btn { background: rgba(197, 160, 89, 0.15); color: var(--gold-color); border: 1px solid var(--gold-color); padding: 8px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: bold; text-align: right; }
         .drawio-tool-btn:hover { background: rgba(197, 160, 89, 0.3); }
         
-        .draggable-node { position: absolute; min-width: 140px; padding: 10px 12px; border-radius: 6px; cursor: move; user-select: none; box-shadow: 0 4px 15px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 4px; z-index: 20; background: #162235; border: 1.5px solid var(--accent-color); color: #fff; }
-        .node-circle { border-radius: 50%; width: 110px; height: 110px; align-items: center; justify-content: center; text-align: center; padding: 15px; }
+        /* عناصر الشجرة (المستطيل والدائرة بنفس اللون والنمط) */
+        .draggable-node { position: absolute; min-width: 140px; padding: 12px; border-radius: 6px; cursor: move; user-select: none; box-shadow: 0 4px 15px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 4px; z-index: 20; background: #162235; border: 1.5px solid var(--accent-color); color: #fff; }
+        .node-circle { border-radius: 50%; width: 110px; height: 110px; align-items: center; justify-content: center; text-align: center; padding: 15px; background: #162235; border: 1.5px solid var(--accent-color); }
         .node-text { background: rgba(0,0,0,0.6); border: 1px dashed var(--gold-color); color: var(--gold-color); font-size: 13px; padding: 8px; }
         
-        /* الخط المستقيم المستقل القابل للتحجيم والسحب المباشر */
+        /* الخط المستقيم المستقل */
         .node-line { position: absolute; background: var(--gold-color); cursor: move; user-select: none; z-index: 20; min-width: 30px; min-height: 4px; border-radius: 2px; }
         
-        /* زر (X) أحمر صغير ونظيف على الطرف */
-        .node-delete-x { position: absolute; top: -6px; right: -6px; width: 18px; height: 18px; background: var(--danger-color); color: #fff; border: 1px solid #fff; border-radius: 50%; font-size: 10px; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 40; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
-        .node-delete-x:hover { transform: scale(1.15); background: #ff1a3c; }
+        /* إطار التحديد عند النقر على أي عنصر استعداداً لحذفه بزر Delete */
+        .selected-element { outline: 2px dashed var(--success-color) !important; box-shadow: 0 0 15px var(--success-color) !important; z-index: 100 !important; }
 
-        /* مقبض لتغيير الحجم عند سحب أطراف الخط المستقيم */
+        /* مقبض لتغيير حجم الخط المستقيم عند سحبه أفقياً */
         .line-resize-handle { position: absolute; right: 0; top: 0; width: 12px; height: 100%; cursor: ew-resize; background: rgba(255,255,255,0.4); border-radius: 0 2px 2px 0; }
         
         /* وثيقة التقرير الاستخباراتي */
@@ -361,7 +361,7 @@
                 <button class="drawio-tool-btn" style="background:rgba(197,160,89,0.3); border-color:var(--gold-color);" onclick="spawnLine()">➖ خط مستقيم جديد</button>
                 
                 <div style="font-size: 10px; color: var(--text-muted); line-height: 1.4; margin-top: 5px;">
-                    💡 <b>التحكم بالخط:</b> اسحب حافة الخط الأيمن لتغيير طوله بحرية تامة دون أي قوائم!
+                    💡 <b>طريقة الحذف:</b> انقر على أي عنصر لتحديده ثم اضغط زر <b>Delete</b> من لوحة المفاتيح.
                 </div>
                 
                 <h5 style="color: var(--gold-color); font-size: 12px; margin-top: 15px; margin-bottom: 5px;">📋 نبذة العصابة</h5>
@@ -403,6 +403,7 @@
         let isSaving = false;
         let isModalOpen = false;
         let currentEditingGangId = null;
+        let selectedElementForDeletion = null;
 
         async function fetchCloudData() {
             if (isSaving || isModalOpen) return;
@@ -923,6 +924,7 @@
             const g = globalDatabase.gangs.find(item => item.id === id);
             if (!g) return;
             currentEditingGangId = g.id;
+            selectedElementForDeletion = null;
             
             document.getElementById("fullscreenGangTitle").innerText = `🏴‍☠️ ملف عصابة: ${g.name}`;
             document.getElementById("fullscreenGangDetails").value = g.details || '';
@@ -945,6 +947,7 @@
         function closeGangFullscreen() {
             document.getElementById("gangFullscreenModal").style.display = "none";
             currentEditingGangId = null;
+            selectedElementForDeletion = null;
         }
 
         function spawnNode(type) {
@@ -988,12 +991,8 @@
             div.setAttribute('data-id', data.id);
             
             if (isLine) {
-                div.innerHTML = `
-                    <div class="node-delete-x" onclick="this.closest('.node-line').remove()" title="حذف الخط">✕</div>
-                    <div class="line-resize-handle" title="اسحب لتغيير الطول"></div>
-                `;
+                div.innerHTML = `<div class="line-resize-handle" title="اسحب لتغيير الطول"></div>`;
                 
-                // تفعيل تغيير حجم الخط عند سحب المقبض الأيمن
                 const handle = div.querySelector('.line-resize-handle');
                 let isResizing = false, startX, startWidth;
                 handle.addEventListener('mousedown', (e) => {
@@ -1010,22 +1009,26 @@
                 window.addEventListener('mouseup', () => { isResizing = false; });
 
             } else {
-                div.innerHTML = `
-                    <div class="node-delete-x" onclick="this.closest('.draggable-node').remove()" title="حذف العنصر">✕</div>
-                    <div contenteditable="true" style="outline:none; width:100%; min-height:25px; word-break:break-all;">${data.text}</div>
-                `;
+                div.innerHTML = `<div contenteditable="true" style="outline:none; width:100%; min-height:25px; word-break:break-all;">${data.text}</div>`;
             }
             
+            // النقر لتحديد العنصر (لاختياره ثم حذفه عبر لوحة المفاتيح)
+            div.addEventListener('click', (e) => {
+                document.querySelectorAll('.draggable-node, .node-line').forEach(el => el.classList.remove('selected-element'));
+                div.classList.add('selected-element');
+                selectedElementForDeletion = div;
+                e.stopPropagation();
+            });
+
             // سحب وإفلات حر لجميع العناصر
             let isDragging = false, startX, startY;
             
             div.addEventListener('mousedown', (e) => {
-                if (e.target.tagName === 'BUTTON' || e.target.classList.contains('node-delete-x') || e.target.classList.contains('line-resize-handle') || e.target.getAttribute('contenteditable') === 'true') return;
+                if (e.target.classList.contains('line-resize-handle') || e.target.getAttribute('contenteditable') === 'true') return;
                 isDragging = true;
                 startX = e.clientX - div.offsetLeft;
                 startY = e.clientY - div.offsetTop;
                 div.style.zIndex = 1000;
-                e.stopPropagation();
             });
             
             window.addEventListener('mousemove', (e) => {
@@ -1043,6 +1046,23 @@
             
             area.appendChild(div);
         }
+
+        // الاستماع لضغط زر Delete على الكيبورد لحذف العنصر المختار
+        window.addEventListener('keydown', (e) => {
+            if ((e.key === 'Delete' || e.key === 'Backspace') && selectedElementForDeletion) {
+                // التأكد من أننا لسنا نكتب داخل حقل نصي أو محرر النصوص
+                if (document.activeElement.getAttribute('contenteditable') === 'true' || document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
+                
+                selectedElementForDeletion.remove();
+                selectedElementForDeletion = null;
+            }
+        });
+
+        // إلغاء التحديد عند النقر على مساحة فارغة في اللوحة
+        document.getElementById("gangCanvasArea").addEventListener('click', () => {
+            document.querySelectorAll('.draggable-node, .node-line').forEach(el => el.classList.remove('selected-element'));
+            selectedElementForDeletion = null;
+        });
 
         async function updateGangDetailsOnly() {
             if (!currentEditingGangId) return;
