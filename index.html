@@ -132,28 +132,28 @@
         .drawio-tool-btn { background: rgba(197, 160, 89, 0.15); color: var(--gold-color); border: 1px solid var(--gold-color); padding: 8px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: bold; text-align: right; }
         .drawio-tool-btn:hover { background: rgba(197, 160, 89, 0.3); }
         
-        /* عناصر الشجرة (تم احتواء النص بدقة داخل الحدود وعدم خروجه نهائياً) */
+        /* عناصر الشجرة (يتوسع المربع والدائرة تلقائياً مع المحتوى دون تمرير أو أسهم) */
         .draggable-node { 
-            position: absolute; min-width: 140px; padding: 12px; border-radius: 6px; cursor: move; user-select: none; 
+            position: absolute; min-width: 150px; min-height: 50px; padding: 12px; border-radius: 6px; cursor: move; user-select: none; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 4px; z-index: 20; 
             background: #162235; border: 1.5px solid var(--accent-color); color: #fff; 
-            overflow: hidden; word-break: break-word; overflow-wrap: break-word; 
+            overflow: visible; word-break: break-word; overflow-wrap: break-word; 
         }
         .node-circle { 
-            border-radius: 50% !important; width: 120px !important; height: 120px !important; 
-            align-items: center; justify-content: center; text-align: center; padding: 15px; 
+            border-radius: 50% !important; min-width: 130px !important; min-height: 130px !important; 
+            align-items: center; justify-content: center; text-align: center; padding: 20px; 
             background: #162235; border: 1.5px solid var(--accent-color); 
-            overflow: hidden !important; display: flex !important;
+            overflow: visible !important; display: flex !important;
         }
         .node-text { 
             background: rgba(0,0,0,0.6); border: 1px dashed var(--gold-color); color: var(--gold-color); 
-            font-size: 13px; padding: 8px; overflow: hidden; word-break: break-word; overflow-wrap: break-word;
+            font-size: 13px; padding: 10px; overflow: visible; word-break: break-word; overflow-wrap: break-word;
         }
         
-        /* محتوى النص الداخلي للعنصر لضمان عدم الخروج وعمله كحاوية مرنة */
+        /* محتوى النص الداخلي للعنصر ليتوسع تلقائياً */
         .node-content-editable {
-            outline: none; width: 100%; height: 100%; word-break: break-word; overflow-wrap: break-word;
-            max-height: 100%; overflow-y: auto; white-space: pre-wrap;
+            outline: none; width: 100%; height: auto; word-break: break-word; overflow-wrap: break-word;
+            overflow: visible; white-space: pre-wrap;
         }
 
         /* الخط المستقيم مع مقبض لتغيير الطول والزاوية */
@@ -382,7 +382,7 @@
                 <button class="drawio-tool-btn" style="background:rgba(197,160,89,0.3); border-color:var(--gold-color);" onclick="spawnLine()">➖ خط مستقيم جديد</button>
                 
                 <div style="font-size: 10px; color: var(--text-muted); line-height: 1.4; margin-top: 5px;">
-                    💡 <b>الخط:</b> اسحب النقطة الزرقاء لتدوير الزاوية، والمقبض الأيمن لتغيير الطول.<br>
+                    💡 <b>ملاحظة:</b> المربع يتوسع تلقائياً كلما كتبت أكثر!<br>
                     🗑️ <b>الحذف:</b> انقر على أي عنصر واضغط <b>Delete</b>.
                 </div>
                 
@@ -958,8 +958,8 @@
             if (g.nodes && Array.isArray(g.nodes) && g.nodes.length > 0) {
                 g.nodes.forEach(nodeData => renderNodeElement(nodeData));
             } else {
-                renderNodeElement({ id: 'node_' + Date.now() + 1, type: 'circle', text: '👑 القائد', x: 250, y: 60, width: 120, height: 120, angle: 0 });
-                renderNodeElement({ id: 'node_' + Date.now() + 2, type: 'rect', text: 'مسؤول العمليات', x: 120, y: 220, width: 150, height: 60, angle: 0 });
+                renderNodeElement({ id: 'node_' + Date.now() + 1, type: 'circle', text: '👑 القائد', x: 250, y: 60, width: 130, height: 130, angle: 0 });
+                renderNodeElement({ id: 'node_' + Date.now() + 2, type: 'rect', text: 'مسؤول العمليات', x: 120, y: 220, width: 160, height: 60, angle: 0 });
                 renderNodeElement({ id: 'node_' + Date.now() + 3, type: 'line', text: '', x: 200, y: 180, width: 150, height: 4, angle: 0 });
             }
             
@@ -979,8 +979,8 @@
                 text: type === 'circle' ? 'عضو جديد' : (type === 'rect' ? 'مسؤول جديد' : 'ملاحظة نصية...'),
                 x: 180 + Math.random() * 150,
                 y: 150 + Math.random() * 100,
-                width: type === 'circle' ? 120 : 150,
-                height: type === 'circle' ? 120 : 60,
+                width: type === 'circle' ? 130 : 160,
+                height: type === 'circle' ? 130 : 60,
                 angle: 0
             };
             renderNodeElement(nodeData);
@@ -1009,7 +1009,8 @@
             
             div.style.left = data.x + 'px';
             div.style.top = data.y + 'px';
-            if (data.width) div.style.width = data.width + 'px';
+            if (!isLine && data.width) div.style.width = data.width + 'px';
+            if (isLine) div.style.width = (data.width || 150) + 'px';
             if (data.height) div.style.height = data.height + 'px';
             if (data.angle !== undefined) div.style.transform = `rotate(${data.angle}deg)`;
             
@@ -1022,7 +1023,6 @@
                     <div class="line-resize-handle" title="اسحب لتغيير الطول"></div>
                 `;
                 
-                // التحكم بالطول
                 const handle = div.querySelector('.line-resize-handle');
                 let isResizing = false, startX, startWidth;
                 handle.addEventListener('mousedown', (e) => {
@@ -1038,7 +1038,6 @@
                 });
                 window.addEventListener('mouseup', () => { isResizing = false; });
 
-                // التحكم بزاوية الدوران للخط المستقيم
                 const rotHandle = div.querySelector('.line-rotate-handle');
                 let isRotating = false;
                 rotHandle.addEventListener('mousedown', (e) => {
@@ -1059,9 +1058,20 @@
 
             } else {
                 div.innerHTML = `<div class="node-content-editable" contenteditable="true">${data.text}</div>`;
+                
+                // تفعيل التوسع التلقائي للمربع والدائرة عند الكتابة
+                const editable = div.querySelector('.node-content-editable');
+                editable.addEventListener('input', () => {
+                    // إعادة ضبط العرض مؤقتاً لحساب الارتفاع بدقة
+                    div.style.height = 'auto';
+                    const newHeight = div.scrollHeight;
+                    div.style.height = Math.max(div.classList.contains('node-circle') ? 130 : 50, newHeight) + 'px';
+                    if (div.classList.contains('node-circle')) {
+                        div.style.width = Math.max(130, newHeight) + 'px';
+                    }
+                });
             }
             
-            // النقر لتحديد العنصر لحذفه بزر Delete
             div.addEventListener('click', (e) => {
                 document.querySelectorAll('.draggable-node, .node-line').forEach(el => el.classList.remove('selected-element'));
                 div.classList.add('selected-element');
@@ -1069,7 +1079,6 @@
                 e.stopPropagation();
             });
 
-            // سحب وإفلات حر لجميع العناصر
             let isDragging = false, startX, startY;
             
             div.addEventListener('mousedown', (e) => {
@@ -1096,7 +1105,6 @@
             area.appendChild(div);
         }
 
-        // الاستماع لضغط زر Delete من لوحة المفاتيح
         window.addEventListener('keydown', (e) => {
             if ((e.key === 'Delete' || e.key === 'Backspace') && selectedElementForDeletion) {
                 if (document.activeElement.getAttribute('contenteditable') === 'true' || document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
@@ -1147,7 +1155,7 @@
 
             g.nodes = nodes;
             await saveCloudData();
-            alert("✅ تم حفظ الشجرة والزوايا والخطوط بنجاح في السحابة!");
+            alert("✅ تم حفظ الشجرة والتوسع التلقائي للمربعات والزوايا بنجاح في السحابة!");
         }
 
         function renderGangs() {
