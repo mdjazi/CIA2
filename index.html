@@ -183,8 +183,17 @@
         .gang-editor-layout { display: flex; flex-grow: 1; gap: 15px; overflow: hidden; }
         .gang-sidebar { width: 300px; background: rgba(8, 13, 20, 0.9); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; z-index: 10; }
         
-        /* 🗺️ مساحة الشجرة الكبيرة القابلة للتمرير (Scrollable Canvas) */
-        .gang-canvas-area { flex-grow: 1; background: #06090f; border: 1px solid var(--gold-color); border-radius: 8px; position: relative; overflow: auto; background-image: linear-gradient(to right, #101926 1px, transparent 1px), linear-gradient(to bottom, #101926 1px, transparent 1px); background-size: 30px 30px; }
+        /* 🗺️ مساحة الشجرة مع شريط تمرير شفاف وأنيق */
+        .gang-canvas-area {
+            flex-grow: 1; background: #06090f; border: 1px solid var(--gold-color); border-radius: 8px; position: relative; overflow: auto;
+            background-image: linear-gradient(to right, #101926 1px, transparent 1px), linear-gradient(to bottom, #101926 1px, transparent 1px); background-size: 30px 30px;
+            scrollbar-width: thin; scrollbar-color: rgba(197, 160, 89, 0.3) transparent;
+        }
+        .gang-canvas-area::-webkit-scrollbar { width: 6px; height: 6px; }
+        .gang-canvas-area::-webkit-scrollbar-track { background: transparent; }
+        .gang-canvas-area::-webkit-scrollbar-thumb { background: rgba(197, 160, 89, 0.3); border-radius: 4px; transition: background 0.3s; }
+        .gang-canvas-area::-webkit-scrollbar-thumb:hover { background: rgba(197, 160, 89, 0.7); }
+
         .gang-canvas-inner-world { position: relative; width: 3000px; height: 3000px; }
         
         .drawio-tool-btn { background: rgba(197, 160, 89, 0.15); color: var(--gold-color); border: 1px solid var(--gold-color); padding: 8px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: bold; text-align: right; }
@@ -209,7 +218,7 @@
             font-size: 13px; padding: 10px; overflow: visible; word-break: break-word; overflow-wrap: break-word; height: auto !important;
         }
         
-        .node-content-editable { outline: none; width: 100%; height: auto; word-break: break-word; overflow-wrap: break-word; overflow: visible; white-space: pre-wrap; }
+        .node-content-editable { outline: none; width: 100%; height: auto; word-break: break-word; overflow-wrap: break-word; overflow: visible; white-space: pre-wrap; z-index: 25; position: relative; }
         .node-line { position: absolute; background: var(--gold-color); cursor: move; user-select: none; z-index: 20; min-width: 30px; min-height: 4px; border-radius: 2px; transform-origin: left center; }
         
         .connected-svg-line { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
@@ -446,7 +455,7 @@
         </div>
     </div>
     
-    <!-- 🏴‍☠️ شاشة العصابات الموسعة مع دعم إرفاق الصور والخطوط المحفوظة سحابياً -->
+    <!-- 🏴‍☠️ شاشة العصابات الموسعة مع شريط التمرير الشفاف وإصلاح إضافة العناصر -->
     <div class="gang-fullscreen-overlay" id="gangFullscreenModal">
         <div class="gang-fullscreen-header">
             <div style="display:flex; align-items:center; gap:8px;">
@@ -475,7 +484,7 @@
                 <button class="drawio-tool-btn" style="background:rgba(16, 185, 129, 0.2); border-color:var(--success-color); color:#34d399;" onclick="attachImageToSelectedNode()">➕ إضافة/تحديث الصورة للعنصر</button>
                 
                 <div style="font-size: 10px; color: var(--text-muted); line-height: 1.4; margin-top: 5px;">
-                    💡 <b>ملاحظة:</b> الشجرة الآن تدعم التمرير للأعلى والأسفل بكامل الحرية. النص يكبر تلقائياً عند زيادته داخل المربع.<br>
+                    💡 <b>ملاحظة:</b> شريط التمرير الآن شفاف وأنيق، والشجرة تدعم التمرير للأسفل بحرية تامة.<br>
                     🗑️ <b>الحذف:</b> انقر على المربع، الخط، أو الصورة واضغط <b>Delete</b>.
                 </div>
                 
@@ -1090,12 +1099,16 @@
         }
 
         function spawnNode(type) {
+            const area = document.getElementById("gangCanvasArea");
+            const startX = area.scrollLeft + 150;
+            const startY = area.scrollTop + 100;
+            
             const nodeData = {
                 id: 'node_' + Date.now() + Math.floor(Math.random()*10000),
                 type: type,
                 text: type === 'circle' ? 'عضو جديد' : (type === 'rect' ? 'مسؤول جديد' : 'ملاحظة نصية...'),
-                x: 300 + Math.random() * 200,
-                y: 250 + Math.random() * 200,
+                x: startX,
+                y: startY,
                 width: type === 'circle' ? 130 : 160,
                 height: type === 'circle' ? 130 : 60,
                 angle: 0,
@@ -1104,12 +1117,16 @@
             renderNodeElement(nodeData);
         }
         function spawnLine() {
+            const area = document.getElementById("gangCanvasArea");
+            const startX = area.scrollLeft + 180;
+            const startY = area.scrollTop + 120;
+
             const lineData = {
                 id: 'node_' + Date.now() + Math.floor(Math.random()*10000),
                 type: 'line',
                 text: '',
-                x: 350 + Math.random() * 150,
-                y: 300 + Math.random() * 150,
+                x: startX,
+                y: startY,
                 width: 150,
                 height: 4,
                 angle: 0
