@@ -131,7 +131,6 @@
         
         .drawio-tool-btn { background: rgba(197, 160, 89, 0.15); color: var(--gold-color); border: 1px solid var(--gold-color); padding: 8px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: bold; text-align: right; }
         .drawio-tool-btn:hover { background: rgba(197, 160, 89, 0.3); }
-        .drawio-tool-btn.active-connect { background: var(--success-color); color: #fff; }
         
         .draggable-node { position: absolute; min-width: 140px; padding: 12px; border-radius: 6px; cursor: move; user-select: none; box-shadow: 0 4px 15px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 5px; z-index: 20; }
         .draggable-node.selected-for-link { border: 2px solid var(--success-color) !important; box-shadow: 0 0 15px var(--success-color); }
@@ -339,7 +338,7 @@
         </div>
     </div>
 
-    <!-- نافذة ملف العصابة بملء الشاشة مع الشجرة والخطوط اليدوية -->
+    <!-- نافذة ملف العصابة بملء الشاشة مع الشجرة والخطوط اليدوية الحرة المتعددة -->
     <div class="gang-fullscreen-overlay" id="gangFullscreenModal">
         <div class="gang-fullscreen-header">
             <div style="color: var(--gold-color); font-size: 18px; font-weight: bold;" id="fullscreenGangTitle">🏴‍☠️ ملف العصابة</div>
@@ -356,13 +355,13 @@
                 <button class="drawio-tool-btn" onclick="spawnNode('text')">💬 نص كتابي حر</button>
                 
                 <hr style="border-color: var(--border-color); margin: 5px 0;">
-                <h5 style="color: var(--gold-color); font-size: 12px; margin-bottom: 5px;">🔗 إدارة الخطوط اليدوية</h5>
+                <h5 style="color: var(--gold-color); font-size: 12px; margin-bottom: 5px;">🔗 ربط غير محدود بين المربعات</h5>
                 <div style="font-size: 10px; color: var(--text-muted); line-height: 1.4;">
-                    1. اضغط زر <b>"ربط 🔗"</b> في العنصر الأول.<br>
-                    2. اضغط زر <b>"ربط 🔗"</b> في العنصر الثاني لإنشاء خط بينهما.<br>
-                    3. يمكنك حذف أي خط بالتمرير عليه أو مسح اللوحة.
+                    1. اضغط زر <b>"ربط 🔗"</b> في المربع الأول.<br>
+                    2. اضغط زر <b>"ربط 🔗"</b> في المربع الثاني (أو أي عدد تريد من المربعات والدوائر والنصوص).<br>
+                    3. يمكنك ربط 100 عنصر ببعضهم بحرية تامة!
                 </div>
-                <button class="drawio-tool-btn" style="background:var(--danger-color); border-color:var(--danger-color); color:#fff; margin-top:5px;" onclick="clearAllLines()">🗑️ مسح كل الخطوط</button>
+                <button class="drawio-tool-btn" style="background:var(--danger-color); border-color:var(--danger-color); color:#fff; margin-top:5px;" onclick="clearAllLines()">🗑️ مسح جميع الخطوط</button>
                 
                 <h5 style="color: var(--gold-color); font-size: 12px; margin-top: 15px; margin-bottom: 5px;">📋 نبذة العصابة</h5>
                 <textarea id="fullscreenGangDetails" rows="4" style="width:100%; padding:8px; background:#04060a; border:1px solid var(--border-color); color:#fff; font-size:12px; border-radius:5px;" placeholder="ملاحظات وتفاصيل العصابة..."></textarea>
@@ -370,7 +369,7 @@
                 <button class="btn-login" style="background:var(--gold-color); color:#000; margin-top: 10px; padding:8px; font-size:11px;" onclick="updateGangDetailsOnly()">تحديث النبذة فقط</button>
             </div>
             <div class="gang-canvas-area" id="gangCanvasArea">
-                <!-- SVG للخطوط اليدوية المخصصة -->
+                <!-- SVG للخطوط اليدوية المخصصة والمتعددة -->
                 <svg id="gangSvgLines" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1;"></svg>
             </div>
         </div>
@@ -404,7 +403,7 @@
         let isSaving = false;
         let isModalOpen = false;
         let currentEditingGangId = null;
-        let selectedNodeForLinking = null; // لتخزين أول عنصر عند الربط اليدوي للخطوط
+        let selectedNodeForLinking = null;
 
         async function fetchCloudData() {
             if (isSaving || isModalOpen) return;
@@ -900,7 +899,7 @@
         }
 
         // ==========================================
-        // 🏴‍☠️ نظام العصابات واللوحة مع الخطوط اليدوية بالكامل
+        // 🏴‍☠️ نظام العصابات واللوحة والشجرة الحرة (تحرك الكل + خطوط غير محدودة)
         // ==========================================
         function openCreateGangModal() {
             openCustomModal("🏴‍☠️ إنشاء عصابة جديدة", `
@@ -955,13 +954,14 @@
 
         function spawnNode(type) {
             const nodeData = {
-                id: 'node_' + Date.now() + Math.floor(Math.random()*1000),
+                id: 'node_' + Date.now() + Math.floor(Math.random()*10000),
                 type: type,
                 text: type === 'circle' ? 'عضو جديد' : (type === 'rect' ? 'مسؤول جديد' : 'ملاحظة نصية...'),
                 x: 180 + Math.random() * 150,
                 y: 150 + Math.random() * 100
             };
             renderNodeElement(nodeData);
+            redrawManualLines();
         }
 
         function renderNodeElement(data) {
@@ -982,35 +982,37 @@
                 <div contenteditable="true" style="outline:none; width:100%; min-height:25px; word-break:break-all;">${data.text}</div>
             `;
             
-            // السحب والإفلات بحرية تامة ودون قيود
+            // تفعيل السحب والإفلات لكل عنصر على حدة بشكل مستقل ومضمون بنسبة 100%
             let isDragging = false, startX, startY;
-            div.onmousedown = (e) => {
+            
+            div.addEventListener('mousedown', (e) => {
                 if (e.target.tagName === 'BUTTON' || e.target.getAttribute('contenteditable') === 'true') return;
                 isDragging = true;
                 startX = e.clientX - div.offsetLeft;
                 startY = e.clientY - div.offsetTop;
                 div.style.zIndex = 1000;
-            };
+                e.stopPropagation();
+            });
             
-            document.onmousemove = (e) => {
+            window.addEventListener('mousemove', (e) => {
                 if (!isDragging) return;
                 div.style.left = Math.max(0, e.clientX - startX) + 'px';
                 div.style.top = Math.max(0, e.clientY - startY) + 'px';
                 redrawManualLines();
-            };
+            });
             
-            document.onmouseup = () => { 
+            window.addEventListener('mouseup', () => { 
                 if (isDragging) {
                     isDragging = false; 
                     div.style.zIndex = 20; 
                     redrawManualLines();
                 }
-            };
+            });
             
             area.appendChild(div);
         }
 
-        // نظام ربط الخطوط يدوياً بين العناصر
+        // نظام ربط يدوي لا نهائي بين أي عدد من العناصر
         function handleNodeLinkClick(btn, nodeId) {
             const nodeEl = btn.closest('.draggable-node');
             if (!selectedNodeForLinking) {
@@ -1027,7 +1029,6 @@
                 const g = globalDatabase.gangs.find(item => item.id === currentEditingGangId);
                 if (g) {
                     if (!g.lines) g.lines = [];
-                    // التحقق من عدم وجود الخط مسبقاً
                     const exists = g.lines.some(l => (l.from === selectedNodeForLinking && l.to === nodeId) || (l.from === nodeId && l.to === selectedNodeForLinking));
                     if (!exists) {
                         g.lines.push({ from: selectedNodeForLinking, to: nodeId });
@@ -1058,7 +1059,7 @@
             redrawManualLines();
         }
 
-        // رسم الخطوط اليدوية المحددة بين العناصر
+        // إعادة رسم الخطوط يدوياً فور تحريك أو تعديل أي عنصر
         function redrawManualLines() {
             const svg = document.getElementById("gangSvgLines");
             if (!svg) return;
@@ -1124,6 +1125,18 @@
                 });
             });
             g.nodes = nodes;
+            
+            // حفظ الخطوط اليدوية الحالية
+            const activeLines = [];
+            if (g.lines) {
+                g.lines.forEach(l => {
+                    if (document.querySelector(`[data-id="${l.from}"]`) && document.querySelector(`[data-id="${l.to}"]`)) {
+                        activeLines.push(l);
+                    }
+                });
+            }
+            g.lines = activeLines;
+
             await saveCloudData();
             alert("✅ تم حفظ الشجرة التنظيمية والخطوط اليدوية بالكامل بنجاح في السحابة!");
         }
