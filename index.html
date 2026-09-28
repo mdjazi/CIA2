@@ -73,7 +73,7 @@
         .badge-deputy { background: #b45309; color: #fff; }
         .badge-wing { background: rgba(16, 185, 129, 0.2); border: 1px solid var(--success-color); color: #34d399; font-size: 9px; padding: 2px 6px; border-radius: 3px; }
         
-        .folder-grid-panel { background: rgba(8, 13, 20, 0.8); border: 1px solid rgba(197, 160, 89, 0.3); padding: 30px; border-radius: 12px; margin-bottom: 20px; }
+        .folder-grid-panel { background: rgba(8, 13, 20, 0.8); border: 1px solid rgba(197, 160, 89, 0.3); padding: 30px; border-radius: 12px; margin-bottom: 20px; position: relative; }
         .dashboard-header { display: flex; align-items: center; gap: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); margin-bottom: 25px; }
         .dashboard-logo { width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--gold-color); background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; }
         .dashboard-logo img { width: 58px; height: 58px; border-radius: 50%; }
@@ -321,10 +321,15 @@
         .evidence-content-wrapper { display: none; margin-top: 12px; padding-top: 10px; border-top: 1px dashed #bbb; }
         .evidence-item-card { background: #fff; border: 1px solid #ccc; border-radius: 6px; padding: 8px; margin-bottom: 10px; }
         
-        /* بطاقة آخر تعميم على سطح المكتب */
+        /* بطاقة آخر تعميم على يسار وسط سطح المكتب (مربع أحمر خافت وشبه شفاف) */
         .desktop-broadcast-card {
-            background: rgba(11, 16, 23, 0.9); border: 1px solid var(--gold-color); border-radius: 10px; padding: 18px 22px; margin-bottom: 25px;
-            box-shadow: 0 4px 20px rgba(197, 160, 89, 0.15); display: flex; flex-direction: column; gap: 8px; position: relative;
+            position: absolute; left: 30px; top: 50%; transform: translateY(-50%);
+            width: 290px; background: rgba(217, 4, 41, 0.12); backdrop-filter: blur(12px);
+            border: 1px solid rgba(217, 4, 41, 0.4); border-radius: 10px; padding: 16px; z-index: 25;
+            box-shadow: 0 0 25px rgba(217, 4, 41, 0.2); display: flex; flex-direction: column; gap: 6px;
+        }
+        @media (max-width: 1024px) {
+            .desktop-broadcast-card { position: relative; left: 0; top: 0; transform: none; width: 100%; margin-bottom: 20px; }
         }
 
         .chat-box-container { height: 380px; overflow-y: auto; background: rgba(4, 6, 10, 0.8); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 12px; }
@@ -363,7 +368,6 @@
         }
         .floating-bubble-btn:hover { transform: scale(1.1); background: rgba(0, 132, 255, 0.3); border-color: var(--accent-color); box-shadow: 0 0 25px rgba(0, 132, 255, 0.7); }
 
-        /* إشعار الرسالة الجديد على يمين الشاشة */
         #chat-popup-notification {
             position: fixed; top: 30px; right: 30px; transform: translateX(400px);
             background: rgba(11, 16, 23, 0.95); border: 2px solid var(--accent-color); border-radius: 12px;
@@ -378,7 +382,6 @@
     <div id="toast-notification">✅ تم حفظ التغييرات بنجاح</div>
     <div id="toast-delete-notification">🗑️ تم الحذف بنجاح</div>
     
-    <!-- إشعار الرسالة الواردة على يمين الشاشة -->
     <div id="chat-popup-notification">
         <div style="font-size: 28px;">📩</div>
         <div>
@@ -393,8 +396,8 @@
         <div class="floating-bubble-btn" onclick="openSection('chatSection')" title="غرفة دردشة الأعضاء">
             📩
         </div>
-        <!-- أيقونة التعميمات العائمة تفتح مجلد التعميمات -->
-        <div class="floating-bubble-btn" onclick="openSection('circularsSection')" title="مجلد التعميمات الرسمية" style="border-color: rgba(197, 160, 89, 0.5); color: var(--gold-color);">
+        <!-- أيقونة التعميمات العائمة لإنشاء وعرض التعميمات مباشرة -->
+        <div class="floating-bubble-btn" onclick="openCreateCircularModal()" title="إنشاء تعميم فدرالي رسمي" style="border-color: rgba(197, 160, 89, 0.5); color: var(--gold-color);">
             📢
         </div>
         <!-- أيقونة سجل الـ Logs العائمة الخاصة برتبة ADMIN فقط -->
@@ -445,14 +448,14 @@
         </div>
         
         <div class="folder-grid-panel" id="folderHome">
-            <!-- بطاقة آخر تعميم على سطح المكتب مع خيار الإخفاء الخاص بالمستخدم -->
+            <!-- بطاقة آخر تعميم على يسار وسط سطح المكتب (مربع أحمر خافت وشبه شفاف) -->
             <div class="desktop-broadcast-card" id="desktopBroadcastCard" style="display:none;">
-                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px dashed rgba(197,160,89,0.3); padding-bottom:6px;">
-                    <div style="color:var(--gold-color); font-size:12px; font-weight:800;">📢 آخر تعميم فدرالي رسمي</div>
-                    <button class="btn-del-item" style="background:rgba(255,255,255,0.1); color:#fff; font-size:10px; padding:3px 8px;" onclick="hideDesktopBroadcastForMe()">إخفاء من عندي فقط ✕</button>
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px dashed rgba(217,4,41,0.4); padding-bottom:6px;">
+                    <div style="color:#fca5a5; font-size:11px; font-weight:800;">📢 آخر تعميم رسمي</div>
+                    <button class="btn-del-item" style="background:rgba(255,255,255,0.1); color:#fff; font-size:9px; padding:2px 6px;" onclick="hideDesktopBroadcastForMe()">إخفاء ✕</button>
                 </div>
-                <div id="desktopBroadcastTitle" style="color:#fff; font-size:14px; font-weight:bold; margin-top:4px;">-</div>
-                <div id="desktopBroadcastText" style="color:#cbd5e1; font-size:12px; line-height:1.4; white-space:pre-wrap;">-</div>
+                <div id="desktopBroadcastTitle" style="color:#fff; font-size:13px; font-weight:bold; margin-top:2px;">-</div>
+                <div id="desktopBroadcastText" style="color:#e2e8f0; font-size:11px; line-height:1.4; white-space:pre-wrap;">-</div>
             </div>
 
             <div class="dashboard-header">
@@ -466,9 +469,8 @@
             </div>
             <div class="folder-grid" style="grid-template-columns: repeat(3, 1fr);">
                 <div class="folder-card" onclick="openSection('reportsSection')"><span class="folder-card-icon">📋</span><b>REPORTS</b><small>التقارير الرسمية</small><span class="open-lbl">فتح المجلد ←</span></div>
-                <div class="folder-card" onclick="openSection('circularsSection')"><span class="folder-card-icon">📢</span><b>CIRCULARS</b><small>التعميمات الرسمية</small><span class="open-lbl">فتح المجلد ←</span></div>
+                <div class="folder-card" onclick="openSection('recordsSection')"><span class="folder-card-icon">📁</span><b>سجلات المواطنين</b><small>سجلات المواطنين الرسمية</small><span class="open-lbl">فتح المجلد ←</span></div>
                 <div class="folder-card" onclick="openSection('wantedSection')"><span class="folder-card-icon">🚨</span><b>WANTED</b><small>المطلوبون للعدالة</small><span class="open-lbl">فتح المجلد ←</span></div>
-                <div class="folder-card" onclick="openSection('recordsSection')"><span class="folder-card-icon">📁</span><b>RECORDS</b><small>السجلات الجنائية</small><span class="open-lbl">فتح المجلد ←</span></div>
                 <div class="folder-card" onclick="openSection('intelligenceSection')"><span class="folder-card-icon">🕵️‍♂️</span><b>INTELLIGENCE</b><small>ملفات العصابات</small><span class="open-lbl">فتح المجلد ←</span></div>
                 <div class="folder-card" onclick="openSection('casesSection')"><span class="folder-card-icon">🔓</span><b>DECRYPTION</b><small>التشفير والأمان</small><span class="open-lbl">فتح المجلد ←</span></div>
                 <div class="folder-card" onclick="openSection('usersSection')"><span class="folder-card-icon">👥</span><b>USERS</b><small>سجل الوكلاء</small><span class="open-lbl">فتح المجلد ←</span></div>
@@ -497,7 +499,7 @@
                 <button class="btn-login" style="background:var(--danger-color); margin:0; font-size:12px;" onclick="confirmBulkDelete('reports', 'جميع التقارير الرسمية')">🗑️ حذف جميع التقارير</button>
                 <button class="btn-login" style="background:var(--danger-color); margin:0; font-size:12px;" onclick="confirmBulkDelete('circulars', 'جميع التعميمات الرسمية')">🗑️ حذف جميع التعميمات</button>
                 <button class="btn-login" style="background:var(--danger-color); margin:0; font-size:12px;" onclick="confirmBulkDelete('gangs', 'جميع ملفات العصابات')">🗑️ حذف جميع العصابات</button>
-                <button class="btn-login" style="background:var(--danger-color); margin:0; font-size:12px;" onclick="confirmBulkDelete('records', 'جميع الهويات والسجلات')">🗑️ حذف جميع السجلات</button>
+                <button class="btn-login" style="background:var(--danger-color); margin:0; font-size:12px;" onclick="confirmBulkDelete('records', 'جميع سجلات المواطنين')">🗑️ حذف جميع سجلات المواطنين</button>
                 <button class="btn-login" style="background:var(--danger-color); margin:0; font-size:12px;" onclick="confirmBulkDelete('wanted', 'جميع المطلوبين للعدالة')">🗑️ حذف جميع المطلوبين</button>
                 <button class="btn-login" style="background:var(--danger-color); margin:0; font-size:12px;" onclick="confirmBulkDelete('users', 'جميع الأعضاء (ما عدا الأدمن)')">🗑️ حذف جميع الأشخاص (عدا الأدمن)</button>
             </div>
@@ -551,13 +553,13 @@
             <div id="reports-list" class="folder-grid"></div>
         </div>
 
-        <!-- مجلد التعميمات الجديد (مشابه للتقارير) -->
-        <div class="workspace-panel" id="circularsSection">
+        <!-- قسم سجلات المواطنين -->
+        <div class="workspace-panel" id="recordsSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            <h3 style="color:var(--gold-color); margin-bottom: 15px;">📢 قسم التعميمات الرسمية الفدرالية</h3>
-            <button class="btn-create-action" style="background: var(--gold-color); color:#000;" onclick="openCreateCircularModal()">➕ إنشاء تعميم جديد</button>
-            <div class="input-group"><input type="text" id="circularSearch" class="search-box" placeholder="🔍 بحث شامل في التعميمات..." oninput="renderCirculars()"></div>
-            <div id="circulars-list" class="folder-grid"></div>
+            <h3 style="color:var(--gold-color); margin-bottom: 15px;">📂 سجلات المواطنين الرسمية</h3>
+            <button class="btn-create-action" style="background: var(--gold-color); color:#000;" onclick="openCreateRecordModal()">🪪 إضافة مواطن للسجلات</button>
+            <div class="input-group"><input type="text" id="recordsSearch" class="search-box" placeholder="🔍 بحث بالاسم أو رقم ملف المواطن..." oninput="renderRecords()"></div>
+            <div id="records-list" class="folder-grid" style="grid-template-columns: repeat(3, 1fr);"></div>
         </div>
 
         <div class="workspace-panel" id="wantedSection">
@@ -566,14 +568,6 @@
             <button class="btn-create-action" style="background: var(--danger-color);" onclick="openCreateWantedModal()">➕ إضافة مطلوب جديد</button>
             <div class="input-group"><input type="text" id="wantedSearch" class="search-box" placeholder="🔍 بحث شامل في المطلوبين..." oninput="renderWanted()"></div>
             <div id="wanted-list" class="folder-grid" style="grid-template-columns: repeat(3, 1fr);"></div>
-        </div>
-
-        <div class="workspace-panel" id="recordsSection">
-            <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            <h3 style="color:var(--gold-color); margin-bottom: 15px;">📂 السجل الجنائي للمواطنين</h3>
-            <button class="btn-create-action" style="background: var(--gold-color); color:#000;" onclick="openCreateRecordModal()">🪪 إنشاء هوية جديدة</button>
-            <div class="input-group"><input type="text" id="recordsSearch" class="search-box" placeholder="🔍 بحث شامل في السجلات..." oninput="renderRecords()"></div>
-            <div id="records-list" class="folder-grid" style="grid-template-columns: repeat(3, 1fr);"></div>
         </div>
 
         <div class="workspace-panel" id="intelligenceSection">
@@ -1054,7 +1048,6 @@
             document.getElementById("logsSection").style.display = "none";
             document.getElementById("leaderSection").style.display = "none";
             document.getElementById("reportsSection").style.display = "none";
-            document.getElementById("circularsSection").style.display = "none";
             document.getElementById("wantedSection").style.display = "none";
             document.getElementById("recordsSection").style.display = "none";
             document.getElementById("intelligenceSection").style.display = "none";
@@ -1076,7 +1069,6 @@
             document.getElementById("logsSection").style.display = "none";
             document.getElementById("leaderSection").style.display = "none";
             document.getElementById("reportsSection").style.display = "none";
-            document.getElementById("circularsSection").style.display = "none";
             document.getElementById("wantedSection").style.display = "none";
             document.getElementById("recordsSection").style.display = "none";
             document.getElementById("intelligenceSection").style.display = "none";
@@ -1085,7 +1077,7 @@
             renderDesktopBroadcast();
         }
         function renderAllData() {
-            renderReports(); renderCirculars(); renderWanted(); renderRecords(); renderGangs(); renderUsers(); renderChatMessages(); renderDesktopBroadcast();
+            renderReports(); renderWanted(); renderRecords(); renderGangs(); renderUsers(); renderChatMessages(); renderDesktopBroadcast();
         }
 
         function renderDesktopBroadcast() {
@@ -1096,10 +1088,8 @@
                 card.style.display = "none";
                 return;
             }
-            // آخر تعميم مضاف
             const latest = list[list.length - 1];
             
-            // تحقق إذا كان المستخدم الحالي قام بإخفاء هذا التعميم من عنده فقط
             if (!globalDatabase.hiddenCirculars) globalDatabase.hiddenCirculars = {};
             const userHiddenMap = globalDatabase.hiddenCirculars[currentUser] || {};
             if (userHiddenMap[latest.id]) {
@@ -1155,7 +1145,7 @@
                     logSystemAction(`تم حذف جميع العصابات بواسطة الأدمن: ${currentUser}`);
                 } else if (type === 'records') {
                     globalDatabase.records = [];
-                    logSystemAction(`تم حذف جميع السجلات بواسطة الأدمن: ${currentUser}`);
+                    logSystemAction(`تم حذف جميع سجلات المواطنين بواسطة الأدمن: ${currentUser}`);
                 } else if (type === 'wanted') {
                     globalDatabase.wanted = [];
                     logSystemAction(`تم حذف جميع المطلوبين بواسطة الأدمن: ${currentUser}`);
@@ -1284,20 +1274,6 @@
             isModalOpen = false;
             document.getElementById("customModal").style.display = "none";
         }
-        function readFileAsBase64(fileInputId) {
-            return new Promise((resolve) => {
-                const fileInput = document.getElementById(fileInputId);
-                if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
-                    resolve(null);
-                    return;
-                }
-                const file = fileInput.files[0];
-                const reader = new FileReader();
-                reader.onload = function(e) { resolve(e.target.result); };
-                reader.onerror = function() { resolve(null); };
-                reader.readAsDataURL(file);
-            });
-        }
         function toggleEvidenceContent() {
             const wrapper = document.getElementById("evidenceContentWrapper");
             const btn = document.getElementById("evidenceToggleBtn");
@@ -1328,7 +1304,7 @@
                     </div>
                     <div class="cia-doc-body">
                         <div style="margin-bottom:2px; font-weight:900; color:#b91c1c; font-size:11px;">[مضمون المستند الاستخباراتي]:</div>
-                        ${isEdit ? `<textarea id="editReportDetails" rows="5" style="width:100%; padding:6px; background:transparent; border:1px solid #999; font-weight:bold; white-space:pre-wrap;">${detailsVal}</textarea>` : `<textarea id="popReportDetails" rows="5" placeholder="تفاصيل المستند أو التعميم..." style="width:100%; padding:6px; background:transparent; border:1px solid #999; font-weight:bold; white-space:pre-wrap;"></textarea>`}
+                        ${isEdit ? `<textarea id="editReportDetails" rows="5" style="width:100%; padding:6px; background:transparent; border:1px solid #999; font-weight:bold; white-space:pre-wrap;">${detailsVal}</textarea>` : `<textarea id="popReportDetails" rows="5" placeholder="تفاصيل المستند أو التقرير..." style="width:100%; padding:6px; background:transparent; border:1px solid #999; font-weight:bold; white-space:pre-wrap;"></textarea>`}
                         
                         ${!isEdit ? `
                             <div class="input-group" style="margin-top:8px;">
@@ -1354,7 +1330,7 @@
             `;
         }
 
-        // قالب التعميم الرسمي المخصص (اسم المرسل + التعميم بدون حشو + OFFICIAL FEDERAL CIRCULAR + هام)
+        // وثيقة التعميم الفدرالي بتصميم نظيف: اسم المرسل، نص التعميم بدقة، OFFICIAL FEDERAL CIRCULAR، ختم هـام
         function getCircularDocHtml(titleVal = "", detailsVal = "", authorVal = currentUser, dateVal = new Date().toLocaleDateString(), isEdit = false) {
             return `
                 <div class="cia-classified-doc">
@@ -1404,7 +1380,6 @@
             });
         }
 
-        // إنشاء تعميم جديد عبر مجلد التعميمات
         function openCreateCircularModal() {
             openCustomModal("📢 إنشاء تعميم فدرالي رسمي جديد", getCircularDocHtml(), () => {
                 const title = document.getElementById("popCircularTitle").value.trim();
@@ -1489,40 +1464,6 @@
             openCustomModal(`📋 وثيقة رسمية - ${r.title}`, contentHtml, null);
         }
 
-        // عرض تعميم من مجلد التعميمات
-        function viewCircularFolder(id) {
-            loadDatabase();
-            const c = (globalDatabase.circulars || []).find(item => item.id === id);
-            if (!c) return;
-            
-            const contentHtml = `
-                <div style="display:flex; justify-content:flex-end; gap:5px; margin-bottom:10px;">
-                    <button class="btn-edit-item" onclick="editCircular(${c.id})">تعديل ✏️</button>
-                    <button class="btn-del-item" onclick="deleteCircular(${c.id})">حذف 🗑️</button>
-                </div>
-                <div class="cia-classified-doc">
-                    <div class="cia-doc-header">
-                        <div style="font-size:18px; font-weight:900; letter-spacing:2px; color:#111;">CIA</div>
-                        <div style="text-align:center;">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" style="width:55px; height:55px; border-radius:50%; border:1px solid #000; display:inline-block;" alt="CIA">
-                            <div style="font-size:9px; color:#444; margin-top:6px; font-weight:900; letter-spacing:1px;">OFFICIAL FEDERAL CIRCULAR</div>
-                        </div>
-                        <div class="cia-top-secret-stamp">هـام</div>
-                    </div>
-                    <div class="cia-doc-meta">
-                        <div style="font-size:15px; margin-bottom:8px;"><b>العنوان:</b> ${c.title}</div>
-                        <div style="margin-bottom:4px;"><b>المرسل:</b> ${c.author}</div>
-                        <div><b>التاريخ:</b> ${c.date}</div>
-                    </div>
-                    <div class="cia-doc-body">
-                        <div style="margin-bottom:2px; font-weight:900; color:#b91c1c; font-size:11px;">[نص التعميم الفدرالي]:</div>
-                        <div style="font-weight:bold; white-space:pre-wrap;">${c.details}</div>
-                    </div>
-                </div>
-            `;
-            openCustomModal(`📢 تعميم رسمي - ${c.title}`, contentHtml, null);
-        }
-
         function editReport(id) {
             const r = (globalDatabase.reports || []).find(item => item.id === id);
             if (!r) return;
@@ -1535,19 +1476,6 @@
                 closeModal();
                 showToast("✅ تم تحديث التقرير بنجاح");
                 viewReportFolder(r.id);
-            });
-        }
-
-        function editCircular(id) {
-            const c = (globalDatabase.circulars || []).find(item => item.id === id);
-            if (!c) return;
-            openCustomModal("✏️ تعديل التعميم الفدرالي", getCircularDocHtml(c.title, c.details, c.author, c.date, true), () => {
-                c.title = document.getElementById("editCircularTitle").value.trim();
-                c.details = document.getElementById("editCircularDetails").value;
-                saveDatabase(); 
-                closeModal();
-                showToast("✅ تم تحديث التعميم بنجاح");
-                viewCircularFolder(c.id);
             });
         }
 
@@ -1569,36 +1497,11 @@
             });
         }
 
-        function renderCirculars() {
-            const list = document.getElementById("circulars-list");
-            if (!list) return;
-            const query = (document.getElementById("circularSearch")?.value || "").toLowerCase();
-            list.innerHTML = "";
-            (globalDatabase.circulars || []).filter(c => c.title.toLowerCase().includes(query) || (c.details && c.details.toLowerCase().includes(query)) || (c.author && c.author.toLowerCase().includes(query))).forEach(c => {
-                list.innerHTML += `
-                    <div class="item-folder-card" onclick="viewCircularFolder(${c.id})">
-                        <div>
-                            <span class="item-folder-icon">📢</span>
-                            <span class="item-folder-title">${c.title}</span>
-                            <span class="item-folder-sub">المرسل: ${c.author}</span>
-                        </div>
-                        <span class="item-folder-btn" style="color:var(--gold-color);">فتح التعميم ←</span>
-                    </div>`;
-            });
-        }
-
         function deleteReport(id) {
             globalDatabase.reports = globalDatabase.reports.filter(r => r.id !== id); 
             saveDatabase(); 
             closeModal(); 
             showDeleteToast("🗑️ تم حذف التقرير بنجاح");
-        }
-
-        function deleteCircular(id) {
-            globalDatabase.circulars = globalDatabase.circulars.filter(c => c.id !== id); 
-            saveDatabase(); 
-            closeModal(); 
-            showDeleteToast("🗑️ تم حذف التعميم بنجاح");
         }
 
         function openCreateWantedModal() {
@@ -1676,8 +1579,12 @@
             closeModal(); 
             showDeleteToast("🗑️ تم حذف المطلوب بنجاح");
         }
+
+        // إضافة مواطن للسجلات مع رقم خاص ورابط صورة
         function openCreateRecordModal() {
-            openCustomModal("🪪 هوية جديدة", `
+            const generatedFileNo = 'CIT-' + Math.floor(100000 + Math.random() * 900000);
+            openCustomModal("🪪 إضافة مواطن للسجلات", `
+                <div class="input-group"><label>رقم ملف المواطن (رقم فريد للبحث)</label><input type="text" id="popRecFileNo" value="${generatedFileNo}" style="font-family:monospace; color:var(--gold-color); font-weight:bold;"></div>
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                     <div class="input-group"><label>الاسم الأول</label><input type="text" id="popRecFirstName"></div>
                     <div class="input-group"><label>الاسم الأخير</label><input type="text" id="popRecLastName"></div>
@@ -1686,42 +1593,46 @@
                     <div class="input-group"><label>Citizen ID</label><input type="text" id="popRecId" placeholder="CIA-102"></div>
                     <div class="input-group"><label>الجنس</label><select id="popRecSex"><option value="MALE">ذكر / MALE</option><option value="FEMALE">أنثى / FEMALE</option></select></div>
                 </div>
-                <div class="input-group"><label>📎 إرفاق صورة الهوية</label><input type="file" id="popRecPhotoFile" accept="image/*"></div>
+                <div class="input-group"><label>🔗 رابط صورة المواطن (Image URL)</label><input type="text" id="popRecPhotoUrl" placeholder="https://images.unsplash.com/..."></div>
                 <div class="input-group"><label>السجل والملاحظات</label><textarea id="popRecNotes" rows="3"></textarea></div>
-            `, async () => {
+            `, () => {
                 const fn = document.getElementById("popRecFirstName").value.trim();
                 const ln = document.getElementById("popRecLastName").value.trim();
+                const fileNo = document.getElementById("popRecFileNo").value.trim() || generatedFileNo;
                 if (!fn || !ln) return alert("أدخل اسم المواطن!");
-                const photoBase64 = await readFileAsBase64("popRecPhotoFile");
+                
                 loadDatabase();
                 if (!globalDatabase.records) globalDatabase.records = [];
                 globalDatabase.records.push({ 
                     id: Date.now(), 
+                    fileNo: fileNo,
                     firstName: fn, lastName: ln, 
                     cid: document.getElementById("popRecId").value.trim() || "N/A", 
                     sex: document.getElementById("popRecSex").value, 
                     notes: document.getElementById("popRecNotes").value.trim(), 
-                    photo: photoBase64 || "" 
+                    photoUrl: document.getElementById("popRecPhotoUrl").value.trim() || "" 
                 });
                 saveDatabase(); 
                 closeModal();
-                showToast("✅ تم إنشاء الهوية بنجاح");
+                showToast("✅ تمت إضافة المواطن بنجاح");
             });
         }
         function viewRecordFolder(id) {
             loadDatabase();
             const r = (globalDatabase.records || []).find(item => item.id === id);
             if (!r) return;
-            openCustomModal(`🪪 هوية: ${r.firstName} ${r.lastName}`, `
+            openCustomModal(`🪪 مواطن: ${r.firstName} ${r.lastName} (${r.fileNo || 'بدون رقم'})`, `
                 <div style="display:flex; justify-content:flex-end; gap:5px; margin-bottom:10px;">
                     <button class="btn-edit-item" onclick="editRecord(${r.id})">تعديل ✏️</button>
                     <button class="btn-del-item" onclick="deleteRecord(${r.id})">حذف 🗑️</button>
                 </div>
+                <div style="color:var(--gold-color); font-size:12px; margin-bottom:8px; font-family:monospace;"><b>رقم ملف المواطن:</b> ${r.fileNo || 'N/A'}</div>
                 <div class="id-card-tactical">
                     <div class="id-card-header">IDENTIFICATION CARD</div>
                     <div class="id-card-body">
-                        <div class="id-card-photo-box"><img src="${r.photo || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=300&h=350'}"></div>
+                        <div class="id-card-photo-box"><img src="${r.photoUrl || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=300&h=350'}"></div>
                         <div class="id-card-details">
+                            <div class="id-field-group"><span class="id-field-label">FILE NO</span><span class="id-field-val" style="font-size:11px; color:var(--accent-color);">${r.fileNo || 'N/A'}</span></div>
                             <div class="id-field-group"><span class="id-field-label">ID</span><span class="id-field-val">${r.cid}</span></div>
                             <div class="id-field-group"><span class="id-field-label">NAME</span><span class="id-field-val">${r.firstName} ${r.lastName}</span></div>
                             <div class="id-field-group"><span class="id-field-label">SEX</span><span class="id-field-val">${r.sex}</span></div>
@@ -1734,7 +1645,8 @@
         function editRecord(id) {
             const r = (globalDatabase.records || []).find(item => item.id === id);
             if (!r) return;
-            openCustomModal("✏️ تعديل الهوية", `
+            openCustomModal("✏️ تعديل سجل المواطن", `
+                <div class="input-group"><label>رقم ملف المواطن</label><input type="text" id="editRecFileNo" value="${r.fileNo || ''}" style="font-family:monospace; color:var(--gold-color); font-weight:bold;"></div>
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                     <div class="input-group"><label>الاسم الأول</label><input type="text" id="editRecFirstName" value="${r.firstName}"></div>
                     <div class="input-group"><label>الاسم الأخير</label><input type="text" id="editRecLastName" value="${r.lastName}"></div>
@@ -1743,19 +1655,19 @@
                     <div class="input-group"><label>Citizen ID</label><input type="text" id="editRecCid" value="${r.cid}"></div>
                     <div class="input-group"><label>الجنس</label><select id="editRecSex"><option value="MALE" ${r.sex==="MALE"?"selected":""}>ذكر</option><option value="FEMALE" ${r.sex==="FEMALE"?"selected":""}>أنثى</option></select></div>
                 </div>
-                <div class="input-group"><label>📎 إرفاق صورة جديدة</label><input type="file" id="editRecPhotoFile" accept="image/*"></div>
+                <div class="input-group"><label>🔗 رابط صورة المواطن (Image URL)</label><input type="text" id="editRecPhotoUrl" value="${r.photoUrl || ''}"></div>
                 <div class="input-group"><label>الملاحظات</label><textarea id="editRecNotes" rows="3">${r.notes}</textarea></div>
-            `, async () => {
+            `, () => {
+                r.fileNo = document.getElementById("editRecFileNo").value.trim();
                 r.firstName = document.getElementById("editRecFirstName").value.trim();
                 r.lastName = document.getElementById("editRecLastName").value.trim();
                 r.cid = document.getElementById("editRecCid").value.trim();
                 r.sex = document.getElementById("editRecSex").value;
-                const newPhoto = await readFileAsBase64("editRecPhotoFile");
-                if (newPhoto) r.photo = newPhoto;
+                r.photoUrl = document.getElementById("editRecPhotoUrl").value.trim();
                 r.notes = document.getElementById("editRecNotes").value.trim();
                 saveDatabase(); 
                 closeModal();
-                showToast("✅ تم تحديث الهوية بنجاح");
+                showToast("✅ تم تحديث سجل المواطن بنجاح");
             });
         }
         function renderRecords() {
@@ -1763,15 +1675,15 @@
             if (!list) return;
             const query = (document.getElementById("recordsSearch")?.value || "").toLowerCase();
             list.innerHTML = "";
-            (globalDatabase.records || []).filter(r => `${r.firstName} ${r.lastName}`.toLowerCase().includes(query) || (r.cid && r.cid.toLowerCase().includes(query)) || (r.notes && r.notes.toLowerCase().includes(query))).forEach(r => {
-                list.innerHTML += `<div class="item-folder-card" onclick="viewRecordFolder(${r.id})"><div><span class="item-folder-icon">📁</span><span class="item-folder-title">${r.firstName} ${r.lastName}</span><span class="item-folder-sub">ID: ${r.cid}</span></div><span class="item-folder-btn">فتح الهوية ←</span></div>`;
+            (globalDatabase.records || []).filter(r => `${r.firstName} ${r.lastName}`.toLowerCase().includes(query) || (r.cid && r.cid.toLowerCase().includes(query)) || (r.fileNo && r.fileNo.toLowerCase().includes(query)) || (r.notes && r.notes.toLowerCase().includes(query))).forEach(r => {
+                list.innerHTML += `<div class="item-folder-card" onclick="viewRecordFolder(${r.id})"><div><span class="item-folder-icon">📁</span><span class="item-folder-title">${r.firstName} ${r.lastName}</span><span class="item-folder-sub">رقم الملف: ${r.fileNo || 'N/A'}</span></div><span class="item-folder-btn">فتح السجل ←</span></div>`;
             });
         }
         function deleteRecord(id) {
             globalDatabase.records = globalDatabase.records.filter(r => r.id !== id); 
             saveDatabase(); 
             closeModal(); 
-            showDeleteToast("🗑️ تم حذف الهوية بنجاح");
+            showDeleteToast("🗑️ تم حذف السجل بنجاح");
         }
         
         function openCreateGangModal() {
