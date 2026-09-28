@@ -64,7 +64,6 @@
         #main-system { display: none; width: 100%; max-width: 1150px; position: relative; z-index: 10; }
         .header-system { display: flex; justify-content: space-between; align-items: center; background: rgba(11, 16, 23, 0.85); padding: 18px 25px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
         .header-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-        .btn-chat-nav { background: rgba(0, 132, 255, 0.2); color: var(--accent-color); border: 1px solid var(--accent-color); padding: 8px 14px; border-radius: 5px; cursor: pointer; font-weight: 700; font-size: 12px; }
         .btn-leader-nav { background: rgba(23, 16, 4, 0.8); color: var(--gold-color); border: 1px solid var(--gold-color); padding: 8px 14px; border-radius: 5px; cursor: pointer; font-weight: 700; font-size: 12px; display: none; }
         .btn-logout { background: var(--danger-color); color: #fff; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; font-weight: 700; font-size: 12px; }
         
@@ -346,19 +345,19 @@
         }
         #toast-delete-notification.show { transform: translateX(-50%) translateY(0); }
 
-        /* الأيقونات العائمة السفلية (دائرية بلون خفيف وشبه شفاف) */
+        /* الأيقونات العائمة السفلية (دائرية شبه شفافة وفاخرة - تظهر بعد تسجيل الدخول فقط) */
         .floating-action-container {
             position: fixed; bottom: 25px; left: 25px; display: flex; gap: 10px; z-index: 950; display: none;
         }
         .floating-bubble-btn {
             width: 52px; height: 52px; border-radius: 50%;
-            background: rgba(11, 16, 23, 0.65); backdrop-filter: blur(8px);
+            background: rgba(11, 16, 23, 0.65); backdrop-filter: blur(10px);
             border: 1.5px solid rgba(0, 132, 255, 0.4); color: #fff; display: flex; justify-content: center; align-items: center; font-size: 22px;
-            cursor: pointer; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); transition: all 0.3s ease;
+            cursor: pointer; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.05); transition: all 0.3s ease;
         }
-        .floating-bubble-btn:hover { transform: scale(1.08); background: rgba(0, 132, 255, 0.25); border-color: var(--accent-color); box-shadow: 0 0 20px rgba(0, 132, 255, 0.6); }
+        .floating-bubble-btn:hover { transform: scale(1.1); background: rgba(0, 132, 255, 0.3); border-color: var(--accent-color); box-shadow: 0 0 25px rgba(0, 132, 255, 0.7); }
 
-        /* إشعار الرسالة الجديد على يمين الشاشة (لمدة 2.5 ثانية) */
+        /* إشعار الرسالة الجديد على يمين الشاشة (لمدة 1.5 ثانية) */
         #chat-popup-notification {
             position: fixed; top: 30px; right: 30px; transform: translateX(400px);
             background: rgba(11, 16, 23, 0.95); border: 2px solid var(--accent-color); border-radius: 12px;
@@ -382,15 +381,19 @@
         </div>
     </div>
 
-    <!-- الأيقونات العائمة في أسفل يسار الشاشة (تظهر بعد تسجيل الدخول فقط) -->
+    <!-- الأيقونات العائمة الفاخرة والشبه شفافة في أسفل يسار الشاشة (تظهر بعد تسجيل الدخول فقط) -->
     <div class="floating-action-container" id="floatingActionContainer">
         <!-- أيقونة الدردشة العائمة -->
         <div class="floating-bubble-btn" onclick="openSection('chatSection')" title="غرفة دردشة الأعضاء">
             📩
         </div>
-        <!-- أيقونة الوكلاء العائمة الجديدة -->
-        <div class="floating-bubble-btn" onclick="openSection('usersSection')" title="سجل الوكلاء" style="border-color: rgba(197, 160, 89, 0.5);">
-            🛡️
+        <!-- أيقونة التعميمات العائمة الجديدة -->
+        <div class="floating-bubble-btn" onclick="openCreateBroadcastModal()" title="إنشاء تعميم جديد" style="border-color: rgba(197, 160, 89, 0.5); color: var(--gold-color);">
+            📢
+        </div>
+        <!-- أيقونة سجل الـ Logs العائمة الخاصة برتبة ADMIN فقط -->
+        <div class="floating-bubble-btn" id="floatingLogsBtn" onclick="openSection('logsSection')" title="سجل الـ Logs والعمليات" style="border-color: rgba(16, 185, 129, 0.6); color: var(--success-color); display: none;">
+            📜
         </div>
     </div>
 
@@ -429,7 +432,7 @@
                 </small>
             </div>
             <div class="header-actions">
-                <button class="btn-chat-nav" onclick="openSection('chatSection')">💬 دردشة الأعضاء</button>
+                <!-- تم حذف زر دردشة الأعضاء من هنا لكونها أصبحت أيقونة عائمة -->
                 <button class="btn-leader-nav" id="btn-leader-toggle" onclick="openSection('leaderSection')">👑 مركز الإدارة</button>
                 <button class="btn-logout" onclick="logout()">تسجيل الخروج</button>
             </div>
@@ -448,10 +451,10 @@
             <div class="folder-grid" style="grid-template-columns: repeat(3, 1fr);">
                 <div class="folder-card" onclick="openSection('reportsSection')"><span class="folder-card-icon">📋</span><b>REPORTS</b><small>التقارير الرسمية</small><span class="open-lbl">فتح المجلد ←</span></div>
                 <div class="folder-card" onclick="openSection('wantedSection')"><span class="folder-card-icon">🚨</span><b>WANTED</b><small>المطلوبون للعدالة</small><span class="open-lbl">فتح المجلد ←</span></div>
-                <div class="folder-card" onclick="openSection('recordsSection')"><span class="folder-card-icon">👥</span><b>CITIZENS</b><small>مجلد المواطنين (السجلات)</small><span class="open-lbl">فتح المجلد ←</span></div>
+                <div class="folder-card" onclick="openSection('recordsSection')"><span class="folder-card-icon">📁</span><b>RECORDS</b><small>السجلات الجنائية</small><span class="open-lbl">فتح المجلد ←</span></div>
                 <div class="folder-card" onclick="openSection('intelligenceSection')"><span class="folder-card-icon">🕵️‍♂️</span><b>INTELLIGENCE</b><small>ملفات العصابات</small><span class="open-lbl">فتح المجلد ←</span></div>
                 <div class="folder-card" onclick="openSection('casesSection')"><span class="folder-card-icon">🔓</span><b>DECRYPTION</b><small>التشفير والأمان</small><span class="open-lbl">فتح المجلد ←</span></div>
-                <div class="folder-card" onclick="openSection('usersSection')"><span class="folder-card-icon">🛡️</span><b>AGENTS</b><small>سجل الوكلاء</small><span class="open-lbl">فتح المجلد ←</span></div>
+                <div class="folder-card" onclick="openSection('usersSection')"><span class="folder-card-icon">👥</span><b>USERS</b><small>سجل الوكلاء</small><span class="open-lbl">فتح المجلد ←</span></div>
             </div>
         </div>
         <div class="workspace-panel" id="chatSection">
@@ -466,6 +469,16 @@
                 <button class="btn-login" style="width:auto; margin:0; padding:0 25px; background:var(--accent-color);" onclick="sendChatMessage()">إرسال 🚀</button>
             </div>
         </div>
+
+        <!-- لوحة سجلات الـ Logs الخاصة برتبة ADMIN فقط -->
+        <div class="workspace-panel" id="logsSection">
+            <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
+            <h3 style="color:var(--success-color); margin-bottom: 15px;">📜 سجل الـ Logs والعمليات الفدرالية (ADMIN ONLY)</h3>
+            <div style="background: rgba(4, 6, 10, 0.9); border: 1px solid var(--success-color); border-radius: 8px; padding: 20px; font-family: monospace; font-size: 12px; color: #34d399; max-height: 400px; overflow-y: auto;" id="logsContainerBox">
+                - لا توجد سجلات حالياً -
+            </div>
+        </div>
+
         <div class="workspace-panel leader-panel" id="leaderSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-top:0;">👑 مركز إدارة التراخيص والسرية والحسابات</h3>
@@ -517,9 +530,9 @@
         </div>
         <div class="workspace-panel" id="recordsSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            <h3 style="color:var(--gold-color); margin-bottom: 15px;">👥 مجلد المواطنين (السجلات الجنائية سابقاً)</h3>
-            <button class="btn-create-action" style="background: var(--gold-color); color:#000;" onclick="openCreateRecordModal()">🪪 إنشاء هوية مواطن جديدة</button>
-            <div class="input-group"><input type="text" id="recordsSearch" class="search-box" placeholder="🔍 بحث شامل في المواطنين..." oninput="renderRecords()"></div>
+            <h3 style="color:var(--gold-color); margin-bottom: 15px;">📂 السجل الجنائي للمواطنين</h3>
+            <button class="btn-create-action" style="background: var(--gold-color); color:#000;" onclick="openCreateRecordModal()">🪪 إنشاء هوية جديدة</button>
+            <div class="input-group"><input type="text" id="recordsSearch" class="search-box" placeholder="🔍 بحث شامل في السجلات..." oninput="renderRecords()"></div>
             <div id="records-list" class="folder-grid" style="grid-template-columns: repeat(3, 1fr);"></div>
         </div>
         <div class="workspace-panel" id="intelligenceSection">
@@ -570,8 +583,8 @@
         </div>
         <div class="workspace-panel" id="usersSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            <h3 style="color:var(--gold-color);">🛡️ سجل الوكلاء المرخصين (مرتبة حسب الرتبة)</h3>
-            <div class="input-group"><input type="text" id="usersSearch" class="search-box" placeholder="🔍 بحث شامل في الوكلاء..." oninput="renderUsers()"></div>
+            <h3 style="color:var(--gold-color);">👥 قائمة الأعضاء المسجلين والـ Wings (مرتبة حسب الرتبة)</h3>
+            <div class="input-group"><input type="text" id="usersSearch" class="search-box" placeholder="🔍 بحث شامل في الأعضاء..." oninput="renderUsers()"></div>
             <table>
                 <thead><tr><th>اسم الوكيل</th><th>المعرف</th><th>الرتبة الرئيسية</th><th>الدورات والـ Wings</th></tr></thead>
                 <tbody id="users-table-body"></tbody>
@@ -741,8 +754,16 @@
                 popup.classList.add("show");
                 setTimeout(() => {
                     popup.classList.remove("show");
-                }, 2500); // تظهر لمدة 2.5 ثانية كاملة
+                }, 2500);
             }
+        }
+
+        function logSystemAction(actionText) {
+            if (!globalDatabase.logs) globalDatabase.logs = [];
+            const timeStr = new Date().toLocaleString('ar-EG');
+            globalDatabase.logs.unshift(`[${timeStr}] ${actionText}`);
+            if (globalDatabase.logs.length > 50) globalDatabase.logs.pop();
+            saveDatabase();
         }
 
         function loadDatabase() {
@@ -947,6 +968,7 @@
             if (globalDatabase.users && globalDatabase.users[user] && globalDatabase.users[user].password === pass && globalDatabase.users[user].pin === pin) {
                 localStorage.setItem("active_cia_user", user);
                 document.getElementById("login-screen").style.display = "none";
+                logSystemAction(`تسجيل دخول ناجح للوكيل: ${user}`);
                 openMainSystem(user);
             } else {
                 document.getElementById("error-msg").style.display = "block";
@@ -960,7 +982,7 @@
             currentUser = user;
             document.getElementById("login-screen").style.display = "none";
             document.getElementById("main-system").style.display = "block";
-            // إظهار الأيقونات العائمة فقط بعد تسجيل الدخول بنجاح
+            // إظهار أيقونات الإشعارات/الدردشة والتعميمات بعد تسجيل الدخول فقط
             document.getElementById("floatingActionContainer").style.display = "flex";
             
             document.getElementById("current-user-display").innerText = user;
@@ -968,6 +990,12 @@
             const userData = globalDatabase.users[user] || { role: "CIA Member", wings: [] };
             const isManagerRole = userData.role === "ADMIN" || userData.role === "Director" || userData.role === "Deputy Director";
             
+            // إظهار أيقونة الـ Logs باللون الأخضر لرتبة ADMIN فقط
+            const logsBtn = document.getElementById("floatingLogsBtn");
+            if (logsBtn) {
+                logsBtn.style.display = (userData.role === "ADMIN") ? "flex" : "none";
+            }
+
             document.getElementById("current-role-display").innerText = userData.role;
             document.getElementById("current-role-display").className = userData.role === "ADMIN" ? "badge badge-admin" : (userData.role === "Director" ? "badge badge-director" : (userData.role === "Deputy Director" ? "badge badge-deputy" : "badge"));
             
@@ -996,6 +1024,7 @@
         function openSection(sectionId) {
             document.getElementById("folderHome").style.display = "none";
             document.getElementById("chatSection").style.display = "none";
+            document.getElementById("logsSection").style.display = "none";
             document.getElementById("leaderSection").style.display = "none";
             document.getElementById("reportsSection").style.display = "none";
             document.getElementById("wantedSection").style.display = "none";
@@ -1008,12 +1037,15 @@
             if (target) target.style.display = "block";
             if (sectionId === 'leaderSection') {
                 renderAdminUsersCards();
+            } else if (sectionId === 'logsSection') {
+                renderLogsContainer();
             }
         }
         function showHome() {
             loadDatabase();
             document.getElementById("folderHome").style.display = "block";
             document.getElementById("chatSection").style.display = "none";
+            document.getElementById("logsSection").style.display = "none";
             document.getElementById("leaderSection").style.display = "none";
             document.getElementById("reportsSection").style.display = "none";
             document.getElementById("wantedSection").style.display = "none";
@@ -1035,9 +1067,40 @@
             openCustomModal("📢 تعديل التعميم", `<div class="input-group"><label>نص التعميم</label><textarea id="editBroadcastInput" rows="4">${globalDatabase.broadcast || ''}</textarea></div>`, () => {
                 globalDatabase.broadcast = document.getElementById("editBroadcastInput").value.trim();
                 saveDatabase();
+                logSystemAction(`تم تعديل التعميم بواسطة الوكيل: ${currentUser}`);
                 showToast("✅ تم تحديث التعميم بنجاح");
                 closeModal();
             });
+        }
+
+        // إنشاء تعميم جديد بتصميم وثيقة التقرير الاستخباراتي
+        function openCreateBroadcastModal() {
+            openCustomModal("📢 إنشاء تعميم فدرالي رسمي", getReportDocHtml("", "", "", "", currentUser, new Date().toLocaleDateString(), new Date().toLocaleDateString('ar-EG', { weekday: 'long' }), false), () => {
+                const title = document.getElementById("popReportTitle").value.trim();
+                const details = document.getElementById("popReportDetails").value;
+                if (!title) return alert("أدخل عنوان التعميم!");
+                
+                globalDatabase.broadcast = `[${title}]\n${details}`;
+                saveDatabase();
+                logSystemAction(`تم إنشاء تعميم جديد بعنوان (${title}) بواسطة: ${currentUser}`);
+                closeModal();
+                showToast("✅ تم نشر التعميم الفدرالي بنجاح");
+            });
+        }
+
+        function renderLogsContainer() {
+            const box = document.getElementById("logsContainerBox");
+            if (!box) return;
+            const logs = globalDatabase.logs || [];
+            if (logs.length === 0) {
+                box.innerHTML = "- لا توجد سجلات حالياً -";
+                return;
+            }
+            let html = "";
+            logs.forEach(l => {
+                html += `<div>> ${l}</div>`;
+            });
+            box.innerHTML = html;
         }
 
         function renderChatMessages() {
@@ -1071,7 +1134,6 @@
             box.scrollTop = box.scrollHeight;
         }
 
-        // تعديل الرسالة مباشرة في مكانها (واقعي وجميل)
         function enableInlineEdit(msgId) {
             loadDatabase();
             const msg = (globalDatabase.chat || []).find(m => m.id === msgId);
@@ -1192,8 +1254,8 @@
                         <div><b>اليوم:</b> ${dayVal} &nbsp;|&nbsp; <b>التاريخ:</b> ${dateVal}</div>
                     </div>
                     <div class="cia-doc-body">
-                        <div style="margin-bottom:2px; font-weight:900; color:#b91c1c; font-size:11px;">[مضمون التقرير الاستخباراتي]:</div>
-                        ${isEdit ? `<textarea id="editReportDetails" rows="5" style="width:100%; padding:6px; background:transparent; border:1px solid #999; font-weight:bold; white-space:pre-wrap;">${detailsVal}</textarea>` : `<textarea id="popReportDetails" rows="5" placeholder="تفاصيل العملية والتحريات..." style="width:100%; padding:6px; background:transparent; border:1px solid #999; font-weight:bold; white-space:pre-wrap;"></textarea>`}
+                        <div style="margin-bottom:2px; font-weight:900; color:#b91c1c; font-size:11px;">[مضمون المستند الاستخباراتي]:</div>
+                        ${isEdit ? `<textarea id="editReportDetails" rows="5" style="width:100%; padding:6px; background:transparent; border:1px solid #999; font-weight:bold; white-space:pre-wrap;">${detailsVal}</textarea>` : `<textarea id="popReportDetails" rows="5" placeholder="تفاصيل المستند أو التعميم..." style="width:100%; padding:6px; background:transparent; border:1px solid #999; font-weight:bold; white-space:pre-wrap;"></textarea>`}
                         
                         ${!isEdit ? `
                             <div class="input-group" style="margin-top:8px;">
@@ -1237,6 +1299,7 @@
                     day: new Date().toLocaleDateString('ar-EG', { weekday: 'long' })
                 });
                 saveDatabase(); 
+                logSystemAction(`تم إنشاء تقرير جديد بعنوان (${title}) بواسطة: ${currentUser}`);
                 closeModal();
                 showToast("✅ تم إنشاء التقرير بنجاح");
             });
@@ -1417,7 +1480,7 @@
             showDeleteToast("🗑️ تم حذف المطلوب بنجاح");
         }
         function openCreateRecordModal() {
-            openCustomModal("🪪 هوية مواطن جديدة", `
+            openCustomModal("🪪 هوية جديدة", `
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                     <div class="input-group"><label>الاسم الأول</label><input type="text" id="popRecFirstName"></div>
                     <div class="input-group"><label>الاسم الأخير</label><input type="text" id="popRecLastName"></div>
@@ -1445,20 +1508,20 @@
                 });
                 saveDatabase(); 
                 closeModal();
-                showToast("✅ تم إنشاء هوية المواطن بنجاح");
+                showToast("✅ تم إنشاء الهوية بنجاح");
             });
         }
         function viewRecordFolder(id) {
             loadDatabase();
             const r = (globalDatabase.records || []).find(item => item.id === id);
             if (!r) return;
-            openCustomModal(`🪪 هوية مواطن: ${r.firstName} ${r.lastName}`, `
+            openCustomModal(`🪪 هوية: ${r.firstName} ${r.lastName}`, `
                 <div style="display:flex; justify-content:flex-end; gap:5px; margin-bottom:10px;">
                     <button class="btn-edit-item" onclick="editRecord(${r.id})">تعديل ✏️</button>
                     <button class="btn-del-item" onclick="deleteRecord(${r.id})">حذف 🗑️</button>
                 </div>
                 <div class="id-card-tactical">
-                    <div class="id-card-header">CITIZEN IDENTIFICATION CARD</div>
+                    <div class="id-card-header">IDENTIFICATION CARD</div>
                     <div class="id-card-body">
                         <div class="id-card-photo-box"><img src="${r.photo || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=300&h=350'}"></div>
                         <div class="id-card-details">
@@ -1467,7 +1530,7 @@
                             <div class="id-field-group"><span class="id-field-label">SEX</span><span class="id-field-val">${r.sex}</span></div>
                         </div>
                     </div>
-                    <div class="id-card-notes"><b>السجل والملاحظات:</b> ${r.notes}</div>
+                    <div class="id-card-notes"><b>ملاحظات:</b> ${r.notes}</div>
                 </div>
             `, null);
         }
@@ -1504,7 +1567,7 @@
             const query = (document.getElementById("recordsSearch")?.value || "").toLowerCase();
             list.innerHTML = "";
             (globalDatabase.records || []).filter(r => `${r.firstName} ${r.lastName}`.toLowerCase().includes(query) || (r.cid && r.cid.toLowerCase().includes(query)) || (r.notes && r.notes.toLowerCase().includes(query))).forEach(r => {
-                list.innerHTML += `<div class="item-folder-card" onclick="viewRecordFolder(${r.id})"><div><span class="item-folder-icon">👥</span><span class="item-folder-title">${r.firstName} ${r.lastName}</span><span class="item-folder-sub">ID: ${r.cid}</span></div><span class="item-folder-btn">فتح الهوية ←</span></div>`;
+                list.innerHTML += `<div class="item-folder-card" onclick="viewRecordFolder(${r.id})"><div><span class="item-folder-icon">📁</span><span class="item-folder-title">${r.firstName} ${r.lastName}</span><span class="item-folder-sub">ID: ${r.cid}</span></div><span class="item-folder-btn">فتح الهوية ←</span></div>`;
             });
         }
         function deleteRecord(id) {
@@ -1659,7 +1722,7 @@
             });
         }
         
-        // ترتيب الوكلاء في الجدول: المدير أولاً، ثم المساعد، ثم الأعضاء
+        // حساب أولوية الرتبة للترتيب في الجدول: مدير (1) -> مساعد (2) -> عضو (3)
         function getRolePriority(role) {
             if (role === "ADMIN" || role === "Director") return 1;
             if (role === "Deputy Director") return 2;
@@ -1676,25 +1739,22 @@
                 return { username, ...globalDatabase.users[username] };
             });
 
-            // فرز الوكلاء حسب الأولوية والرتبة
+            // إخفاء أي شخص يحمل رتبة ADMIN من الجدول تماماً
+            usersArray = usersArray.filter(u => u.role !== "ADMIN");
+
+            // ترتيب الوكلاء: مدير (Director) أولاً، ثم المساعد (Deputy Director)، ثم الأعضاء (CIA Member)
             usersArray.sort((a, b) => {
                 return getRolePriority(a.role) - getRolePriority(b.role);
             });
 
             usersArray.forEach(u => {
-                if (u.role === "ADMIN" && u.username === "Majed") {
-                    // إبقاء المدير العام
-                } else if (u.role === "ADMIN") {
-                    // استثناء أو إظهار حسب الرتبة
-                }
-
                 if (u.username.toLowerCase().includes(query) || (u.id && u.id.toLowerCase().includes(query)) || (u.role && u.role.toLowerCase().includes(query))) {
                     let wingsStr = "";
                     if (u.wings && Array.isArray(u.wings)) {
                         u.wings.forEach(w => { wingsStr += `<span class="badge-wing">${w}</span> `; });
                     }
                     let badgeClass = "badge";
-                    if (u.role === 'ADMIN' || u.role === 'Director') badgeClass = "badge badge-director";
+                    if (u.role === 'Director') badgeClass = "badge badge-director";
                     else if (u.role === 'Deputy Director') badgeClass = "badge badge-deputy";
                     
                     tbody.innerHTML += `<tr><td><b>${u.username}</b></td><td>${u.id || 'N/A'}</td><td><span class="${badgeClass}">${u.role}</span></td><td>${wingsStr || '-'}</td></tr>`;
@@ -1863,6 +1923,7 @@
             globalDatabase.users[username].wings = wings;
             
             saveDatabase();
+            logSystemAction(`تم تعديل حساب الوكيل (${username}) بواسطة: ${currentUser}`);
             showToast("✅ تم حفظ تعديلات الوكيل بنجاح");
             renderAdminUsersCards();
         }
@@ -1883,6 +1944,7 @@
 
             delete globalDatabase.users[username];
             saveDatabase();
+            logSystemAction(`تم حذف حساب الوكيل (${username}) بواسطة: ${currentUser}`);
             renderAdminUsersCards();
             showDeleteToast("🗑️ تم حذف حساب الوكيل بنجاح");
         }
@@ -1917,6 +1979,7 @@
             if (!globalDatabase.users) globalDatabase.users = {};
             globalDatabase.users[username] = { password, pin, id: id || "CIA-777", role, wings };
             saveDatabase();
+            logSystemAction(`تم إنشاء حساب جديد للوكيل (${username}) برتبة (${role}) بواسطة: ${currentUser}`);
             showToast(`✅ تم إنشاء حساب الوكيل (${username}) بنجاح`);
             document.getElementById("new-username").value = "";
             document.getElementById("new-id").value = "";
