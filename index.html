@@ -310,7 +310,7 @@
             background-repeat: no-repeat; background-position: center; background-size: contain; opacity: 0.12; pointer-events: none; z-index: 0;
         }
         .cia-doc-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px dashed #b91c1c; padding-bottom: 15px; margin-bottom: 12px; position: relative; z-index: 1; }
-        .cia-top-secret-stamp { color: #b91c1c; font-size: 10px; font-weight: 900; letter-spacing: 1px; border: 1.5px solid #b91c1c; padding: 2px 6px; transform: rotate(-3deg); display: inline-block; background: rgba(185, 28, 28, 0.05); }
+        .cia-top-secret-stamp { color: #b91c1c; font-size: 11px; font-weight: 900; letter-spacing: 1px; border: 1.5px solid #b91c1c; padding: 2px 8px; transform: rotate(-3deg); display: inline-block; background: rgba(185, 28, 28, 0.05); }
         .cia-doc-meta { font-size: 12px; color: #111; margin-bottom: 10px; line-height: 1.5; border-bottom: 1px solid #b5b9c0; padding-bottom: 8px; position: relative; z-index: 1; font-weight: bold; }
         .cia-doc-body { background: transparent; padding: 2px 0 8px 0; min-height: 120px; font-size: 13px; color: #111; line-height: 1.5; position: relative; z-index: 1; font-weight: bold; white-space: pre-wrap; word-break: break-word; }
         
@@ -320,7 +320,13 @@
         .evidence-toggle-btn:hover { background: #8e1515; }
         .evidence-content-wrapper { display: none; margin-top: 12px; padding-top: 10px; border-top: 1px dashed #bbb; }
         .evidence-item-card { background: #fff; border: 1px solid #ccc; border-radius: 6px; padding: 8px; margin-bottom: 10px; }
-        .broadcast-card-floating { display: none; position: fixed; bottom: 25px; left: 25px; width: 320px; background: rgba(11, 16, 23, 0.95); border: 1px solid var(--danger-color); border-radius: 10px; padding: 16px; z-index: 900; }
+        
+        /* بطاقة آخر تعميم على سطح المكتب */
+        .desktop-broadcast-card {
+            background: rgba(11, 16, 23, 0.9); border: 1px solid var(--gold-color); border-radius: 10px; padding: 18px 22px; margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(197, 160, 89, 0.15); display: flex; flex-direction: column; gap: 8px; position: relative;
+        }
+
         .chat-box-container { height: 380px; overflow-y: auto; background: rgba(4, 6, 10, 0.8); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 12px; }
         .chat-msg { max-width: 80%; padding: 10px 14px; border-radius: 8px; font-size: 12px; line-height: 1.5; position: relative; }
         .chat-msg-me { align-self: flex-start; background: rgba(0, 132, 255, 0.2); border: 1px solid var(--accent-color); color: #fff; }
@@ -345,7 +351,7 @@
         }
         #toast-delete-notification.show { transform: translateX(-50%) translateY(0); }
 
-        /* الأيقونات العائمة السفلية (دائرية شبه شفافة وفاخرة - تظهر بعد تسجيل الدخول فقط) */
+        /* الأيقونات العائمة الفاخرة */
         .floating-action-container {
             position: fixed; bottom: 25px; left: 25px; display: flex; gap: 10px; z-index: 950; display: none;
         }
@@ -357,7 +363,7 @@
         }
         .floating-bubble-btn:hover { transform: scale(1.1); background: rgba(0, 132, 255, 0.3); border-color: var(--accent-color); box-shadow: 0 0 25px rgba(0, 132, 255, 0.7); }
 
-        /* إشعار الرسالة الجديد على يمين الشاشة (لمدة 1.5 ثانية) */
+        /* إشعار الرسالة الجديد على يمين الشاشة */
         #chat-popup-notification {
             position: fixed; top: 30px; right: 30px; transform: translateX(400px);
             background: rgba(11, 16, 23, 0.95); border: 2px solid var(--accent-color); border-radius: 12px;
@@ -381,14 +387,14 @@
         </div>
     </div>
 
-    <!-- الأيقونات العائمة الفاخرة والشبه شفافة في أسفل يسار الشاشة (تظهر بعد تسجيل الدخول فقط) -->
+    <!-- الأيقونات العائمة الفاخرة في أسفل يسار الشاشة -->
     <div class="floating-action-container" id="floatingActionContainer">
         <!-- أيقونة الدردشة العائمة -->
         <div class="floating-bubble-btn" onclick="openSection('chatSection')" title="غرفة دردشة الأعضاء">
             📩
         </div>
-        <!-- أيقونة التعميمات العائمة الجديدة -->
-        <div class="floating-bubble-btn" onclick="openCreateBroadcastModal()" title="إنشاء تعميم جديد" style="border-color: rgba(197, 160, 89, 0.5); color: var(--gold-color);">
+        <!-- أيقونة التعميمات العائمة تفتح مجلد التعميمات -->
+        <div class="floating-bubble-btn" onclick="openSection('circularsSection')" title="مجلد التعميمات الرسمية" style="border-color: rgba(197, 160, 89, 0.5); color: var(--gold-color);">
             📢
         </div>
         <!-- أيقونة سجل الـ Logs العائمة الخاصة برتبة ADMIN فقط -->
@@ -421,6 +427,7 @@
         <div class="sync-status" id="loading-status">✅ تم الاتصال بنظام التحكم والاستخبارات</div>
         <div class="error-msg" id="error-msg">⚠️ خطأ في بيانات الدخول!</div>
     </div>
+    
     <div id="main-system">
         <div class="header-system">
             <div>
@@ -432,13 +439,22 @@
                 </small>
             </div>
             <div class="header-actions">
-                <!-- تم حذف زر دردشة الأعضاء من هنا لكونها أصبحت أيقونة عائمة -->
                 <button class="btn-leader-nav" id="btn-leader-toggle" onclick="openSection('leaderSection')">👑 مركز الإدارة</button>
                 <button class="btn-logout" onclick="logout()">تسجيل الخروج</button>
             </div>
         </div>
         
         <div class="folder-grid-panel" id="folderHome">
+            <!-- بطاقة آخر تعميم على سطح المكتب مع خيار الإخفاء الخاص بالمستخدم -->
+            <div class="desktop-broadcast-card" id="desktopBroadcastCard" style="display:none;">
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px dashed rgba(197,160,89,0.3); padding-bottom:6px;">
+                    <div style="color:var(--gold-color); font-size:12px; font-weight:800;">📢 آخر تعميم فدرالي رسمي</div>
+                    <button class="btn-del-item" style="background:rgba(255,255,255,0.1); color:#fff; font-size:10px; padding:3px 8px;" onclick="hideDesktopBroadcastForMe()">إخفاء من عندي فقط ✕</button>
+                </div>
+                <div id="desktopBroadcastTitle" style="color:#fff; font-size:14px; font-weight:bold; margin-top:4px;">-</div>
+                <div id="desktopBroadcastText" style="color:#cbd5e1; font-size:12px; line-height:1.4; white-space:pre-wrap;">-</div>
+            </div>
+
             <div class="dashboard-header">
                 <div class="dashboard-logo">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Emblem">
@@ -450,6 +466,7 @@
             </div>
             <div class="folder-grid" style="grid-template-columns: repeat(3, 1fr);">
                 <div class="folder-card" onclick="openSection('reportsSection')"><span class="folder-card-icon">📋</span><b>REPORTS</b><small>التقارير الرسمية</small><span class="open-lbl">فتح المجلد ←</span></div>
+                <div class="folder-card" onclick="openSection('circularsSection')"><span class="folder-card-icon">📢</span><b>CIRCULARS</b><small>التعميمات الرسمية</small><span class="open-lbl">فتح المجلد ←</span></div>
                 <div class="folder-card" onclick="openSection('wantedSection')"><span class="folder-card-icon">🚨</span><b>WANTED</b><small>المطلوبون للعدالة</small><span class="open-lbl">فتح المجلد ←</span></div>
                 <div class="folder-card" onclick="openSection('recordsSection')"><span class="folder-card-icon">📁</span><b>RECORDS</b><small>السجلات الجنائية</small><span class="open-lbl">فتح المجلد ←</span></div>
                 <div class="folder-card" onclick="openSection('intelligenceSection')"><span class="folder-card-icon">🕵️‍♂️</span><b>INTELLIGENCE</b><small>ملفات العصابات</small><span class="open-lbl">فتح المجلد ←</span></div>
@@ -457,6 +474,7 @@
                 <div class="folder-card" onclick="openSection('usersSection')"><span class="folder-card-icon">👥</span><b>USERS</b><small>سجل الوكلاء</small><span class="open-lbl">فتح المجلد ←</span></div>
             </div>
         </div>
+
         <div class="workspace-panel" id="chatSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
@@ -470,10 +488,20 @@
             </div>
         </div>
 
-        <!-- لوحة سجلات الـ Logs الخاصة برتبة ADMIN فقط -->
+        <!-- لوحة سجلات الـ Logs وخيارات الحذف الشامل الخاصة برتبة ADMIN فقط -->
         <div class="workspace-panel" id="logsSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            <h3 style="color:var(--success-color); margin-bottom: 15px;">📜 سجل الـ Logs والعمليات الفدرالية (ADMIN ONLY)</h3>
+            <h3 style="color:var(--success-color); margin-bottom: 15px;">📜 سجل الـ Logs والعمليات والتحكم الإداري الشامل (ADMIN ONLY)</h3>
+            
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:10px; margin-bottom:20px;">
+                <button class="btn-login" style="background:var(--danger-color); margin:0; font-size:12px;" onclick="confirmBulkDelete('reports', 'جميع التقارير الرسمية')">🗑️ حذف جميع التقارير</button>
+                <button class="btn-login" style="background:var(--danger-color); margin:0; font-size:12px;" onclick="confirmBulkDelete('circulars', 'جميع التعميمات الرسمية')">🗑️ حذف جميع التعميمات</button>
+                <button class="btn-login" style="background:var(--danger-color); margin:0; font-size:12px;" onclick="confirmBulkDelete('gangs', 'جميع ملفات العصابات')">🗑️ حذف جميع العصابات</button>
+                <button class="btn-login" style="background:var(--danger-color); margin:0; font-size:12px;" onclick="confirmBulkDelete('records', 'جميع الهويات والسجلات')">🗑️ حذف جميع السجلات</button>
+                <button class="btn-login" style="background:var(--danger-color); margin:0; font-size:12px;" onclick="confirmBulkDelete('wanted', 'جميع المطلوبين للعدالة')">🗑️ حذف جميع المطلوبين</button>
+                <button class="btn-login" style="background:var(--danger-color); margin:0; font-size:12px;" onclick="confirmBulkDelete('users', 'جميع الأعضاء (ما عدا الأدمن)')">🗑️ حذف جميع الأشخاص (عدا الأدمن)</button>
+            </div>
+
             <div style="background: rgba(4, 6, 10, 0.9); border: 1px solid var(--success-color); border-radius: 8px; padding: 20px; font-family: monospace; font-size: 12px; color: #34d399; max-height: 400px; overflow-y: auto;" id="logsContainerBox">
                 - لا توجد سجلات حالياً -
             </div>
@@ -514,6 +542,7 @@
             </div>
             <div id="admin-users-cards-list"></div>
         </div>
+
         <div class="workspace-panel" id="reportsSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">📋 قسم التقارير والمذكرات الاستخباراتية</h3>
@@ -521,6 +550,16 @@
             <div class="input-group"><input type="text" id="reportSearch" class="search-box" placeholder="🔍 بحث شامل في التقارير..." oninput="renderReports()"></div>
             <div id="reports-list" class="folder-grid"></div>
         </div>
+
+        <!-- مجلد التعميمات الجديد (مشابه للتقارير) -->
+        <div class="workspace-panel" id="circularsSection">
+            <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
+            <h3 style="color:var(--gold-color); margin-bottom: 15px;">📢 قسم التعميمات الرسمية الفدرالية</h3>
+            <button class="btn-create-action" style="background: var(--gold-color); color:#000;" onclick="openCreateCircularModal()">➕ إنشاء تعميم جديد</button>
+            <div class="input-group"><input type="text" id="circularSearch" class="search-box" placeholder="🔍 بحث شامل في التعميمات..." oninput="renderCirculars()"></div>
+            <div id="circulars-list" class="folder-grid"></div>
+        </div>
+
         <div class="workspace-panel" id="wantedSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">🚨 قائمة المطلوبين للعدالة</h3>
@@ -528,6 +567,7 @@
             <div class="input-group"><input type="text" id="wantedSearch" class="search-box" placeholder="🔍 بحث شامل في المطلوبين..." oninput="renderWanted()"></div>
             <div id="wanted-list" class="folder-grid" style="grid-template-columns: repeat(3, 1fr);"></div>
         </div>
+
         <div class="workspace-panel" id="recordsSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">📂 السجل الجنائي للمواطنين</h3>
@@ -535,6 +575,7 @@
             <div class="input-group"><input type="text" id="recordsSearch" class="search-box" placeholder="🔍 بحث شامل في السجلات..." oninput="renderRecords()"></div>
             <div id="records-list" class="folder-grid" style="grid-template-columns: repeat(3, 1fr);"></div>
         </div>
+
         <div class="workspace-panel" id="intelligenceSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">GANG INTELLIGENCE & HIERARCHY 🕵️‍♂️</h3>
@@ -542,37 +583,32 @@
             <div class="input-group"><input type="text" id="gangsSearch" class="search-box" placeholder="🔍 بحث شامل في العصابات..." oninput="renderGangs()"></div>
             <div id="gangs-list" class="folder-grid" style="grid-template-columns: repeat(3, 1fr);"></div>
         </div>
+
         <div class="workspace-panel" id="casesSection" style="background: transparent; border: none; padding: 0;">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            
             <div class="tactical-cockpit-wrapper">
                 <div class="data-injection-header">
                     <div class="data-injection-box">Data Injection Port</div>
                     <div class="data-injection-arrow">▼</div>
                 </div>
-                
                 <div class="ipad-frame">
                     <div class="ipad-screen">
                         <div class="ipad-cyber-box">
                             <label class="ipad-label">أدخل الكود المشفر هنا...</label>
                             <input type="text" id="cipherText" class="ipad-input" placeholder="Xy7z!@#$...">
-                            
                             <label class="ipad-label" style="margin-top: 8px;">أدخل السطر.</label>
                             <button class="ipad-btn" onclick="decryptMsg()">أدخل</button>
                         </div>
-                        
                         <div class="ipad-cyber-box">
                             <label class="ipad-label">🔒 تشفير نص جديد</label>
                             <input type="text" id="plainText" class="ipad-input" placeholder="اكتب النص هنا للتشفير...">
                             <button class="ipad-btn" style="background: linear-gradient(135deg, #059669 0%, #047857 100%); border-color:#10b981;" onclick="encryptMsg()">تشفير وإخراج الكود</button>
                         </div>
-                        
                         <div class="ipad-cyber-box" style="margin-bottom:0; border-color:#ca8a04;">
                             <label class="ipad-label" style="color:#fde047;">📋 الكود المشفر الناتج</label>
                             <div class="crypto-result-value" id="cryptoResult" style="color:#38bdf8; font-size:12px; font-family:monospace; text-align:center; word-break:break-all;">- في انتظار الإدخال -</div>
                         </div>
                     </div>
-                    
                     <div class="ipad-controls">
                         <div class="ipad-hardware-btn btn-gold-hw"></div>
                         <div class="ipad-hardware-btn btn-silver-hw"></div>
@@ -581,6 +617,7 @@
                 </div>
             </div>
         </div>
+
         <div class="workspace-panel" id="usersSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color);">👥 قائمة الأعضاء المسجلين والـ Wings (مرتبة حسب الرتبة)</h3>
@@ -590,13 +627,6 @@
                 <tbody id="users-table-body"></tbody>
             </table>
         </div>
-    </div>
-    <div class="broadcast-card-floating" id="broadcastCard">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid rgba(217, 4, 41, 0.3); padding-bottom:6px;">
-            <div style="color:#f87171; font-size:12px; font-weight:800;">🚨 تعميم عاجل من القيادة</div>
-            <button class="btn-edit-item" id="btnEditBroadcast" style="display:none;" onclick="updateBroadcast()">تعديل</button>
-        </div>
-        <div id="broadcastTextDisplay" style="color:#f1f5f9; font-size:13px; line-height:1.5;">-</div>
     </div>
     
     <div class="custom-modal-overlay" id="customModal">
@@ -677,7 +707,7 @@
                 "Majed": { password: "1967", pin: "0000", id: "CIA-001", role: "ADMIN", wings: ["CID", "FIELD AGENT", "SOG - 71"] },
                 "Mutleq": { password: "123", pin: "1234", id: "CIA-102", role: "CIA Member", wings: ["CID"] }
             },
-            reports: [], wanted: [], records: [], gangs: [], chat: [], broadcast: "", logs: ["[SYSTEM READY]"]
+            reports: [], circulars: [], wanted: [], records: [], gangs: [], chat: [], logs: ["[SYSTEM READY]"], hiddenCirculars: {}
         };
         let currentUser = "";
         let isModalOpen = false;
@@ -982,7 +1012,6 @@
             currentUser = user;
             document.getElementById("login-screen").style.display = "none";
             document.getElementById("main-system").style.display = "block";
-            // إظهار أيقونات الإشعارات/الدردشة والتعميمات بعد تسجيل الدخول فقط
             document.getElementById("floatingActionContainer").style.display = "flex";
             
             document.getElementById("current-user-display").innerText = user;
@@ -990,7 +1019,6 @@
             const userData = globalDatabase.users[user] || { role: "CIA Member", wings: [] };
             const isManagerRole = userData.role === "ADMIN" || userData.role === "Director" || userData.role === "Deputy Director";
             
-            // إظهار أيقونة الـ Logs باللون الأخضر لرتبة ADMIN فقط
             const logsBtn = document.getElementById("floatingLogsBtn");
             if (logsBtn) {
                 logsBtn.style.display = (userData.role === "ADMIN") ? "flex" : "none";
@@ -1008,7 +1036,6 @@
             document.getElementById("current-wings-display").innerHTML = wingsHtml;
             
             document.getElementById("btn-leader-toggle").style.display = isManagerRole ? "inline-block" : "none";
-            document.getElementById("btnEditBroadcast").style.display = isManagerRole ? "inline-block" : "none";
             
             const clearChatBtn = document.getElementById("clearAllChatBtn");
             if (clearChatBtn) clearChatBtn.style.display = isManagerRole ? "inline-block" : "none";
@@ -1027,6 +1054,7 @@
             document.getElementById("logsSection").style.display = "none";
             document.getElementById("leaderSection").style.display = "none";
             document.getElementById("reportsSection").style.display = "none";
+            document.getElementById("circularsSection").style.display = "none";
             document.getElementById("wantedSection").style.display = "none";
             document.getElementById("recordsSection").style.display = "none";
             document.getElementById("intelligenceSection").style.display = "none";
@@ -1048,44 +1076,54 @@
             document.getElementById("logsSection").style.display = "none";
             document.getElementById("leaderSection").style.display = "none";
             document.getElementById("reportsSection").style.display = "none";
+            document.getElementById("circularsSection").style.display = "none";
             document.getElementById("wantedSection").style.display = "none";
             document.getElementById("recordsSection").style.display = "none";
             document.getElementById("intelligenceSection").style.display = "none";
             document.getElementById("casesSection").style.display = "none";
             document.getElementById("usersSection").style.display = "none";
+            renderDesktopBroadcast();
         }
         function renderAllData() {
-            renderReports(); renderWanted(); renderRecords(); renderGangs(); renderUsers(); renderChatMessages(); renderBroadcast();
-        }
-        function renderBroadcast() {
-            const card = document.getElementById("broadcastCard");
-            const text = (globalDatabase.broadcast || "").trim();
-            if (text === "" || text.includes("لا يوجد")) { card.style.display = "none"; }
-            else { document.getElementById("broadcastTextDisplay").innerText = text; card.style.display = "block"; }
-        }
-        function updateBroadcast() {
-            openCustomModal("📢 تعديل التعميم", `<div class="input-group"><label>نص التعميم</label><textarea id="editBroadcastInput" rows="4">${globalDatabase.broadcast || ''}</textarea></div>`, () => {
-                globalDatabase.broadcast = document.getElementById("editBroadcastInput").value.trim();
-                saveDatabase();
-                logSystemAction(`تم تعديل التعميم بواسطة الوكيل: ${currentUser}`);
-                showToast("✅ تم تحديث التعميم بنجاح");
-                closeModal();
-            });
+            renderReports(); renderCirculars(); renderWanted(); renderRecords(); renderGangs(); renderUsers(); renderChatMessages(); renderDesktopBroadcast();
         }
 
-        // إنشاء تعميم جديد بتصميم وثيقة التقرير الاستخباراتي
-        function openCreateBroadcastModal() {
-            openCustomModal("📢 إنشاء تعميم فدرالي رسمي", getReportDocHtml("", "", "", "", currentUser, new Date().toLocaleDateString(), new Date().toLocaleDateString('ar-EG', { weekday: 'long' }), false), () => {
-                const title = document.getElementById("popReportTitle").value.trim();
-                const details = document.getElementById("popReportDetails").value;
-                if (!title) return alert("أدخل عنوان التعميم!");
-                
-                globalDatabase.broadcast = `[${title}]\n${details}`;
-                saveDatabase();
-                logSystemAction(`تم إنشاء تعميم جديد بعنوان (${title}) بواسطة: ${currentUser}`);
-                closeModal();
-                showToast("✅ تم نشر التعميم الفدرالي بنجاح");
-            });
+        function renderDesktopBroadcast() {
+            const card = document.getElementById("desktopBroadcastCard");
+            if (!card) return;
+            const list = globalDatabase.circulars || [];
+            if (list.length === 0) {
+                card.style.display = "none";
+                return;
+            }
+            // آخر تعميم مضاف
+            const latest = list[list.length - 1];
+            
+            // تحقق إذا كان المستخدم الحالي قام بإخفاء هذا التعميم من عنده فقط
+            if (!globalDatabase.hiddenCirculars) globalDatabase.hiddenCirculars = {};
+            const userHiddenMap = globalDatabase.hiddenCirculars[currentUser] || {};
+            if (userHiddenMap[latest.id]) {
+                card.style.display = "none";
+                return;
+            }
+
+            document.getElementById("desktopBroadcastTitle").innerText = `[${latest.title}] — المرسل: ${latest.author}`;
+            document.getElementById("desktopBroadcastText").innerText = latest.details;
+            card.style.display = "flex";
+        }
+
+        function hideDesktopBroadcastForMe() {
+            const list = globalDatabase.circulars || [];
+            if (list.length === 0) return;
+            const latest = list[list.length - 1];
+            
+            loadDatabase();
+            if (!globalDatabase.hiddenCirculars) globalDatabase.hiddenCirculars = {};
+            if (!globalDatabase.hiddenCirculars[currentUser]) globalDatabase.hiddenCirculars[currentUser] = {};
+            globalDatabase.hiddenCirculars[currentUser][latest.id] = true;
+            saveDatabase();
+            document.getElementById("desktopBroadcastCard").style.display = "none";
+            showToast("✅ تم إخفاء التعميم من شاشتك بنجاح");
         }
 
         function renderLogsContainer() {
@@ -1101,6 +1139,40 @@
                 html += `<div>> ${l}</div>`;
             });
             box.innerHTML = html;
+        }
+
+        function confirmBulkDelete(type, targetName) {
+            if (confirm(`⚠️ تحذير فدرالي خطير:\nهل أنت متأكد تماماً من رغبتك في حذف (${targetName})؟\nلا يمكن التراجع عن هذا الإجراء!`)) {
+                loadDatabase();
+                if (type === 'reports') {
+                    globalDatabase.reports = [];
+                    logSystemAction(`تم حذف جميع التقارير بواسطة الأدمن: ${currentUser}`);
+                } else if (type === 'circulars') {
+                    globalDatabase.circulars = [];
+                    logSystemAction(`تم حذف جميع التعميمات بواسطة الأدمن: ${currentUser}`);
+                } else if (type === 'gangs') {
+                    globalDatabase.gangs = [];
+                    logSystemAction(`تم حذف جميع العصابات بواسطة الأدمن: ${currentUser}`);
+                } else if (type === 'records') {
+                    globalDatabase.records = [];
+                    logSystemAction(`تم حذف جميع السجلات بواسطة الأدمن: ${currentUser}`);
+                } else if (type === 'wanted') {
+                    globalDatabase.wanted = [];
+                    logSystemAction(`تم حذف جميع المطلوبين بواسطة الأدمن: ${currentUser}`);
+                } else if (type === 'users') {
+                    const newUsers = {};
+                    Object.keys(globalDatabase.users || {}).forEach(u => {
+                        if (globalDatabase.users[u].role === "ADMIN") {
+                            newUsers[u] = globalDatabase.users[u];
+                        }
+                    });
+                    globalDatabase.users = newUsers;
+                    logSystemAction(`تم حذف جميع المستخدمين (عدا الأدمن) بواسطة: ${currentUser}`);
+                }
+                saveDatabase();
+                renderLogsContainer();
+                showDeleteToast(`🗑️ تم تنفيذ الحذف الشامل لـ (${targetName}) بنجاح`);
+            }
         }
 
         function renderChatMessages() {
@@ -1237,6 +1309,7 @@
                 btn.innerHTML = "👁️ عرض الأدلة المرفقة";
             }
         }
+
         function getReportDocHtml(titleVal = "", detailsVal = "", imageUrlVal = "", videoUrlVal = "", authorVal = currentUser, dateVal = new Date().toLocaleDateString(), dayVal = new Date().toLocaleDateString('ar-EG', { weekday: 'long' }), isEdit = false) {
             return `
                 <div class="cia-classified-doc">
@@ -1280,6 +1353,32 @@
                 </div>
             `;
         }
+
+        // قالب التعميم الرسمي المخصص (اسم المرسل + التعميم بدون حشو + OFFICIAL FEDERAL CIRCULAR + هام)
+        function getCircularDocHtml(titleVal = "", detailsVal = "", authorVal = currentUser, dateVal = new Date().toLocaleDateString(), isEdit = false) {
+            return `
+                <div class="cia-classified-doc">
+                    <div class="cia-doc-header">
+                        <div style="font-size:18px; font-weight:900; letter-spacing:2px; color:#111;">CIA</div>
+                        <div style="text-align:center;">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" style="width:55px; height:55px; border-radius:50%; border:1px solid #000; display:inline-block;" alt="CIA">
+                            <div style="font-size:9px; color:#444; margin-top:6px; font-weight:900; letter-spacing:1px;">OFFICIAL FEDERAL CIRCULAR</div>
+                        </div>
+                        <div class="cia-top-secret-stamp">هـام</div>
+                    </div>
+                    <div class="cia-doc-meta">
+                        <div style="font-size:15px; margin-bottom:8px;"><b>العنوان:</b> ${isEdit ? `<input type="text" id="editCircularTitle" value="${titleVal}" style="margin-top:4px; font-weight:bold;">` : `<input type="text" id="popCircularTitle" placeholder="مثال: تعميم إداري عاجل" style="margin-top:4px; font-weight:bold;">`}</div>
+                        <div style="margin-bottom:4px;"><b>المرسل:</b> ${authorVal}</div>
+                        <div><b>التاريخ:</b> ${dateVal}</div>
+                    </div>
+                    <div class="cia-doc-body">
+                        <div style="margin-bottom:2px; font-weight:900; color:#b91c1c; font-size:11px;">[نص التعميم الفدرالي]:</div>
+                        ${isEdit ? `<textarea id="editCircularDetails" rows="6" style="width:100%; padding:6px; background:transparent; border:1px solid #999; font-weight:bold; white-space:pre-wrap;">${detailsVal}</textarea>` : `<textarea id="popCircularDetails" rows="6" placeholder="اكتب نص التعميم هنا..." style="width:100%; padding:6px; background:transparent; border:1px solid #999; font-weight:bold; white-space:pre-wrap;"></textarea>`}
+                    </div>
+                </div>
+            `;
+        }
+
         function openCreateReportModal() {
             openCustomModal("➕ إنشاء تقرير استخباراتي جديد", getReportDocHtml(), () => {
                 const title = document.getElementById("popReportTitle").value.trim();
@@ -1304,6 +1403,28 @@
                 showToast("✅ تم إنشاء التقرير بنجاح");
             });
         }
+
+        // إنشاء تعميم جديد عبر مجلد التعميمات
+        function openCreateCircularModal() {
+            openCustomModal("📢 إنشاء تعميم فدرالي رسمي جديد", getCircularDocHtml(), () => {
+                const title = document.getElementById("popCircularTitle").value.trim();
+                const details = document.getElementById("popCircularDetails").value;
+                if (!title) return alert("أدخل عنوان التعميم!");
+                
+                loadDatabase();
+                if (!globalDatabase.circulars) globalDatabase.circulars = [];
+                globalDatabase.circulars.push({ 
+                    id: Date.now(), title, details, 
+                    author: currentUser, 
+                    date: new Date().toLocaleDateString()
+                });
+                saveDatabase(); 
+                logSystemAction(`تم إنشاء تعميم جديد بعنوان (${title}) بواسطة: ${currentUser}`);
+                closeModal();
+                showToast("✅ تم نشر التعميم بنجاح");
+            });
+        }
+
         function viewReportFolder(id) {
             loadDatabase();
             const r = (globalDatabase.reports || []).find(item => item.id === id);
@@ -1367,6 +1488,41 @@
             `;
             openCustomModal(`📋 وثيقة رسمية - ${r.title}`, contentHtml, null);
         }
+
+        // عرض تعميم من مجلد التعميمات
+        function viewCircularFolder(id) {
+            loadDatabase();
+            const c = (globalDatabase.circulars || []).find(item => item.id === id);
+            if (!c) return;
+            
+            const contentHtml = `
+                <div style="display:flex; justify-content:flex-end; gap:5px; margin-bottom:10px;">
+                    <button class="btn-edit-item" onclick="editCircular(${c.id})">تعديل ✏️</button>
+                    <button class="btn-del-item" onclick="deleteCircular(${c.id})">حذف 🗑️</button>
+                </div>
+                <div class="cia-classified-doc">
+                    <div class="cia-doc-header">
+                        <div style="font-size:18px; font-weight:900; letter-spacing:2px; color:#111;">CIA</div>
+                        <div style="text-align:center;">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" style="width:55px; height:55px; border-radius:50%; border:1px solid #000; display:inline-block;" alt="CIA">
+                            <div style="font-size:9px; color:#444; margin-top:6px; font-weight:900; letter-spacing:1px;">OFFICIAL FEDERAL CIRCULAR</div>
+                        </div>
+                        <div class="cia-top-secret-stamp">هـام</div>
+                    </div>
+                    <div class="cia-doc-meta">
+                        <div style="font-size:15px; margin-bottom:8px;"><b>العنوان:</b> ${c.title}</div>
+                        <div style="margin-bottom:4px;"><b>المرسل:</b> ${c.author}</div>
+                        <div><b>التاريخ:</b> ${c.date}</div>
+                    </div>
+                    <div class="cia-doc-body">
+                        <div style="margin-bottom:2px; font-weight:900; color:#b91c1c; font-size:11px;">[نص التعميم الفدرالي]:</div>
+                        <div style="font-weight:bold; white-space:pre-wrap;">${c.details}</div>
+                    </div>
+                </div>
+            `;
+            openCustomModal(`📢 تعميم رسمي - ${c.title}`, contentHtml, null);
+        }
+
         function editReport(id) {
             const r = (globalDatabase.reports || []).find(item => item.id === id);
             if (!r) return;
@@ -1381,6 +1537,20 @@
                 viewReportFolder(r.id);
             });
         }
+
+        function editCircular(id) {
+            const c = (globalDatabase.circulars || []).find(item => item.id === id);
+            if (!c) return;
+            openCustomModal("✏️ تعديل التعميم الفدرالي", getCircularDocHtml(c.title, c.details, c.author, c.date, true), () => {
+                c.title = document.getElementById("editCircularTitle").value.trim();
+                c.details = document.getElementById("editCircularDetails").value;
+                saveDatabase(); 
+                closeModal();
+                showToast("✅ تم تحديث التعميم بنجاح");
+                viewCircularFolder(c.id);
+            });
+        }
+
         function renderReports() {
             const list = document.getElementById("reports-list");
             if (!list) return;
@@ -1398,12 +1568,39 @@
                     </div>`;
             });
         }
+
+        function renderCirculars() {
+            const list = document.getElementById("circulars-list");
+            if (!list) return;
+            const query = (document.getElementById("circularSearch")?.value || "").toLowerCase();
+            list.innerHTML = "";
+            (globalDatabase.circulars || []).filter(c => c.title.toLowerCase().includes(query) || (c.details && c.details.toLowerCase().includes(query)) || (c.author && c.author.toLowerCase().includes(query))).forEach(c => {
+                list.innerHTML += `
+                    <div class="item-folder-card" onclick="viewCircularFolder(${c.id})">
+                        <div>
+                            <span class="item-folder-icon">📢</span>
+                            <span class="item-folder-title">${c.title}</span>
+                            <span class="item-folder-sub">المرسل: ${c.author}</span>
+                        </div>
+                        <span class="item-folder-btn" style="color:var(--gold-color);">فتح التعميم ←</span>
+                    </div>`;
+            });
+        }
+
         function deleteReport(id) {
             globalDatabase.reports = globalDatabase.reports.filter(r => r.id !== id); 
             saveDatabase(); 
             closeModal(); 
             showDeleteToast("🗑️ تم حذف التقرير بنجاح");
         }
+
+        function deleteCircular(id) {
+            globalDatabase.circulars = globalDatabase.circulars.filter(c => c.id !== id); 
+            saveDatabase(); 
+            closeModal(); 
+            showDeleteToast("🗑️ تم حذف التعميم بنجاح");
+        }
+
         function openCreateWantedModal() {
             openCustomModal("➕ إضافة مطلوب جديد", `
                 <div class="input-group"><label>اسم المطلوب</label><input type="text" id="popWantedName"></div>
@@ -1722,7 +1919,6 @@
             });
         }
         
-        // حساب أولوية الرتبة للترتيب في الجدول: مدير (1) -> مساعد (2) -> عضو (3)
         function getRolePriority(role) {
             if (role === "ADMIN" || role === "Director") return 1;
             if (role === "Deputy Director") return 2;
@@ -1739,10 +1935,8 @@
                 return { username, ...globalDatabase.users[username] };
             });
 
-            // إخفاء أي شخص يحمل رتبة ADMIN من الجدول تماماً
             usersArray = usersArray.filter(u => u.role !== "ADMIN");
 
-            // ترتيب الوكلاء: مدير (Director) أولاً، ثم المساعد (Deputy Director)، ثم الأعضاء (CIA Member)
             usersArray.sort((a, b) => {
                 return getRolePriority(a.role) - getRolePriority(b.role);
             });
