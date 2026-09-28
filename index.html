@@ -73,13 +73,24 @@
         .badge-deputy { background: #b45309; color: #fff; }
         .badge-wing { background: rgba(16, 185, 129, 0.2); border: 1px solid var(--success-color); color: #34d399; font-size: 9px; padding: 2px 6px; border-radius: 3px; }
         
-        .folder-grid-panel { background: rgba(8, 13, 20, 0.8); border: 1px solid rgba(197, 160, 89, 0.3); padding: 30px; border-radius: 12px; margin-bottom: 20px; position: relative; }
+        .folder-grid-wrapper { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 20px; }
+        @media (max-width: 1024px) { .folder-grid-wrapper { flex-direction: column-reverse; } }
+
+        /* بطاقة آخر تعميم على يسار المجلدات حصرياً (مربع أحمر خافت وشبه شفاف) */
+        .desktop-broadcast-card {
+            width: 280px; min-width: 280px; background: rgba(217, 4, 41, 0.12); backdrop-filter: blur(12px);
+            border: 1px solid rgba(217, 4, 41, 0.4); border-radius: 10px; padding: 16px;
+            box-shadow: 0 0 25px rgba(217, 4, 41, 0.2); display: flex; flex-direction: column; gap: 6px; position: relative; z-index: 5;
+        }
+        @media (max-width: 1024px) { .desktop-broadcast-card { width: 100%; } }
+
+        .folder-grid-panel { flex-grow: 1; background: rgba(8, 13, 20, 0.8); border: 1px solid rgba(197, 160, 89, 0.3); padding: 30px; border-radius: 12px; }
         .dashboard-header { display: flex; align-items: center; gap: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); margin-bottom: 25px; }
         .dashboard-logo { width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--gold-color); background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; }
         .dashboard-logo img { width: 58px; height: 58px; border-radius: 50%; }
         .grid-title { color: var(--gold-color); font-size: 20px; font-weight: 800; }
         
-        .folder-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 10px; }
+        .folder-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 10px; }
         @media (max-width: 900px) { .folder-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 500px) { .folder-grid { grid-template-columns: 1fr; } }
         
@@ -321,17 +332,6 @@
         .evidence-content-wrapper { display: none; margin-top: 12px; padding-top: 10px; border-top: 1px dashed #bbb; }
         .evidence-item-card { background: #fff; border: 1px solid #ccc; border-radius: 6px; padding: 8px; margin-bottom: 10px; }
         
-        /* بطاقة آخر تعميم على يسار وسط سطح المكتب (مربع أحمر خافت وشبه شفاف) */
-        .desktop-broadcast-card {
-            position: absolute; left: 30px; top: 50%; transform: translateY(-50%);
-            width: 290px; background: rgba(217, 4, 41, 0.12); backdrop-filter: blur(12px);
-            border: 1px solid rgba(217, 4, 41, 0.4); border-radius: 10px; padding: 16px; z-index: 25;
-            box-shadow: 0 0 25px rgba(217, 4, 41, 0.2); display: flex; flex-direction: column; gap: 6px;
-        }
-        @media (max-width: 1024px) {
-            .desktop-broadcast-card { position: relative; left: 0; top: 0; transform: none; width: 100%; margin-bottom: 20px; }
-        }
-
         .chat-box-container { height: 380px; overflow-y: auto; background: rgba(4, 6, 10, 0.8); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 12px; }
         .chat-msg { max-width: 80%; padding: 10px 14px; border-radius: 8px; font-size: 12px; line-height: 1.5; position: relative; }
         .chat-msg-me { align-self: flex-start; background: rgba(0, 132, 255, 0.2); border: 1px solid var(--accent-color); color: #fff; }
@@ -396,8 +396,8 @@
         <div class="floating-bubble-btn" onclick="openSection('chatSection')" title="غرفة دردشة الأعضاء">
             📩
         </div>
-        <!-- أيقونة التعميمات العائمة لإنشاء وعرض التعميمات مباشرة -->
-        <div class="floating-bubble-btn" onclick="openCreateCircularModal()" title="إنشاء تعميم فدرالي رسمي" style="border-color: rgba(197, 160, 89, 0.5); color: var(--gold-color);">
+        <!-- أيقونة التعميمات العائمة تفتح قائمة التعميمات والبحث والإنشاء -->
+        <div class="floating-bubble-btn" onclick="openSection('circularsSection')" title="التعميمات الرسمية" style="border-color: rgba(197, 160, 89, 0.5); color: var(--gold-color);">
             📢
         </div>
         <!-- أيقونة سجل الـ Logs العائمة الخاصة برتبة ADMIN فقط -->
@@ -447,8 +447,8 @@
             </div>
         </div>
         
-        <div class="folder-grid-panel" id="folderHome">
-            <!-- بطاقة آخر تعميم على يسار وسط سطح المكتب (مربع أحمر خافت وشبه شفاف) -->
+        <div class="folder-grid-wrapper" id="folderHome">
+            <!-- بطاقة آخر تعميم على يسار المجلدات حصرياً (مربع أحمر خافت وشبه شفاف) -->
             <div class="desktop-broadcast-card" id="desktopBroadcastCard" style="display:none;">
                 <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px dashed rgba(217,4,41,0.4); padding-bottom:6px;">
                     <div style="color:#fca5a5; font-size:11px; font-weight:800;">📢 آخر تعميم رسمي</div>
@@ -458,22 +458,24 @@
                 <div id="desktopBroadcastText" style="color:#e2e8f0; font-size:11px; line-height:1.4; white-space:pre-wrap;">-</div>
             </div>
 
-            <div class="dashboard-header">
-                <div class="dashboard-logo">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Emblem">
+            <div class="folder-grid-panel">
+                <div class="dashboard-header">
+                    <div class="dashboard-logo">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Emblem">
+                    </div>
+                    <div>
+                        <div class="grid-title">سطح مكتب نظام CIA الفدرالي</div>
+                        <small style="color:var(--text-muted)">اختر المجلد الاستخباراتي للوصول إلى قاعدة البيانات</small>
+                    </div>
                 </div>
-                <div>
-                    <div class="grid-title">سطح مكتب نظام CIA الفدرالي</div>
-                    <small style="color:var(--text-muted)">اختر المجلد الاستخباراتي للوصول إلى قاعدة البيانات</small>
+                <div class="folder-grid">
+                    <div class="folder-card" onclick="openSection('reportsSection')"><span class="folder-card-icon">📋</span><b>REPORTS</b><small>التقارير الرسمية</small><span class="open-lbl">فتح المجلد ←</span></div>
+                    <div class="folder-card" onclick="openSection('recordsSection')"><span class="folder-card-icon">📁</span><b>سجلات المواطنين</b><small>سجلات المواطنين الرسمية</small><span class="open-lbl">فتح المجلد ←</span></div>
+                    <div class="folder-card" onclick="openSection('wantedSection')"><span class="folder-card-icon">🚨</span><b>WANTED</b><small>المطلوبون للعدالة</small><span class="open-lbl">فتح المجلد ←</span></div>
+                    <div class="folder-card" onclick="openSection('intelligenceSection')"><span class="folder-card-icon">🕵️‍♂️</span><b>INTELLIGENCE</b><small>ملفات العصابات</small><span class="open-lbl">فتح المجلد ←</span></div>
+                    <div class="folder-card" onclick="openSection('casesSection')"><span class="folder-card-icon">🔓</span><b>DECRYPTION</b><small>التشفير والأمان</small><span class="open-lbl">فتح المجلد ←</span></div>
+                    <div class="folder-card" onclick="openSection('usersSection')"><span class="folder-card-icon">👥</span><b>USERS</b><small>سجل الوكلاء</small><span class="open-lbl">فتح المجلد ←</span></div>
                 </div>
-            </div>
-            <div class="folder-grid" style="grid-template-columns: repeat(3, 1fr);">
-                <div class="folder-card" onclick="openSection('reportsSection')"><span class="folder-card-icon">📋</span><b>REPORTS</b><small>التقارير الرسمية</small><span class="open-lbl">فتح المجلد ←</span></div>
-                <div class="folder-card" onclick="openSection('recordsSection')"><span class="folder-card-icon">📁</span><b>سجلات المواطنين</b><small>سجلات المواطنين الرسمية</small><span class="open-lbl">فتح المجلد ←</span></div>
-                <div class="folder-card" onclick="openSection('wantedSection')"><span class="folder-card-icon">🚨</span><b>WANTED</b><small>المطلوبون للعدالة</small><span class="open-lbl">فتح المجلد ←</span></div>
-                <div class="folder-card" onclick="openSection('intelligenceSection')"><span class="folder-card-icon">🕵️‍♂️</span><b>INTELLIGENCE</b><small>ملفات العصابات</small><span class="open-lbl">فتح المجلد ←</span></div>
-                <div class="folder-card" onclick="openSection('casesSection')"><span class="folder-card-icon">🔓</span><b>DECRYPTION</b><small>التشفير والأمان</small><span class="open-lbl">فتح المجلد ←</span></div>
-                <div class="folder-card" onclick="openSection('usersSection')"><span class="folder-card-icon">👥</span><b>USERS</b><small>سجل الوكلاء</small><span class="open-lbl">فتح المجلد ←</span></div>
             </div>
         </div>
 
@@ -488,6 +490,15 @@
                 <input type="text" id="chatInputText" placeholder="اكتب رسالتك..." style="flex-grow:1; margin:0;" onkeypress="if(event.key === 'Enter') sendChatMessage()">
                 <button class="btn-login" style="width:auto; margin:0; padding:0 25px; background:var(--accent-color);" onclick="sendChatMessage()">إرسال 🚀</button>
             </div>
+        </div>
+
+        <!-- قسم قائمة التعميمات، البحث، وزر الإنشاء -->
+        <div class="workspace-panel" id="circularsSection">
+            <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
+            <h3 style="color:var(--gold-color); margin-bottom: 15px;">📢 لوحة التعميمات الرسمية الفدرالية</h3>
+            <button class="btn-create-action" style="background: var(--gold-color); color:#000;" onclick="openCreateCircularModal()">➕ إنشاء تعميم جديد</button>
+            <div class="input-group"><input type="text" id="circularSearch" class="search-box" placeholder="🔍 بحث في التعميمات برقم أو عنوان أو مرسل..." oninput="renderCirculars()"></div>
+            <div id="circulars-list" class="folder-grid"></div>
         </div>
 
         <!-- لوحة سجلات الـ Logs وخيارات الحذف الشامل الخاصة برتبة ADMIN فقط -->
@@ -553,7 +564,6 @@
             <div id="reports-list" class="folder-grid"></div>
         </div>
 
-        <!-- قسم سجلات المواطنين -->
         <div class="workspace-panel" id="recordsSection">
             <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
             <h3 style="color:var(--gold-color); margin-bottom: 15px;">📂 سجلات المواطنين الرسمية</h3>
@@ -1045,6 +1055,7 @@
         function openSection(sectionId) {
             document.getElementById("folderHome").style.display = "none";
             document.getElementById("chatSection").style.display = "none";
+            document.getElementById("circularsSection").style.display = "none";
             document.getElementById("logsSection").style.display = "none";
             document.getElementById("leaderSection").style.display = "none";
             document.getElementById("reportsSection").style.display = "none";
@@ -1060,12 +1071,15 @@
                 renderAdminUsersCards();
             } else if (sectionId === 'logsSection') {
                 renderLogsContainer();
+            } else if (sectionId === 'circularsSection') {
+                renderCirculars();
             }
         }
         function showHome() {
             loadDatabase();
-            document.getElementById("folderHome").style.display = "block";
+            document.getElementById("folderHome").style.display = "flex";
             document.getElementById("chatSection").style.display = "none";
+            document.getElementById("circularsSection").style.display = "none";
             document.getElementById("logsSection").style.display = "none";
             document.getElementById("leaderSection").style.display = "none";
             document.getElementById("reportsSection").style.display = "none";
@@ -1077,7 +1091,7 @@
             renderDesktopBroadcast();
         }
         function renderAllData() {
-            renderReports(); renderWanted(); renderRecords(); renderGangs(); renderUsers(); renderChatMessages(); renderDesktopBroadcast();
+            renderReports(); renderCirculars(); renderWanted(); renderRecords(); renderGangs(); renderUsers(); renderChatMessages(); renderDesktopBroadcast();
         }
 
         function renderDesktopBroadcast() {
@@ -1330,7 +1344,7 @@
             `;
         }
 
-        // وثيقة التعميم الفدرالي بتصميم نظيف: اسم المرسل، نص التعميم بدقة، OFFICIAL FEDERAL CIRCULAR، ختم هـام
+        // تصميم التعميم الرسمي الموحد لعرض والتعديل والإنشاء
         function getCircularDocHtml(titleVal = "", detailsVal = "", authorVal = currentUser, dateVal = new Date().toLocaleDateString(), isEdit = false) {
             return `
                 <div class="cia-classified-doc">
@@ -1396,6 +1410,7 @@
                 saveDatabase(); 
                 logSystemAction(`تم إنشاء تعميم جديد بعنوان (${title}) بواسطة: ${currentUser}`);
                 closeModal();
+                renderCirculars();
                 showToast("✅ تم نشر التعميم بنجاح");
             });
         }
@@ -1464,6 +1479,39 @@
             openCustomModal(`📋 وثيقة رسمية - ${r.title}`, contentHtml, null);
         }
 
+        function viewCircularFolder(id) {
+            loadDatabase();
+            const c = (globalDatabase.circulars || []).find(item => item.id === id);
+            if (!c) return;
+            
+            const contentHtml = `
+                <div style="display:flex; justify-content:flex-end; gap:5px; margin-bottom:10px;">
+                    <button class="btn-edit-item" onclick="editCircular(${c.id})">تعديل ✏️</button>
+                    <button class="btn-del-item" onclick="deleteCircular(${c.id})">حذف 🗑️</button>
+                </div>
+                ${getCircularDocHtml(c.title, c.details, c.author, c.date, false)}
+            `;
+            // استبدال حقول النص بـ divs للقراءة داخل المودال
+            const docContainer = document.createElement('div');
+            docContainer.innerHTML = contentHtml;
+            const textarea = docContainer.querySelector('textarea');
+            if (textarea) {
+                const divBody = document.createElement('div');
+                divBody.style.cssText = "font-weight:bold; white-space:pre-wrap;";
+                divBody.innerText = c.details;
+                textarea.parentNode.replaceChild(divBody, textarea);
+            }
+            const titleInput = docContainer.querySelector('input');
+            if (titleInput) {
+                const titleSpan = document.createElement('span');
+                titleSpan.style.cssText = "font-weight:bold; font-size:15px;";
+                titleSpan.innerText = c.title;
+                titleInput.parentNode.replaceChild(titleSpan, titleInput);
+            }
+
+            openCustomModal(`📢 تعميم رسمي - ${c.title}`, docContainer.innerHTML, null);
+        }
+
         function editReport(id) {
             const r = (globalDatabase.reports || []).find(item => item.id === id);
             if (!r) return;
@@ -1476,6 +1524,20 @@
                 closeModal();
                 showToast("✅ تم تحديث التقرير بنجاح");
                 viewReportFolder(r.id);
+            });
+        }
+
+        function editCircular(id) {
+            const c = (globalDatabase.circulars || []).find(item => item.id === id);
+            if (!c) return;
+            openCustomModal("✏️ تعديل التعميم الفدرالي", getCircularDocHtml(c.title, c.details, c.author, c.date, true), () => {
+                c.title = document.getElementById("editCircularTitle").value.trim();
+                c.details = document.getElementById("editCircularDetails").value;
+                saveDatabase(); 
+                closeModal();
+                renderCirculars();
+                showToast("✅ تم تحديث التعميم بنجاح");
+                viewCircularFolder(c.id);
             });
         }
 
@@ -1497,11 +1559,37 @@
             });
         }
 
+        function renderCirculars() {
+            const list = document.getElementById("circulars-list");
+            if (!list) return;
+            const query = (document.getElementById("circularSearch")?.value || "").toLowerCase();
+            list.innerHTML = "";
+            (globalDatabase.circulars || []).filter(c => c.title.toLowerCase().includes(query) || (c.details && c.details.toLowerCase().includes(query)) || (c.author && c.author.toLowerCase().includes(query))).forEach(c => {
+                list.innerHTML += `
+                    <div class="item-folder-card" onclick="viewCircularFolder(${c.id})">
+                        <div>
+                            <span class="item-folder-icon">📢</span>
+                            <span class="item-folder-title">${c.title}</span>
+                            <span class="item-folder-sub">المرسل: ${c.author}</span>
+                        </div>
+                        <span class="item-folder-btn" style="color:var(--gold-color);">فتح التعميم ←</span>
+                    </div>`;
+            });
+        }
+
         function deleteReport(id) {
             globalDatabase.reports = globalDatabase.reports.filter(r => r.id !== id); 
             saveDatabase(); 
             closeModal(); 
             showDeleteToast("🗑️ تم حذف التقرير بنجاح");
+        }
+
+        function deleteCircular(id) {
+            globalDatabase.circulars = globalDatabase.circulars.filter(c => c.id !== id); 
+            saveDatabase(); 
+            closeModal();
+            renderCirculars();
+            showDeleteToast("🗑️ تم حذف التعميم بنجاح");
         }
 
         function openCreateWantedModal() {
@@ -1580,7 +1668,6 @@
             showDeleteToast("🗑️ تم حذف المطلوب بنجاح");
         }
 
-        // إضافة مواطن للسجلات مع رقم خاص ورابط صورة
         function openCreateRecordModal() {
             const generatedFileNo = 'CIT-' + Math.floor(100000 + Math.random() * 900000);
             openCustomModal("🪪 إضافة مواطن للسجلات", `
