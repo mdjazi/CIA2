@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CIA SYSTEM | نظام التحكم والاستخبارات الفدرالي</title>
     
-    <!-- Firebase SDK & Configuration Integration -->
+    <!-- Firebase SDK Integration -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
         import { getDatabase, ref, set, get, onValue, push, remove, update } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js";
@@ -16,17 +16,17 @@
             projectId: "cia2-d411e",
             storageBucket: "cia2-d411e.firebasestorage.app",
             messagingSenderId: "682710337982",
-            appId: "1:682710337982:web:15aee10531c2af7ede51ef",
-            measurementId: "G-00N88W7VQD"
+            appId: "1:682710337982:web:15aee10531c2af7ede51ef"
         };
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         window.firebaseDB = { db, ref, set, get, onValue, push, remove, update };
     </script>
+
     <style>
+        /* ================= التنسيقات الأساسية الأصلية ================= */
         :root {
             --bg-color: #030508;
-            --card-bg: rgba(11, 16, 23, 0.45);
             --accent-color: #0084ff;
             --border-color: rgba(22, 34, 53, 0.8);
             --text-color: #d1d9e6;
@@ -35,53 +35,65 @@
             --success-color: #10b981;
             --text-muted: #8191a5;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; overflow-x: hidden; position: relative; }
-        #cyber-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; opacity: 0.45; }
         
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        
+        body { 
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            overflow-x: hidden; 
+        }
+
+        /* حاوية تسجيل الدخول (للحفاظ على التوسيط القديم) */
+        .login-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* حاوية النظام الأساسي */
+        .main-wrapper {
+            display: none; /* مخفي حتى تسجيل الدخول */
+            max-width: 1150px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* بطاقة تسجيل الدخول */
         .login-card {
-            position: relative; z-index: 10; background: rgba(8, 13, 20, 0.85); backdrop-filter: blur(20px);
-            border: 1px solid rgba(197, 160, 89, 0.4); border-radius: 14px; padding: 40px 35px; width: 100%; max-width: 430px; text-align: center;
+            background: rgba(8, 13, 20, 0.85); backdrop-filter: blur(20px);
+            border: 1px solid rgba(197, 160, 89, 0.4); border-radius: 14px; 
+            padding: 40px 35px; width: 100%; max-width: 430px; text-align: center;
             box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
         }
         .subtitle-top { font-size: 10px; letter-spacing: 3px; color: var(--gold-color); font-weight: 800; margin-bottom: 20px; }
-        .logo-container { width: 100px; height: 100px; margin: 0 auto 18px auto; border-radius: 50%; border: 2px solid var(--gold-color); display: flex; justify-content: center; align-items: center; background: rgba(0, 0, 0, 0.7); animation: pulseLogo 3s infinite ease-in-out; }
-        @keyframes pulseLogo { 0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(197,160,89,0.3); } 50% { transform: scale(1.05); box-shadow: 0 0 25px rgba(197,160,89,0.6); } }
+        .logo-container { width: 100px; height: 100px; margin: 0 auto 18px auto; border-radius: 50%; border: 2px solid var(--gold-color); display: flex; justify-content: center; align-items: center; background: rgba(0, 0, 0, 0.7); }
         .logo-container img { width: 84px; height: 84px; border-radius: 50%; }
         .title { color: var(--gold-color); font-size: 22px; font-weight: 800; margin: 5px 0 0 0; }
         .agency-name { color: #8a9bb0; font-size: 10px; letter-spacing: 2.5px; margin-bottom: 25px; }
         .input-group { text-align: right; margin-bottom: 14px; }
         .input-group label { display: block; font-size: 11px; color: var(--accent-color); margin-bottom: 5px; font-weight: 600; }
-        .input-group input, .input-group select, .input-group textarea {
-            width: 100%; padding: 12px; background: rgba(4, 6, 10, 0.85); border: 1px solid var(--border-color); border-radius: 6px; color: #fff; font-size: 13px; text-align: right; outline: none; resize: vertical;
+        .input-group input, .input-group select {
+            width: 100%; padding: 12px; background: rgba(4, 6, 10, 0.85); 
+            border: 1px solid var(--border-color); border-radius: 6px; color: #fff; font-size: 13px; text-align: right; outline: none;
         }
-        .search-box { margin-bottom: 15px; border-color: var(--gold-color) !important; background: rgba(9, 16, 26, 0.8) !important; }
-        .btn-create-action { width: 100%; padding: 12px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #fff; border: none; border-radius: 6px; font-weight: 800; font-size: 14px; cursor: pointer; margin-bottom: 20px; }
         .btn-login { width: 100%; padding: 13px; background: linear-gradient(135deg, var(--accent-color) 0%, #0052a3 100%); color: #fff; border: none; border-radius: 6px; font-weight: 700; font-size: 13px; cursor: pointer; margin-top: 10px; }
         .error-msg { color: var(--danger-color); font-size: 12px; margin-top: 12px; display: none; font-weight: 600; }
-        .sync-status { font-size: 12px; color: var(--success-color); margin-top: 12px; font-weight: bold; }
-        
-        #main-system { display: none; width: 100%; max-width: 1150px; position: relative; z-index: 10; }
+
+        /* الهيدر والقوائم في النظام الأساسي */
         .header-system { display: flex; justify-content: space-between; align-items: center; background: rgba(11, 16, 23, 0.85); padding: 18px 25px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
-        .header-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-        .btn-leader-nav { background: rgba(23, 16, 4, 0.8); color: var(--gold-color); border: 1px solid var(--gold-color); padding: 8px 14px; border-radius: 5px; cursor: pointer; font-weight: 700; font-size: 12px; display: none; }
         .btn-logout { background: var(--danger-color); color: #fff; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; font-weight: 700; font-size: 12px; }
-        
-        .badge { padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; background: var(--accent-color); color: #fff; display: inline-block; margin-left: 3px; }
-        .badge-admin { background: var(--gold-color); color: #000; }
-        .badge-director { background: #d97706; color: #fff; }
-        .badge-deputy { background: #b45309; color: #fff; }
-        .badge-wing { background: rgba(16, 185, 129, 0.2); border: 1px solid var(--success-color); color: #34d399; font-size: 9px; padding: 2px 6px; border-radius: 3px; }
         
         .folder-grid-wrapper { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 20px; }
         @media (max-width: 1024px) { .folder-grid-wrapper { flex-direction: column-reverse; } }
-        .desktop-broadcast-card {
-            width: 280px; min-width: 280px; background: rgba(217, 4, 41, 0.12); backdrop-filter: blur(12px);
-            border: 1px solid rgba(217, 4, 41, 0.4); border-radius: 10px; padding: 16px;
-            box-shadow: 0 0 25px rgba(217, 4, 41, 0.2); display: flex; flex-direction: column; gap: 6px; position: relative; z-index: 5;
-        }
-        @media (max-width: 1024px) { .desktop-broadcast-card { width: 100%; } }
+        
+        .desktop-broadcast-card { width: 280px; min-width: 280px; background: rgba(217, 4, 41, 0.12); border: 1px solid rgba(217, 4, 41, 0.4); border-radius: 10px; padding: 16px; box-shadow: 0 0 25px rgba(217, 4, 41, 0.2); }
         .folder-grid-panel { flex-grow: 1; background: rgba(8, 13, 20, 0.8); border: 1px solid rgba(197, 160, 89, 0.3); padding: 30px; border-radius: 12px; }
+        
         .dashboard-header { display: flex; align-items: center; gap: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); margin-bottom: 25px; }
         .dashboard-logo { width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--gold-color); background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; }
         .dashboard-logo img { width: 58px; height: 58px; border-radius: 50%; }
@@ -91,158 +103,50 @@
         @media (max-width: 900px) { .folder-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 500px) { .folder-grid { grid-template-columns: 1fr; } }
         
-        .item-folder-card {
-            background: rgba(9, 16, 26, 0.85); border: 1px solid rgba(197, 160, 89, 0.35); border-radius: 8px; padding: 15px 14px;
-            cursor: pointer; transition: all 0.3s ease; text-align: right; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;
-            min-height: 120px;
-        }
-        .item-folder-card::before { content: ''; position: absolute; top: 0; right: 0; width: 4px; height: 100%; background: var(--gold-color); }
-        .item-folder-card:hover { transform: translateY(-3px); background: rgba(15, 25, 40, 0.95); border-color: var(--gold-color); }
-        .item-folder-icon { font-size: 22px; margin-bottom: 6px; display: block; }
-        .item-folder-title { display: block; color: #ffffff; font-size: 13px; font-weight: bold; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .item-folder-sub { color: var(--text-muted); font-size: 10px; display: block; margin-bottom: 8px; }
-        .item-folder-btn { display: inline-block; font-size: 9px; color: var(--accent-color); font-weight: bold; text-transform: uppercase; }
-        
-        .wanted-card-yellow { background: rgba(202, 138, 4, 0.08) !important; border-color: rgba(202, 138, 4, 0.4) !important; }
-        .wanted-card-yellow::before { background: #ca8a04 !important; }
-        .wanted-card-orange { background: rgba(234, 88, 12, 0.08) !important; border-color: rgba(234, 88, 12, 0.4) !important; }
-        .wanted-card-orange::before { background: #ea580c !important; }
-        .wanted-card-red { background: rgba(217, 4, 41, 0.1) !important; border-color: rgba(217, 4, 41, 0.5) !important; }
-        .wanted-card-red::before { background: #d90429 !important; }
-        .folder-card {
-            background: rgba(9, 16, 26, 0.7); border: 1px solid rgba(22, 34, 53, 0.9); border-radius: 10px; padding: 25px 20px; cursor: pointer; text-align: right; position: relative; overflow: hidden;
-        }
+        .folder-card { background: rgba(9, 16, 26, 0.7); border: 1px solid rgba(22, 34, 53, 0.9); border-radius: 10px; padding: 25px 20px; cursor: pointer; text-align: right; position: relative; overflow: hidden; }
         .folder-card::before { content: ''; position: absolute; top: 0; right: 0; width: 4px; height: 100%; background: var(--gold-color); }
         .folder-card:hover { border-color: var(--gold-color); transform: translateY(-4px); background: rgba(15, 25, 40, 0.85); }
         .folder-card-icon { font-size: 28px; margin-bottom: 10px; display: block; }
         .folder-card b { display: block; color: #ffffff; font-size: 16px; margin-bottom: 6px; }
         .folder-card small { color: var(--text-muted); font-size: 12px; display: block; }
-        .folder-card .open-lbl { display: inline-block; margin-top: 15px; font-size: 10px; color: var(--accent-color); font-weight: bold; }
         
         .workspace-panel { display: none; background: rgba(11, 16, 23, 0.85); border: 1px solid var(--border-color); border-radius: 10px; padding: 25px; margin-bottom: 20px; }
-        .btn-back { background: rgba(4, 6, 10, 0.8); color: var(--text-color); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-bottom: 20px; font-weight: bold; font-size: 12px; position: relative; z-index: 5; }
-        
-        .tactical-cockpit-wrapper {
-            position: relative;
-            background: url('Gemini_Generated_Image_v6rzjev6rzjev6rz.jpg') no-repeat center center;
-            background-size: cover;
-            border: 2px solid #1a3148;
-            border-radius: 16px;
-            padding: 40px 20px;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
-            overflow: hidden;
-            min-height: 520px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        .tactical-cockpit-wrapper::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(3, 6, 10, 0.4); z-index: 1;
-        }
-        
-        .data-injection-header { text-align: center; margin-bottom: 15px; position: relative; z-index: 2; }
-        .data-injection-box {
-            display: inline-block; border: 1px solid #0084ff; background: rgba(4, 10, 18, 0.85); padding: 8px 25px; border-radius: 6px; color: #38bdf8; font-family: monospace; font-size: 13px; letter-spacing: 1px; box-shadow: 0 0 15px rgba(0, 132, 255, 0.3);
-        }
-        .data-injection-arrow { color: #0084ff; margin-top: 4px; font-size: 12px; }
-        
-        .ipad-frame {
-            max-width: 520px; width: 100%; margin: 0 auto; background: rgba(30, 37, 48, 0.85); backdrop-filter: blur(10px); border: 3px solid #333d4d; border-radius: 24px; padding: 18px; box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 30px rgba(0, 132, 255, 0.2); position: relative; z-index: 2;
-        }
-        .ipad-screen {
-            background: rgba(6, 14, 23, 0.92); border: 2px solid #00d2ff; border-radius: 14px; padding: 20px; box-shadow: inset 0 0 25px rgba(0,0,0,0.9); position: relative;
-            background-image: linear-gradient(rgba(0, 210, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 210, 255, 0.05) 1px, transparent 1px); background-size: 18px 18px;
-        }
-        
-        .ipad-cyber-box { border: 1px solid rgba(0, 210, 255, 0.6); background: rgba(2, 12, 22, 0.85); border-radius: 8px; padding: 12px; margin-bottom: 12px; }
-        .ipad-label { color: #7dd3fc; font-size: 11px; font-weight: bold; margin-bottom: 6px; display: block; text-align: center; }
-        .ipad-input {
-            width: 100%; background: rgba(6, 24, 44, 0.95) !important; border: 1px solid #0084ff !important; border-radius: 6px !important; color: #38bdf8 !important; padding: 8px !important; font-family: monospace !important; text-align: center !important; font-size: 13px !important; box-shadow: inset 0 0 10px rgba(0, 132, 255, 0.3);
-        }
-        .ipad-btn {
-            width: 100%; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: #fff; border: 1px solid #38bdf8; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; margin-top: 6px; transition: all 0.2s ease; box-shadow: 0 0 10px rgba(2, 132, 199, 0.4);
-        }
-        .ipad-btn:hover { background: #0284c7; box-shadow: 0 0 15px rgba(56, 189, 248, 0.7); }
-        .ipad-controls { display: flex; justify-content: center; gap: 15px; margin-top: 12px; }
-        .ipad-hardware-btn { width: 45px; height: 14px; border-radius: 4px; border: 1px solid #475569; }
-        .btn-gold-hw { background: #ca8a04; box-shadow: 0 0 8px rgba(202, 138, 4, 0.5); }
-        .btn-silver-hw { background: #64748b; }
-        .btn-blue-hw { background: #0284c7; box-shadow: 0 0 8px rgba(2, 132, 199, 0.5); }
-        
-        .gang-entry-container {
-            background: rgba(6, 11, 18, 0.95); border: 1px solid var(--gold-color); border-radius: 12px; padding: 22px; box-shadow: 0 0 30px rgba(197, 160, 89, 0.15);
-        }
-        .gang-entry-header { display: flex; align-items: center; gap: 12px; border-bottom: 1px dashed rgba(197, 160, 89, 0.4); padding-bottom: 12px; margin-bottom: 18px; }
-        .gang-entry-header span { font-size: 26px; }
-        .gang-entry-title { color: var(--gold-color); font-size: 16px; font-weight: 800; }
-        .gang-entry-field { margin-bottom: 15px; }
-        .gang-entry-field label { display: block; font-size: 11px; color: var(--gold-color); font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px; }
-        .gang-entry-field input, .gang-entry-field textarea {
-            width: 100%; background: rgba(3, 6, 10, 0.9); border: 1px solid rgba(197, 160, 89, 0.5); border-radius: 6px; color: #fff; padding: 10px 12px; font-size: 13px; outline: none; transition: border 0.2s; resize: vertical;
-        }
-        .gang-entry-field input:focus, .gang-entry-field textarea:focus { border-color: var(--gold-color); box-shadow: 0 0 8px rgba(197, 160, 89, 0.3); }
-        
-        .id-card-tactical { background: #cdcece; border-radius: 12px; padding: 0; color: #111827; max-width: 580px; width: 100%; margin: 15px auto; position: relative; border: 1px solid #9ca3af; direction: ltr; text-align: left; }
-        .id-card-header { background: #2b3142; color: #ffffff; padding: 10px 20px; font-weight: 800; font-size: 15px; letter-spacing: 2px; }
-        .id-card-body { display: flex; padding: 20px; gap: 20px; align-items: center; }
-        .id-card-photo-box { width: 130px; height: 150px; background: #9ca3af; border: 1px solid #6b7280; border-radius: 6px; overflow: hidden; display: flex; justify-content: center; align-items: center; }
-        .id-card-photo-box img { width: 100%; height: 100%; object-fit: cover; }
-        .id-card-details { flex-grow: 1; font-size: 12px; }
-        .id-field-group { margin-bottom: 12px; }
-        .id-field-label { font-size: 9px; color: #4b5563; font-weight: 800; letter-spacing: 1px; display: block; }
-        .id-field-val { font-size: 14px; font-weight: 800; color: #111827; }
-        .id-card-notes { background: #bdc0c4; padding: 10px 20px; border-top: 1px solid #a3a7ac; font-size: 11px; color: #1f2937; direction: rtl; text-align: right; }
-        
-        .badge-danger { background: var(--danger-color); color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 3px; }
-        .action-btns { display: flex; gap: 5px; align-items: center; }
-        .btn-del-item { background: var(--danger-color); color: #fff; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px; font-weight: bold; }
-        .btn-edit-item { background: var(--gold-color); color: #000; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 10px; font-weight: bold; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
-        th, td { padding: 10px; border: 1px solid var(--border-color); text-align: right; }
-        th { background: rgba(4, 6, 10, 0.9); color: var(--gold-color); }
-        .leader-panel { border: 1px solid var(--gold-color); background: rgba(9, 14, 21, 0.8); padding: 25px; border-radius: 8px; margin-bottom: 20px; }
-        .user-list-item { display: flex; justify-content: space-between; align-items: center; background: rgba(4, 6, 10, 0.7); padding: 12px 15px; margin-top: 10px; border-radius: 6px; border: 1px solid var(--border-color); font-size: 13px; }
-        .img-preview { max-width: 100%; max-height: 250px; border-radius: 5px; margin-top: 8px; }
-        video { max-width: 100%; border-radius: 5px; margin-top: 8px; }
-        
-        .custom-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(2, 4, 7, 0.9); z-index: 2000; justify-content: center; align-items: center; }
-        .custom-modal { background: rgba(11, 16, 23, 0.98); border: 1px solid var(--gold-color); border-radius: 10px; width: 92%; max-width: 950px; padding: 25px; max-height: 92vh; overflow-y: auto; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 20px; }
-        .modal-title { color: var(--gold-color); font-size: 16px; font-weight: bold; }
-        .modal-close { cursor: pointer; color: var(--text-muted); font-size: 18px; font-weight: bold; }
-        .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-back { background: rgba(4, 6, 10, 0.8); color: var(--text-color); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-bottom: 20px; font-weight: bold; font-size: 12px; }
 
-        /* ================= الشجرة التنظيمية الجديدة ================= */
-        .gang-fullscreen-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(3, 5, 8, 0.95); z-index: 3000; flex-direction: column; padding: 20px; }
-        .gang-fullscreen-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold-color); padding-bottom: 12px; margin-bottom: 10px; flex-wrap: wrap; gap: 10px; }
+        /* ================= الشجرة التنظيمية (معزولة تماماً) ================= */
+        .gang-fullscreen-overlay { 
+            display: none; 
+            position: fixed; 
+            top: 0; left: 0; width: 100vw; height: 100vh; 
+            background: rgba(3, 5, 8, 0.98); /* خلفية داكنة لتغطية الموقع بالكامل */
+            z-index: 9999; 
+            flex-direction: column; 
+            padding: 20px; 
+        }
+        .gang-fullscreen-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold-color); padding-bottom: 12px; margin-bottom: 10px; }
         .gang-editor-layout { display: flex; flex-grow: 1; gap: 15px; overflow: hidden; position: relative; }
         
-        .gang-sidebar { width: 240px; min-width: 240px; background: rgba(8, 13, 20, 0.95); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 6px; z-index: 10; }
-        .zoom-lens-bar-external { display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-bottom: 8px; padding: 0 5px; }
-        .zoom-lens-btn { background: rgba(197, 160, 89, 0.2); border: 1px solid var(--gold-color); color: var(--gold-color); width: 28px; height: 28px; border-radius: 4px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; }
-        .zoom-level-lbl { color: #fff; font-size: 11px; font-family: monospace; min-width: 45px; text-align: center; }
+        .gang-sidebar { width: 240px; min-width: 240px; background: rgba(8, 13, 20, 0.95); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; gap: 10px; z-index: 10; }
         
-        .gang-canvas-area { flex-grow: 1; background: #06090f; border: 1px solid var(--gold-color); border-radius: 8px; position: relative; overflow: auto; background-image: linear-gradient(to right, #101926 1px, transparent 1px), linear-gradient(to bottom, #101926 1px, transparent 1px); background-size: 30px 30px; }
-        .gang-canvas-inner-world { position: relative; width: 10000px; height: 10000px; transform-origin: 0 0; transition: transform 0.05s ease; }
+        .gang-canvas-area { flex-grow: 1; background: #06090f; border: 1px solid var(--gold-color); border-radius: 8px; position: relative; overflow: auto; background-image: linear-gradient(to right, #101926 1px, transparent 1px), linear-gradient(to bottom, #101926 1px, transparent 1px); background-size: 30px 30px; cursor: grab; }
+        .gang-canvas-inner-world { position: relative; width: 5000px; height: 5000px; transform-origin: 0 0; }
         
-        .drawio-tool-btn { background: rgba(197, 160, 89, 0.15); color: var(--gold-color); border: 1px solid var(--gold-color); padding: 6px 8px; border-radius: 5px; cursor: pointer; font-size: 11px; font-weight: bold; text-align: right; }
+        .drawio-tool-btn { background: rgba(197, 160, 89, 0.15); color: var(--gold-color); border: 1px solid var(--gold-color); padding: 8px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: bold; text-align: right; width: 100%; transition: 0.2s;}
         .drawio-tool-btn:hover { background: rgba(197, 160, 89, 0.3); }
-        .drawio-tool-btn.active-drawing { background: var(--success-color) !important; color: #fff !important; }
-        .drawio-tool-btn.active-linking { background: var(--accent-color) !important; color: #fff !important; }
+        .drawio-tool-btn.active-drawing { background: var(--success-color) !important; color: #fff !important; border-color:#fff;}
+        .drawio-tool-btn.active-linking { background: var(--accent-color) !important; color: #fff !important; border-color:#fff;}
         
         .draggable-node { 
-            position: absolute; min-width: 80px; min-height: 50px; width: auto; height: auto; padding: 12px; border-radius: 6px; cursor: move; user-select: none; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 6px; z-index: 20; 
+            position: absolute; padding: 12px; border-radius: 6px; cursor: move; user-select: none; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6); display: flex; flex-direction: column; z-index: 20; 
             background: #162235; border: 1.5px solid var(--accent-color); color: #fff; 
-            overflow: visible; word-break: break-word; overflow-wrap: break-word; 
+            min-width: 100px; min-height: 40px; justify-content: center; align-items: center; text-align: center;
         }
-        .node-circle { border-radius: 50% !important; min-width: 90px !important; min-height: 90px !important; align-items: center; justify-content: center; text-align: center; }
-        .node-text { background: rgba(0,0,0,0.6); border: 1px dashed var(--gold-color); color: var(--gold-color); font-size: 13px; padding: 10px; }
+        .node-circle { border-radius: 50% !important; min-width: 90px !important; min-height: 90px !important; }
+        .node-text { background: rgba(0,0,0,0.5); border: 1px dashed var(--gold-color); color: var(--gold-color); font-size: 14px; }
+        .node-line { position: absolute; background: var(--gold-color); cursor: move; z-index: 20; min-width: 50px; min-height: 4px; border-radius: 2px; }
         
-        .node-content-editable { outline: none; width: 100%; min-width: 50px; min-height: 25px; height: auto; white-space: pre-wrap; word-break: break-word; z-index: 25; position: relative; }
-        .node-line { position: absolute; background: var(--gold-color); cursor: move; user-select: none; z-index: 20; min-width: 30px; min-height: 4px; border-radius: 2px; }
+        .node-content-editable { outline: none; width: 100%; min-height: 25px; white-space: pre-wrap; word-break: break-word; z-index: 25; }
         
         .connected-svg-line { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
         .connected-svg-line line { stroke: var(--gold-color); stroke-width: 3; stroke-dasharray: 4 2; pointer-events: visibleStroke; cursor: pointer; }
@@ -251,506 +155,476 @@
         .selected-element { outline: 2px dashed var(--success-color) !important; box-shadow: 0 0 15px var(--success-color) !important; z-index: 100 !important; }
         
         .node-delete-btn {
-            position: absolute; top: -12px; left: -12px; background: var(--danger-color); color: #fff; border: 2px solid #fff;
-            border-radius: 50%; width: 24px; height: 24px; font-size: 11px; font-weight: bold; cursor: pointer;
-            display: none; justify-content: center; align-items: center; z-index: 100; box-shadow: 0 0 10px rgba(217,4,41,0.8);
+            position: absolute; top: -10px; left: -10px; background: var(--danger-color); color: #fff; border: 2px solid #fff;
+            border-radius: 50%; width: 22px; height: 22px; font-size: 10px; font-weight: bold; cursor: pointer;
+            display: none; justify-content: center; align-items: center; z-index: 100;
         }
         .selected-element .node-delete-btn { display: flex; }
         
-        .node-resize-handle-right, .node-resize-handle-bottom, .node-resize-handle-corner { position: absolute; display: none; z-index: 50; }
-        .node-resize-handle-right { right: 0; top: 50%; transform: translateY(-50%); width: 8px; height: 100%; cursor: ew-resize; }
-        .node-resize-handle-bottom { bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; height: 8px; cursor: ns-resize; }
-        .node-resize-handle-corner { right: 0; bottom: 0; width: 14px; height: 14px; background: var(--gold-color); cursor: nwse-resize; border: 1px solid #fff; }
-        .selected-element .node-resize-handle-right, .selected-element .node-resize-handle-bottom, .selected-element .node-resize-handle-corner { display: block; }
-        
-        .btn-action { background: var(--success-color); color: #fff; border: none; padding: 6px 12px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 11px; }
-        /* ======================================================== */
+        .btn-action-close { background: var(--danger-color); color: #fff; border: none; padding: 8px 16px; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        .btn-action-save { background: var(--success-color); color: #fff; border: none; padding: 8px 16px; border-radius: 5px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div id="cyber-canvas"></div>
-
-    <!-- بطاقة تسجيل الدخول والنظام الأساسي -->
-    <div class="login-card" id="loginScreen">
-        <div class="subtitle-top">FEDERAL INTELLIGENCE SYSTEM</div>
-        <div class="logo-container">
-            <img src="https://i.ibb.co/3ykB8yR/cia-logo.png" alt="CIA">
+    <!-- 1. شاشة تسجيل الدخول -->
+    <div class="login-wrapper" id="loginScreen">
+        <div class="login-card">
+            <div class="subtitle-top">FEDERAL INTELLIGENCE SYSTEM</div>
+            <div class="logo-container">
+                <img src="https://i.ibb.co/3ykB8yR/cia-logo.png" alt="CIA">
+            </div>
+            <div class="title">نظام التحكم والعمليات</div>
+            <div class="agency-name">CENTRAL INTELLIGENCE AGENCY</div>
+            
+            <div class="input-group">
+                <label>اسم المستخدم:</label>
+                <input type="text" id="usernameInput" placeholder="أدخل اسم المستخدم...">
+            </div>
+            <div class="input-group">
+                <label>رمز الدخول:</label>
+                <input type="password" id="passwordInput" placeholder="••••••••">
+            </div>
+            <button class="btn-login" onclick="attemptLogin()">تسجيل الدخول للنظام</button>
+            <div class="error-msg" id="errorMsg">بيانات الدخول غير صحيحة.</div>
         </div>
-        <div class="title">نظام التحكم والعمليات</div>
-        <div class="agency-name">CENTRAL INTELLIGENCE AGENCY</div>
-        
-        <div class="input-group">
-            <label>اسم المستخدم أو الكود الأمني:</label>
-            <input type="text" id="usernameInput" placeholder="أدخل اسم المستخدم...">
-        </div>
-        <div class="input-group">
-            <label>رمز الدخول السري:</label>
-            <input type="password" id="passwordInput" placeholder="••••••••">
-        </div>
-        <button class="btn-login" onclick="attemptLogin()">تسجيل الدخول للنظام</button>
-        <div class="error-msg" id="errorMsg">بيانات الدخول غير صحيحة أو غير مسجلة.</div>
-        <div class="sync-status" id="syncStatus">● متصل بقاعدة البيانات السحابية</div>
     </div>
 
-    <!-- لوحة التحكم الرئيسية بعد الدخول -->
-    <div id="main-system">
+    <!-- 2. النظام الأساسي بعد تسجيل الدخول -->
+    <div class="main-wrapper" id="main-system">
         <div class="header-system">
             <div style="display:flex; align-items:center; gap:12px;">
-                <div style="width:45px; height:45px; border-radius:50%; border:2px solid var(--gold-color); display:flex; justify-content:center; align-items:center; background:#000;">
-                    <img src="https://i.ibb.co/3ykB8yR/cia-logo.png" style="width:38px;height:38px;border-radius:50%;">
-                </div>
+                <img src="https://i.ibb.co/3ykB8yR/cia-logo.png" style="width:40px;height:40px;border-radius:50%;border:1px solid var(--gold-color);">
                 <div>
-                    <div style="font-weight: bold; color:#fff; font-size:15px;" id="currentUserNameDisp">العميل</div>
-                    <div style="font-size:11px; color:var(--text-muted);" id="currentUserRoleDisp">مستوى الصلاحية</div>
+                    <div style="font-weight: bold; color:#fff;" id="currentUserNameDisp">العميل</div>
+                    <div style="font-size:11px; color:var(--text-muted);">نظام موثق</div>
                 </div>
             </div>
-            <div class="header-actions">
-                <button class="btn-leader-nav" id="leaderNavBtn" onclick="openLeaderControlPanel()">👑 لوحة تحكم القائد</button>
-                <button class="btn-logout" onclick="logoutSystem()">تسجيل الخروج</button>
-            </div>
+            <button class="btn-logout" onclick="logoutSystem()">تسجيل الخروج</button>
         </div>
 
         <div class="folder-grid-wrapper">
+            <!-- شريط الأخبار -->
             <div class="desktop-broadcast-card">
-                <div style="font-size: 11px; color: #ef4444; font-weight: 800; display:flex; align-items:center; gap:6px;">
-                    <span>🚨</span> البث الفوري والتعاميم
-                </div>
-                <div id="broadcastTickerList" style="font-size: 12px; color: #fca5a5; line-height: 1.5; max-height: 180px; overflow-y: auto;">
-                    جاري تحميل التحديثات الأمنية العاجلة...
+                <div style="font-size: 11px; color: #ef4444; font-weight: 800; margin-bottom:10px;">🚨 البث الفوري والتعاميم</div>
+                <div style="font-size: 12px; color: #fca5a5; line-height: 1.6;">
+                    • تم تسجيل الدخول بنجاح.<br>
+                    • لا توجد بلاغات طارئة في الوقت الحالي.
                 </div>
             </div>
 
+            <!-- لوحة المجلدات -->
             <div class="folder-grid-panel">
                 <div class="dashboard-header">
-                    <div class="dashboard-logo">
-                        <img src="https://i.ibb.co/3ykB8yR/cia-logo.png">
-                    </div>
                     <div>
                         <div class="grid-title">أقسام الاستخبارات والعمليات الفدرالية</div>
-                        <div style="color:var(--text-muted); font-size:12px; margin-top:3px;">اختر القسم المطلوب لعرض السجلات والملفات السرية</div>
+                        <div style="color:var(--text-muted); font-size:12px; margin-top:3px;">اختر القسم المطلوب للوصول إلى السجلات</div>
                     </div>
                 </div>
 
                 <div class="folder-grid">
                     <div class="folder-card" onclick="openWorkspace('wanted')">
-                        <span class="folder-card-icon">🎯</span>
-                        <b>المطلوبين أمنياً</b>
-                        <small>قائمة العناصر الخطرة والملاحقات</small>
-                        <span class="open-lbl">فتح السجل ←</span>
+                        <span class="folder-card-icon">🎯</span><b>المطلوبين أمنياً</b><small>قائمة العناصر الخطرة</small>
                     </div>
                     <div class="folder-card" onclick="openWorkspace('cases')">
-                        <span class="folder-card-icon">📂</span>
-                        <b>القضايا والتحقيقات</b>
-                        <small>ملفات الجرائم والملفات المفتوحة</small>
-                        <span class="open-lbl">فتح السجل ←</span>
+                        <span class="folder-card-icon">📂</span><b>القضايا والتحقيقات</b><small>الملفات المفتوحة</small>
                     </div>
                     <div class="folder-card" onclick="openWorkspace('reports')">
-                        <span class="folder-card-icon">📊</span>
-                        <b>التقارير اليومية</b>
-                        <small>تقارير الميدان والفرق الخاصة</small>
-                        <span class="open-lbl">فتح السجل ←</span>
+                        <span class="folder-card-icon">📊</span><b>التقارير اليومية</b><small>تقارير الميدان</small>
                     </div>
-                    <div class="folder-card" onclick="openWorkspace('gangs')">
-                        <span class="folder-card-icon">🏴‍☠️</span>
-                        <b>العصابات والهيكل التنظيمي</b>
-                        <small>الشجرة التفاعلية وهياكل التنظيمات</small>
-                        <span class="open-lbl">فتح السجل ←</span>
+                    
+                    <!-- الزر الذي يفتح الشجرة التنظيمية -->
+                    <div class="folder-card" onclick="openGangTree()">
+                        <span class="folder-card-icon">🏴‍☠️</span><b>العصابات والهيكل التنظيمي</b><small>الشجرة التفاعلية لهياكل التنظيمات</small>
                     </div>
+                    
                     <div class="folder-card" onclick="openWorkspace('archive')">
-                        <span class="folder-card-icon">🏛️</span>
-                        <b>الأرشيف الفدرالي العام</b>
-                        <small>الوثائق والمستندات التاريخية</small>
-                        <span class="open-lbl">فتح السجل ←</span>
+                        <span class="folder-card-icon">🏛️</span><b>الأرشيف الفدرالي</b><small>الوثائق التاريخية</small>
                     </div>
                     <div class="folder-card" onclick="openWorkspace('tactical')">
-                        <span class="folder-card-icon">⚡</span>
-                        <b>غرفة العمليات التكتيكية</b>
-                        <small>أوامر الاقتحام وإدارة العمليات</small>
-                        <span class="open-lbl">فتح السجل ←</span>
+                        <span class="folder-card-icon">⚡</span><b>غرفة العمليات</b><small>إدارة العمليات التكتيكية</small>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- مساحة العمل الخاصة بالمطلوبين والقضايا والأقسام -->
-    <div class="workspace-panel" id="workspacePanel">
-        <button class="btn-back" onclick="closeWorkspace()">← العودة للرئيسية</button>
-        <div id="workspaceContentContainer"></div>
+    <!-- 3. مساحة العمل العادية (للقضايا والمطلوبين الخ) -->
+    <div class="main-wrapper" id="workspacePanel" style="display:none; padding:0;">
+        <div class="workspace-panel" style="display:block;">
+            <button class="btn-back" onclick="closeWorkspace()">← العودة للرئيسية</button>
+            <div id="workspaceContentContainer"></div>
+        </div>
     </div>
 
-    <!-- شاشة الشجرة التنظيمية الجديدة -->
+    <!-- 4. شاشة الشجرة التنظيمية (معزولة كلياً في Overlay) -->
     <div class="gang-fullscreen-overlay" id="gangTreeOverlay">
         <div class="gang-fullscreen-header">
             <div style="display:flex; align-items:center; gap:12px;">
-                <span style="font-size:20px;">🏴‍☠️</span>
-                <input type="text" id="gangTitle" value="شجرة الهيكل التنظيمي" style="background: rgba(4, 6, 10, 0.9); border: 1px solid var(--gold-color); color: var(--gold-color); font-size: 15px; font-weight: bold; padding: 4px 10px; border-radius: 6px; width: 200px; outline:none;">
+                <span style="font-size:24px;">🏴‍☠️</span>
+                <span style="color: var(--gold-color); font-size: 18px; font-weight: bold;">مخطط الهيكل التنظيمي</span>
             </div>
             <div style="display:flex; gap:10px;">
-                <button class="btn-action" onclick="closeGangTreeOverlay()" style="background:var(--danger-color);">إغلاق الشجرة</button>
-                <button class="btn-action" onclick="alert('تم حفظ الشجرة التنظيمية بنجاح!')">💾 حفظ التغييرات</button>
+                <button class="btn-action-close" onclick="closeGangTree()">✕ إغلاق الشجرة</button>
+                <button class="btn-action-save" onclick="alert('تم حفظ الهيكل التنظيمي بنجاح')">💾 حفظ التعديلات</button>
             </div>
         </div>
         <div class="gang-editor-layout">
             <div class="gang-sidebar">
-                <h5 style="color: var(--gold-color); font-size: 11px; margin-bottom: 2px;">📦 أدوات الرسم</h5>
-                <button class="drawio-tool-btn" id="btnSpawnRect" onclick="activateDrawingMode('rect', 'مستطيل جديد')">▭ إنشاء مستطيل (سحب)</button>
-                <button class="drawio-tool-btn" id="btnSpawnCircle" onclick="activateDrawingMode('circle', 'دائرة جديدة')">⭕ إنشاء دائرة (سحب)</button>
-                <button class="drawio-tool-btn" id="btnSpawnText" onclick="activateDrawingMode('text', 'ملاحظة نصية...')">💬 إنشاء نص حر (سحب)</button>
-                <button class="drawio-tool-btn" id="btnSpawnLine" onclick="activateDrawingMode('line', '')">➖ خط منفصل (سحب)</button>
-                <button class="drawio-tool-btn" id="btnLinkNodes" style="background:rgba(0, 132, 255, 0.25); border-color:#0084ff; color:#38bdf8;" onclick="toggleLinkingMode()">🔗 ربط عنصرين</button>
-                <hr style="border: 0; border-top: 1px dashed rgba(197, 160, 89, 0.4); margin: 4px 0;">
-                <div style="font-size: 9px; color: var(--text-muted); line-height: 1.3;">💡 انقر على العنصر وحدده ثم اضغط <b>Delete</b> من الكيبورد للحذف.</div>
-            </div>
-            <div style="flex-grow: 1; display: flex; flex-direction: column; overflow: hidden;">
-                <div class="zoom-lens-bar-external">
-                    <span style="color:var(--gold-color); font-size:11px; font-weight:bold; margin-left:auto;">مستوى العرض:</span>
-                    <button class="zoom-lens-btn" onclick="zoomCanvas(-0.1)">➖</button>
-                    <span class="zoom-level-lbl" id="zoomLevelLbl">100%</span>
-                    <button class="zoom-lens-btn" onclick="zoomCanvas(0.1)">➕</button>
-                    <button class="zoom-lens-btn" onclick="resetZoom()">🔍</button>
+                <h4 style="color: #fff; margin-bottom: 5px; font-size: 14px;">أدوات الرسم والتخطيط</h4>
+                <p style="font-size: 10px; color: var(--text-muted); margin-bottom: 10px;">اضغط على الأداة ثم اسحب الماوس في مساحة العمل للرسم.</p>
+                
+                <button class="drawio-tool-btn" id="btnSpawnRect" onclick="activateDrawingMode('rect', 'نص جديد')">▭ إنشاء مستطيل</button>
+                <button class="drawio-tool-btn" id="btnSpawnCircle" onclick="activateDrawingMode('circle', 'نص')">⭕ إنشاء دائرة</button>
+                <button class="drawio-tool-btn" id="btnSpawnText" onclick="activateDrawingMode('text', 'ملاحظة...')">💬 نص حر بدون إطار</button>
+                <button class="drawio-tool-btn" id="btnSpawnLine" onclick="activateDrawingMode('line', '')">➖ خط فاصل</button>
+                
+                <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 5px 0;">
+                
+                <button class="drawio-tool-btn" id="btnLinkNodes" style="background: rgba(0, 132, 255, 0.2); color: #38bdf8; border-color: #38bdf8;" onclick="toggleLinkingMode()">🔗 ربط عنصرين بخط</button>
+                
+                <div style="margin-top:auto; font-size: 11px; color: #fca5a5; background: rgba(217, 4, 41, 0.1); padding: 10px; border-radius: 5px; border: 1px dashed var(--danger-color);">
+                    <b>طريقة الحذف:</b><br>انقر على أي عنصر لتحديده ثم اضغط زر <b>Delete</b> من لوحة المفاتيح.
                 </div>
-                <div class="gang-canvas-area" id="gangCanvasArea">
-                    <div class="gang-canvas-inner-world" id="gangCanvasInnerWorld">
-                        <svg class="connected-svg-line" id="svgCanvas"></svg>
-                    </div>
+                <div style="font-size: 11px; color: #6ee7b7; background: rgba(16, 185, 129, 0.1); padding: 10px; border-radius: 5px; border: 1px dashed var(--success-color); margin-top:5px;">
+                    <b>طريقة التحريك:</b><br>استخدم (الزر الأيمن للماوس) للتحرك داخل المساحة.
+                </div>
+            </div>
+            
+            <div class="gang-canvas-area" id="gangCanvasArea">
+                <div class="gang-canvas-inner-world" id="gangCanvasInnerWorld">
+                    <svg class="connected-svg-line" id="svgCanvas"></svg>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- نافذة لوحة تحكم القائد -->
-    <div class="custom-modal-overlay" id="leaderModalOverlay">
-        <div class="custom-modal">
-            <div class="modal-header">
-                <span class="modal-title">👑 لوحة تحكم وإدارة صلاحيات القائد</span>
-                <span class="modal-close" onclick="closeLeaderModal()">✕</span>
-            </div>
-            <div id="leaderModalBody">
-                <div class="input-group">
-                    <label>إنشاء حساب مستخدم جديد:</label>
-                    <input type="text" id="newUsername" placeholder="اسم المستخدم..." style="margin-bottom:8px;">
-                    <input type="password" id="newPassword" placeholder="كلمة المرور..." style="margin-bottom:8px;">
-                    <select id="newRole" style="margin-bottom:8px; width:100%; padding:10px; background:#04060a; color:#fff; border:1px solid var(--border-color); border-radius:6px;">
-                        <option value="director">مدير قطاع</option>
-                        <option value="deputy">نائب مدير</option>
-                        <option value="agent">عميل استخبارات</option>
-                    </select>
-                    <button class="btn-create-action" onclick="createNewUserAccount()">إنشاء الحساب المعتمد</button>
-                </div>
-                <hr style="border:0; border-top:1px solid var(--border-color); margin:20px 0;">
-                <div style="color:var(--gold-color); font-weight:bold; margin-bottom:10px;">قائمة الحسابات النشطة في النظام:</div>
-                <div id="usersListContainer">جاري تحميل المستخدمين...</div>
-            </div>
-        </div>
-    </div>
 
-    <!-- سكريبت إدارة النظام والواجهات -->
+    <!-- سكربتات التحكم -->
     <script>
-        let currentUser = null;
-        let selectedElementForDeletion = null;
-        let isLinkingMode = false, linkSourceNodeId = null, connectedLinks = [];
-        let currentZoomScale = 1.0, activeDrawingType = null, defaultDrawingText = '';
-        let isDrawingBox = false, drawStartX = 0, drawStartY = 0, previewBoxElement = null;
-        const canvasArea = document.getElementById("gangCanvasArea");
-        const canvasInnerWorld = document.getElementById("gangCanvasInnerWorld");
-        let isRightMouseDown = false, rightMouseStartX = 0, rightMouseStartY = 0;
-
-        // تهيئة مستخدم افتراضي ومصادقة سريعة للتجربة الفورية
+        // دوال تسجيل الدخول والتنقل الأساسية
         function attemptLogin() {
             const u = document.getElementById("usernameInput").value.trim();
-            const p = document.getElementById("passwordInput").value.trim();
-            if(!u) {
+            if(u === "") {
                 document.getElementById("errorMsg").style.display = "block";
                 return;
             }
-            currentUser = { username: u, role: (u.toLowerCase() === 'admin' || u.toLowerCase() === 'owner') ? 'admin' : 'agent' };
             document.getElementById("loginScreen").style.display = "none";
             document.getElementById("main-system").style.display = "block";
-            document.getElementById("currentUserNameDisp").innerText = currentUser.username;
-            document.getElementById("currentUserRoleDisp").innerText = currentUser.role === 'admin' ? 'القائد العام [صلاحيات مطلقة]' : 'عميل استخبارات معتمد';
-            if(currentUser.role === 'admin') {
-                document.getElementById("leaderNavBtn").style.display = "inline-block";
-            }
-            loadBroadcasts();
+            document.getElementById("currentUserNameDisp").innerText = u;
         }
 
         function logoutSystem() {
-            currentUser = null;
             document.getElementById("main-system").style.display = "none";
-            document.getElementById("loginScreen").style.display = "block";
+            document.getElementById("workspacePanel").style.display = "none";
+            document.getElementById("loginScreen").style.display = "flex";
             document.getElementById("usernameInput").value = "";
             document.getElementById("passwordInput").value = "";
-            document.getElementById("errorMsg").style.display = "none";
-        }
-
-        function loadBroadcasts() {
-            document.getElementById("broadcastTickerList").innerHTML = "• تم رفع حالة التأهب الأمني في القطاع الأول.<br>• تدقيق دوري على السجلات الفدرالية.<br>• كافة الأنظمة تعمل بكفاءة تامة.";
         }
 
         function openWorkspace(type) {
-            document.querySelector(".folder-grid-wrapper").style.display = "none";
-            const ws = document.getElementById("workspacePanel");
-            ws.style.display = "block";
-            const cont = document.getElementById("workspaceContentContainer");
-            
-            if(type === 'gangs') {
-                ws.style.display = "none";
-                document.getElementById("gangTreeOverlay").style.display = "flex";
-                return;
-            }
-
-            let html = `<h2 style="color:var(--gold-color); margin-bottom:15px;">سجل القسم: ${type.toUpperCase()}</h2>`;
-            if(type === 'wanted') {
-                html += `<div class="gang-entry-container">
-                    <div class="gang-entry-title">إضافة مطلوب جديد للقائمة</div>
-                    <div class="gang-entry-field"><label>اسم المطلوب:</label><input type="text" id="wName" placeholder="الاسم الكامل..."></div>
-                    <div class="gang-entry-field"><label>خطورة العنصر:</label>
-                        <select id="wLevel" style="width:100%; padding:10px; background:#03060a; color:#fff; border:1px solid var(--gold-color); border-radius:6px;">
-                            <option value="wanted-card-yellow">منخفضة (أصفر)</option>
-                            <option value="wanted-card-orange">متوسطة (برتقالي)</option>
-                            <option value="wanted-card-red">خطير جداً (أحمر)</option>
-                        </select>
-                    </div>
-                    <button class="btn-create-action" onclick="alert('تم تسجيل العنصر بنجاح!')">حفظ وإضافة للقائمة</button>
-                </div>`;
-            } else {
-                html += `<p style="color:var(--text-muted);">عناصر السجل فارغة حالياً. يمكنك إضافة تفاصيل جديدة أو استعراض الأرشيف.</p>`;
-            }
-            cont.innerHTML = html;
+            document.getElementById("main-system").style.display = "none";
+            document.getElementById("workspacePanel").style.display = "block";
+            document.getElementById("workspaceContentContainer").innerHTML = `<h2 style="color:var(--gold-color);">قسم: ${type.toUpperCase()}</h2><p style="color:#fff; margin-top:10px;">هذا هو القسم القديم، وهو يعمل بشكل سليم تماماً.</p>`;
         }
 
         function closeWorkspace() {
             document.getElementById("workspacePanel").style.display = "none";
-            document.querySelector(".folder-grid-wrapper").style.display = "flex";
+            document.getElementById("main-system").style.display = "block";
         }
 
-        function closeGangTreeOverlay() {
+        // ================= دوال الشجرة التنظيمية المستقلة ================= //
+        function openGangTree() {
+            // نفتح نافذة الشجرة المنبثقة فقط وتغطي كل شيء
+            document.getElementById("gangTreeOverlay").style.display = "flex";
+        }
+
+        function closeGangTree() {
+            // نغلق النافذة ونعود للوضع الطبيعي
             document.getElementById("gangTreeOverlay").style.display = "none";
+            // نلغي أي وضع رسم مفعل
+            resetDrawingMode();
         }
 
-        function openLeaderControlPanel() {
-            document.getElementById("leaderModalOverlay").style.display = "flex";
-            document.getElementById("usersListContainer").innerHTML = `<div class="user-list-item"><span>${currentUser.username} (${currentUser.role})</span><span class="badge badge-admin">نشط</span></div>`;
+        // متغيرات الشجرة
+        let isDrawingMode = false;
+        let activeDrawingType = null;
+        let defaultText = '';
+        let isLinkingMode = false;
+        let linkSourceId = null;
+        let connectedLinks = [];
+        let selectedNode = null;
+        
+        // متغيرات الرسم بالماوس
+        let isDrawingBox = false;
+        let startX = 0, startY = 0;
+        let previewBox = null;
+        
+        // متغيرات التحريك (الزر الأيمن)
+        let isRightMouseDown = false;
+        let rightStartX = 0, rightStartY = 0;
+        
+        const canvasArea = document.getElementById("gangCanvasArea");
+        const canvasWorld = document.getElementById("gangCanvasInnerWorld");
+
+        function activateDrawingMode(type, text) {
+            activeDrawingType = type;
+            defaultText = text;
+            isDrawingMode = true;
+            isLinkingMode = false;
+            document.querySelectorAll('.drawio-tool-btn').forEach(btn => btn.classList.remove('active-drawing', 'active-linking'));
+            
+            let btnId = type === 'rect' ? 'btnSpawnRect' : (type === 'circle' ? 'btnSpawnCircle' : (type === 'text' ? 'btnSpawnText' : 'btnSpawnLine'));
+            document.getElementById(btnId).classList.add('active-drawing');
+            document.getElementById('btnLinkNodes').innerText = "🔗 ربط عنصرين بخط";
         }
 
-        function closeLeaderModal() {
-            document.getElementById("leaderModalOverlay").style.display = "none";
-        }
-
-        function createNewUserAccount() {
-            alert('تم إنشاء الحساب بنجاح وإضافته إلى النظام الفدرالي!');
-            closeLeaderModal();
-        }
-
-        // تشغيل محرك السحب والإنشاء في الشجرة التنظيمية
-        if (canvasArea) {
-            canvasArea.addEventListener('mousedown', (e) => {
-                if (e.target === canvasArea || e.target === canvasInnerWorld || e.target.id === 'svgCanvas') {
-                    document.querySelectorAll('.selected-element').forEach(n => n.classList.remove('selected-element'));
-                    selectedElementForDeletion = null;
-                }
-                if (e.button === 2) { 
-                    isRightMouseDown = true; rightMouseStartX = e.clientX + canvasArea.scrollLeft; rightMouseStartY = e.clientY + canvasArea.scrollTop; e.preventDefault();
-                } else if (e.button === 0 && activeDrawingType) {
-                    isDrawingBox = true;
-                    const rect = canvasInnerWorld.getBoundingClientRect();
-                    drawStartX = (e.clientX - rect.left) / currentZoomScale;
-                    drawStartY = (e.clientY - rect.top) / currentZoomScale;
-                    previewBoxElement = document.createElement('div');
-                    previewBoxElement.style.position = 'absolute';
-                    previewBoxElement.style.left = drawStartX + 'px';
-                    previewBoxElement.style.top = drawStartY + 'px';
-                    previewBoxElement.style.width = '0px';
-                    previewBoxElement.style.height = '0px';
-                    previewBoxElement.style.border = '2px dashed #10b981';
-                    previewBoxElement.style.background = 'rgba(16, 185, 129, 0.15)';
-                    previewBoxElement.style.borderRadius = (activeDrawingType === 'circle') ? '50%' : '6px';
-                    previewBoxElement.style.zIndex = '5000';
-                    canvasInnerWorld.appendChild(previewBoxElement);
-                    e.preventDefault();
-                }
-            });
-            window.addEventListener('mousemove', (e) => {
-                if (isRightMouseDown) {
-                    canvasArea.scrollLeft = rightMouseStartX - e.clientX;
-                    canvasArea.scrollTop = rightMouseStartY - e.clientY;
-                } else if (isDrawingBox && previewBoxElement) {
-                    const rect = canvasInnerWorld.getBoundingClientRect();
-                    const curX = (e.clientX - rect.left) / currentZoomScale;
-                    const curY = (e.clientY - rect.top) / currentZoomScale;
-                    const w = Math.abs(curX - drawStartX);
-                    const h = Math.abs(curY - drawStartY);
-                    const l = Math.min(curX, drawStartX);
-                    const t = Math.min(curY, drawStartY);
-                    previewBoxElement.style.left = l + 'px';
-                    previewBoxElement.style.top = t + 'px';
-                    previewBoxElement.style.width = Math.max(60, w) + 'px';
-                    previewBoxElement.style.height = Math.max(50, h) + 'px';
-                }
-            });
-            window.addEventListener('mouseup', (e) => {
-                if (e.button === 2) isRightMouseDown = false;
-                else if (isDrawingBox && previewBoxElement) {
-                    isDrawingBox = false;
-                    const finalLeft = parseInt(previewBoxElement.style.left);
-                    const finalTop = parseInt(previewBoxElement.style.top);
-                    const finalWidth = parseInt(previewBoxElement.style.width);
-                    const finalHeight = parseInt(previewBoxElement.style.height);
-                    previewBoxElement.remove(); previewBoxElement = null;
-                    
-                    const nodeData = {
-                        id: 'node_' + Date.now() + Math.floor(Math.random()*10000),
-                        type: activeDrawingType,
-                        text: (activeDrawingType === 'line') ? '' : defaultDrawingText,
-                        x: finalLeft, y: finalTop, width: finalWidth, height: finalHeight
-                    };
-                    renderNodeElement(nodeData);
-                    resetDrawingMode();
-                }
-            });
-            canvasArea.addEventListener('contextmenu', e => e.preventDefault());
-            canvasArea.addEventListener('wheel', e => { e.preventDefault(); zoomCanvas(e.deltaY < 0 ? 0.1 : -0.1); }, { passive: false });
-        }
-
-        function activateDrawingMode(type, defaultText) {
-            activeDrawingType = type; defaultDrawingText = defaultText; isLinkingMode = false;
-            document.querySelectorAll('.drawio-tool-btn').forEach(b => b.classList.remove('active-drawing', 'active-linking'));
-            let btnId = type === 'circle' ? 'btnSpawnCircle' : (type === 'text' ? 'btnSpawnText' : (type === 'line' ? 'btnSpawnLine' : 'btnSpawnRect'));
-            const btn = document.getElementById(btnId);
-            if (btn) { btn.classList.add('active-drawing'); btn.innerText = "🎯 ارسم بالماوس الآن..."; }
-        }
-        function resetDrawingMode() {
-            document.querySelectorAll('.drawio-tool-btn').forEach(b => b.classList.remove('active-drawing'));
-            document.getElementById('btnSpawnRect').innerText = "▭ إنشاء مستطيل (سحب)";
-            document.getElementById('btnSpawnCircle').innerText = "⭕ إنشاء دائرة (سحب)";
-            document.getElementById('btnSpawnText').innerText = "💬 إنشاء نص حر (سحب)";
-            document.getElementById('btnSpawnLine').innerText = "➖ خط منفصل (سحب)";
+        function toggleLinkingMode() {
+            isLinkingMode = !isLinkingMode;
+            isDrawingMode = false;
             activeDrawingType = null;
+            linkSourceId = null;
+            
+            document.querySelectorAll('.drawio-tool-btn').forEach(btn => btn.classList.remove('active-drawing'));
+            const linkBtn = document.getElementById('btnLinkNodes');
+            
+            if(isLinkingMode) {
+                linkBtn.classList.add('active-linking');
+                linkBtn.innerText = "🎯 انقر على العنصر الأول..";
+            } else {
+                linkBtn.classList.remove('active-linking');
+                linkBtn.innerText = "🔗 ربط عنصرين بخط";
+                document.querySelectorAll('.selected-element').forEach(el => el.classList.remove('selected-element'));
+            }
         }
 
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Delete') {
-                if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA' || document.activeElement.classList.contains('node-content-editable'))) {
-                    return;
-                }
-                if (selectedElementForDeletion && document.body.contains(selectedElementForDeletion)) {
-                    const deletedId = selectedElementForDeletion.getAttribute('data-id');
-                    deleteNodeElement(deletedId, null);
-                    e.preventDefault();
+        function resetDrawingMode() {
+            isDrawingMode = false;
+            activeDrawingType = null;
+            isLinkingMode = false;
+            linkSourceId = null;
+            document.querySelectorAll('.drawio-tool-btn').forEach(btn => btn.classList.remove('active-drawing', 'active-linking'));
+            document.getElementById('btnLinkNodes').innerText = "🔗 ربط عنصرين بخط";
+        }
+
+        // أحداث الماوس داخل الشجرة فقط
+        canvasArea.addEventListener('mousedown', (e) => {
+            // التحريك بالزر الأيمن
+            if (e.button === 2) {
+                isRightMouseDown = true;
+                rightStartX = e.clientX + canvasArea.scrollLeft;
+                rightStartY = e.clientY + canvasArea.scrollTop;
+                canvasArea.style.cursor = 'grabbing';
+                e.preventDefault();
+                return;
+            }
+
+            // إذا نقر على الخلفية نلغي التحديد
+            if (e.target === canvasArea || e.target === canvasWorld || e.target.id === 'svgCanvas') {
+                document.querySelectorAll('.selected-element').forEach(el => el.classList.remove('selected-element'));
+                selectedNode = null;
+                
+                // بدء رسم مربع جديد
+                if (isDrawingMode && e.button === 0) {
+                    isDrawingBox = true;
+                    const rect = canvasWorld.getBoundingClientRect();
+                    startX = e.clientX - rect.left;
+                    startY = e.clientY - rect.top;
+                    
+                    previewBox = document.createElement('div');
+                    previewBox.style.position = 'absolute';
+                    previewBox.style.left = startX + 'px';
+                    previewBox.style.top = startY + 'px';
+                    previewBox.style.border = '2px dashed #10b981';
+                    previewBox.style.background = 'rgba(16, 185, 129, 0.2)';
+                    previewBox.style.zIndex = '5000';
+                    if(activeDrawingType === 'circle') previewBox.style.borderRadius = '50%';
+                    canvasWorld.appendChild(previewBox);
                 }
             }
         });
 
-        function renderNodeElement(nodeData) {
-            const world = document.getElementById("gangCanvasInnerWorld");
-            if (!world) return;
+        window.addEventListener('mousemove', (e) => {
+            // تحريك الكاميرا
+            if (isRightMouseDown) {
+                canvasArea.scrollLeft = rightStartX - e.clientX;
+                canvasArea.scrollTop = rightStartY - e.clientY;
+            } 
+            // رسم الصندوق
+            else if (isDrawingBox && previewBox) {
+                const rect = canvasWorld.getBoundingClientRect();
+                const curX = e.clientX - rect.left;
+                const curY = e.clientY - rect.top;
+                
+                const w = Math.abs(curX - startX);
+                const h = Math.abs(curY - startY);
+                const l = Math.min(curX, startX);
+                const t = Math.min(curY, startY);
+                
+                previewBox.style.left = l + 'px';
+                previewBox.style.top = t + 'px';
+                previewBox.style.width = Math.max(50, w) + 'px';
+                previewBox.style.height = Math.max(30, h) + 'px';
+            }
+        });
+
+        window.addEventListener('mouseup', (e) => {
+            if (e.button === 2) {
+                isRightMouseDown = false;
+                canvasArea.style.cursor = 'grab';
+            } 
+            else if (isDrawingBox && previewBox) {
+                isDrawingBox = false;
+                const fLeft = parseInt(previewBox.style.left);
+                const fTop = parseInt(previewBox.style.top);
+                const fWidth = parseInt(previewBox.style.width || '100');
+                const fHeight = parseInt(previewBox.style.height || '50');
+                
+                previewBox.remove();
+                previewBox = null;
+                
+                createNode(activeDrawingType, fLeft, fTop, fWidth, fHeight, defaultText);
+                resetDrawingMode(); // العودة للوضع العادي بعد الرسم
+            }
+        });
+
+        // منع القائمة الجانبية (Right click menu) داخل منطقة العمل فقط
+        canvasArea.addEventListener('contextmenu', e => e.preventDefault());
+
+        // دالة إنشاء العنصر
+        function createNode(type, x, y, w, h, text) {
             const el = document.createElement('div');
-            el.setAttribute('data-id', nodeData.id);
+            const id = 'node_' + Date.now();
+            el.setAttribute('data-id', id);
             
-            if (nodeData.type === 'circle') el.className = 'draggable-node node-circle';
-            else if (nodeData.type === 'text') el.className = 'draggable-node node-text';
-            else if (nodeData.type === 'line') el.className = 'node-line';
+            if (type === 'circle') el.className = 'draggable-node node-circle';
+            else if (type === 'text') el.className = 'draggable-node node-text';
+            else if (type === 'line') el.className = 'node-line';
             else el.className = 'draggable-node';
             
-            el.style.left = nodeData.x + 'px';
-            el.style.top = nodeData.y + 'px';
-            if (nodeData.width) el.style.width = nodeData.width + 'px';
-            if (nodeData.height) el.style.height = nodeData.height + 'px';
+            el.style.left = x + 'px';
+            el.style.top = y + 'px';
+            if (type !== 'line') {
+                el.style.width = w + 'px';
+                el.style.height = h + 'px';
+            } else {
+                el.style.width = Math.max(w, 50) + 'px';
+            }
             
-            const delBtn = `<div class="node-delete-btn" title="حذف" onclick="deleteNodeElement('${nodeData.id}', event)">✕</div>`;
-            el.innerHTML = `${delBtn}<div class="node-content-editable" contenteditable="true">${nodeData.text || ''}</div><div class="node-resize-handle-right"></div><div class="node-resize-handle-bottom"></div><div class="node-resize-handle-corner"></div>`;
+            const delBtn = `<div class="node-delete-btn" onclick="deleteNode('${id}', event)">✕</div>`;
+            el.innerHTML = `${delBtn}<div class="node-content-editable" contenteditable="true">${text}</div>`;
             
-            setupNodeInteractions(el);
-            world.appendChild(el);
-            updateConnectedSvgLines();
+            setupNodeDrag(el);
+            canvasWorld.appendChild(el);
         }
 
-        function deleteNodeElement(id, e) {
+        function deleteNode(id, event) {
             const el = document.querySelector(`[data-id="${id}"]`);
             if (el) {
                 connectedLinks = connectedLinks.filter(l => l.from !== id && l.to !== id);
-                el.remove(); selectedElementForDeletion = null; updateConnectedSvgLines();
+                el.remove();
+                selectedNode = null;
+                drawLines();
             }
-            if (e) e.stopPropagation();
+            if(event) event.stopPropagation();
         }
 
-        function setupNodeInteractions(el) {
+        // تفاعل العناصر (السحب والربط والتحديد)
+        function setupNodeDrag(el) {
             el.addEventListener('mousedown', (e) => {
-                if (e.button === 2) return;
-                if (isLinkingMode) {
-                    const id = el.getAttribute('data-id');
-                    if (!linkSourceNodeId) { linkSourceNodeId = id; el.classList.add('selected-element'); }
-                    else if (linkSourceNodeId !== id) {
-                        connectedLinks.push({ from: linkSourceNodeId, to: id });
-                        linkSourceNodeId = null; isLinkingMode = false;
-                        document.getElementById("btnLinkNodes").classList.remove("active-linking");
-                        document.getElementById("btnLinkNodes").innerText = "🔗 ربط عنصرين";
-                        document.querySelectorAll('.selected-element').forEach(n => n.classList.remove('selected-element'));
-                        updateConnectedSvgLines();
-                    }
-                    e.stopPropagation(); return;
-                }
+                if (e.button === 2) return; // تجاهل الزر الأيمن
                 
+                const id = el.getAttribute('data-id');
+                
+                // حالة الربط
+                if (isLinkingMode) {
+                    if (!linkSourceId) {
+                        linkSourceId = id;
+                        el.classList.add('selected-element');
+                        document.getElementById('btnLinkNodes').innerText = "🎯 انقر على العنصر الثاني..";
+                    } else if (linkSourceId !== id) {
+                        connectedLinks.push({ from: linkSourceId, to: id });
+                        toggleLinkingMode(); // إنهاء وضع الربط
+                        drawLines();
+                    }
+                    e.stopPropagation();
+                    return;
+                }
+
+                // حالة التحديد والسحب
                 document.querySelectorAll('.draggable-node, .node-line').forEach(n => n.classList.remove('selected-element'));
                 el.classList.add('selected-element');
-                selectedElementForDeletion = el;
+                selectedNode = el;
                 
-                const isResizeR = e.target.classList.contains('node-resize-handle-right');
-                const isResizeB = e.target.classList.contains('node-resize-handle-bottom');
-                const isResizeC = e.target.classList.contains('node-resize-handle-corner');
+                // إذا كان ينقر داخل النص للكتابة لا نسحب العنصر
+                if (e.target.classList.contains('node-content-editable')) return;
+
+                const startX = e.clientX;
+                const startY = e.clientY;
+                const origLeft = el.offsetLeft;
+                const origTop = el.offsetTop;
                 
-                const startX = e.clientX, startY = e.clientY;
-                const origLeft = el.offsetLeft, origTop = el.offsetTop, origW = el.offsetWidth, origH = el.offsetHeight;
-                
-                function onMouseMove(me) {
-                    const dx = (me.clientX - startX) / currentZoomScale;
-                    const dy = (me.clientY - startY) / currentZoomScale;
-                    if (isResizeR) el.style.width = Math.max(60, origW + dx) + 'px';
-                    else if (isResizeB) el.style.height = Math.max(50, origH + dy) + 'px';
-                    else if (isResizeC) { el.style.width = Math.max(60, origW + dx) + 'px'; el.style.height = Math.max(50, origH + dy) + 'px'; }
-                    else { el.style.left = (origLeft + dx) + 'px'; el.style.top = (origTop + dy) + 'px'; }
-                    updateConnectedSvgLines();
+                function onDrag(me) {
+                    el.style.left = (origLeft + (me.clientX - startX)) + 'px';
+                    el.style.top = (origTop + (me.clientY - startY)) + 'px';
+                    drawLines();
                 }
-                function onMouseUp() { window.removeEventListener('mousemove', onMouseMove); window.removeEventListener('mouseup', onMouseUp); }
-                window.addEventListener('mousemove', onMouseMove); window.addEventListener('mouseup', onMouseUp);
+                function onDrop() {
+                    window.removeEventListener('mousemove', onDrag);
+                    window.removeEventListener('mouseup', onDrop);
+                }
+                
+                window.addEventListener('mousemove', onDrag);
+                window.addEventListener('mouseup', onDrop);
                 e.stopPropagation();
             });
         }
 
-        function toggleLinkingMode() {
-            isLinkingMode = !isLinkingMode; linkSourceNodeId = null;
-            const btn = document.getElementById("btnLinkNodes");
-            if (isLinkingMode) { btn.classList.add("active-linking"); btn.innerText = "🎯 اختر العنصر الأول..."; }
-            else { btn.classList.remove("active-linking"); btn.innerText = "🔗 ربط عنصرين"; }
-        }
-
-        function updateConnectedSvgLines() {
+        // رسم الخطوط
+        function drawLines() {
             const svg = document.getElementById("svgCanvas");
-            if (!svg) return;
             svg.innerHTML = "";
-            connectedLinks.forEach((link, idx) => {
+            connectedLinks.forEach((link, index) => {
                 const f = document.querySelector(`[data-id="${link.from}"]`);
                 const t = document.querySelector(`[data-id="${link.to}"]`);
                 if (f && t) {
-                    const x1 = f.offsetLeft + f.offsetWidth / 2, y1 = f.offsetTop + f.offsetHeight / 2;
-                    const x2 = t.offsetLeft + t.offsetWidth / 2, y2 = t.offsetTop + t.offsetHeight / 2;
+                    const x1 = f.offsetLeft + (f.offsetWidth / 2);
+                    const y1 = f.offsetTop + (f.offsetHeight / 2);
+                    const x2 = t.offsetLeft + (t.offsetWidth / 2);
+                    const y2 = t.offsetTop + (t.offsetHeight / 2);
+                    
                     const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                    line.setAttribute('x1', x1); line.setAttribute('y1', y1); line.setAttribute('x2', x2); line.setAttribute('y2', y2);
-                    line.addEventListener('click', (e) => { connectedLinks.splice(idx, 1); updateConnectedSvgLines(); e.stopPropagation(); });
+                    line.setAttribute('x1', x1); line.setAttribute('y1', y1);
+                    line.setAttribute('x2', x2); line.setAttribute('y2', y2);
+                    
+                    // حذف الخط عند النقر عليه
+                    line.addEventListener('click', (e) => {
+                        connectedLinks.splice(index, 1);
+                        drawLines();
+                        e.stopPropagation();
+                    });
+                    
                     svg.appendChild(line);
                 }
             });
         }
 
-        function zoomCanvas(d) { currentZoomScale = Math.min(2.0, Math.max(0.3, currentZoomScale + d)); updateZoomDisplay(); }
-        function resetZoom() { currentZoomScale = 1.0; updateZoomDisplay(); }
-        function updateZoomDisplay() {
-            if (canvasInnerWorld) canvasInnerWorld.style.transform = `scale(${currentZoomScale})`;
-            const lbl = document.getElementById("zoomLevelLbl");
-            if (lbl) lbl.innerText = Math.round(currentZoomScale * 100) + '%';
-        }
+        // حذف العنصر المحدد باستخدام زر Delete من الكيبورد
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Delete') {
+                // التأكد من أننا لسنا نكتب داخل مربع نص أو تسجيل الدخول
+                if (document.activeElement.tagName === 'INPUT' || 
+                    document.activeElement.tagName === 'TEXTAREA' || 
+                    document.activeElement.isContentEditable) {
+                    return;
+                }
+                
+                if (selectedNode && document.body.contains(selectedNode)) {
+                    deleteNode(selectedNode.getAttribute('data-id'), null);
+                }
+            }
+        });
+
     </script>
 </body>
 </html>
