@@ -169,6 +169,7 @@
         .btn-gold-hw { background: #ca8a04; box-shadow: 0 0 8px rgba(202, 138, 4, 0.5); }
         .btn-silver-hw { background: #64748b; }
         .btn-blue-hw { background: #0284c7; box-shadow: 0 0 8px rgba(2, 132, 199, 0.5); }
+        
         .gang-entry-container {
             background: rgba(6, 11, 18, 0.95); border: 1px solid var(--gold-color); border-radius: 12px; padding: 22px; box-shadow: 0 0 30px rgba(197, 160, 89, 0.15);
         }
@@ -181,6 +182,7 @@
             width: 100%; background: rgba(3, 6, 10, 0.9); border: 1px solid rgba(197, 160, 89, 0.5); border-radius: 6px; color: #fff; padding: 10px 12px; font-size: 13px; outline: none; transition: border 0.2s; resize: vertical;
         }
         .gang-entry-field input:focus, .gang-entry-field textarea:focus { border-color: var(--gold-color); box-shadow: 0 0 8px rgba(197, 160, 89, 0.3); }
+        
         .id-card-tactical { background: #cdcece; border-radius: 12px; padding: 0; color: #111827; max-width: 580px; width: 100%; margin: 15px auto; position: relative; border: 1px solid #9ca3af; direction: ltr; text-align: left; }
         .id-card-header { background: #2b3142; color: #ffffff; padding: 10px 20px; font-weight: 800; font-size: 15px; letter-spacing: 2px; }
         .id-card-body { display: flex; padding: 20px; gap: 20px; align-items: center; }
@@ -213,7 +215,7 @@
         .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
 
         /* ================= الشجرة التنظيمية الجديدة ================= */
-        .gang-fullscreen-overlay { display: flex; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(3, 5, 8, 0.95); z-index: 3000; flex-direction: column; padding: 20px; }
+        .gang-fullscreen-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(3, 5, 8, 0.95); z-index: 3000; flex-direction: column; padding: 20px; }
         .gang-fullscreen-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold-color); padding-bottom: 12px; margin-bottom: 10px; flex-wrap: wrap; gap: 10px; }
         .gang-editor-layout { display: flex; flex-grow: 1; gap: 15px; overflow: hidden; position: relative; }
         
@@ -267,16 +269,128 @@
 </head>
 <body>
 
-    <!-- بقية عناصر النظام واللوحات الأساسية تظل هنا كما هي بدون تغيير -->
+    <div id="cyber-canvas"></div>
+
+    <!-- بطاقة تسجيل الدخول والنظام الأساسي -->
+    <div class="login-card" id="loginScreen">
+        <div class="subtitle-top">FEDERAL INTELLIGENCE SYSTEM</div>
+        <div class="logo-container">
+            <img src="https://i.ibb.co/3ykB8yR/cia-logo.png" alt="CIA">
+        </div>
+        <div class="title">نظام التحكم والعمليات</div>
+        <div class="agency-name">CENTRAL INTELLIGENCE AGENCY</div>
+        
+        <div class="input-group">
+            <label>اسم المستخدم أو الكود الأمني:</label>
+            <input type="text" id="usernameInput" placeholder="أدخل اسم المستخدم...">
+        </div>
+        <div class="input-group">
+            <label>رمز الدخول السري:</label>
+            <input type="password" id="passwordInput" placeholder="••••••••">
+        </div>
+        <button class="btn-login" onclick="attemptLogin()">تسجيل الدخول للنظام</button>
+        <div class="error-msg" id="errorMsg">بيانات الدخول غير صحيحة أو غير مسجلة.</div>
+        <div class="sync-status" id="syncStatus">● متصل بقاعدة البيانات السحابية</div>
+    </div>
+
+    <!-- لوحة التحكم الرئيسية بعد الدخول -->
+    <div id="main-system">
+        <div class="header-system">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div style="width:45px; height:45px; border-radius:50%; border:2px solid var(--gold-color); display:flex; justify-content:center; align-items:center; background:#000;">
+                    <img src="https://i.ibb.co/3ykB8yR/cia-logo.png" style="width:38px;height:38px;border-radius:50%;">
+                </div>
+                <div>
+                    <div style="font-weight: bold; color:#fff; font-size:15px;" id="currentUserNameDisp">العميل</div>
+                    <div style="font-size:11px; color:var(--text-muted);" id="currentUserRoleDisp">مستوى الصلاحية</div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn-leader-nav" id="leaderNavBtn" onclick="openLeaderControlPanel()">👑 لوحة تحكم القائد</button>
+                <button class="btn-logout" onclick="logoutSystem()">تسجيل الخروج</button>
+            </div>
+        </div>
+
+        <div class="folder-grid-wrapper">
+            <div class="desktop-broadcast-card">
+                <div style="font-size: 11px; color: #ef4444; font-weight: 800; display:flex; align-items:center; gap:6px;">
+                    <span>🚨</span> البث الفوري والتعاميم
+                </div>
+                <div id="broadcastTickerList" style="font-size: 12px; color: #fca5a5; line-height: 1.5; max-height: 180px; overflow-y: auto;">
+                    جاري تحميل التحديثات الأمنية العاجلة...
+                </div>
+            </div>
+
+            <div class="folder-grid-panel">
+                <div class="dashboard-header">
+                    <div class="dashboard-logo">
+                        <img src="https://i.ibb.co/3ykB8yR/cia-logo.png">
+                    </div>
+                    <div>
+                        <div class="grid-title">أقسام الاستخبارات والعمليات الفدرالية</div>
+                        <div style="color:var(--text-muted); font-size:12px; margin-top:3px;">اختر القسم المطلوب لعرض السجلات والملفات السرية</div>
+                    </div>
+                </div>
+
+                <div class="folder-grid">
+                    <div class="folder-card" onclick="openWorkspace('wanted')">
+                        <span class="folder-card-icon">🎯</span>
+                        <b>المطلوبين أمنياً</b>
+                        <small>قائمة العناصر الخطرة والملاحقات</small>
+                        <span class="open-lbl">فتح السجل ←</span>
+                    </div>
+                    <div class="folder-card" onclick="openWorkspace('cases')">
+                        <span class="folder-card-icon">📂</span>
+                        <b>القضايا والتحقيقات</b>
+                        <small>ملفات الجرائم والملفات المفتوحة</small>
+                        <span class="open-lbl">فتح السجل ←</span>
+                    </div>
+                    <div class="folder-card" onclick="openWorkspace('reports')">
+                        <span class="folder-card-icon">📊</span>
+                        <b>التقارير اليومية</b>
+                        <small>تقارير الميدان والفرق الخاصة</small>
+                        <span class="open-lbl">فتح السجل ←</span>
+                    </div>
+                    <div class="folder-card" onclick="openWorkspace('gangs')">
+                        <span class="folder-card-icon">🏴‍☠️</span>
+                        <b>العصابات والهيكل التنظيمي</b>
+                        <small>الشجرة التفاعلية وهياكل التنظيمات</small>
+                        <span class="open-lbl">فتح السجل ←</span>
+                    </div>
+                    <div class="folder-card" onclick="openWorkspace('archive')">
+                        <span class="folder-card-icon">🏛️</span>
+                        <b>الأرشيف الفدرالي العام</b>
+                        <small>الوثائق والمستندات التاريخية</small>
+                        <span class="open-lbl">فتح السجل ←</span>
+                    </div>
+                    <div class="folder-card" onclick="openWorkspace('tactical')">
+                        <span class="folder-card-icon">⚡</span>
+                        <b>غرفة العمليات التكتيكية</b>
+                        <small>أوامر الاقتحام وإدارة العمليات</small>
+                        <span class="open-lbl">فتح السجل ←</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- مساحة العمل الخاصة بالمطلوبين والقضايا والأقسام -->
+    <div class="workspace-panel" id="workspacePanel">
+        <button class="btn-back" onclick="closeWorkspace()">← العودة للرئيسية</button>
+        <div id="workspaceContentContainer"></div>
+    </div>
 
     <!-- شاشة الشجرة التنظيمية الجديدة -->
-    <div class="gang-fullscreen-overlay" id="gangTreeOverlay" style="display:none;">
+    <div class="gang-fullscreen-overlay" id="gangTreeOverlay">
         <div class="gang-fullscreen-header">
             <div style="display:flex; align-items:center; gap:12px;">
                 <span style="font-size:20px;">🏴‍☠️</span>
                 <input type="text" id="gangTitle" value="شجرة الهيكل التنظيمي" style="background: rgba(4, 6, 10, 0.9); border: 1px solid var(--gold-color); color: var(--gold-color); font-size: 15px; font-weight: bold; padding: 4px 10px; border-radius: 6px; width: 200px; outline:none;">
             </div>
-            <button class="btn-action" onclick="alert('تم الحفظ بنجاح!')">💾 حفظ التغييرات</button>
+            <div style="display:flex; gap:10px;">
+                <button class="btn-action" onclick="closeGangTreeOverlay()" style="background:var(--danger-color);">إغلاق الشجرة</button>
+                <button class="btn-action" onclick="alert('تم حفظ الشجرة التنظيمية بنجاح!')">💾 حفظ التغييرات</button>
+            </div>
         </div>
         <div class="gang-editor-layout">
             <div class="gang-sidebar">
@@ -306,7 +420,35 @@
         </div>
     </div>
 
+    <!-- نافذة لوحة تحكم القائد -->
+    <div class="custom-modal-overlay" id="leaderModalOverlay">
+        <div class="custom-modal">
+            <div class="modal-header">
+                <span class="modal-title">👑 لوحة تحكم وإدارة صلاحيات القائد</span>
+                <span class="modal-close" onclick="closeLeaderModal()">✕</span>
+            </div>
+            <div id="leaderModalBody">
+                <div class="input-group">
+                    <label>إنشاء حساب مستخدم جديد:</label>
+                    <input type="text" id="newUsername" placeholder="اسم المستخدم..." style="margin-bottom:8px;">
+                    <input type="password" id="newPassword" placeholder="كلمة المرور..." style="margin-bottom:8px;">
+                    <select id="newRole" style="margin-bottom:8px; width:100%; padding:10px; background:#04060a; color:#fff; border:1px solid var(--border-color); border-radius:6px;">
+                        <option value="director">مدير قطاع</option>
+                        <option value="deputy">نائب مدير</option>
+                        <option value="agent">عميل استخبارات</option>
+                    </select>
+                    <button class="btn-create-action" onclick="createNewUserAccount()">إنشاء الحساب المعتمد</button>
+                </div>
+                <hr style="border:0; border-top:1px solid var(--border-color); margin:20px 0;">
+                <div style="color:var(--gold-color); font-weight:bold; margin-bottom:10px;">قائمة الحسابات النشطة في النظام:</div>
+                <div id="usersListContainer">جاري تحميل المستخدمين...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- سكريبت إدارة النظام والواجهات -->
     <script>
+        let currentUser = null;
         let selectedElementForDeletion = null;
         let isLinkingMode = false, linkSourceNodeId = null, connectedLinks = [];
         let currentZoomScale = 1.0, activeDrawingType = null, defaultDrawingText = '';
@@ -315,7 +457,94 @@
         const canvasInnerWorld = document.getElementById("gangCanvasInnerWorld");
         let isRightMouseDown = false, rightMouseStartX = 0, rightMouseStartY = 0;
 
-        // تشغيل محرك السحب والإنشاء
+        // تهيئة مستخدم افتراضي ومصادقة سريعة للتجربة الفورية
+        function attemptLogin() {
+            const u = document.getElementById("usernameInput").value.trim();
+            const p = document.getElementById("passwordInput").value.trim();
+            if(!u) {
+                document.getElementById("errorMsg").style.display = "block";
+                return;
+            }
+            currentUser = { username: u, role: (u.toLowerCase() === 'admin' || u.toLowerCase() === 'owner') ? 'admin' : 'agent' };
+            document.getElementById("loginScreen").style.display = "none";
+            document.getElementById("main-system").style.display = "block";
+            document.getElementById("currentUserNameDisp").innerText = currentUser.username;
+            document.getElementById("currentUserRoleDisp").innerText = currentUser.role === 'admin' ? 'القائد العام [صلاحيات مطلقة]' : 'عميل استخبارات معتمد';
+            if(currentUser.role === 'admin') {
+                document.getElementById("leaderNavBtn").style.display = "inline-block";
+            }
+            loadBroadcasts();
+        }
+
+        function logoutSystem() {
+            currentUser = null;
+            document.getElementById("main-system").style.display = "none";
+            document.getElementById("loginScreen").style.display = "block";
+            document.getElementById("usernameInput").value = "";
+            document.getElementById("passwordInput").value = "";
+            document.getElementById("errorMsg").style.display = "none";
+        }
+
+        function loadBroadcasts() {
+            document.getElementById("broadcastTickerList").innerHTML = "• تم رفع حالة التأهب الأمني في القطاع الأول.<br>• تدقيق دوري على السجلات الفدرالية.<br>• كافة الأنظمة تعمل بكفاءة تامة.";
+        }
+
+        function openWorkspace(type) {
+            document.querySelector(".folder-grid-wrapper").style.display = "none";
+            const ws = document.getElementById("workspacePanel");
+            ws.style.display = "block";
+            const cont = document.getElementById("workspaceContentContainer");
+            
+            if(type === 'gangs') {
+                ws.style.display = "none";
+                document.getElementById("gangTreeOverlay").style.display = "flex";
+                return;
+            }
+
+            let html = `<h2 style="color:var(--gold-color); margin-bottom:15px;">سجل القسم: ${type.toUpperCase()}</h2>`;
+            if(type === 'wanted') {
+                html += `<div class="gang-entry-container">
+                    <div class="gang-entry-title">إضافة مطلوب جديد للقائمة</div>
+                    <div class="gang-entry-field"><label>اسم المطلوب:</label><input type="text" id="wName" placeholder="الاسم الكامل..."></div>
+                    <div class="gang-entry-field"><label>خطورة العنصر:</label>
+                        <select id="wLevel" style="width:100%; padding:10px; background:#03060a; color:#fff; border:1px solid var(--gold-color); border-radius:6px;">
+                            <option value="wanted-card-yellow">منخفضة (أصفر)</option>
+                            <option value="wanted-card-orange">متوسطة (برتقالي)</option>
+                            <option value="wanted-card-red">خطير جداً (أحمر)</option>
+                        </select>
+                    </div>
+                    <button class="btn-create-action" onclick="alert('تم تسجيل العنصر بنجاح!')">حفظ وإضافة للقائمة</button>
+                </div>`;
+            } else {
+                html += `<p style="color:var(--text-muted);">عناصر السجل فارغة حالياً. يمكنك إضافة تفاصيل جديدة أو استعراض الأرشيف.</p>`;
+            }
+            cont.innerHTML = html;
+        }
+
+        function closeWorkspace() {
+            document.getElementById("workspacePanel").style.display = "none";
+            document.querySelector(".folder-grid-wrapper").style.display = "flex";
+        }
+
+        function closeGangTreeOverlay() {
+            document.getElementById("gangTreeOverlay").style.display = "none";
+        }
+
+        function openLeaderControlPanel() {
+            document.getElementById("leaderModalOverlay").style.display = "flex";
+            document.getElementById("usersListContainer").innerHTML = `<div class="user-list-item"><span>${currentUser.username} (${currentUser.role})</span><span class="badge badge-admin">نشط</span></div>`;
+        }
+
+        function closeLeaderModal() {
+            document.getElementById("leaderModalOverlay").style.display = "none";
+        }
+
+        function createNewUserAccount() {
+            alert('تم إنشاء الحساب بنجاح وإضافته إلى النظام الفدرالي!');
+            closeLeaderModal();
+        }
+
+        // تشغيل محرك السحب والإنشاء في الشجرة التنظيمية
         if (canvasArea) {
             canvasArea.addEventListener('mousedown', (e) => {
                 if (e.target === canvasArea || e.target === canvasInnerWorld || e.target.id === 'svgCanvas') {
@@ -401,7 +630,6 @@
             activeDrawingType = null;
         }
 
-        // تفعيل الحذف باستخدام زر Delete من الكيبورد
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Delete') {
                 if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA' || document.activeElement.classList.contains('node-content-editable'))) {
