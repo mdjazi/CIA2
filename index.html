@@ -44,26 +44,14 @@
             overflow-x: hidden; 
         }
 
-        /* حاوية تسجيل الدخول (للحفاظ على التوسيط القديم) */
         .login-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
+            display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px;
         }
 
-        /* حاوية النظام الأساسي */
         .main-wrapper {
-            display: none; /* مخفي حتى تسجيل الدخول */
-            max-width: 1150px;
-            margin: 0 auto;
-            padding: 20px;
-            position: relative;
-            z-index: 10;
+            display: none; max-width: 1150px; margin: 0 auto; padding: 20px; position: relative; z-index: 10;
         }
 
-        /* بطاقة تسجيل الدخول */
         .login-card {
             background: rgba(8, 13, 20, 0.85); backdrop-filter: blur(20px);
             border: 1px solid rgba(197, 160, 89, 0.4); border-radius: 14px; 
@@ -84,7 +72,6 @@
         .btn-login { width: 100%; padding: 13px; background: linear-gradient(135deg, var(--accent-color) 0%, #0052a3 100%); color: #fff; border: none; border-radius: 6px; font-weight: 700; font-size: 13px; cursor: pointer; margin-top: 10px; }
         .error-msg { color: var(--danger-color); font-size: 12px; margin-top: 12px; display: none; font-weight: 600; }
 
-        /* الهيدر والقوائم في النظام الأساسي */
         .header-system { display: flex; justify-content: space-between; align-items: center; background: rgba(11, 16, 23, 0.85); padding: 18px 25px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
         .btn-logout { background: var(--danger-color); color: #fff; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; font-weight: 700; font-size: 12px; }
         
@@ -95,8 +82,6 @@
         .folder-grid-panel { flex-grow: 1; background: rgba(8, 13, 20, 0.8); border: 1px solid rgba(197, 160, 89, 0.3); padding: 30px; border-radius: 12px; }
         
         .dashboard-header { display: flex; align-items: center; gap: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); margin-bottom: 25px; }
-        .dashboard-logo { width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--gold-color); background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; }
-        .dashboard-logo img { width: 58px; height: 58px; border-radius: 50%; }
         .grid-title { color: var(--gold-color); font-size: 20px; font-weight: 800; }
         
         .folder-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 10px; }
@@ -113,22 +98,19 @@
         .workspace-panel { display: none; background: rgba(11, 16, 23, 0.85); border: 1px solid var(--border-color); border-radius: 10px; padding: 25px; margin-bottom: 20px; }
         .btn-back { background: rgba(4, 6, 10, 0.8); color: var(--text-color); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-bottom: 20px; font-weight: bold; font-size: 12px; }
 
-        /* ================= الشجرة التنظيمية (معزولة تماماً) ================= */
-        .gang-fullscreen-overlay { 
-            display: none; 
-            position: fixed; 
-            top: 0; left: 0; width: 100vw; height: 100vh; 
-            background: rgba(3, 5, 8, 0.98); /* خلفية داكنة لتغطية الموقع بالكامل */
-            z-index: 9999; 
-            flex-direction: column; 
-            padding: 20px; 
-        }
-        .gang-fullscreen-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold-color); padding-bottom: 12px; margin-bottom: 10px; }
-        .gang-editor-layout { display: flex; flex-grow: 1; gap: 15px; overflow: hidden; position: relative; }
-        
-        .gang-sidebar { width: 240px; min-width: 240px; background: rgba(8, 13, 20, 0.95); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; display: flex; flex-direction: column; gap: 10px; z-index: 10; }
-        
-        .gang-canvas-area { flex-grow: 1; background: #06090f; border: 1px solid var(--gold-color); border-radius: 8px; position: relative; overflow: auto; background-image: linear-gradient(to right, #101926 1px, transparent 1px), linear-gradient(to bottom, #101926 1px, transparent 1px); background-size: 30px 30px; cursor: grab; }
+        /* ================= تصميم قائمة العصابات (القديمة) ================= */
+        .gangs-list-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin-top: 15px; }
+        .gang-item-card { background: rgba(15, 22, 35, 0.9); border: 1px solid var(--gold-color); border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .gang-item-card:hover { background: rgba(25, 38, 58, 0.95); transform: translateY(-3px); }
+        .create-gang-btn { background: rgba(197, 160, 89, 0.1); border: 2px dashed var(--gold-color); border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; color: var(--gold-color); font-weight: bold; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px; }
+        .create-gang-btn:hover { background: rgba(197, 160, 89, 0.2); }
+
+        /* ================= الشجرة التنظيمية الجديدة (داخل ملف العصابة) ================= */
+        .gang-tree-wrapper { display: none; flex-direction: column; height: 75vh; border: 1px solid var(--gold-color); border-radius: 10px; overflow: hidden; background: #06090f; }
+        .gang-tree-topbar { display: flex; justify-content: space-between; align-items: center; background: rgba(11, 16, 23, 0.95); padding: 12px 20px; border-bottom: 1px solid var(--gold-color); }
+        .gang-editor-layout { display: flex; flex-grow: 1; position: relative; overflow: hidden; }
+        .gang-sidebar { width: 240px; min-width: 240px; background: rgba(8, 13, 20, 0.95); border-left: 1px solid var(--border-color); padding: 15px; display: flex; flex-direction: column; gap: 10px; z-index: 10; }
+        .gang-canvas-area { flex-grow: 1; position: relative; overflow: auto; background-image: linear-gradient(to right, #101926 1px, transparent 1px), linear-gradient(to bottom, #101926 1px, transparent 1px); background-size: 30px 30px; cursor: grab; }
         .gang-canvas-inner-world { position: relative; width: 5000px; height: 5000px; transform-origin: 0 0; }
         
         .drawio-tool-btn { background: rgba(197, 160, 89, 0.15); color: var(--gold-color); border: 1px solid var(--gold-color); padding: 8px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: bold; text-align: right; width: 100%; transition: 0.2s;}
@@ -145,23 +127,17 @@
         .node-circle { border-radius: 50% !important; min-width: 90px !important; min-height: 90px !important; }
         .node-text { background: rgba(0,0,0,0.5); border: 1px dashed var(--gold-color); color: var(--gold-color); font-size: 14px; }
         .node-line { position: absolute; background: var(--gold-color); cursor: move; z-index: 20; min-width: 50px; min-height: 4px; border-radius: 2px; }
-        
         .node-content-editable { outline: none; width: 100%; min-height: 25px; white-space: pre-wrap; word-break: break-word; z-index: 25; }
-        
         .connected-svg-line { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
         .connected-svg-line line { stroke: var(--gold-color); stroke-width: 3; stroke-dasharray: 4 2; pointer-events: visibleStroke; cursor: pointer; }
         .connected-svg-line line:hover { stroke: #00d2ff; stroke-width: 5; }
-        
         .selected-element { outline: 2px dashed var(--success-color) !important; box-shadow: 0 0 15px var(--success-color) !important; z-index: 100 !important; }
-        
         .node-delete-btn {
             position: absolute; top: -10px; left: -10px; background: var(--danger-color); color: #fff; border: 2px solid #fff;
             border-radius: 50%; width: 22px; height: 22px; font-size: 10px; font-weight: bold; cursor: pointer;
             display: none; justify-content: center; align-items: center; z-index: 100;
         }
         .selected-element .node-delete-btn { display: flex; }
-        
-        .btn-action-close { background: var(--danger-color); color: #fff; border: none; padding: 8px 16px; border-radius: 5px; font-weight: bold; cursor: pointer; }
         .btn-action-save { background: var(--success-color); color: #fff; border: none; padding: 8px 16px; border-radius: 5px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
@@ -204,7 +180,6 @@
         </div>
 
         <div class="folder-grid-wrapper">
-            <!-- شريط الأخبار -->
             <div class="desktop-broadcast-card">
                 <div style="font-size: 11px; color: #ef4444; font-weight: 800; margin-bottom:10px;">🚨 البث الفوري والتعاميم</div>
                 <div style="font-size: 12px; color: #fca5a5; line-height: 1.6;">
@@ -213,7 +188,6 @@
                 </div>
             </div>
 
-            <!-- لوحة المجلدات -->
             <div class="folder-grid-panel">
                 <div class="dashboard-header">
                     <div>
@@ -233,9 +207,9 @@
                         <span class="folder-card-icon">📊</span><b>التقارير اليومية</b><small>تقارير الميدان</small>
                     </div>
                     
-                    <!-- الزر الذي يفتح الشجرة التنظيمية -->
-                    <div class="folder-card" onclick="openGangTree()">
-                        <span class="folder-card-icon">🏴‍☠️</span><b>العصابات والهيكل التنظيمي</b><small>الشجرة التفاعلية لهياكل التنظيمات</small>
+                    <!-- زر العصابات والهيكل التنظيمي (يفتح قائمة العصابات القديمة) -->
+                    <div class="folder-card" onclick="openGangsDirectory()">
+                        <span class="folder-card-icon">🏴‍☠️</span><b>العصابات والهيكل التنظيمي</b><small>إدارة وقوائم العصابات</small>
                     </div>
                     
                     <div class="folder-card" onclick="openWorkspace('archive')">
@@ -249,7 +223,7 @@
         </div>
     </div>
 
-    <!-- 3. مساحة العمل العادية (للقضايا والمطلوبين الخ) -->
+    <!-- 3. مساحة العمل العامة (للقضايا والمطلوبين الخ) -->
     <div class="main-wrapper" id="workspacePanel" style="display:none; padding:0;">
         <div class="workspace-panel" style="display:block;">
             <button class="btn-back" onclick="closeWorkspace()">← العودة للرئيسية</button>
@@ -257,52 +231,83 @@
         </div>
     </div>
 
-    <!-- 4. شاشة الشجرة التنظيمية (معزولة كلياً في Overlay) -->
-    <div class="gang-fullscreen-overlay" id="gangTreeOverlay">
-        <div class="gang-fullscreen-header">
-            <div style="display:flex; align-items:center; gap:12px;">
-                <span style="font-size:24px;">🏴‍☠️</span>
-                <span style="color: var(--gold-color); font-size: 18px; font-weight: bold;">مخطط الهيكل التنظيمي</span>
-            </div>
-            <div style="display:flex; gap:10px;">
-                <button class="btn-action-close" onclick="closeGangTree()">✕ إغلاق الشجرة</button>
-                <button class="btn-action-save" onclick="alert('تم حفظ الهيكل التنظيمي بنجاح')">💾 حفظ التعديلات</button>
-            </div>
-        </div>
-        <div class="gang-editor-layout">
-            <div class="gang-sidebar">
-                <h4 style="color: #fff; margin-bottom: 5px; font-size: 14px;">أدوات الرسم والتخطيط</h4>
-                <p style="font-size: 10px; color: var(--text-muted); margin-bottom: 10px;">اضغط على الأداة ثم اسحب الماوس في مساحة العمل للرسم.</p>
-                
-                <button class="drawio-tool-btn" id="btnSpawnRect" onclick="activateDrawingMode('rect', 'نص جديد')">▭ إنشاء مستطيل</button>
-                <button class="drawio-tool-btn" id="btnSpawnCircle" onclick="activateDrawingMode('circle', 'نص')">⭕ إنشاء دائرة</button>
-                <button class="drawio-tool-btn" id="btnSpawnText" onclick="activateDrawingMode('text', 'ملاحظة...')">💬 نص حر بدون إطار</button>
-                <button class="drawio-tool-btn" id="btnSpawnLine" onclick="activateDrawingMode('line', '')">➖ خط فاصل</button>
-                
-                <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 5px 0;">
-                
-                <button class="drawio-tool-btn" id="btnLinkNodes" style="background: rgba(0, 132, 255, 0.2); color: #38bdf8; border-color: #38bdf8;" onclick="toggleLinkingMode()">🔗 ربط عنصرين بخط</button>
-                
-                <div style="margin-top:auto; font-size: 11px; color: #fca5a5; background: rgba(217, 4, 41, 0.1); padding: 10px; border-radius: 5px; border: 1px dashed var(--danger-color);">
-                    <b>طريقة الحذف:</b><br>انقر على أي عنصر لتحديده ثم اضغط زر <b>Delete</b> من لوحة المفاتيح.
-                </div>
-                <div style="font-size: 11px; color: #6ee7b7; background: rgba(16, 185, 129, 0.1); padding: 10px; border-radius: 5px; border: 1px dashed var(--success-color); margin-top:5px;">
-                    <b>طريقة التحريك:</b><br>استخدم (الزر الأيمن للماوس) للتحرك داخل المساحة.
-                </div>
-            </div>
+    <!-- 4. نافذة قائمة العصابات والهيكل التنظيمي -->
+    <div class="main-wrapper" id="gangsDirectoryPanel" style="display:none; padding:0;">
+        <div class="workspace-panel" style="display:block;">
+            <button class="btn-back" onclick="closeGangsDirectory()">← العودة للرئيسية</button>
             
-            <div class="gang-canvas-area" id="gangCanvasArea">
-                <div class="gang-canvas-inner-world" id="gangCanvasInnerWorld">
-                    <svg class="connected-svg-line" id="svgCanvas"></svg>
+            <div id="gangsListMainView">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div>
+                        <h2 style="color:var(--gold-color);">قائمة العصابات والهياكل التنظيمية</h2>
+                        <p style="color:var(--text-muted); font-size:12px; margin-top:3px;">اختر عصابة لعرض شجرتها التنظيمية أو أنشئ عصابة جديدة</p>
+                    </div>
+                    <div style="width: 250px;">
+                        <input type="text" id="searchGangInput" placeholder="بحث عن عصابة..." style="width:100%; padding:8px; background:rgba(4,6,10,0.8); border:1px solid var(--border-color); border-radius:5px; color:#fff; font-size:12px;" oninput="filterGangsList()">
+                    </div>
+                </div>
+
+                <div class="gangs-list-container" id="gangsGridContainer">
+                    <!-- زر إنشاء عصابة جديدة -->
+                    <div class="create-gang-btn" onclick="promptCreateGang()">
+                        <span style="font-size:24px;">➕</span>
+                        <span>إنشاء عصابة جديدة</span>
+                    </div>
+                    <!-- عصابات افتراضية كمثال -->
+                    <div class="gang-item-card" onclick="openSpecificGangTree('عصابة المافيا الإيطالية')">
+                        <div style="font-size:24px; margin-bottom:8px;">🎩</div>
+                        <b style="color:#fff; font-size:14px;">عصابة المافيا الإيطالية</b>
+                        <small style="color:var(--text-muted); font-size:11px; margin-top:4px;">انقر لدخول الهيكل التنظيمي</small>
+                    </div>
+                    <div class="gang-item-card" onclick="openSpecificGangTree('عصابة الشوارع الجنوبية')">
+                        <div style="font-size:24px; margin-bottom:8px;">🔥</div>
+                        <b style="color:#fff; font-size:14px;">عصابة الشوارع الجنوبية</b>
+                        <small style="color:var(--text-muted); font-size:11px; margin-top:4px;">انقر لدخول الهيكل التنظيمي</small>
+                    </div>
                 </div>
             </div>
+
+            <!-- الشجرة التنظيمية الجديدة الخاصة بالعصابة المختارة -->
+            <div class="gang-tree-wrapper" id="gangTreeWorkspace">
+                <div class="gang-tree-topbar">
+                    <button class="btn-back" style="margin-bottom:0;" onclick="backToGangsList()">← العودة لقائمة العصابات</button>
+                    <div style="color: var(--gold-color); font-size: 16px; font-weight: bold;" id="currentGangTitleDisp">الهيكل التنظيمي</div>
+                    <button class="btn-action-save" onclick="alert('تم حفظ هيكل العصابة بنجاح')">💾 حفظ الهيكل</button>
+                </div>
+                
+                <div class="gang-editor-layout">
+                    <div class="gang-canvas-area" id="gangCanvasArea">
+                        <div class="gang-canvas-inner-world" id="gangCanvasInnerWorld">
+                            <svg class="connected-svg-line" id="svgCanvas"></svg>
+                        </div>
+                    </div>
+                    
+                    <div class="gang-sidebar">
+                        <h4 style="color: #fff; margin-bottom: 5px; font-size: 13px;">أدوات الرسم والتخطيط</h4>
+                        <p style="font-size: 10px; color: var(--text-muted); margin-bottom: 8px;">اختر الأداة وارسم داخل المساحة.</p>
+                        
+                        <button class="drawio-tool-btn" id="btnSpawnRect" onclick="activateDrawingMode('rect', 'عضو / منصب')">▭ مستطيل (منصب)</button>
+                        <button class="drawio-tool-btn" id="btnSpawnCircle" onclick="activateDrawingMode('circle', 'قائد')">⭕ دائرة (قائد)</button>
+                        <button class="drawio-tool-btn" id="btnSpawnText" onclick="activateDrawingMode('text', 'ملاحظة...')">💬 نص حر</button>
+                        <button class="drawio-tool-btn" id="btnSpawnLine" onclick="activateDrawingMode('line', '')">➖ خط فاصل</button>
+                        
+                        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 3px 0;">
+                        
+                        <button class="drawio-tool-btn" id="btnLinkNodes" style="background: rgba(0, 132, 255, 0.2); color: #38bdf8; border-color: #38bdf8;" onclick="toggleLinkingMode()">🔗 ربط عنصرين</button>
+                        
+                        <div style="margin-top:auto; font-size: 10px; color: #fca5a5; background: rgba(217, 4, 41, 0.1); padding: 8px; border-radius: 4px; border: 1px dashed var(--danger-color);">
+                            <b>للحذف:</b> انقر على العنصر واضغط زر <b>Delete</b> من لوحة المفاتيح.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
 
     <!-- سكربتات التحكم -->
     <script>
-        // دوال تسجيل الدخول والتنقل الأساسية
         function attemptLogin() {
             const u = document.getElementById("usernameInput").value.trim();
             if(u === "") {
@@ -317,6 +322,7 @@
         function logoutSystem() {
             document.getElementById("main-system").style.display = "none";
             document.getElementById("workspacePanel").style.display = "none";
+            document.getElementById("gangsDirectoryPanel").style.display = "none";
             document.getElementById("loginScreen").style.display = "flex";
             document.getElementById("usernameInput").value = "";
             document.getElementById("passwordInput").value = "";
@@ -325,7 +331,7 @@
         function openWorkspace(type) {
             document.getElementById("main-system").style.display = "none";
             document.getElementById("workspacePanel").style.display = "block";
-            document.getElementById("workspaceContentContainer").innerHTML = `<h2 style="color:var(--gold-color);">قسم: ${type.toUpperCase()}</h2><p style="color:#fff; margin-top:10px;">هذا هو القسم القديم، وهو يعمل بشكل سليم تماماً.</p>`;
+            document.getElementById("workspaceContentContainer").innerHTML = `<h2 style="color:var(--gold-color);">قسم: ${type.toUpperCase()}</h2><p style="color:#fff; margin-top:10px;">هذا القسم يعمل بشكل سليم.</p>`;
         }
 
         function closeWorkspace() {
@@ -333,20 +339,58 @@
             document.getElementById("main-system").style.display = "block";
         }
 
-        // ================= دوال الشجرة التنظيمية المستقلة ================= //
-        function openGangTree() {
-            // نفتح نافذة الشجرة المنبثقة فقط وتغطي كل شيء
-            document.getElementById("gangTreeOverlay").style.display = "flex";
+        // التحكم بقائمة العصابات
+        function openGangsDirectory() {
+            document.getElementById("main-system").style.display = "none";
+            document.getElementById("gangsDirectoryPanel").style.display = "block";
+            document.getElementById("gangsListMainView").style.display = "block";
+            document.getElementById("gangTreeWorkspace").style.display = "none";
         }
 
-        function closeGangTree() {
-            // نغلق النافذة ونعود للوضع الطبيعي
-            document.getElementById("gangTreeOverlay").style.display = "none";
-            // نلغي أي وضع رسم مفعل
+        function closeGangsDirectory() {
+            document.getElementById("gangsDirectoryPanel").style.display = "none";
+            document.getElementById("main-system").style.display = "block";
+        }
+
+        function promptCreateGang() {
+            const name = prompt("أدخل اسم العصابة الجديدة:");
+            if (name && name.trim() !== "") {
+                const container = document.getElementById("gangsGridContainer");
+                const newCard = document.createElement("div");
+                newCard.className = "gang-item-card";
+                newCard.onclick = () => openSpecificGangTree(name);
+                newCard.innerHTML = `
+                    <div style="font-size:24px; margin-bottom:8px;">🏴‍☠️</div>
+                    <b style="color:#fff; font-size:14px;">${name}</b>
+                    <small style="color:var(--text-muted); font-size:11px; margin-top:4px;">انقر لدخول الهيكل التنظيمي</small>
+                `;
+                container.appendChild(newCard);
+            }
+        }
+
+        function filterGangsList() {
+            const q = document.getElementById("searchGangInput").value.toLowerCase();
+            const cards = document.querySelectorAll(".gang-item-card");
+            cards.forEach(c => {
+                const title = c.querySelector("b").innerText.toLowerCase();
+                c.style.display = title.includes(q) ? "block" : "none";
+            });
+        }
+
+        // الانتقال إلى الشجرة التنظيمية الجديدة الخاصة بالعصابة
+        function openSpecificGangTree(gangName) {
+            document.getElementById("gangsListMainView").style.display = "none";
+            document.getElementById("gangTreeWorkspace").style.display = "flex";
+            document.getElementById("currentGangTitleDisp").innerText = "الهيكل التنظيمي: " + gangName;
+        }
+
+        function backToGangsList() {
+            document.getElementById("gangTreeWorkspace").style.display = "none";
+            document.getElementById("gangsListMainView").style.display = "block";
             resetDrawingMode();
         }
 
-        // متغيرات الشجرة
+        // ================= منطق الشجرة التنظيمية (Draw.io مصغر) ================= //
         let isDrawingMode = false;
         let activeDrawingType = null;
         let defaultText = '';
@@ -355,12 +399,10 @@
         let connectedLinks = [];
         let selectedNode = null;
         
-        // متغيرات الرسم بالماوس
         let isDrawingBox = false;
         let startX = 0, startY = 0;
         let previewBox = null;
         
-        // متغيرات التحريك (الزر الأيمن)
         let isRightMouseDown = false;
         let rightStartX = 0, rightStartY = 0;
         
@@ -376,7 +418,7 @@
             
             let btnId = type === 'rect' ? 'btnSpawnRect' : (type === 'circle' ? 'btnSpawnCircle' : (type === 'text' ? 'btnSpawnText' : 'btnSpawnLine'));
             document.getElementById(btnId).classList.add('active-drawing');
-            document.getElementById('btnLinkNodes').innerText = "🔗 ربط عنصرين بخط";
+            document.getElementById('btnLinkNodes').innerText = "🔗 ربط عنصرين";
         }
 
         function toggleLinkingMode() {
@@ -393,7 +435,7 @@
                 linkBtn.innerText = "🎯 انقر على العنصر الأول..";
             } else {
                 linkBtn.classList.remove('active-linking');
-                linkBtn.innerText = "🔗 ربط عنصرين بخط";
+                linkBtn.innerText = "🔗 ربط عنصرين";
                 document.querySelectorAll('.selected-element').forEach(el => el.classList.remove('selected-element'));
             }
         }
@@ -404,12 +446,10 @@
             isLinkingMode = false;
             linkSourceId = null;
             document.querySelectorAll('.drawio-tool-btn').forEach(btn => btn.classList.remove('active-drawing', 'active-linking'));
-            document.getElementById('btnLinkNodes').innerText = "🔗 ربط عنصرين بخط";
+            document.getElementById('btnLinkNodes').innerText = "🔗 ربط عنصرين";
         }
 
-        // أحداث الماوس داخل الشجرة فقط
         canvasArea.addEventListener('mousedown', (e) => {
-            // التحريك بالزر الأيمن
             if (e.button === 2) {
                 isRightMouseDown = true;
                 rightStartX = e.clientX + canvasArea.scrollLeft;
@@ -419,12 +459,10 @@
                 return;
             }
 
-            // إذا نقر على الخلفية نلغي التحديد
             if (e.target === canvasArea || e.target === canvasWorld || e.target.id === 'svgCanvas') {
                 document.querySelectorAll('.selected-element').forEach(el => el.classList.remove('selected-element'));
                 selectedNode = null;
                 
-                // بدء رسم مربع جديد
                 if (isDrawingMode && e.button === 0) {
                     isDrawingBox = true;
                     const rect = canvasWorld.getBoundingClientRect();
@@ -445,12 +483,10 @@
         });
 
         window.addEventListener('mousemove', (e) => {
-            // تحريك الكاميرا
             if (isRightMouseDown) {
                 canvasArea.scrollLeft = rightStartX - e.clientX;
                 canvasArea.scrollTop = rightStartY - e.clientY;
             } 
-            // رسم الصندوق
             else if (isDrawingBox && previewBox) {
                 const rect = canvasWorld.getBoundingClientRect();
                 const curX = e.clientX - rect.left;
@@ -484,14 +520,12 @@
                 previewBox = null;
                 
                 createNode(activeDrawingType, fLeft, fTop, fWidth, fHeight, defaultText);
-                resetDrawingMode(); // العودة للوضع العادي بعد الرسم
+                resetDrawingMode();
             }
         });
 
-        // منع القائمة الجانبية (Right click menu) داخل منطقة العمل فقط
         canvasArea.addEventListener('contextmenu', e => e.preventDefault());
 
-        // دالة إنشاء العنصر
         function createNode(type, x, y, w, h, text) {
             const el = document.createElement('div');
             const id = 'node_' + Date.now();
@@ -529,14 +563,12 @@
             if(event) event.stopPropagation();
         }
 
-        // تفاعل العناصر (السحب والربط والتحديد)
         function setupNodeDrag(el) {
             el.addEventListener('mousedown', (e) => {
-                if (e.button === 2) return; // تجاهل الزر الأيمن
+                if (e.button === 2) return;
                 
                 const id = el.getAttribute('data-id');
                 
-                // حالة الربط
                 if (isLinkingMode) {
                     if (!linkSourceId) {
                         linkSourceId = id;
@@ -544,19 +576,17 @@
                         document.getElementById('btnLinkNodes').innerText = "🎯 انقر على العنصر الثاني..";
                     } else if (linkSourceId !== id) {
                         connectedLinks.push({ from: linkSourceId, to: id });
-                        toggleLinkingMode(); // إنهاء وضع الربط
+                        toggleLinkingMode();
                         drawLines();
                     }
                     e.stopPropagation();
                     return;
                 }
 
-                // حالة التحديد والسحب
                 document.querySelectorAll('.draggable-node, .node-line').forEach(n => n.classList.remove('selected-element'));
                 el.classList.add('selected-element');
                 selectedNode = el;
                 
-                // إذا كان ينقر داخل النص للكتابة لا نسحب العنصر
                 if (e.target.classList.contains('node-content-editable')) return;
 
                 const startX = e.clientX;
@@ -580,7 +610,6 @@
             });
         }
 
-        // رسم الخطوط
         function drawLines() {
             const svg = document.getElementById("svgCanvas");
             svg.innerHTML = "";
@@ -597,7 +626,6 @@
                     line.setAttribute('x1', x1); line.setAttribute('y1', y1);
                     line.setAttribute('x2', x2); line.setAttribute('y2', y2);
                     
-                    // حذف الخط عند النقر عليه
                     line.addEventListener('click', (e) => {
                         connectedLinks.splice(index, 1);
                         drawLines();
@@ -609,10 +637,8 @@
             });
         }
 
-        // حذف العنصر المحدد باستخدام زر Delete من الكيبورد
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Delete') {
-                // التأكد من أننا لسنا نكتب داخل مربع نص أو تسجيل الدخول
                 if (document.activeElement.tagName === 'INPUT' || 
                     document.activeElement.tagName === 'TEXTAREA' || 
                     document.activeElement.isContentEditable) {
@@ -624,7 +650,6 @@
                 }
             }
         });
-
     </script>
 </body>
 </html>
