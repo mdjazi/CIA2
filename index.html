@@ -69,11 +69,16 @@
         
         .badge { padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; background: var(--accent-color); color: #fff; display: inline-block; margin-left: 3px; }
         .badge-admin { background: var(--gold-color); color: #000; }
-        .badge-director { background: #d97706; color: #fff; }
-        .badge-deputy { background: #b45309; color: #fff; }
-        .badge-wing { background: rgba(16, 185, 129, 0.2); border: 1px solid var(--success-color); color: #34d399; font-size: 9px; padding: 2px 6px; border-radius: 3px; }
         
         .folder-grid-wrapper { display: flex; gap: 20px; align-items: flex-start; margin-bottom: 20px; }
+        @media (max-width: 1024px) { .folder-grid-wrapper { flex-direction: column-reverse; } }
+        
+        .desktop-broadcast-card {
+            width: 280px; min-width: 280px; background: rgba(217, 4, 41, 0.12); backdrop-filter: blur(12px);
+            border: 1px solid rgba(217, 4, 41, 0.4); border-radius: 10px; padding: 16px;
+            box-shadow: 0 0 25px rgba(217, 4, 41, 0.2); display: flex; flex-direction: column; gap: 6px; position: relative; z-index: 5;
+        }
+        @media (max-width: 1024px) { .desktop-broadcast-card { width: 100%; } }
         .folder-grid-panel { flex-grow: 1; background: rgba(8, 13, 20, 0.8); border: 1px solid rgba(197, 160, 89, 0.3); padding: 30px; border-radius: 12px; }
         .dashboard-header { display: flex; align-items: center; gap: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); margin-bottom: 25px; }
         .dashboard-logo { width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--gold-color); background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; }
@@ -83,25 +88,6 @@
         .folder-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 10px; }
         @media (max-width: 900px) { .folder-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 500px) { .folder-grid { grid-template-columns: 1fr; } }
-        
-        .item-folder-card {
-            background: rgba(9, 16, 26, 0.85); border: 1px solid rgba(197, 160, 89, 0.35); border-radius: 8px; padding: 15px 14px;
-            cursor: pointer; transition: all 0.3s ease; text-align: right; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;
-            min-height: 120px;
-        }
-        .item-folder-card::before { content: ''; position: absolute; top: 0; right: 0; width: 4px; height: 100%; background: var(--gold-color); }
-        .item-folder-card:hover { transform: translateY(-3px); background: rgba(15, 25, 40, 0.95); border-color: var(--gold-color); }
-        .item-folder-icon { font-size: 22px; margin-bottom: 6px; display: block; }
-        .item-folder-title { display: block; color: #ffffff; font-size: 13px; font-weight: bold; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .item-folder-sub { color: var(--text-muted); font-size: 10px; display: block; margin-bottom: 8px; }
-        .item-folder-btn { display: inline-block; font-size: 9px; color: var(--accent-color); font-weight: bold; text-transform: uppercase; }
-        
-        .wanted-card-yellow { background: rgba(202, 138, 4, 0.08) !important; border-color: rgba(202, 138, 4, 0.4) !important; }
-        .wanted-card-yellow::before { background: #ca8a04 !important; }
-        .wanted-card-orange { background: rgba(234, 88, 12, 0.08) !important; border-color: rgba(234, 88, 12, 0.4) !important; }
-        .wanted-card-orange::before { background: #ea580c !important; }
-        .wanted-card-red { background: rgba(217, 4, 41, 0.1) !important; border-color: rgba(217, 4, 41, 0.5) !important; }
-        .wanted-card-red::before { background: #d90429 !important; }
         
         .folder-card {
             background: rgba(9, 16, 26, 0.7); border: 1px solid rgba(22, 34, 53, 0.9); border-radius: 10px; padding: 25px 20px; cursor: pointer; text-align: right; position: relative; overflow: hidden;
@@ -116,41 +102,12 @@
         .workspace-panel { display: none; background: rgba(11, 16, 23, 0.85); border: 1px solid var(--border-color); border-radius: 10px; padding: 25px; margin-bottom: 20px; }
         .btn-back { background: rgba(4, 6, 10, 0.8); color: var(--text-color); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-bottom: 20px; font-weight: bold; font-size: 12px; position: relative; z-index: 5; }
         
-        .tactical-cockpit-wrapper {
-            position: relative; background: url('Gemini_Generated_Image_v6rzjev6rzjev6rz.jpg') no-repeat center center; background-size: cover;
-            border: 2px solid #1a3148; border-radius: 16px; padding: 40px 20px; box-shadow: 0 0 50px rgba(0, 0, 0, 0.9); overflow: hidden; min-height: 520px; display: flex; flex-direction: column; justify-content: center; align-items: center;
-        }
-        .tactical-cockpit-wrapper::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(3, 6, 10, 0.4); z-index: 1; }
-        
-        .data-injection-header { text-align: center; margin-bottom: 15px; position: relative; z-index: 2; }
-        .data-injection-box { display: inline-block; border: 1px solid #0084ff; background: rgba(4, 10, 18, 0.85); padding: 8px 25px; border-radius: 6px; color: #38bdf8; font-family: monospace; font-size: 13px; letter-spacing: 1px; box-shadow: 0 0 15px rgba(0, 132, 255, 0.3); }
-        .data-injection-arrow { color: #0084ff; margin-top: 4px; font-size: 12px; }
-        
-        .ipad-frame { max-width: 520px; width: 100%; margin: 0 auto; background: rgba(30, 37, 48, 0.85); backdrop-filter: blur(10px); border: 3px solid #333d4d; border-radius: 24px; padding: 18px; box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 30px rgba(0, 132, 255, 0.2); position: relative; z-index: 2; }
-        .ipad-screen { background: rgba(6, 14, 23, 0.92); border: 2px solid #00d2ff; border-radius: 14px; padding: 20px; box-shadow: inset 0 0 25px rgba(0,0,0,0.9); position: relative; }
-        .ipad-cyber-box { border: 1px solid rgba(0, 210, 255, 0.6); background: rgba(2, 12, 22, 0.85); border-radius: 8px; padding: 12px; margin-bottom: 12px; }
-        .ipad-label { color: #7dd3fc; font-size: 11px; font-weight: bold; margin-bottom: 6px; display: block; text-align: center; }
-        .ipad-input { width: 100%; background: rgba(6, 24, 44, 0.95) !important; border: 1px solid #0084ff !important; border-radius: 6px !important; color: #38bdf8 !important; padding: 8px !important; font-family: monospace !important; text-align: center !important; font-size: 13px !important; }
-        .ipad-btn { width: 100%; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: #fff; border: 1px solid #38bdf8; padding: 8px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; margin-top: 6px; }
-        
-        .gang-entry-container { background: rgba(6, 11, 18, 0.95); border: 1px solid var(--gold-color); border-radius: 12px; padding: 22px; box-shadow: 0 0 30px rgba(197, 160, 89, 0.15); }
-        .gang-entry-field { margin-bottom: 15px; }
-        .gang-entry-field label { display: block; font-size: 11px; color: var(--gold-color); font-weight: bold; margin-bottom: 6px; }
-        .gang-entry-field input, .gang-entry-field textarea { width: 100%; background: rgba(3, 6, 10, 0.9); border: 1px solid rgba(197, 160, 89, 0.5); border-radius: 6px; color: #fff; padding: 10px 12px; font-size: 13px; outline: none; }
-        
         table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
         th, td { padding: 10px; border: 1px solid var(--border-color); text-align: right; }
         th { background: rgba(4, 6, 10, 0.9); color: var(--gold-color); }
-        .leader-panel { border: 1px solid var(--gold-color); background: rgba(9, 14, 21, 0.8); padding: 25px; border-radius: 8px; margin-bottom: 20px; }
         
-        .custom-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(2, 4, 7, 0.9); z-index: 2000; justify-content: center; align-items: center; }
-        .custom-modal { background: rgba(11, 16, 23, 0.98); border: 1px solid var(--gold-color); border-radius: 10px; width: 92%; max-width: 950px; padding: 25px; max-height: 92vh; overflow-y: auto; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 20px; }
-        .modal-title { color: var(--gold-color); font-size: 16px; font-weight: bold; }
-        .modal-close { cursor: pointer; color: var(--text-muted); font-size: 18px; font-weight: bold; }
-        .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
-        
-        .gang-fullscreen-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(3, 5, 8, 0.95); z-index: 3000; flex-direction: column; padding: 20px; }
+        /* تنسيقات الشجرة التنظيمية المدمجة */
+        .gang-fullscreen-overlay { display: flex; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(3, 5, 8, 0.95); z-index: 3000; flex-direction: column; padding: 20px; }
         .gang-fullscreen-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--gold-color); padding-bottom: 12px; margin-bottom: 10px; flex-wrap: wrap; gap: 10px; }
         .gang-editor-layout { display: flex; flex-grow: 1; gap: 15px; overflow: hidden; position: relative; }
         
@@ -167,7 +124,6 @@
         .drawio-tool-btn.active-drawing { background: var(--success-color) !important; color: #fff !important; }
         .drawio-tool-btn.active-linking { background: var(--accent-color) !important; color: #fff !important; }
         
-        /* عناصر الشجرة التنظيمية مع التوسع التلقائي للنصوص بدون خروج عن الحدود */
         .draggable-node { 
             position: absolute; min-width: 80px; min-height: 50px; width: auto; height: auto; padding: 12px; border-radius: 6px; cursor: move; user-select: none; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 6px; z-index: 20; 
@@ -176,7 +132,6 @@
         }
         .node-circle { border-radius: 50% !important; min-width: 90px !important; min-height: 90px !important; align-items: center; justify-content: center; text-align: center; }
         .node-text { background: rgba(0,0,0,0.6); border: 1px dashed var(--gold-color); color: var(--gold-color); font-size: 13px; padding: 10px; }
-        .node-image-only { background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; }
         
         .node-content-editable { outline: none; width: 100%; min-width: 50px; min-height: 25px; height: auto; white-space: pre-wrap; word-break: break-word; z-index: 25; position: relative; }
         .node-line { position: absolute; background: var(--gold-color); cursor: move; user-select: none; z-index: 20; min-width: 30px; min-height: 4px; border-radius: 2px; }
@@ -200,78 +155,11 @@
         .node-resize-handle-corner { right: 0; bottom: 0; width: 14px; height: 14px; background: var(--gold-color); cursor: nwse-resize; border: 1px solid #fff; }
         .selected-element .node-resize-handle-right, .selected-element .node-resize-handle-bottom, .selected-element .node-resize-handle-corner { display: block; }
         
-        .cia-classified-doc { background: #f4f4f0; color: #111; padding: 30px; border-radius: 6px; border: 2px solid #333; font-family: 'Courier New', Courier, monospace; position: relative; direction: rtl; text-align: right; font-weight: bold; }
-        
-        .chat-box-container { height: 380px; overflow-y: auto; background: rgba(4, 6, 10, 0.8); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 12px; }
-        .chat-msg { max-width: 80%; padding: 10px 14px; border-radius: 8px; font-size: 12px; line-height: 1.5; position: relative; }
-        .chat-msg-me { align-self: flex-start; background: rgba(0, 132, 255, 0.2); border: 1px solid var(--accent-color); color: #fff; }
-        .chat-msg-other { align-self: flex-end; background: rgba(22, 34, 53, 0.9); border: 1px solid var(--border-color); color: #d1d9e6; }
-        .chat-meta { font-size: 9px; color: var(--gold-color); margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
-        
-        #toast-notification, #toast-delete-notification {
-            position: fixed; top: 30px; left: 50%; transform: translateX(-50%) translateY(-100px);
-            color: #fff; padding: 12px 25px; border-radius: 8px; font-weight: bold; font-size: 14px; z-index: 9999; transition: transform 0.4s; display: flex; align-items: center; gap: 8px;
-        }
-        #toast-notification { background: #10b981; box-shadow: 0 5px 20px rgba(16, 185, 129, 0.4); }
-        #toast-delete-notification { background: var(--danger-color); box-shadow: 0 5px 20px rgba(217, 4, 41, 0.4); }
-        #toast-notification.show, #toast-delete-notification.show { transform: translateX(-50%) translateY(0); }
-        
-        .floating-action-container { position: fixed; bottom: 25px; left: 25px; display: flex; gap: 10px; z-index: 950; display: none; }
-        .floating-bubble-btn {
-            width: 52px; height: 52px; border-radius: 50%; background: rgba(11, 16, 23, 0.65); backdrop-filter: blur(10px);
-            border: 1.5px solid rgba(0, 132, 255, 0.4); color: #fff; display: flex; justify-content: center; align-items: center; font-size: 22px; cursor: pointer; transition: all 0.3s ease;
-        }
-        .floating-bubble-btn:hover { transform: scale(1.1); background: rgba(0, 132, 255, 0.3); border-color: var(--accent-color); }
-        
-        /* آخر تعميم تحت إشعار الرسائل يمين الشاشة */
-        #chat-popup-notification {
-            position: fixed; top: 30px; right: 30px; transform: translateX(450px);
-            background: rgba(11, 16, 23, 0.95); border: 2px solid var(--accent-color); border-radius: 12px;
-            padding: 16px 20px; z-index: 9999; box-shadow: 0 10px 35px rgba(0, 132, 255, 0.4);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 14px; max-width: 320px; backdrop-filter: blur(10px);
-        }
-        #chat-popup-notification.show { transform: translateX(0); }
-
-        .desktop-broadcast-card {
-            position: fixed; top: 110px; right: 30px; transform: translateX(450px);
-            width: 320px; background: rgba(217, 4, 41, 0.15); backdrop-filter: blur(12px);
-            border: 1px solid rgba(217, 4, 41, 0.5); border-radius: 12px; padding: 14px 18px;
-            box-shadow: 0 10px 30px rgba(217, 4, 41, 0.3); z-index: 9998;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; gap: 6px;
-        }
-        .desktop-broadcast-card.show { transform: translateX(0); }
+        .btn-action { background: var(--success-color); color: #fff; border: none; padding: 6px 12px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 11px; }
     </style>
 </head>
 <body>
-    <div id="toast-notification">✅ تم حفظ التغييرات بنجاح</div>
-    <div id="toast-delete-notification">🗑️ تم الحذف بنجاح</div>
-    
-    <div id="chat-popup-notification">
-        <div style="font-size: 28px;">📩</div>
-        <div>
-            <div style="font-size: 10px; color: var(--accent-color); font-weight: 800; letter-spacing: 1px;">تنبيه مراسلة استخباراتية</div>
-            <div id="popup-sender-name" style="font-size: 14px; font-weight: bold; color: #fff; margin-top: 2px;">رسالة جديدة</div>
-        </div>
-    </div>
-
-    <!-- آخر تعميم يظهر تحت إشعار الرسائل يمين الشاشة -->
-    <div class="desktop-broadcast-card" id="desktopBroadcastCard" style="display:none;">
-        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px dashed rgba(217,4,41,0.4); padding-bottom:6px;">
-            <div style="color:#fca5a5; font-size:11px; font-weight:800;">📢 آخر تعميم رسمي</div>
-            <button style="background:rgba(255,255,255,0.1); color:#fff; font-size:9px; padding:2px 6px; border:none; border-radius:3px; cursor:pointer;" onclick="hideDesktopBroadcastForMe()">إخفاء ✕</button>
-        </div>
-        <div id="desktopBroadcastTitle" style="color:#fff; font-size:13px; font-weight:bold; margin-top:2px;">-</div>
-        <div id="desktopBroadcastText" style="color:#e2e8f0; font-size:11px; line-height:1.4; white-space:pre-wrap; max-height:100px; overflow-y:auto;">-</div>
-    </div>
-
-    <div class="floating-action-container" id="floatingActionContainer">
-        <div class="floating-bubble-btn" onclick="openSection('chatSection')" title="غرفة دردشة الأعضاء">📩</div>
-        <div class="floating-bubble-btn" onclick="openSection('circularsSection')" title="التعميمات الرسمية" style="border-color: rgba(197, 160, 89, 0.5); color: var(--gold-color);">📢</div>
-        <div class="floating-bubble-btn" id="floatingLogsBtn" onclick="openSection('logsSection')" title="سجل العمليات" style="border-color: rgba(16, 185, 129, 0.6); color: var(--success-color); display: none;">📜</div>
-    </div>
-    
     <canvas id="cyber-canvas"></canvas>
-    
     <div class="login-card" id="login-screen">
         <div class="subtitle-top">CIA • FEDERAL DATA TERMINAL</div>
         <div class="logo-container">
@@ -279,11 +167,20 @@
         </div>
         <div class="title">CIA FEDERAL SYSTEM</div>
         <div class="agency-name">CENTRAL INTELLIGENCE AGENCY</div>
-        <div class="input-group"><label>معرف الوكيل / اسم المستخدم</label><input type="text" id="login-username" placeholder="Name"></div>
-        <div class="input-group"><label>كلمة المرور التشفيرية</label><input type="password" id="login-password" placeholder="•••••"></div>
-        <div class="input-group"><label>رمز الأمان التشغيلي (PIN)</label><input type="password" id="login-pin" placeholder="••••"></div>
+        <div class="input-group">
+            <label>معرف الوكيل / اسم المستخدم (Username)</label>
+            <input type="text" id="login-username" placeholder="Name" autocomplete="off">
+        </div>
+        <div class="input-group">
+            <label>كلمة المرور التشفيرية (Passcode)</label>
+            <input type="password" id="login-password" placeholder="•••••" autocomplete="new-password">
+        </div>
+        <div class="input-group">
+            <label>رمز الأمان التشغيلي (PIN Code)</label>
+            <input type="password" id="login-pin" placeholder="••••" autocomplete="off">
+        </div>
         <button class="btn-login" onclick="login()">تسجيل الدخول للمنظومة الفدرالية</button>
-        <div class="sync-status">✅ تم الاتصال بنظام التحكم والاستخبارات</div>
+        <div class="sync-status" id="loading-status">✅ تم الاتصال بنظام التحكم والاستخبارات</div>
         <div class="error-msg" id="error-msg">⚠️ خطأ في بيانات الدخول!</div>
     </div>
     
@@ -291,167 +188,95 @@
         <div class="header-system">
             <div>
                 <h3 style="margin:0; color:var(--gold-color); font-size:18px;">🛡️ CIA SYSTEM | نظام التحكم والاستخبارات</h3>
-                <small style="color:#94a3b8;">العضو: <span id="current-user-display" style="color:var(--accent-color); font-weight:bold;">Mutleq</span> | الرتبة: <span id="current-role-display" class="badge">CIA Member</span></small>
+                <small style="color:#94a3b8;">
+                    العضو: <span id="current-user-display" style="color:var(--accent-color); font-weight:bold;">Mutleq</span> 
+                    | الرتبة: <span id="current-role-display" class="badge">CIA Member</span>
+                </small>
             </div>
             <div class="header-actions">
-                <button class="btn-leader-nav" id="btn-leader-toggle" onclick="openSection('leaderSection')">👑 مركز الإدارة</button>
+                <button class="btn-login" style="margin:0; padding:8px 14px; font-size:12px; background:var(--gold-color); color:#000;" onclick="openOrgTreeSection()">🌐 الشجرة التنظيمية</button>
                 <button class="btn-logout" onclick="logout()">تسجيل الخروج</button>
             </div>
         </div>
         
         <div class="folder-grid-wrapper" id="folderHome">
-            <div class="folder-grid-panel" style="width:100%;">
+            <div class="folder-grid-panel">
                 <div class="dashboard-header">
-                    <div class="dashboard-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA"></div>
-                    <div><div class="grid-title">سطح مكتب نظام CIA الفدرالي</div><small style="color:var(--text-muted)">اختر المجلد الاستخباراتي للوصول إلى قاعدة البيانات</small></div>
+                    <div class="dashboard-logo">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_the_Central_Intelligence_Agency.svg" alt="CIA Emblem">
+                    </div>
+                    <div>
+                        <div class="grid-title">سطح مكتب نظام CIA الفدرالي</div>
+                        <small style="color:var(--text-muted)">اختر المجلد الاستخباراتي للوصول إلى قاعدة البيانات</small>
+                    </div>
                 </div>
                 <div class="folder-grid">
-                    <div class="folder-card" onclick="openSection('reportsSection')"><span class="folder-card-icon">📋</span><b>REPORTS</b><small>التقارير الرسمية</small><span class="open-lbl">فتح المجلد ←</span></div>
-                    <div class="folder-card" onclick="openSection('recordsSection')"><span class="folder-card-icon">📁</span><b>سجلات المواطنين</b><small>سجلات المواطنين الرسمية</small><span class="open-lbl">فتح المجلد ←</span></div>
-                    <div class="folder-card" onclick="openSection('wantedSection')"><span class="folder-card-icon">🚨</span><b>WANTED</b><small>المطلوبون للعدالة</small><span class="open-lbl">فتح المجلد ←</span></div>
-                    <div class="folder-card" onclick="openSection('intelligenceSection')"><span class="folder-card-icon">🕵️‍♂️</span><b>INTELLIGENCE</b><small>ملفات العصابات</small><span class="open-lbl">فتح المجلد ←</span></div>
-                    <div class="folder-card" onclick="openSection('casesSection')"><span class="folder-card-icon">🔓</span><b>DECRYPTION</b><small>التشفير والأمان</small><span class="open-lbl">فتح المجلد ←</span></div>
-                    <div class="folder-card" onclick="openSection('usersSection')"><span class="folder-card-icon">👥</span><b>USERS</b><small>سجل الوكلاء</small><span class="open-lbl">فتح المجلد ←</span></div>
+                    <div class="folder-card" onclick="openOrgTreeSection()"><span class="folder-card-icon">🌐</span><b>ORGANIZATIONAL TREE</b><small>الشجرة التنظيمية والهيكل</small><span class="open-lbl">فتح المجلد ←</span></div>
                 </div>
             </div>
         </div>
-
-        <div class="workspace-panel" id="chatSection">
-            <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            <h3 style="color:var(--gold-color); margin-bottom:15px;">💬 غرف التواصل المباشر بين الوكلاء</h3>
-            <div class="chat-box-container" id="chatMessagesBox"></div>
-            <div style="display:flex; gap:10px;"><input type="text" id="chatInputText" placeholder="اكتب رسالتك..." style="flex-grow:1; margin:0;" onkeypress="if(event.key === 'Enter') sendChatMessage()"><button class="btn-login" style="width:auto; margin:0; padding:0 25px;" onclick="sendChatMessage()">إرسال 🚀</button></div>
-        </div>
-
-        <div class="workspace-panel" id="circularsSection">
-            <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            <h3 style="color:var(--gold-color); margin-bottom: 15px;">📢 لوحة التعميمات الرسمية الفدرالية</h3>
-            <button class="btn-create-action" style="background: var(--gold-color); color:#000;" onclick="openCreateCircularModal()">➕ إنشاء تعميم جديد</button>
-            <div id="circulars-list" class="folder-grid"></div>
-        </div>
-
-        <div class="workspace-panel" id="logsSection">
-            <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            <h3 style="color:var(--success-color); margin-bottom: 15px;">📜 سجل الـ Logs والعمليات (ADMIN ONLY)</h3>
-            <div style="background: rgba(4, 6, 10, 0.9); border: 1px solid var(--success-color); border-radius: 8px; padding: 20px; font-family: monospace; font-size: 12px; color: #34d399; max-height: 400px; overflow-y: auto;" id="logsContainerBox">- لا توجد سجلات حالياً -</div>
-        </div>
-
-        <div class="workspace-panel leader-panel" id="leaderSection">
-            <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            <h3 style="color:var(--gold-color); margin-top:0;">👑 مركز إدارة التراخيص والحسابات</h3>
-            <div id="admin-users-cards-list"></div>
-        </div>
-
-        <div class="workspace-panel" id="reportsSection">
-            <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            <h3 style="color:var(--gold-color); margin-bottom: 15px;">📋 قسم التقارير والمذكرات الاستخباراتية</h3>
-            <button class="btn-create-action" onclick="openCreateReportModal()">➕ إنشاء تقرير جديد</button>
-            <div id="reports-list" class="folder-grid"></div>
-        </div>
-
-        <div class="workspace-panel" id="recordsSection">
-            <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            <h3 style="color:var(--gold-color); margin-bottom: 15px;">📂 سجلات المواطنين الرسمية</h3>
-            <button class="btn-create-action" style="background: var(--gold-color); color:#000;" onclick="openCreateRecordModal()">🪪 إضافة مواطن للسجلات</button>
-            <div id="records-list" class="folder-grid" style="grid-template-columns: repeat(3, 1fr);"></div>
-        </div>
-
-        <div class="workspace-panel" id="wantedSection">
-            <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            <h3 style="color:var(--gold-color); margin-bottom: 15px;">🚨 قائمة المطلوبين للعدالة</h3>
-            <button class="btn-create-action" style="background: var(--danger-color);" onclick="openCreateWantedModal()">➕ إضافة مطلوب جديد</button>
-            <div id="wanted-list" class="folder-grid" style="grid-template-columns: repeat(3, 1fr);"></div>
-        </div>
-
-        <div class="workspace-panel" id="intelligenceSection">
-            <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            <h3 style="color:var(--gold-color); margin-bottom: 15px;">GANG INTELLIGENCE & HIERARCHY 🕵️‍♂️</h3>
-            <button class="btn-create-action" style="background: var(--gold-color); color:#000;" onclick="openCreateGangModal()">🏴‍☠️ إضافة عصابة جديدة للنظام</button>
-            <div id="gangs-list" class="folder-grid" style="grid-template-columns: repeat(3, 1fr);"></div>
-        </div>
-
-        <!-- التشفير الفدرالي -->
-        <div class="workspace-panel" id="casesSection" style="background: transparent; border: none; padding: 0;">
-            <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            <div class="tactical-cockpit-wrapper">
-                <div class="data-injection-header"><div class="data-injection-box">Data Injection Port</div><div class="data-injection-arrow">▼</div></div>
-                <div class="ipad-frame">
-                    <div class="ipad-screen">
-                        <div class="ipad-cyber-box"><label class="ipad-label">أدخل الكود المشفر هنا (عربي / إنجليزي)...</label><input type="text" id="cipherText" class="ipad-input"><button class="ipad-btn" onclick="decryptMsg()">فك التشفير وإدخال</button></div>
-                        <div class="ipad-cyber-box"><label class="ipad-label">🔒 تشفير نص جديد (عربي / إنجليزي)</label><input type="text" id="plainText" class="ipad-input"><button class="ipad-btn" style="background:#059669; border-color:#10b981;" onclick="encryptMsg()">تشفير وإخراج الكود</button></div>
-                        <div class="ipad-cyber-box" style="margin-bottom:0; border-color:#ca8a04;"><label class="ipad-label" style="color:#fde047;">📋 النتيجة النهائية</label><div id="cryptoResult" style="color:#38bdf8; font-size:12px; font-family:monospace; text-align:center; word-break:break-all;">- في انتظار الإدخال -</div></div>
+        
+        <!-- قسم الشجرة التنظيمية المدمج داخل النظام -->
+        <div class="workspace-panel" id="orgTreeSection" style="padding: 0; background: transparent; border: none;">
+            <button class="btn-back" onclick="showHome()" style="margin-bottom: 10px;">← العودة للرئيسية</button>
+            <div class="gang-fullscreen-overlay" style="position: relative; height: 80vh; width: 100%;">
+                <div class="gang-fullscreen-header">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <span style="font-size:20px;">🏴‍☠️</span>
+                        <input type="text" id="gangTitle" value="شجرة الهيكل التنظيمي" style="background: rgba(4, 6, 10, 0.9); border: 1px solid var(--gold-color); color: var(--gold-color); font-size: 15px; font-weight: bold; padding: 4px 10px; border-radius: 6px; width: 200px; outline:none;">
                     </div>
+                    <button class="btn-action" onclick="alert('تم الحفظ بنجاح!')">💾 حفظ التغييرات</button>
                 </div>
-            </div>
-        </div>
-
-        <div class="workspace-panel" id="usersSection">
-            <button class="btn-back" onclick="showHome()">← العودة للرئيسية</button>
-            <h3 style="color:var(--gold-color);">👥 قائمة الأعضاء المسجلين والـ Wings</h3>
-            <table><thead><tr><th>اسم الوكيل</th><th>المعرف</th><th>الرتبة</th><th>الدورات</th></tr></thead><tbody id="users-table-body"></tbody></table>
-        </div>
-    </div>
-    
-    <div class="custom-modal-overlay" id="customModal">
-        <div class="custom-modal">
-            <div class="modal-header"><div class="modal-title" id="modalTitle">✏️ التقرير الاستخباراتي</div><span class="modal-close" onclick="closeModal()">✕</span></div>
-            <div id="modalBody"></div>
-            <div class="modal-actions" id="modalActions"><button class="btn-login" style="background:var(--success-color); margin-top:0;" id="modalSaveBtn">تأكيد وحفظ</button><button class="btn-login" style="background:rgba(255,255,255,0.1); color:#fff; margin-top:0;" onclick="closeModal()">إغلاق</button></div>
-        </div>
-    </div>
-    
-    <!-- محرر العصابات (الشجرة التنظيمية) -->
-    <div class="gang-fullscreen-overlay" id="gangFullscreenModal">
-        <div class="gang-fullscreen-header">
-            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-                <span style="font-size:20px;">🏴‍☠️</span>
-                <input type="text" id="fullscreenGangTitleInput" style="background: rgba(4, 6, 10, 0.9); border: 1px solid var(--gold-color); color: var(--gold-color); font-size: 15px; font-weight: bold; padding: 4px 10px; border-radius: 6px; width: 200px; outline:none;" placeholder="اسم العصابة...">
-                <input type="text" id="fullscreenGangDetails" style="background: rgba(4, 6, 10, 0.9); border: 1px solid var(--border-color); color: #fff; font-size: 13px; padding: 4px 10px; border-radius: 6px; width: 260px; outline:none;" placeholder="نبذة...">
-                <button class="btn-login" style="background:var(--gold-color); color:#000; margin:0; padding:4px 12px; font-size:11px; width:auto;" onclick="updateGangDetailsOnly()">حفظ النبذة والاسم</button>
-            </div>
-            <div style="display: flex; gap: 8px;">
-                <button class="btn-login" style="background: var(--success-color); margin:0; padding: 6px 12px; font-size: 11px;" onclick="saveGangFullscreenCanvas()">💾 حفظ التغييرات</button>
-                <button class="btn-login" style="background: var(--danger-color); margin:0; padding: 6px 12px; font-size: 11px;" onclick="closeGangFullscreen()">✕ إغلاق</button>
-            </div>
-        </div>
-        <div class="gang-editor-layout">
-            <div class="gang-sidebar">
-                <h5 style="color: var(--gold-color); font-size: 11px; margin-bottom: 2px;">📦 أدوات الرسم (Word Style)</h5>
-                <button class="drawio-tool-btn" id="btnSpawnRect" onclick="activateDrawingMode('rect', 'مستطيل جديد')">▭ إنشاء مستطيل (سحب)</button>
-                <button class="drawio-tool-btn" id="btnSpawnCircle" onclick="activateDrawingMode('circle', 'دائرة جديدة')">⭕ إنشاء دائرة (سحب)</button>
-                <button class="drawio-tool-btn" id="btnSpawnText" onclick="activateDrawingMode('text', 'ملاحظة نصية...')">💬 إنشاء نص حر (سحب)</button>
-                <button class="drawio-tool-btn" id="btnSpawnLine" onclick="activateDrawingMode('line', '')">➖ خط منفصل (سحب)</button>
-                <button class="drawio-tool-btn" id="btnSpawnImg" onclick="activateDrawingMode('imgNode', '')" style="border-color:var(--success-color); color:#34d399;">🖼️ مربع صورة (سحب)</button>
-                <button class="drawio-tool-btn" id="btnLinkNodes" style="background:rgba(0, 132, 255, 0.25); border-color:#0084ff; color:#38bdf8;" onclick="toggleLinkingMode()">🔗 ربط عنصرين</button>
-                <hr style="border: 0; border-top: 1px dashed rgba(197, 160, 89, 0.4); margin: 4px 0;">
-                <div style="font-size: 9px; color: var(--text-muted); line-height: 1.3;">💡 انقر على العنصر وحدده ثم اضغط <b>Delete</b> من الكيبورد للحذف.</div>
-                <button class="btn-login" style="background: var(--danger-color); padding: 7px; font-size: 11px; margin-top: 6px;" onclick="deleteGangFromEditor()">🗑️ حذف العصابة</button>
-            </div>
-            <div style="flex-grow: 1; display: flex; flex-direction: column; overflow: hidden;">
-                <div class="zoom-lens-bar-external">
-                    <span style="color:var(--gold-color); font-size:11px; font-weight:bold; margin-left:auto;">مستوى العرض:</span>
-                    <button class="zoom-lens-btn" onclick="zoomCanvas(-0.1)">➖</button>
-                    <span class="zoom-level-lbl" id="zoomLevelLbl">100%</span>
-                    <button class="zoom-lens-btn" onclick="zoomCanvas(0.1)">➕</button>
-                    <button class="zoom-lens-btn" onclick="resetZoom()">🔍</button>
-                </div>
-                <div class="gang-canvas-area" id="gangCanvasArea">
-                    <div class="gang-canvas-inner-world" id="gangCanvasInnerWorld">
-                        <svg class="connected-svg-line" id="svgCanvas"></svg>
+                <div class="gang-editor-layout">
+                    <div class="gang-sidebar">
+                        <h5 style="color: var(--gold-color); font-size: 11px; margin-bottom: 2px;">📦 أدوات الرسم</h5>
+                        <button class="drawio-tool-btn" id="btnSpawnRect" onclick="activateDrawingMode('rect', 'مستطيل جديد')">▭ إنشاء مستطيل (سحب)</button>
+                        <button class="drawio-tool-btn" id="btnSpawnCircle" onclick="activateDrawingMode('circle', 'دائرة جديدة')">⭕ إنشاء دائرة (سحب)</button>
+                        <button class="drawio-tool-btn" id="btnSpawnText" onclick="activateDrawingMode('text', 'ملاحظة نصية...')">💬 إنشاء نص حر (سحب)</button>
+                        <button class="drawio-tool-btn" id="btnSpawnLine" onclick="activateDrawingMode('line', '')">➖ خط منفصل (سحب)</button>
+                        <button class="drawio-tool-btn" id="btnLinkNodes" style="background:rgba(0, 132, 255, 0.25); border-color:#0084ff; color:#38bdf8;" onclick="toggleLinkingMode()">🔗 ربط عنصرين</button>
+                        <hr style="border: 0; border-top: 1px dashed rgba(197, 160, 89, 0.4); margin: 4px 0;">
+                        <div style="font-size: 9px; color: var(--text-muted); line-height: 1.3;">💡 انقر على العنصر وحدده ثم اضغط <b>Delete</b> من الكيبورد للحذف.</div>
+                    </div>
+                    <div style="flex-grow: 1; display: flex; flex-direction: column; overflow: hidden;">
+                        <div class="zoom-lens-bar-external">
+                            <span style="color:var(--gold-color); font-size:11px; font-weight:bold; margin-left:auto;">مستوى العرض:</span>
+                            <button class="zoom-lens-btn" onclick="zoomCanvas(-0.1)">➖</button>
+                            <span class="zoom-level-lbl" id="zoomLevelLbl">100%</span>
+                            <button class="zoom-lens-btn" onclick="zoomCanvas(0.1)">➕</button>
+                            <button class="zoom-lens-btn" onclick="resetZoom()">🔍</button>
+                        </div>
+                        <div class="gang-canvas-area" id="gangCanvasArea">
+                            <div class="gang-canvas-inner-world" id="gangCanvasInnerWorld">
+                                <svg class="connected-svg-line" id="svgCanvas"></svg>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <script>
-        let globalDatabase = {
-            users: { "Majed": { password: "1967", pin: "0000", id: "CIA-001", role: "ADMIN", wings: ["CID"] }, "Mutleq": { password: "123", pin: "1234", id: "CIA-102", role: "CIA Member", wings: ["CID"] } },
-            reports: [], circulars: [], wanted: [], records: [], gangs: [], chat: [], logs: ["[SYSTEM READY]"], hiddenCirculars: {}
-        };
-        let currentUser = "";
-        let isModalOpen = false;
-        let currentEditingGangId = null;
+        // دوال تسجيل الدخول والتنقل الأساسية
+        function login() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('main-system').style.display = 'block';
+        }
+        function logout() {
+            document.getElementById('main-system').style.display = 'none';
+            document.getElementById('login-screen').style.display = 'block';
+        }
+        function showHome() {
+            document.getElementById('folderHome').style.display = 'flex';
+            document.getElementById('orgTreeSection').style.display = 'none';
+        }
+        function openOrgTreeSection() {
+            document.getElementById('folderHome').style.display = 'none';
+            document.getElementById('orgTreeSection').style.display = 'block';
+        }
+
+        // محرك الشجرة التنظيمية والتفاعل
         let selectedElementForDeletion = null;
         let isLinkingMode = false, linkSourceNodeId = null, connectedLinks = [];
         let currentZoomScale = 1.0, activeDrawingType = null, defaultDrawingText = '';
@@ -460,75 +285,6 @@
         const canvasInnerWorld = document.getElementById("gangCanvasInnerWorld");
         let isRightMouseDown = false, rightMouseStartX = 0, rightMouseStartY = 0;
 
-        const canvas = document.getElementById('cyber-canvas');
-        const ctx = canvas.getContext('2d');
-        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-
-        function showToast(text = "✅ تم حفظ التغييرات بنجاح") {
-            const t = document.getElementById("toast-notification");
-            if (t) { t.innerHTML = text; t.classList.add("show"); setTimeout(() => t.classList.remove("show"), 3000); }
-        }
-        function showDeleteToast(text = "🗑️ تم الحذف بنجاح") {
-            const t = document.getElementById("toast-delete-notification");
-            if (t) { t.innerHTML = text; t.classList.add("show"); setTimeout(() => t.classList.remove("show"), 3000); }
-        }
-        function playTacticalBeep() {
-            try {
-                const ac = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = ac.createOscillator(); const g = ac.createGain();
-                osc.type = 'sine'; osc.frequency.setValueAtTime(880, ac.currentTime);
-                g.gain.setValueAtTime(0.1, ac.currentTime); g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.3);
-                osc.connect(g); g.connect(ac.destination); osc.start(); osc.stop(ac.currentTime + 0.3);
-            } catch(e) {}
-        }
-        function showChatPopupNotification(senderName) {
-            playTacticalBeep();
-            const p = document.getElementById("chat-popup-notification");
-            const s = document.getElementById("popup-sender-name");
-            if (p && s) { s.innerText = `رسالة جديدة بواسطة: ${senderName}`; p.classList.add("show"); setTimeout(() => p.classList.remove("show"), 2500); }
-        }
-        function logSystemAction(text) {
-            if (!globalDatabase.logs) globalDatabase.logs = [];
-            globalDatabase.logs.unshift(`[${new Date().toLocaleString('ar-EG')}] ${text}`);
-            if (globalDatabase.logs.length > 50) globalDatabase.logs.pop();
-            saveDatabase();
-        }
-        function loadDatabase() {
-            const dbRef = window.firebaseDB.ref(window.firebaseDB.db, 'cia_system_data');
-            window.firebaseDB.onValue(dbRef, (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    const prevLen = globalDatabase.chat ? globalDatabase.chat.length : 0;
-                    globalDatabase = data;
-                    if (currentUser) {
-                        const newLen = globalDatabase.chat ? globalDatabase.chat.length : 0;
-                        if (newLen > prevLen && prevLen > 0) {
-                            const latest = globalDatabase.chat[newLen - 1];
-                            if (latest && latest.user !== currentUser) showChatPopupNotification(latest.user);
-                        }
-                        renderAllData();
-                    }
-                } else { saveDatabase(); }
-            }, { onlyOnce: true });
-        }
-        function saveDatabase() {
-            const dbRef = window.firebaseDB.ref(window.firebaseDB.db, 'cia_system_data');
-            window.firebaseDB.set(dbRef, globalDatabase).then(() => renderAllData()).catch(err => console.error(err));
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                const dbRef = window.firebaseDB.ref(window.firebaseDB.db, 'cia_system_data');
-                window.firebaseDB.onValue(dbRef, (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) { globalDatabase = data; if (currentUser) renderAllData(); }
-                });
-            }, 1000);
-        });
-
-        // محرك الشجرة التنظيمية وسحب العناصر
         if (canvasArea) {
             canvasArea.addEventListener('mousedown', (e) => {
                 if (e.target === canvasArea || e.target === canvasInnerWorld || e.target.id === 'svgCanvas') {
@@ -584,17 +340,11 @@
                     const finalHeight = parseInt(previewBoxElement.style.height);
                     previewBoxElement.remove(); previewBoxElement = null;
                     
-                    let mediaUrl = '';
-                    if (activeDrawingType === 'imgNode') {
-                        mediaUrl = prompt("أدخل رابط الصورة (URL):", "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?fit=crop&w=300&h=350");
-                        if (!mediaUrl) { resetDrawingMode(); return; }
-                    }
                     const nodeData = {
                         id: 'node_' + Date.now() + Math.floor(Math.random()*10000),
                         type: activeDrawingType,
-                        text: (activeDrawingType === 'imgNode' || activeDrawingType === 'line') ? '' : defaultDrawingText,
-                        x: finalLeft, y: finalTop, width: finalWidth, height: finalHeight, angle: 0,
-                        imageUrl: activeDrawingType === 'imgNode' ? mediaUrl : ''
+                        text: (activeDrawingType === 'line') ? '' : defaultDrawingText,
+                        x: finalLeft, y: finalTop, width: finalWidth, height: finalHeight
                     };
                     renderNodeElement(nodeData);
                     resetDrawingMode();
@@ -607,7 +357,7 @@
         function activateDrawingMode(type, defaultText) {
             activeDrawingType = type; defaultDrawingText = defaultText; isLinkingMode = false;
             document.querySelectorAll('.drawio-tool-btn').forEach(b => b.classList.remove('active-drawing', 'active-linking'));
-            let btnId = type === 'circle' ? 'btnSpawnCircle' : (type === 'text' ? 'btnSpawnText' : (type === 'line' ? 'btnSpawnLine' : (type === 'imgNode' ? 'btnSpawnImg' : 'btnSpawnRect')));
+            let btnId = type === 'circle' ? 'btnSpawnCircle' : (type === 'text' ? 'btnSpawnText' : (type === 'line' ? 'btnSpawnLine' : 'btnSpawnRect'));
             const btn = document.getElementById(btnId);
             if (btn) { btn.classList.add('active-drawing'); btn.innerText = "🎯 ارسم بالماوس الآن..."; }
         }
@@ -617,13 +367,11 @@
             document.getElementById('btnSpawnCircle').innerText = "⭕ إنشاء دائرة (سحب)";
             document.getElementById('btnSpawnText').innerText = "💬 إنشاء نص حر (سحب)";
             document.getElementById('btnSpawnLine').innerText = "➖ خط منفصل (سحب)";
-            document.getElementById('btnSpawnImg').innerText = "🖼️ مربع صورة (سحب)";
             activeDrawingType = null;
         }
 
-        // تفعيل الحذف باستخدام لوحة المفاتيح عبر زر Delete
         window.addEventListener('keydown', (e) => {
-            if (e.key === 'Delete' && currentEditingGangId !== null && !isModalOpen) {
+            if (e.key === 'Delete') {
                 if (document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA' || document.activeElement.classList.contains('node-content-editable'))) {
                     return;
                 }
@@ -635,313 +383,15 @@
             }
         });
 
-        function checkAutoLogin() {
-            loadDatabase();
-            const savedUser = localStorage.getItem("active_cia_user");
-            if (savedUser && globalDatabase.users && globalDatabase.users[savedUser]) openMainSystem(savedUser);
-        }
-        function login() {
-            loadDatabase();
-            const user = document.getElementById("login-username").value.trim();
-            const pass = document.getElementById("login-password").value.trim();
-            const pin = document.getElementById("login-pin").value.trim();
-            if (globalDatabase.users && globalDatabase.users[user] && globalDatabase.users[user].password === pass && globalDatabase.users[user].pin === pin) {
-                localStorage.setItem("active_cia_user", user);
-                document.getElementById("login-screen").style.display = "none";
-                logSystemAction(`تسجيل دخول ناجح للوكيل: ${user}`);
-                openMainSystem(user);
-            } else { document.getElementById("error-msg").style.display = "block"; }
-        }
-        function logout() { localStorage.removeItem("active_cia_user"); location.reload(); }
-
-        function openMainSystem(user) {
-            currentUser = user;
-            document.getElementById("login-screen").style.display = "none";
-            document.getElementById("main-system").style.display = "block";
-            document.getElementById("floatingActionContainer").style.display = "flex";
-            document.getElementById("current-user-display").innerText = user;
-            const userData = globalDatabase.users[user] || { role: "CIA Member" };
-            document.getElementById("current-role-display").innerText = userData.role;
-            document.getElementById("floatingLogsBtn").style.display = (userData.role === "ADMIN") ? "flex" : "none";
-            document.getElementById("btn-leader-toggle").style.display = (userData.role === "ADMIN" || userData.role === "Director") ? "inline-block" : "none";
-            renderAllData(); showHome();
-        }
-
-        function openSection(sectionId) {
-            document.getElementById("folderHome").style.display = "none";
-            document.querySelectorAll('.workspace-panel').forEach(p => p.style.display = "none");
-            const target = document.getElementById(sectionId);
-            if (target) target.style.display = "block";
-            if (sectionId === 'circularsSection') renderCirculars();
-            else if (sectionId === 'reportsSection') renderReports();
-            else if (sectionId === 'recordsSection') renderRecords();
-            else if (sectionId === 'wantedSection') renderWanted();
-            else if (sectionId === 'intelligenceSection') renderGangs();
-            else if (sectionId === 'usersSection') renderUsers();
-        }
-        function showHome() {
-            loadDatabase();
-            document.getElementById("folderHome").style.display = "flex";
-            document.querySelectorAll('.workspace-panel').forEach(p => p.style.display = "none");
-            renderDesktopBroadcast();
-        }
-        function renderAllData() {
-            renderReports(); renderCirculars(); renderWanted(); renderRecords(); renderGangs(); renderUsers(); renderChatMessages(); renderDesktopBroadcast();
-        }
-
-        function renderDesktopBroadcast() {
-            const card = document.getElementById("desktopBroadcastCard");
-            if (!card) return;
-            const list = globalDatabase.circulars || [];
-            if (list.length === 0) { card.style.display = "none"; return; }
-            const latest = list[list.length - 1];
-            if (!globalDatabase.hiddenCirculars) globalDatabase.hiddenCirculars = {};
-            if ((globalDatabase.hiddenCirculars[currentUser] || {})[latest.id]) { card.style.display = "none"; return; }
-            document.getElementById("desktopBroadcastTitle").innerText = `[${latest.title}] — المرسل: ${latest.author}`;
-            document.getElementById("desktopBroadcastText").innerText = latest.details;
-            card.style.display = "flex";
-            setTimeout(() => card.classList.add("show"), 100);
-        }
-        function hideDesktopBroadcastForMe() {
-            const list = globalDatabase.circulars || [];
-            if (list.length === 0) return;
-            const latest = list[list.length - 1];
-            loadDatabase();
-            if (!globalDatabase.hiddenCirculars) globalDatabase.hiddenCirculars = {};
-            if (!globalDatabase.hiddenCirculars[currentUser]) globalDatabase.hiddenCirculars[currentUser] = {};
-            globalDatabase.hiddenCirculars[currentUser][latest.id] = true;
-            saveDatabase();
-            const card = document.getElementById("desktopBroadcastCard");
-            card.classList.remove("show");
-            setTimeout(() => card.style.display = "none", 400);
-            showToast("✅ تم إخفاء التعميم بنجاح");
-        }
-
-        function renderChatMessages() {
-            const box = document.getElementById("chatMessagesBox");
-            if (!box) return;
-            box.innerHTML = "";
-            (globalDatabase.chat || []).forEach(m => {
-                box.innerHTML += `<div class="chat-msg ${m.user === currentUser ? 'chat-msg-me' : 'chat-msg-other'}"><div class="chat-meta"><span><b>${m.user}</b> (${m.time})</span></div><div>${m.text}</div></div>`;
-            });
-            box.scrollTop = box.scrollHeight;
-        }
-        function sendChatMessage() {
-            const input = document.getElementById("chatInputText");
-            if (!input.value.trim()) return;
-            loadDatabase();
-            if (!globalDatabase.chat) globalDatabase.chat = [];
-            globalDatabase.chat.push({ id: Date.now(), user: currentUser, text: input.value.trim(), time: new Date().toLocaleTimeString('ar-EG') });
-            input.value = ""; saveDatabase();
-        }
-
-        function openCustomModal(title, html, onSave) {
-            isModalOpen = true;
-            document.getElementById("modalTitle").innerText = title;
-            document.getElementById("modalBody").innerHTML = html;
-            document.getElementById("customModal").style.display = "flex";
-            const saveBtn = document.getElementById("modalSaveBtn");
-            if (onSave) { saveBtn.style.display = "block"; saveBtn.onclick = () => onSave(); } else { saveBtn.style.display = "none"; }
-        }
-        function closeModal() { isModalOpen = false; document.getElementById("customModal").style.display = "none"; }
-
-        // إنشاء وعرض التقارير
-        function openCreateReportModal() {
-            openCustomModal("➕ إنشاء تقرير استخباراتي", `
-                <div class="input-group"><label>عنوان التقرير</label><input type="text" id="popReportTitle"></div>
-                <div class="input-group"><label>مضمون التقرير</label><textarea id="popReportDetails" rows="5"></textarea></div>
-            `, () => {
-                const title = document.getElementById("popReportTitle").value.trim();
-                const details = document.getElementById("popReportDetails").value;
-                if (!title) return alert("أدخل العنوان!");
-                loadDatabase();
-                if (!globalDatabase.reports) globalDatabase.reports = [];
-                globalDatabase.reports.push({ id: Date.now(), title, details, author: currentUser, date: new Date().toLocaleDateString() });
-                saveDatabase(); closeModal(); renderReports(); showToast("✅ تم إنشاء التقرير بنجاح");
-            });
-        }
-        function viewReport(id) {
-            const r = (globalDatabase.reports || []).find(item => item.id === id);
-            if (!r) return;
-            openCustomModal(`📋 التقرير: ${r.title}`, `<div class="cia-classified-doc"><h3>${r.title}</h3><p style="margin-top:10px;"><b>الكاتب:</b> ${r.author}</p><hr style="margin:10px 0;"><p style="white-space:pre-wrap;">${r.details}</p></div>`, null);
-        }
-        function renderReports() {
-            const list = document.getElementById("reports-list");
-            if (!list) return;
-            list.innerHTML = "";
-            (globalDatabase.reports || []).forEach(r => {
-                list.innerHTML += `<div class="item-folder-card" onclick="viewReport(${r.id})"><div><span class="item-folder-icon">📋</span><span class="item-folder-title">${r.title}</span><span class="item-folder-sub">الكاتب: ${r.author}</span></div><span class="item-folder-btn">فتح ←</span></div>`;
-            });
-        }
-
-        // إنشاء وعرض التعميمات
-        function openCreateCircularModal() {
-            openCustomModal("📢 إنشاء تعميم رسمي", `
-                <div class="input-group"><label>عنوان التعميم</label><input type="text" id="popCircularTitle"></div>
-                <div class="input-group"><label>نص التعميم</label><textarea id="popCircularDetails" rows="5"></textarea></div>
-            `, () => {
-                const title = document.getElementById("popCircularTitle").value.trim();
-                const details = document.getElementById("popCircularDetails").value;
-                if (!title) return alert("أدخل العنوان!");
-                loadDatabase();
-                if (!globalDatabase.circulars) globalDatabase.circulars = [];
-                globalDatabase.circulars.push({ id: Date.now(), title, details, author: currentUser, date: new Date().toLocaleDateString() });
-                saveDatabase(); closeModal(); renderCirculars(); showToast("✅ تم نشر التعميم بنجاح");
-            });
-        }
-        function renderCirculars() {
-            const list = document.getElementById("circulars-list");
-            if (!list) return;
-            list.innerHTML = "";
-            (globalDatabase.circulars || []).forEach(c => {
-                list.innerHTML += `<div class="item-folder-card"><div><span class="item-folder-icon">📢</span><span class="item-folder-title">${c.title}</span><span class="item-folder-sub">المرسل: ${c.author}</span></div></div>`;
-            });
-        }
-
-        // سجلات المواطنين
-        function openCreateRecordModal() {
-            openCustomModal("🪪 إضافة مواطن للسجلات", `
-                <div class="input-group"><label>الاسم الأول</label><input type="text" id="popRecFN"></div>
-                <div class="input-group"><label>الاسم الأخير</label><input type="text" id="popRecLN"></div>
-                <div class="input-group"><label>ملاحظات السجل</label><textarea id="popRecNotes" rows="3"></textarea></div>
-            `, () => {
-                const fn = document.getElementById("popRecFN").value.trim();
-                const ln = document.getElementById("popRecLN").value.trim();
-                if (!fn) return alert("أدخل الاسم!");
-                loadDatabase();
-                if (!globalDatabase.records) globalDatabase.records = [];
-                globalDatabase.records.push({ id: Date.now(), firstName: fn, lastName: ln, notes: document.getElementById("popRecNotes").value });
-                saveDatabase(); closeModal(); renderRecords(); showToast("✅ تمت الإضافة بنجاح");
-            });
-        }
-        function renderRecords() {
-            const list = document.getElementById("records-list");
-            if (!list) return;
-            list.innerHTML = "";
-            (globalDatabase.records || []).forEach(r => {
-                list.innerHTML += `<div class="item-folder-card"><div><span class="item-folder-icon">📁</span><span class="item-folder-title">${r.firstName} ${r.lastName}</span><span class="item-folder-sub">${r.notes || 'سجل رسمي'}</span></div></div>`;
-            });
-        }
-
-        // المطلوبون
-        function openCreateWantedModal() {
-            openCustomModal("🚨 إضافة مطلوب جديد", `
-                <div class="input-group"><label>اسم المطلوب</label><input type="text" id="popWanName"></div>
-                <div class="input-group"><label>التهم</label><textarea id="popWanCrime" rows="3"></textarea></div>
-            `, () => {
-                const name = document.getElementById("popWanName").value.trim();
-                if (!name) return alert("أدخل اسم المطلوب!");
-                loadDatabase();
-                if (!globalDatabase.wanted) globalDatabase.wanted = [];
-                globalDatabase.wanted.push({ id: Date.now(), name, risk: "🔴 خطر جداً", crime: document.getElementById("popWanCrime").value });
-                saveDatabase(); closeModal(); renderWanted(); showToast("✅ تمت الإضافة بنجاح");
-            });
-        }
-        function renderWanted() {
-            const list = document.getElementById("wanted-list");
-            if (!list) return;
-            list.innerHTML = "";
-            (globalDatabase.wanted || []).forEach(w => {
-                list.innerHTML += `<div class="item-folder-card wanted-card-red"><div><span class="item-folder-icon">🚨</span><span class="item-folder-title">${w.name}</span><span class="item-folder-sub">${w.risk}</span></div></div>`;
-            });
-        }
-
-        // العصابات والشجرة التنظيمية المحدثة
-        function openCreateGangModal() {
-            openCustomModal("🏴‍☠️ إضافة عصابة جديدة", `
-                <div class="gang-entry-container">
-                    <div class="gang-entry-field"><label>اسم العصابة</label><input type="text" id="popGangName"></div>
-                    <div class="gang-entry-field"><label>نبذة عن العصابة</label><textarea id="popGangDetails" rows="3"></textarea></div>
-                </div>
-            `, () => {
-                const name = document.getElementById("popGangName").value.trim();
-                if (!name) return alert("أدخل اسم العصابة!");
-                loadDatabase();
-                if (!globalDatabase.gangs) globalDatabase.gangs = [];
-                globalDatabase.gangs.push({ id: Date.now(), name, details: document.getElementById("popGangDetails").value.trim(), nodes: [], links: [], viewX: 4000, viewY: 4000, zoom: 1.0 });
-                saveDatabase(); closeModal(); renderGangs(); showToast("✅ تمت إضافة العصابة بنجاح");
-            });
-        }
-        function viewGangFolder(id) {
-            loadDatabase();
-            const g = (globalDatabase.gangs || []).find(item => item.id === id);
-            if (!g) return;
-            currentEditingGangId = g.id;
-            selectedElementForDeletion = null;
-            isLinkingMode = false; linkSourceNodeId = null; resetDrawingMode();
-            
-            document.getElementById("fullscreenGangTitleInput").value = g.name;
-            document.getElementById("fullscreenGangDetails").value = g.details || '';
-            
-            const world = document.getElementById("gangCanvasInnerWorld");
-            world.querySelectorAll('.draggable-node, .node-line').forEach(n => n.remove());
-            
-            connectedLinks = Array.isArray(g.links) ? [...g.links] : [];
-            currentZoomScale = g.zoom !== undefined ? g.zoom : 1.0;
-            updateZoomDisplay();
-            
-            if (g.nodes && Array.isArray(g.nodes)) g.nodes.forEach(n => renderNodeElement(n));
-            updateConnectedSvgLines();
-            document.getElementById("gangFullscreenModal").style.display = "flex";
-            setTimeout(() => { if (canvasArea) { canvasArea.scrollLeft = g.viewX || 4800; canvasArea.scrollTop = g.viewY || 4800; } }, 50);
-        }
-        function closeGangFullscreen() { document.getElementById("gangFullscreenModal").style.display = "none"; currentEditingGangId = null; }
-        function deleteGangFromEditor() {
-            if (!currentEditingGangId) return;
-            loadDatabase();
-            globalDatabase.gangs = globalDatabase.gangs.filter(i => i.id !== currentEditingGangId);
-            saveDatabase(); closeGangFullscreen(); showDeleteToast("🗑️ تم حذف العصابة بنجاح");
-        }
-        function updateGangDetailsOnly() {
-            if (!currentEditingGangId) return;
-            loadDatabase();
-            const g = globalDatabase.gangs.find(i => i.id === currentEditingGangId);
-            if (!g) return;
-            g.name = document.getElementById("fullscreenGangTitleInput").value.trim();
-            g.details = document.getElementById("fullscreenGangDetails").value.trim();
-            saveDatabase(); showToast("✅ تم حفظ التفاصيل");
-        }
-        function saveGangFullscreenCanvas() {
-            if (!currentEditingGangId) return;
-            loadDatabase();
-            const g = globalDatabase.gangs.find(i => i.id === currentEditingGangId);
-            if (!g) return;
-            const nodesArr = [];
-            document.querySelectorAll('.gang-canvas-inner-world .draggable-node, .gang-canvas-inner-world .node-line').forEach(el => {
-                const ed = el.querySelector('.node-content-editable');
-                nodesArr.push({
-                    id: el.getAttribute('data-id'),
-                    type: el.classList.contains('node-circle') ? 'circle' : (el.classList.contains('node-text') ? 'text' : (el.classList.contains('node-line') ? 'line' : (el.classList.contains('node-image-only') ? 'imgNode' : 'rect'))),
-                    text: ed ? ed.innerText : '',
-                    x: el.offsetLeft, y: el.offsetTop, width: el.offsetWidth, height: el.offsetHeight,
-                    imageUrl: el.getAttribute('data-image-url') || ''
-                });
-            });
-            g.nodes = nodesArr; g.links = [...connectedLinks];
-            g.viewX = canvasArea ? canvasArea.scrollLeft : 0; g.viewY = canvasArea ? canvasArea.scrollTop : 0; g.zoom = currentZoomScale;
-            saveDatabase(); showToast("✅ تم حفظ المخطط بنجاح");
-        }
-        function renderGangs() {
-            const list = document.getElementById("gangs-list");
-            if (!list) return;
-            list.innerHTML = "";
-            (globalDatabase.gangs || []).forEach(g => {
-                list.innerHTML += `<div class="item-folder-card" onclick="viewGangFolder(${g.id})"><div><span class="item-folder-icon">🏴‍☠️</span><span class="item-folder-title">${g.name}</span><span class="item-folder-sub">${g.details || 'ملف عصابة فدرالي'}</span></div><span class="item-folder-btn">فتح المخطط ←</span></div>`;
-            });
-        }
-
-        // رسم عناصر الشجرة مع الدعم التلقائي لحجم النص والمربع والدائرة
         function renderNodeElement(nodeData) {
             const world = document.getElementById("gangCanvasInnerWorld");
             if (!world) return;
             const el = document.createElement('div');
             el.setAttribute('data-id', nodeData.id);
-            el.setAttribute('data-image-url', nodeData.imageUrl || '');
             
             if (nodeData.type === 'circle') el.className = 'draggable-node node-circle';
             else if (nodeData.type === 'text') el.className = 'draggable-node node-text';
             else if (nodeData.type === 'line') el.className = 'node-line';
-            else if (nodeData.type === 'imgNode') el.className = 'draggable-node node-image-only';
             else el.className = 'draggable-node';
             
             el.style.left = nodeData.x + 'px';
@@ -950,17 +400,13 @@
             if (nodeData.height) el.style.height = nodeData.height + 'px';
             
             const delBtn = `<div class="node-delete-btn" title="حذف" onclick="deleteNodeElement('${nodeData.id}', event)">✕</div>`;
-            
-            if (nodeData.type === 'imgNode' && nodeData.imageUrl) {
-                el.innerHTML = `${delBtn}<img src="${nodeData.imageUrl}" style="width:100%; height:100%; object-fit:contain; border-radius:6px; pointer-events:none;"><div class="node-resize-handle-right"></div><div class="node-resize-handle-bottom"></div><div class="node-resize-handle-corner"></div>`;
-            } else {
-                el.innerHTML = `${delBtn}<div class="node-content-editable" contenteditable="true">${nodeData.text || ''}</div><div class="node-resize-handle-right"></div><div class="node-resize-handle-bottom"></div><div class="node-resize-handle-corner"></div>`;
-            }
+            el.innerHTML = `${delBtn}<div class="node-content-editable" contenteditable="true">${nodeData.text || ''}</div><div class="node-resize-handle-right"></div><div class="node-resize-handle-bottom"></div><div class="node-resize-handle-corner"></div>`;
             
             setupNodeInteractions(el);
             world.appendChild(el);
             updateConnectedSvgLines();
         }
+
         function deleteNodeElement(id, e) {
             const el = document.querySelector(`[data-id="${id}"]`);
             if (el) {
@@ -969,6 +415,7 @@
             }
             if (e) e.stopPropagation();
         }
+
         function setupNodeInteractions(el) {
             el.addEventListener('mousedown', (e) => {
                 if (e.button === 2) return;
@@ -1011,12 +458,14 @@
                 e.stopPropagation();
             });
         }
+
         function toggleLinkingMode() {
             isLinkingMode = !isLinkingMode; linkSourceNodeId = null;
             const btn = document.getElementById("btnLinkNodes");
             if (isLinkingMode) { btn.classList.add("active-linking"); btn.innerText = "🎯 اختر العنصر الأول..."; }
             else { btn.classList.remove("active-linking"); btn.innerText = "🔗 ربط عنصرين"; }
         }
+
         function updateConnectedSvgLines() {
             const svg = document.getElementById("svgCanvas");
             if (!svg) return;
@@ -1034,6 +483,7 @@
                 }
             });
         }
+
         function zoomCanvas(d) { currentZoomScale = Math.min(2.0, Math.max(0.3, currentZoomScale + d)); updateZoomDisplay(); }
         function resetZoom() { currentZoomScale = 1.0; updateZoomDisplay(); }
         function updateZoomDisplay() {
@@ -1041,37 +491,6 @@
             const lbl = document.getElementById("zoomLevelLbl");
             if (lbl) lbl.innerText = Math.round(currentZoomScale * 100) + '%';
         }
-
-        // التشفير الشامل (عربي / إنجليزي)
-        function encryptMsg() {
-            const val = document.getElementById("plainText").value.trim();
-            const out = document.getElementById("cryptoResult");
-            if (!val) { out.innerText = "⚠️ الرجاء كتابة نص للتشفير!"; return; }
-            try {
-                let encoded = btoa(encodeURIComponent(val).replace(/%([0-9A-F]{2})/g, (m, p1) => String.fromCharCode('0x' + p1)));
-                out.innerText = encoded;
-            } catch(e) { out.innerText = "خطأ في التشفير"; }
-        }
-        function decryptMsg() {
-            const val = document.getElementById("cipherText").value.trim();
-            const out = document.getElementById("cryptoResult");
-            if (!val) { out.innerText = "⚠️ الرجاء إدخال الكود أولاً!"; return; }
-            try {
-                let decoded = decodeURIComponent(atob(val).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
-                out.innerText = decoded;
-            } catch(e) { out.innerText = val; }
-        }
-
-        function renderUsers() {
-            const tbody = document.getElementById("users-table-body");
-            if (!tbody) return;
-            tbody.innerHTML = "";
-            Object.keys(globalDatabase.users || {}).forEach(u => {
-                const usr = globalDatabase.users[u];
-                tbody.innerHTML += `<tr><td><b>${u}</b></td><td>${usr.id || 'N/A'}</td><td>${usr.role}</td><td>${(usr.wings||[]).join(', ') || '-'}</td></tr>`;
-            });
-        }
-        window.onload = function() { checkAutoLogin(); };
     </script>
 </body>
 </html>
